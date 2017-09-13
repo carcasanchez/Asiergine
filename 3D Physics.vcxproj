@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{746CC4C3-787F-4B0E-AA66-E388FE3FF4F6}</ProjectGuid>
+    <RootNamespace>SDLGame</RootNamespace>
+    <ProjectName>Asiergine</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>false</SDLCheck>
+      <ExceptionHandling>false</ExceptionHandling>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>false</SDLCheck>
+      <ExceptionHandling>false</ExceptionHandling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <SubSystem>Windows</SubSystem>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="Motor3D\Application.h" />
+    <ClInclude Include="Motor3D\Color.h" />
+    <ClInclude Include="Motor3D\glmath.h" />
+    <ClInclude Include="Motor3D\Globals.h" />
+    <ClInclude Include="Motor3D\Light.h" />
+    <ClInclude Include="Motor3D\Module.h" />
+    <ClInclude Include="Motor3D\ModuleAudio.h" />
+    <ClInclude Include="Motor3D\ModuleCamera3D.h" />
+    <ClInclude Include="Motor3D\ModuleInput.h" />
+    <ClInclude Include="Motor3D\ModulePhysics3D.h" />
+    <ClInclude Include="Motor3D\ModulePlayer.h" />
+    <ClInclude Include="Motor3D\ModuleRenderer3D.h" />
+    <ClInclude Include="Motor3D\ModuleSceneIntro.h" />
+    <ClInclude Include="Motor3D\ModuleWindow.h" />
+    <ClInclude Include="Motor3D\p2DynArray.h" />
+    <ClInclude Include="Motor3D\p2List.h" />
+    <ClInclude Include="Motor3D\p2Point.h" />
+    <ClInclude Include="Motor3D\PhysBody3D.h" />
+    <ClInclude Include="Motor3D\PhysVehicle3D.h" />
+    <ClInclude Include="Motor3D\Primitive.h" />
+    <ClInclude Include="Motor3D\Timer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Motor3D\Application.cpp" />
+    <ClCompile Include="Motor3D\Color.cpp" />
+    <ClCompile Include="Motor3D\glmath.cpp" />
+    <ClCompile Include="Motor3D\Light.cpp" />
+    <ClCompile Include="Motor3D\log.cpp" />
+    <ClCompile Include="Motor3D\Main.cpp" />
+    <ClCompile Include="Motor3D\ModuleAudio.cpp" />
+    <ClCompile Include="Motor3D\ModuleCamera3D.cpp" />
+    <ClCompile Include="Motor3D\ModuleInput.cpp" />
+    <ClCompile Include="Motor3D\ModulePhysics3D.cpp" />
+    <ClCompile Include="Motor3D\ModulePlayer.cpp" />
+    <ClCompile Include="Motor3D\ModuleRenderer3D.cpp" />
+    <ClCompile Include="Motor3D\ModuleSceneIntro.cpp" />
+    <ClCompile Include="Motor3D\ModuleWindow.cpp" />
+    <ClCompile Include="Motor3D\PhysBody3D.cpp" />
+    <ClCompile Include="Motor3D\PhysVehicle3D.cpp" />
+    <ClCompile Include="Motor3D\Primitive.cpp" />
+    <ClCompile Include="Motor3D\Timer.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
