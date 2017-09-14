@@ -83,15 +83,12 @@
     <ClInclude Include="Motor3D\ModuleCamera3D.h" />
     <ClInclude Include="Motor3D\ModuleInput.h" />
     <ClInclude Include="Motor3D\ModulePhysics3D.h" />
-    <ClInclude Include="Motor3D\ModulePlayer.h" />
     <ClInclude Include="Motor3D\ModuleRenderer3D.h" />
-    <ClInclude Include="Motor3D\ModuleSceneIntro.h" />
     <ClInclude Include="Motor3D\ModuleWindow.h" />
     <ClInclude Include="Motor3D\p2DynArray.h" />
     <ClInclude Include="Motor3D\p2List.h" />
     <ClInclude Include="Motor3D\p2Point.h" />
     <ClInclude Include="Motor3D\PhysBody3D.h" />
-    <ClInclude Include="Motor3D\PhysVehicle3D.h" />
     <ClInclude Include="Motor3D\Primitive.h" />
     <ClInclude Include="Motor3D\Timer.h" />
   </ItemGroup>
@@ -106,12 +103,9 @@
     <ClCompile Include="Motor3D\ModuleCamera3D.cpp" />
     <ClCompile Include="Motor3D\ModuleInput.cpp" />
     <ClCompile Include="Motor3D\ModulePhysics3D.cpp" />
-    <ClCompile Include="Motor3D\ModulePlayer.cpp" />
     <ClCompile Include="Motor3D\ModuleRenderer3D.cpp" />
-    <ClCompile Include="Motor3D\ModuleSceneIntro.cpp" />
     <ClCompile Include="Motor3D\ModuleWindow.cpp" />
     <ClCompile Include="Motor3D\PhysBody3D.cpp" />
-    <ClCompile Include="Motor3D\PhysVehicle3D.cpp" />
     <ClCompile Include="Motor3D\Primitive.cpp" />
     <ClCompile Include="Motor3D\Timer.cpp" />
   </ItemGroup>
