@@ -72,6 +72,9 @@
     <ClInclude Include="Motor3D\p2Point.h">
       <Filter>Sources\Containers</Filter>
     </ClInclude>
+    <ClInclude Include="Motor3D\FileSystem.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Motor3D\Application.cpp">
@@ -118,6 +121,9 @@
     </ClCompile>
     <ClCompile Include="Motor3D\glmath.cpp">
       <Filter>Sources\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="Motor3D\FileSystem.cpp">
+      <Filter>Sources\Modules</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

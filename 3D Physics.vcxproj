@@ -77,6 +77,7 @@
     <ClInclude Include="Motor3D\Color.h" />
     <ClInclude Include="Motor3D\glmath.h" />
     <ClInclude Include="Motor3D\Globals.h" />
+    <ClInclude Include="Motor3D\FileSystem.h" />
     <ClInclude Include="Motor3D\Light.h" />
     <ClInclude Include="Motor3D\Module.h" />
     <ClInclude Include="Motor3D\ModuleAudio.h" />
@@ -96,6 +97,7 @@
     <ClCompile Include="Motor3D\Application.cpp" />
     <ClCompile Include="Motor3D\Color.cpp" />
     <ClCompile Include="Motor3D\glmath.cpp" />
+    <ClCompile Include="Motor3D\FileSystem.cpp" />
     <ClCompile Include="Motor3D\Light.cpp" />
     <ClCompile Include="Motor3D\log.cpp" />
     <ClCompile Include="Motor3D\Main.cpp" />
