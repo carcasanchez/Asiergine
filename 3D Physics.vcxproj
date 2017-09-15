@@ -81,6 +81,7 @@
     <ClInclude Include="3DEngine\Module.h" />
     <ClInclude Include="3DEngine\ModuleAudio.h" />
     <ClInclude Include="3DEngine\ModuleCamera3D.h" />
+    <ClInclude Include="3DEngine\ModuleEditor.h" />
     <ClInclude Include="3DEngine\ModuleInput.h" />
     <ClInclude Include="3DEngine\ModulePhysics3D.h" />
     <ClInclude Include="3DEngine\ModuleRenderer3D.h" />
@@ -101,6 +102,7 @@
     <ClCompile Include="3DEngine\Main.cpp" />
     <ClCompile Include="3DEngine\ModuleAudio.cpp" />
     <ClCompile Include="3DEngine\ModuleCamera3D.cpp" />
+    <ClCompile Include="3DEngine\ModuleEditor.cpp" />
     <ClCompile Include="3DEngine\ModuleInput.cpp" />
     <ClCompile Include="3DEngine\ModulePhysics3D.cpp" />
     <ClCompile Include="3DEngine\ModuleRenderer3D.cpp" />

@@ -1,3 +1,3 @@
-#include "3DEngine\Globals.h"
+#include "Globals.h"
 #include "ModuleEditor.h"
 
