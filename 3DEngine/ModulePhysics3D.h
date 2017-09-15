@@ -36,12 +36,10 @@ public:
 	void AddConstraintSlider(PhysBody3D & bodyA, bool disable_collision);
 
 	btDiscreteDynamicsWorld* GetWorld();
-	bool GetGravityState();
-	void ChangeGravity();
 	bool isDebug();
+
 private:
-	bool currentGravity = true;
-	bool gravityChange = true;
+
 
 	bool debug;
 
@@ -50,13 +48,14 @@ private:
 	btBroadphaseInterface*				broad_phase;
 	btSequentialImpulseConstraintSolver* solver;
 	btDiscreteDynamicsWorld*			world;
+	btDefaultVehicleRaycaster*			vehicle_raycaster;
 	DebugDrawer*						debug_draw;
 
 	p2List<btCollisionShape*> shapes;
 	p2List<PhysBody3D*> bodies;
 	p2List<btDefaultMotionState*> motions;
 	p2List<btTypedConstraint*> constraints;
-
+	p2List<PhysVehicle3D*> vehicles;
 };
 
 class DebugDrawer : public btIDebugDraw

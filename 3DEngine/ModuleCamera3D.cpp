@@ -2,7 +2,7 @@
 #include "Application.h"
 #include "PhysBody3D.h"
 #include "ModuleCamera3D.h"
-#include "PhysVehicle3D.h"
+
 
 ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -41,10 +41,7 @@ bool ModuleCamera3D::CleanUp()
 
 // -----------------------------------------------------------------
 update_status ModuleCamera3D::Update(float dt)
-{
-	
-	//Camera update: control camera movement
-	
+{	
 	
 	// Recalculate matrix -------------
 	CalculateViewMatrix();

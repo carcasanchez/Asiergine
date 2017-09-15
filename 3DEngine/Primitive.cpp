@@ -5,7 +5,7 @@
 #include "Primitive.h"
 #include "glut/glut.h"
 
-#pragma comment (lib, "Motor3D/glut/glut32.lib")
+#pragma comment (lib, "3DEngine/glut/glut32.lib")
 
 // ------------------------------------------------------------
 Primitive::Primitive() : transform(IdentityMatrix), color(White), wire(false), axis(false), type(PrimitiveTypes::Primitive_Point)

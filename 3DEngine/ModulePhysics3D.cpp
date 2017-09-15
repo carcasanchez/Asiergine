@@ -2,17 +2,16 @@
 #include "Application.h"
 #include "ModulePhysics3D.h"
 #include "PhysBody3D.h"
-#include "PhysVehicle3D.h"
 #include "Primitive.h"
 
 #ifdef _DEBUG
-	#pragma comment (lib, "Motor3D/Bullet/libx86/BulletDynamics_debug.lib")
-	#pragma comment (lib, "Motor3D/Bullet/libx86/BulletCollision_debug.lib")
-	#pragma comment (lib, "Motor3D/Bullet/libx86/LinearMath_debug.lib")
+	#pragma comment (lib, "3DEngine/Bullet/libx86/BulletDynamics_debug.lib")
+	#pragma comment (lib, "3DEngine/Bullet/libx86/BulletCollision_debug.lib")
+	#pragma comment (lib, "3DEngine/Bullet/libx86/LinearMath_debug.lib")
 #else
-	#pragma comment (lib, "Bullet/libx86/BulletDynamics.lib")
-	#pragma comment (lib, "Bullet/libx86/BulletCollision.lib")
-	#pragma comment (lib, "Bullet/libx86/LinearMath.lib")
+	#pragma comment (lib, "3DEngine/Bullet/libx86/BulletDynamics.lib")
+	#pragma comment (lib, "3DEngine/Bullet/libx86/BulletCollision.lib")
+	#pragma comment (lib, "3DEngine/Bullet/libx86/LinearMath.lib")
 #endif
 
 ModulePhysics3D::ModulePhysics3D(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -53,6 +52,8 @@ bool ModulePhysics3D::Start()
 	world = new btDiscreteDynamicsWorld(dispatcher, broad_phase, solver, collision_conf);
 	world->setDebugDrawer(debug_draw);
 	world->setGravity(GRAVITY);
+	vehicle_raycaster = new btDefaultVehicleRaycaster(world);
+
 
 	return true;
 }
@@ -61,15 +62,7 @@ bool ModulePhysics3D::Start()
 update_status ModulePhysics3D::PreUpdate(float dt)
 {
 	world->stepSimulation(dt, 15);
-	if (currentGravity != gravityChange) {
-		currentGravity = gravityChange;
-		if (currentGravity == true) {
-			world->setGravity(GRAVITY);
-		}
-		else {
-			world->setGravity(-GRAVITY);
-		}
-	}
+
 	int numManifolds = world->getDispatcher()->getNumManifolds();
 	for(int i = 0; i<numManifolds; i++)
 	{
@@ -159,8 +152,13 @@ bool ModulePhysics3D::CleanUp()
 		delete item->data;
 
 	bodies.clear();
-	
-	
+
+	for(p2List_item<PhysVehicle3D*>* item = vehicles.getFirst(); item; item = item->next)
+		delete item->data;
+
+	vehicles.clear();
+
+	delete vehicle_raycaster;
 	delete world;
 
 	return true;
@@ -349,15 +347,6 @@ btDiscreteDynamicsWorld * ModulePhysics3D::GetWorld()
 	return world;
 }
 
-bool ModulePhysics3D::GetGravityState()
-{
-	return currentGravity;
-}
-
-void ModulePhysics3D::ChangeGravity()
-{
-	gravityChange = !gravityChange;
-}
 bool ModulePhysics3D::isDebug()
 {
 	return debug==true;

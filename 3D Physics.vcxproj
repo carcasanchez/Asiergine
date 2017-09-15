@@ -13,7 +13,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{746CC4C3-787F-4B0E-AA66-E388FE3FF4F6}</ProjectGuid>
     <RootNamespace>SDLGame</RootNamespace>
-    <ProjectName>Asiergine</ProjectName>
+    <ProjectName>3D Physics - class5</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -73,43 +73,41 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Motor3D\Application.h" />
-    <ClInclude Include="Motor3D\Color.h" />
-    <ClInclude Include="Motor3D\glmath.h" />
-    <ClInclude Include="Motor3D\Globals.h" />
-    <ClInclude Include="Motor3D\FileSystem.h" />
-    <ClInclude Include="Motor3D\Light.h" />
-    <ClInclude Include="Motor3D\Module.h" />
-    <ClInclude Include="Motor3D\ModuleAudio.h" />
-    <ClInclude Include="Motor3D\ModuleCamera3D.h" />
-    <ClInclude Include="Motor3D\ModuleInput.h" />
-    <ClInclude Include="Motor3D\ModulePhysics3D.h" />
-    <ClInclude Include="Motor3D\ModuleRenderer3D.h" />
-    <ClInclude Include="Motor3D\ModuleWindow.h" />
-    <ClInclude Include="Motor3D\p2DynArray.h" />
-    <ClInclude Include="Motor3D\p2List.h" />
-    <ClInclude Include="Motor3D\p2Point.h" />
-    <ClInclude Include="Motor3D\PhysBody3D.h" />
-    <ClInclude Include="Motor3D\Primitive.h" />
-    <ClInclude Include="Motor3D\Timer.h" />
+    <ClInclude Include="3DEngine\Application.h" />
+    <ClInclude Include="3DEngine\Color.h" />
+    <ClInclude Include="3DEngine\glmath.h" />
+    <ClInclude Include="3DEngine\Globals.h" />
+    <ClInclude Include="3DEngine\Light.h" />
+    <ClInclude Include="3DEngine\Module.h" />
+    <ClInclude Include="3DEngine\ModuleAudio.h" />
+    <ClInclude Include="3DEngine\ModuleCamera3D.h" />
+    <ClInclude Include="3DEngine\ModuleInput.h" />
+    <ClInclude Include="3DEngine\ModulePhysics3D.h" />
+    <ClInclude Include="3DEngine\ModuleRenderer3D.h" />
+    <ClInclude Include="3DEngine\ModuleWindow.h" />
+    <ClInclude Include="3DEngine\p2DynArray.h" />
+    <ClInclude Include="3DEngine\p2List.h" />
+    <ClInclude Include="3DEngine\p2Point.h" />
+    <ClInclude Include="3DEngine\PhysBody3D.h" />
+    <ClInclude Include="3DEngine\Primitive.h" />
+    <ClInclude Include="3DEngine\Timer.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Motor3D\Application.cpp" />
-    <ClCompile Include="Motor3D\Color.cpp" />
-    <ClCompile Include="Motor3D\glmath.cpp" />
-    <ClCompile Include="Motor3D\FileSystem.cpp" />
-    <ClCompile Include="Motor3D\Light.cpp" />
-    <ClCompile Include="Motor3D\log.cpp" />
-    <ClCompile Include="Motor3D\Main.cpp" />
-    <ClCompile Include="Motor3D\ModuleAudio.cpp" />
-    <ClCompile Include="Motor3D\ModuleCamera3D.cpp" />
-    <ClCompile Include="Motor3D\ModuleInput.cpp" />
-    <ClCompile Include="Motor3D\ModulePhysics3D.cpp" />
-    <ClCompile Include="Motor3D\ModuleRenderer3D.cpp" />
-    <ClCompile Include="Motor3D\ModuleWindow.cpp" />
-    <ClCompile Include="Motor3D\PhysBody3D.cpp" />
-    <ClCompile Include="Motor3D\Primitive.cpp" />
-    <ClCompile Include="Motor3D\Timer.cpp" />
+    <ClCompile Include="3DEngine\Application.cpp" />
+    <ClCompile Include="3DEngine\Color.cpp" />
+    <ClCompile Include="3DEngine\glmath.cpp" />
+    <ClCompile Include="3DEngine\Light.cpp" />
+    <ClCompile Include="3DEngine\log.cpp" />
+    <ClCompile Include="3DEngine\Main.cpp" />
+    <ClCompile Include="3DEngine\ModuleAudio.cpp" />
+    <ClCompile Include="3DEngine\ModuleCamera3D.cpp" />
+    <ClCompile Include="3DEngine\ModuleInput.cpp" />
+    <ClCompile Include="3DEngine\ModulePhysics3D.cpp" />
+    <ClCompile Include="3DEngine\ModuleRenderer3D.cpp" />
+    <ClCompile Include="3DEngine\ModuleWindow.cpp" />
+    <ClCompile Include="3DEngine\PhysBody3D.cpp" />
+    <ClCompile Include="3DEngine\Primitive.cpp" />
+    <ClCompile Include="3DEngine\Timer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

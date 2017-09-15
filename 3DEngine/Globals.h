@@ -37,25 +37,3 @@ enum update_status
 #define WIN_FULLSCREEN_DESKTOP false
 #define VSYNC true
 #define TITLE "3D Physics Playground"
-#define NULL 0
-
-// Buffer Releasing
-
-#define RELEASE( x ) \
-    {                        \
-    if( x != NULL )        \
-	    {                      \
-      delete x;            \
-	  x = NULL;              \
-	    }                      \
-    }
-
-#define RELEASE_ARRAY( x ) \
-    {                              \
-    if( x != NULL )              \
-	    {                            \
-      delete[] x;                \
-	  x = NULL;                    \
-	    }                            \
-                              \
-    }
