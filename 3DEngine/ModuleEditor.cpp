@@ -2,13 +2,13 @@
 #include "ModuleEditor.h"
 #include "Application.h"
 
-
+#include "imgui/gl3w/GL/gl3w.h"
 #include "Imgui/imgui_impl_sdl_gl3.h"
 
 
 ModuleEditor::ModuleEditor(Application * app, bool start_enabled) : Module(app, start_enabled)
 {
-	demo_window = NULL;
+
 }
 
 ModuleEditor::~ModuleEditor()
@@ -19,6 +19,7 @@ bool ModuleEditor::Init()
 {
 	bool ret = true;
 
+	gl3wInit();
 	ImGui_ImplSdlGL3_Init(App->window->window);
 	
 
@@ -57,6 +58,6 @@ update_status ModuleEditor::PostUpdate(float dt)
 bool ModuleEditor::CleanUp()
 {
 	bool ret = true;
-	ImGui::End();
+	ImGui_ImplSdlGL3_Shutdown();
 	return ret;
 }

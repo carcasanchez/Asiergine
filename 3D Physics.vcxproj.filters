@@ -61,6 +61,9 @@
     <ClCompile Include="3DEngine\imgui\imgui_impl_sdl_gl3.cpp">
       <Filter>Source\Tools\imGui</Filter>
     </ClCompile>
+    <ClCompile Include="3DEngine\imgui\gl3w\GL\gl3w.c">
+      <Filter>Source\Tools\imGui\gl3w</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3DEngine\Application.h">
@@ -141,6 +144,12 @@
     <ClInclude Include="3DEngine\Glew\include\glew.h">
       <Filter>Source\Tools\imGui</Filter>
     </ClInclude>
+    <ClInclude Include="3DEngine\imgui\gl3w\GL\gl3w.h">
+      <Filter>Source\Tools\imGui\gl3w</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\imgui\gl3w\GL\glcorearb.h">
+      <Filter>Source\Tools\imGui\gl3w</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -160,6 +169,9 @@
     </Filter>
     <Filter Include="Source\Tools\imGui">
       <UniqueIdentifier>{22bc46e6-d71d-47b6-ac11-559373e5b230}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Tools\imGui\gl3w">
+      <UniqueIdentifier>{c6355712-0144-41cb-826d-c84b950b32a3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
