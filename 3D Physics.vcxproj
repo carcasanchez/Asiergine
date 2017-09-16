@@ -17,6 +17,7 @@
     <ClCompile Include="3DEngine\imgui\imgui.cpp" />
     <ClCompile Include="3DEngine\imgui\imgui_demo.cpp" />
     <ClCompile Include="3DEngine\imgui\imgui_draw.cpp" />
+    <ClCompile Include="3DEngine\imgui\imgui_impl_sdl_gl3.cpp" />
     <ClCompile Include="3DEngine\Light.cpp" />
     <ClCompile Include="3DEngine\log.cpp" />
     <ClCompile Include="3DEngine\Main.cpp" />
@@ -34,10 +35,12 @@
   <ItemGroup>
     <ClInclude Include="3DEngine\Application.h" />
     <ClInclude Include="3DEngine\Color.h" />
+    <ClInclude Include="3DEngine\Glew\include\glew.h" />
     <ClInclude Include="3DEngine\glmath.h" />
     <ClInclude Include="3DEngine\Globals.h" />
     <ClInclude Include="3DEngine\imgui\imconfig.h" />
     <ClInclude Include="3DEngine\imgui\imgui.h" />
+    <ClInclude Include="3DEngine\imgui\imgui_impl_sdl_gl3.h" />
     <ClInclude Include="3DEngine\imgui\stb_rect_pack.h" />
     <ClInclude Include="3DEngine\imgui\stb_textedit.h" />
     <ClInclude Include="3DEngine\imgui\stb_truetype.h" />

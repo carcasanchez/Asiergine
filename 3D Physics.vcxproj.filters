@@ -58,6 +58,9 @@
     <ClCompile Include="3DEngine\imgui\imgui_draw.cpp">
       <Filter>Source\Tools\imGui</Filter>
     </ClCompile>
+    <ClCompile Include="3DEngine\imgui\imgui_impl_sdl_gl3.cpp">
+      <Filter>Source\Tools\imGui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3DEngine\Application.h">
@@ -130,6 +133,12 @@
       <Filter>Source\Tools\imGui</Filter>
     </ClInclude>
     <ClInclude Include="3DEngine\imgui\stb_truetype.h">
+      <Filter>Source\Tools\imGui</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\imgui\imgui_impl_sdl_gl3.h">
+      <Filter>Source\Tools\imGui</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\Glew\include\glew.h">
       <Filter>Source\Tools\imGui</Filter>
     </ClInclude>
   </ItemGroup>
