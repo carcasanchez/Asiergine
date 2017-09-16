@@ -15,15 +15,29 @@ ModuleEditor::~ModuleEditor()
 bool ModuleEditor::Init()
 {
 	bool ret = true;
-	ImGui::Begin("Window");
+	
 	return ret;
 }
 
-bool ModuleEditor::Update()
+update_status ModuleEditor::PreUpdate(float dt)
+{
+//	ImGui::NewFrame();
+//	ImGui::Begin("Window");
+	return UPDATE_CONTINUE;
+}
+
+update_status ModuleEditor::Update(float dt)
 {
 	bool ret = true;
-	ImGui::ShowTestWindow();
-	return ret;
+	//ImGui::ShowTestWindow();
+
+	return UPDATE_CONTINUE;
+}
+
+update_status ModuleEditor::PostUpdate(float dt)
+{
+//	ImGui::Render();
+	return UPDATE_CONTINUE;
 }
 
 bool ModuleEditor::CleanUp()
