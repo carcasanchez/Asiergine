@@ -18,12 +18,9 @@ ModuleEditor::~ModuleEditor()
 bool ModuleEditor::Init()
 {
 	bool ret = true;
-	
-	//ImGui::GetIO().DisplaySize.x = App->window->GetWindowPixels().x;
-	//ImGui::GetIO().DisplaySize.y = App->window->GetWindowPixels().y;
-	
+
 	ImGui_ImplSdlGL3_Init(App->window->window);
-	//ImGui::GetIO().Fonts->GetTexDataAsRGBA32();
+	
 
 	return ret;
 }
