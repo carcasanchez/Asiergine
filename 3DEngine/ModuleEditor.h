@@ -15,7 +15,7 @@ public:
 	bool CleanUp();
 
 private:
-	
+	ImGuiID demo_window;
 };
 
 
