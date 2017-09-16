@@ -1,0 +1,156 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="3DEngine\Application.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="3DEngine\Main.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="3DEngine\ModuleAudio.cpp">
+      <Filter>Source\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="3DEngine\ModuleCamera3D.cpp">
+      <Filter>Source\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="3DEngine\ModuleEditor.cpp">
+      <Filter>Source\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="3DEngine\ModuleInput.cpp">
+      <Filter>Source\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="3DEngine\ModulePhysics3D.cpp">
+      <Filter>Source\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="3DEngine\ModuleRenderer3D.cpp">
+      <Filter>Source\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="3DEngine\ModuleWindow.cpp">
+      <Filter>Source\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="3DEngine\Timer.cpp">
+      <Filter>Source\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="3DEngine\log.cpp">
+      <Filter>Source\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="3DEngine\Light.cpp">
+      <Filter>Source\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="3DEngine\PhysBody3D.cpp">
+      <Filter>Source\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="3DEngine\Primitive.cpp">
+      <Filter>Source\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="3DEngine\Color.cpp">
+      <Filter>Source\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="3DEngine\glmath.cpp">
+      <Filter>Source\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="3DEngine\imgui\imgui.cpp">
+      <Filter>Source\Tools\imGui</Filter>
+    </ClCompile>
+    <ClCompile Include="3DEngine\imgui\imgui_demo.cpp">
+      <Filter>Source\Tools\imGui</Filter>
+    </ClCompile>
+    <ClCompile Include="3DEngine\imgui\imgui_draw.cpp">
+      <Filter>Source\Tools\imGui</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="3DEngine\Application.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\Globals.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\Module.h">
+      <Filter>Source\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\ModuleAudio.h">
+      <Filter>Source\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\ModuleCamera3D.h">
+      <Filter>Source\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\ModuleEditor.h">
+      <Filter>Source\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\ModuleInput.h">
+      <Filter>Source\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\ModulePhysics3D.h">
+      <Filter>Source\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\ModuleRenderer3D.h">
+      <Filter>Source\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\ModuleWindow.h">
+      <Filter>Source\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\Timer.h">
+      <Filter>Source\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\Light.h">
+      <Filter>Source\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\PhysBody3D.h">
+      <Filter>Source\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\Primitive.h">
+      <Filter>Source\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\Color.h">
+      <Filter>Source\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\glmath.h">
+      <Filter>Source\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\p2DynArray.h">
+      <Filter>Source\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\p2List.h">
+      <Filter>Source\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\p2Point.h">
+      <Filter>Source\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\imgui\imgui.h">
+      <Filter>Source\Tools\imGui</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\imgui\imconfig.h">
+      <Filter>Source\Tools\imGui</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\imgui\stb_rect_pack.h">
+      <Filter>Source\Tools\imGui</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\imgui\stb_textedit.h">
+      <Filter>Source\Tools\imGui</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\imgui\stb_truetype.h">
+      <Filter>Source\Tools\imGui</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{1d459e9a-f074-43df-b79d-c2de2d15a5f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Helpers">
+      <UniqueIdentifier>{45b2ecfd-3c51-41d3-8a5d-e21a88cef32b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Containers">
+      <UniqueIdentifier>{a437044c-a05a-43fd-ae06-a6b5df37828d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Modules">
+      <UniqueIdentifier>{7358c3a8-af65-4392-9f69-ca7bc7adfe2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Tools">
+      <UniqueIdentifier>{daa777de-dfcc-46c5-a0cf-7a0c582476eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Tools\imGui">
+      <UniqueIdentifier>{22bc46e6-d71d-47b6-ac11-559373e5b230}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
