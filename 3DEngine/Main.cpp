@@ -5,6 +5,7 @@
 
 
 #include "SDL/include/SDL.h"
+
 #pragma comment( lib, "3DEngine/SDL/libx86/SDL2.lib" )
 #pragma comment( lib, "3DEngine/SDL/libx86/SDL2main.lib" )
 

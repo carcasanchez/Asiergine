@@ -2,7 +2,7 @@
 #include "ModuleEditor.h"
 #include "Application.h"
 
-#include "imgui/gl3w/GL/gl3w.h"
+
 #include "Imgui/imgui_impl_sdl_gl3.h"
 
 
@@ -19,7 +19,6 @@ bool ModuleEditor::Init()
 {
 	bool ret = true;
 
-	gl3wInit();
 	ImGui_ImplSdlGL3_Init(App->window->window);
 	
 
