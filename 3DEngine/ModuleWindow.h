@@ -5,6 +5,7 @@
 #include "SDL/include/SDL.h"
 
 class Application;
+class vec2;
 
 class ModuleWindow : public Module
 {
@@ -19,6 +20,8 @@ public:
 	bool CleanUp();
 
 	void SetTitle(const char* title);
+
+	vec2 GetWindowPixels();
 
 public:
 	//The window we'll be rendering to

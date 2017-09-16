@@ -16,27 +16,32 @@ bool ModuleEditor::Init()
 {
 	bool ret = true;
 	
+	ImGui::GetIO().DisplaySize.x = App->window->GetWindowPixels().x;
+	ImGui::GetIO().DisplaySize.y = App->window->GetWindowPixels().y;
+
+	//ImGui::GetIO().Fonts->GetTexDataAsRGBA32();
+
 	return ret;
 }
 
 update_status ModuleEditor::PreUpdate(float dt)
 {
-//	ImGui::NewFrame();
-//	ImGui::Begin("Window");
+	ImGui::NewFrame();
+	ImGui::Begin("Window");
 	return UPDATE_CONTINUE;
 }
 
 update_status ModuleEditor::Update(float dt)
 {
 	bool ret = true;
-	//ImGui::ShowTestWindow();
+	ImGui::ShowTestWindow();
 
 	return UPDATE_CONTINUE;
 }
 
 update_status ModuleEditor::PostUpdate(float dt)
 {
-//	ImGui::Render();
+	ImGui::Render();
 	return UPDATE_CONTINUE;
 }
 
