@@ -27,31 +27,36 @@ bool ModuleEditor::Init()
 
 bool ModuleEditor::Start()
 {
+	bool ret = true;
 	ImGui_ImplSdlGL3_NewFrame(App->window->window);
 
-	return true;
+	return ret;
 }
 
 
 
 update_status ModuleEditor::PreUpdate(float dt)
 {
+	update_status ret = UPDATE_CONTINUE;
 	ImGui_ImplSdlGL3_NewFrame(App->window->window);
-	return UPDATE_CONTINUE;
+	return ret;
 }
 
 update_status ModuleEditor::Update(float dt)
 {
-	bool ret = true;
+	update_status ret = UPDATE_CONTINUE;
+	ShowExampleAppMainMenuBar();
+	if(open == true)
 	ImGui::ShowTestWindow();
 
-	return UPDATE_CONTINUE;
+	return ret;
 }
 
 update_status ModuleEditor::PostUpdate(float dt)
 {
+	update_status ret = UPDATE_CONTINUE;
 	ImGui::Render();
-	return UPDATE_CONTINUE;
+	return ret;
 }
 
 bool ModuleEditor::CleanUp()
@@ -59,4 +64,40 @@ bool ModuleEditor::CleanUp()
 	bool ret = true;
 	ImGui_ImplSdlGL3_Shutdown();
 	return ret;
+}
+
+void ModuleEditor::ShowExampleAppMainMenuBar()
+{
+	if (ImGui::BeginMainMenuBar())
+	{
+		if (ImGui::BeginMenu("Example Window"))
+		{
+			ShowExampleWindow();
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Close"))
+		{
+			ShowQuitWindow();
+			ImGui::EndMenu();
+		}
+		ImGui::EndMainMenuBar();
+	}
+}
+
+void ModuleEditor::ShowExampleWindow()
+{
+	ImGui::MenuItem("Open Demo", NULL, false, false);
+	if (ImGui::MenuItem("Show")) 
+	{
+		open = true;
+		ImGui::ShowTestWindow();
+	}	
+}
+
+void ModuleEditor::ShowQuitWindow()
+{
+	if (ImGui::MenuItem("Quit", "Alt+F4")) 
+	{
+		//ImGui::End();
+	}
 }

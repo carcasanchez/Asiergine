@@ -17,8 +17,12 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
+	void ShowExampleAppMainMenuBar();
+	void ShowExampleWindow();
+	void ShowQuitWindow();
+
 private:
-	
+	bool open = false;
 };
 
 
