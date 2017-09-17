@@ -20,6 +20,7 @@ public:
 	void ShowExampleAppMainMenuBar();
 	void ShowExampleWindow();
 	void ShowQuitWindow();
+	void ExitEditor();
 
 private:
 	bool test_window_open = false;
