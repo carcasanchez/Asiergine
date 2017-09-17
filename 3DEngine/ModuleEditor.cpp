@@ -99,5 +99,6 @@ void ModuleEditor::ShowQuitWindow()
 	if (ImGui::MenuItem("Quit", "Alt+F4")) 
 	{
 		//ImGui::End();
+		open = false;
 	}
 }
