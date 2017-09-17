@@ -46,8 +46,12 @@ update_status ModuleEditor::Update(float dt)
 {
 	update_status ret = UPDATE_CONTINUE;
 	ShowExampleAppMainMenuBar();
-	if(open == true)
+
+	if(test_window_open == true)
 	ImGui::ShowTestWindow();
+
+	if (quit_editor)
+		ret = UPDATE_STOP;
 
 	return ret;
 }
@@ -66,6 +70,8 @@ bool ModuleEditor::CleanUp()
 	return ret;
 }
 
+
+
 void ModuleEditor::ShowExampleAppMainMenuBar()
 {
 	if (ImGui::BeginMainMenuBar())
@@ -77,7 +83,7 @@ void ModuleEditor::ShowExampleAppMainMenuBar()
 		}
 		if (ImGui::BeginMenu("Close"))
 		{
-			ShowQuitWindow();
+			quit_editor = true;
 			ImGui::EndMenu();
 		}
 		ImGui::EndMainMenuBar();
@@ -89,15 +95,12 @@ void ModuleEditor::ShowExampleWindow()
 	ImGui::MenuItem("Open Demo", NULL, false, false);
 	if (ImGui::MenuItem("Show")) 
 	{
-		open = true;
+		test_window_open = true;
 		ImGui::ShowTestWindow();
 	}	
 }
 
 void ModuleEditor::ShowQuitWindow()
 {
-	if (ImGui::MenuItem("Quit", "Alt+F4")) 
-	{
-		//ImGui::End();
-	}
+
 }

@@ -22,7 +22,9 @@ public:
 	void ShowQuitWindow();
 
 private:
-	bool open = false;
+	bool test_window_open = false;
+
+	bool quit_editor = false;
 };
 
 
