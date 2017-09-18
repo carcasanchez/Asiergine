@@ -1,6 +1,7 @@
 #include "Globals.h"
 #include "ModuleEditor.h"
 #include "Application.h"
+#include "Math.h"
 
 
 #include "Imgui/imgui_impl_sdl_gl3.h"
@@ -45,19 +46,20 @@ update_status ModuleEditor::PreUpdate(float dt)
 update_status ModuleEditor::Update(float dt)
 {
 	update_status ret = UPDATE_CONTINUE;
-	ShowExampleAppMainMenuBar();
-	ShowExampleAppConsole(&p_open);
-
-	if(test_window_open == true)
-	ImGui::ShowTestWindow();
-
+	
+	ManageMainMenuBar();
+	ManageConsole();
+	ManageExampleWindow();
+		
 	return ret;
 }
 
 update_status ModuleEditor::PostUpdate(float dt)
 {
 	update_status ret = UPDATE_CONTINUE;
-	ImGui::Render();	
+	
+	ImGui::Render();
+
 	if (quit_editor)
 		ret = UPDATE_STOP;
 	return ret;
@@ -66,54 +68,48 @@ update_status ModuleEditor::PostUpdate(float dt)
 bool ModuleEditor::CleanUp()
 {
 	bool ret = true;
+
+	//Shuts down imGui
 	ImGui_ImplSdlGL3_Shutdown();
 	return ret;
 }
 
 
 
-void ModuleEditor::ShowExampleAppMainMenuBar()
+//Main menu bar management
+void ModuleEditor::ManageMainMenuBar()
 {
 	if (ImGui::BeginMainMenuBar())
 	{
 		if (ImGui::BeginMenu("Example Window"))
 		{
-			ShowExampleWindow();
+			ShowExampleWindow_option();
 			ImGui::EndMenu();
 		}
-		if (ImGui::BeginMenu("Close Ex. Window"))
-		{
-			ShowQuitWindow();
-			ImGui::EndMenu();
-		}
+		
 		if (ImGui::BeginMenu("Exit Editor"))
 		{
-			ExitEditor();
+			ExitEditor_option();
 			ImGui::EndMenu();
 		}
 		ImGui::EndMainMenuBar();
 	}
 }
 
-void ModuleEditor::ShowExampleWindow()
+void ModuleEditor::ShowExampleWindow_option()
 {
-	ImGui::MenuItem("Open Demo", NULL, false, false);
-	if (ImGui::MenuItem("Show")) 
+	if (ImGui::MenuItem("Show"))
 	{
 		test_window_open = true;
-		ImGui::ShowTestWindow();
-	}	
-}
+	}
 
-void ModuleEditor::ShowQuitWindow()
-{
-	if (ImGui::MenuItem("Don't show"))
+	if (ImGui::MenuItem("Hide"))
 	{
 		test_window_open = false;
 	}
 }
 
-void ModuleEditor::ExitEditor()
+void ModuleEditor::ExitEditor_option()
 {
 	if (ImGui::MenuItem("Exit"))
 	{
@@ -121,6 +117,17 @@ void ModuleEditor::ExitEditor()
 	}
 }
 
+
+//Example window management
+void ModuleEditor::ManageExampleWindow()
+{
+	if (test_window_open == true)
+		ImGui::ShowTestWindow();
+}
+
+
+
+//Console management
 struct ExampleAppConsole
 {
 	char                  InputBuf[256];
@@ -405,8 +412,8 @@ struct ExampleAppConsole
 	}
 };
 
-void ModuleEditor::ShowExampleAppConsole(bool* p_open)
+void ModuleEditor::ManageConsole()
 {
 	static ExampleAppConsole console;
-	console.Draw("Example: Console", p_open);
+	console.Draw("Example: Console", &console_open);
 }

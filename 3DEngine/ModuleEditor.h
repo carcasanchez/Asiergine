@@ -17,19 +17,21 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
-	void ShowExampleAppMainMenuBar();
-	void ShowExampleWindow();
-	void ShowQuitWindow();
-	void ExitEditor();
+	void ManageMainMenuBar();
 
-	void ShowExampleAppConsole(bool* p_open);
+	void ManageExampleWindow();
+
+	void ShowExampleWindow_option();
+	void ExitEditor_option();
+
+	void ManageConsole();
 
 private:
 	bool test_window_open = false;
 
 	bool quit_editor = false;
 
-	bool p_open = true;
+	bool console_open = false;
 };
 
 

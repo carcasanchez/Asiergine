@@ -142,7 +142,7 @@
       <Filter>Source\Tools\imGui</Filter>
     </ClInclude>
     <ClInclude Include="3DEngine\Math.h">
-      <Filter>Source\Modules</Filter>
+      <Filter>Source\Tools</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
