@@ -22,10 +22,14 @@ public:
 	void ShowQuitWindow();
 	void ExitEditor();
 
+	void ShowExampleAppConsole(bool* p_open);
+
 private:
 	bool test_window_open = false;
 
 	bool quit_editor = false;
+
+	bool *p_open;
 };
 
 

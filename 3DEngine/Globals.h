@@ -18,6 +18,8 @@ void log(const char file[], int line, const char* format, ...);
 #define HAVE_M_PI
 
 
+#define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
+
 typedef unsigned int uint;
 
 enum update_status
