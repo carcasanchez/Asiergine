@@ -46,7 +46,7 @@ update_status ModuleEditor::Update(float dt)
 {
 	update_status ret = UPDATE_CONTINUE;
 	ShowExampleAppMainMenuBar();
-	ShowExampleAppConsole(p_open);
+	ShowExampleAppConsole(&p_open);
 
 	if(test_window_open == true)
 	ImGui::ShowTestWindow();

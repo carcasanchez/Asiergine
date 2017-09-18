@@ -29,7 +29,7 @@ private:
 
 	bool quit_editor = false;
 
-	bool *p_open;
+	bool p_open = true;
 };
 
 
