@@ -45,6 +45,7 @@
     <ClInclude Include="3DEngine\imgui\stb_textedit.h" />
     <ClInclude Include="3DEngine\imgui\stb_truetype.h" />
     <ClInclude Include="3DEngine\Light.h" />
+    <ClInclude Include="3DEngine\Math.h" />
     <ClInclude Include="3DEngine\Module.h" />
     <ClInclude Include="3DEngine\ModuleAudio.h" />
     <ClInclude Include="3DEngine\ModuleCamera3D.h" />

@@ -141,6 +141,9 @@
     <ClInclude Include="3DEngine\Glew\include\glew.h">
       <Filter>Source\Tools\imGui</Filter>
     </ClInclude>
+    <ClInclude Include="3DEngine\Math.h">
+      <Filter>Source\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
