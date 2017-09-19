@@ -184,6 +184,14 @@ void ModuleEditor::AppConsole::GenerateRandomCollision()
 		AddLog("Ray and Sphere intersects");
 	else AddLog("Ray and Sphere doesn't intersect");
 
+	//if (ray.Intersects(caps))
+	//	AddLog("Ray and Capsule intersects");
+	//else AddLog("Ray and Capsule doesn't intersect");
+
+	if (caps.Intersects(sphere))
+		AddLog("Sphere and Capsule intersects");
+	else AddLog("Sphere and Capsule doesn't intersect");
+
 	AddLog("-------------------------");
 }
 
