@@ -155,18 +155,36 @@ void ModuleEditor::AppConsole::GenerateRandomCollision()
 	ray.dir.Set(ray_dir_x, ray_dir_y, ray_dir_z);
 
 	AddLog("RayPosition: %f, %f, %f", ray_pos_x, ray_pos_y, ray_pos_z);
-
+	AddLog("RayDirection: %f, %f, %f", ray_dir_x, ray_dir_y, ray_dir_z);
 
 	float sphere_pos_x = rand_generator.Int(0, 10);
 	float sphere_pos_y = rand_generator.Int(0, 10);
 	float sphere_pos_z = rand_generator.Int(0, 10);
 	sphere.pos.Set(sphere_pos_x, sphere_pos_y, sphere_pos_z);
 	sphere.r = rand_generator.Int(0, 6);
+	AddLog("SpherePosition: %f, %f, %f", sphere_pos_x, sphere_pos_y, sphere_pos_z);
+	AddLog("SphereRadius: %f", sphere.r);
 
 
+	float caps_pos_x1 = rand_generator.Int(0, 10);
+	float caps_pos_y1 = rand_generator.Int(0, 10);
+	float caps_pos_z1 = rand_generator.Int(0, 10);
+	float caps_pos_x2 = rand_generator.Int(0, 10);
+	float caps_pos_y2 = rand_generator.Int(0, 10);
+	float caps_pos_z2 = rand_generator.Int(0, 10);
+	caps.l.a.Set(caps_pos_x1, caps_pos_y1, caps_pos_z1);
+	caps.l.b.Set(caps_pos_x2, caps_pos_y2, caps_pos_z2);
+	caps.r = rand_generator.Int(0, 6);
+	AddLog("CapsAPosition: %f, %f, %f", caps_pos_x1, caps_pos_y1, caps_pos_z1);
+	AddLog("CapsBPosition: %f, %f, %f", caps_pos_x2, caps_pos_y2, caps_pos_z2);
+	AddLog("CapsRadius: %f", caps.r);
 
-	bool inter = ray.Intersects(sphere);
 
+	if (ray.Intersects(sphere))
+		AddLog("Ray and Sphere intersects");
+	else AddLog("Ray and Sphere doesn't intersect");
+
+	AddLog("-------------------------");
 }
 
 
