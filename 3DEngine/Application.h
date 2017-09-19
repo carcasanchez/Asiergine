@@ -9,7 +9,7 @@
 #include "ModuleAudio.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
-#include "ModulePhysics3D.h"
+//#include "ModulePhysics3D.h"
 #include "ModuleEditor.h"
 
 class Application
@@ -20,7 +20,7 @@ public:
 	ModuleAudio* audio;
 	ModuleRenderer3D* renderer3D;
 	ModuleCamera3D* camera;
-	ModulePhysics3D* physics;
+//	ModulePhysics3D* physics;
 	ModuleEditor* editor;
 
 

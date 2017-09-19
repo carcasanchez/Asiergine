@@ -1,6 +1,8 @@
 #pragma once
 #include "Module.h"
 #include "imgui\imgui.h"
+#include "MathGeoLib\include\Math.h"
+
 
 class ModuleEditor : public Module
 {
@@ -27,11 +29,17 @@ public:
 	void ManageConsole();
 
 private:
+
 	bool test_window_open = false;
-
 	bool quit_editor = false;
-
 	bool console_open = false;
+
+
+	math::Ray ray;
+	math::Sphere sphere;
+	math::Capsule caps;
+
+
 };
 
 
