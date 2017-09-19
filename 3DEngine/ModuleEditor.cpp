@@ -251,6 +251,7 @@ void ModuleEditor::AppConsole::Draw(const char* title, bool* p_open)
 			LCG rand_generator_float;
 			float rand_float = rand_generator_float.Float(0.0f, 1.0f);
 			AddLog("Random Float: %f", rand_float);
+			AddLog("-------------------------");
 		}
 		ImGui::SameLine();
 		if (ImGui::SmallButton("Clear")) { ClearLog(); } ImGui::SameLine();
