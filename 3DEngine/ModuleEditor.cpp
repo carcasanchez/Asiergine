@@ -153,9 +153,12 @@ void ModuleEditor::AppConsole::GenerateRandomCollision()
 	float ray_dir_y = rand_generator.Int(0, 10);
 	float ray_dir_z = rand_generator.Int(0, 10);
 	ray.dir.Set(ray_dir_x, ray_dir_y, ray_dir_z);
+	ray.dir.Normalize();
 
 	AddLog("RayPosition: %f, %f, %f", ray_pos_x, ray_pos_y, ray_pos_z);
 	AddLog("RayDirection: %f, %f, %f", ray_dir_x, ray_dir_y, ray_dir_z);
+
+
 
 	float sphere_pos_x = rand_generator.Int(0, 10);
 	float sphere_pos_y = rand_generator.Int(0, 10);
@@ -184,9 +187,9 @@ void ModuleEditor::AppConsole::GenerateRandomCollision()
 		AddLog("Ray and Sphere intersects");
 	else AddLog("Ray and Sphere doesn't intersect");
 
-	//if (ray.Intersects(caps))
-	//	AddLog("Ray and Capsule intersects");
-	//else AddLog("Ray and Capsule doesn't intersect");
+	if (ray.Intersects(caps))
+		AddLog("Ray and Capsule intersects");
+	else AddLog("Ray and Capsule doesn't intersect");
 
 	if (caps.Intersects(sphere))
 		AddLog("Sphere and Capsule intersects");
