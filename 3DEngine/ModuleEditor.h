@@ -30,9 +30,13 @@ public:
 
 private:
 
+
+
 	//CONSOLE
-	struct AppConsole
+	class AppConsole
 	{
+	public:
+
 		char                  InputBuf[256];
 		ImVector<char*>       Items;
 		bool                  ScrollToBottom;
@@ -63,7 +67,9 @@ private:
 		}
 
 		void Draw(const char* title, bool* p_open);
-		
+
+		void GenerateRandomCollision();
+
 
 		void ExecCommand(const char* command_line)
 		{
@@ -209,11 +215,10 @@ private:
 		}
 	};
 
-	//CollisionTest
-	void GenerateRandomCollision();
-	math::Ray ray;
-	math::Sphere sphere;
-	math::Capsule caps;
+
+	AppConsole console;
+
+
 
 	bool test_window_open = false;
 	bool quit_editor = false;
@@ -224,5 +229,4 @@ private:
 
 
 };
-
 

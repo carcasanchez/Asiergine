@@ -50,9 +50,7 @@ update_status ModuleEditor::Update(float dt)
 	ManageMainMenuBar();
 	ManageConsole();
 	ManageExampleWindow();
-
-	GenerateRandomCollision();
-		
+			
 	return ret;
 }
 
@@ -130,10 +128,21 @@ void ModuleEditor::ManageExampleWindow()
 
 
 
+
+//Console management
+void ModuleEditor::ManageConsole()
+{
+	console.Draw("Asiergine Console", &console_open);
+}
+
+
 //Collision simulation
-void ModuleEditor::GenerateRandomCollision()
+void ModuleEditor::AppConsole::GenerateRandomCollision()
 {
 	LCG rand_generator;
+	math::Ray ray;
+	math::Sphere sphere;
+	math::Capsule caps;
 
 	float ray_pos_x = rand_generator.Int(0, 10);
 	float ray_pos_y = rand_generator.Int(0, 10);
@@ -144,6 +153,8 @@ void ModuleEditor::GenerateRandomCollision()
 	float ray_dir_y = rand_generator.Int(0, 10);
 	float ray_dir_z = rand_generator.Int(0, 10);
 	ray.dir.Set(ray_dir_x, ray_dir_y, ray_dir_z);
+
+	AddLog("RayPosition: %f, %f, %f", ray_pos_x, ray_pos_y, ray_pos_z);
 
 
 	float sphere_pos_x = rand_generator.Int(0, 10);
@@ -159,13 +170,6 @@ void ModuleEditor::GenerateRandomCollision()
 }
 
 
-
-//Console management
-void ModuleEditor::ManageConsole()
-{
-	static AppConsole console;
-	console.Draw("Example: Console", &console_open);
-}
 
 ModuleEditor::AppConsole::AppConsole()
 {
@@ -208,7 +212,12 @@ void ModuleEditor::AppConsole::Draw(const char* title, bool* p_open)
 
 		// TODO: display items starting from the bottom
 
-		if (ImGui::SmallButton("Collision checking")) { AddLog("%d some text", Items.Size); AddLog("some more text"); AddLog("display very important message here!"); } ImGui::SameLine();
+		if (ImGui::SmallButton("Collision checking")) 
+		{ 
+			GenerateRandomCollision();
+		} 
+		ImGui::SameLine();
+
 		if (ImGui::SmallButton("Clear")) { ClearLog(); } ImGui::SameLine();
 		bool copy_to_clipboard = ImGui::SmallButton("Copy"); ImGui::SameLine();
 		if (ImGui::SmallButton("Scroll to bottom")) ScrollToBottom = true;
