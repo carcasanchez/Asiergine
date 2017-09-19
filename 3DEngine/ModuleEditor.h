@@ -307,14 +307,18 @@ private:
 		}
 	};
 
+	//CollisionTest
+	void GenerateRandomCollision();
+	math::Ray ray;
+	math::Sphere sphere;
+	math::Capsule caps;
+
 	bool test_window_open = false;
 	bool quit_editor = false;
 	bool console_open = false;
 
 
-	math::Ray ray;
-	math::Sphere sphere;
-	math::Capsule caps;
+	
 
 
 };

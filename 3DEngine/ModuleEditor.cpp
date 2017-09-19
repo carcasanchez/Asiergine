@@ -50,6 +50,8 @@ update_status ModuleEditor::Update(float dt)
 	ManageMainMenuBar();
 	ManageConsole();
 	ManageExampleWindow();
+
+	GenerateRandomCollision();
 		
 	return ret;
 }
@@ -132,4 +134,34 @@ void ModuleEditor::ManageConsole()
 {
 	static AppConsole console;
 	console.Draw("Example: Console", &console_open);
+}
+
+
+
+//Collision simulation
+void ModuleEditor::GenerateRandomCollision()
+{
+	LCG rand_generator;
+
+	float ray_pos_x = rand_generator.Int(0, 10);
+	float ray_pos_y = rand_generator.Int(0, 10);
+	float ray_pos_z = rand_generator.Int(0, 10);
+	ray.pos.Set(ray_pos_x, ray_pos_y, ray_pos_z);
+
+	float ray_dir_x = rand_generator.Int(0, 10);
+	float ray_dir_y = rand_generator.Int(0, 10);
+	float ray_dir_z = rand_generator.Int(0, 10);
+	ray.dir.Set(ray_dir_x, ray_dir_y, ray_dir_z);
+
+
+	float sphere_pos_x = rand_generator.Int(0, 10);
+	float sphere_pos_y = rand_generator.Int(0, 10);
+	float sphere_pos_z = rand_generator.Int(0, 10);
+	sphere.pos.Set(sphere_pos_x, sphere_pos_y, sphere_pos_z);
+	sphere.r = rand_generator.Int(0, 6);
+
+
+
+	bool inter = ray.Intersects(sphere);
+
 }
