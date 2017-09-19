@@ -243,7 +243,13 @@ void ModuleEditor::AppConsole::Draw(const char* title, bool* p_open)
 			GenerateRandomCollision();
 		} 
 		ImGui::SameLine();
-
+		if (ImGui::SmallButton("Random Float"))
+		{
+			LCG rand_generator_float;
+			float rand_float = rand_generator_float.Float(0.0f, 1.0f);
+			AddLog("Random Float: %f", rand_float);
+		}
+		ImGui::SameLine();
 		if (ImGui::SmallButton("Clear")) { ClearLog(); } ImGui::SameLine();
 		bool copy_to_clipboard = ImGui::SmallButton("Copy"); ImGui::SameLine();
 		if (ImGui::SmallButton("Scroll to bottom")) ScrollToBottom = true;
