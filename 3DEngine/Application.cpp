@@ -42,6 +42,10 @@ bool Application::Init()
 {
 	bool ret = true;
 
+	//Console ON
+	console_on = true;
+	LOG("Opening Console");
+
 	// Call Init() in all modules
 	p2List_item<Module*>* item = list_modules.getFirst();
 
@@ -50,6 +54,8 @@ bool Application::Init()
 		ret = item->data->Init();
 		item = item->next;
 	}
+
+	
 
 	// After all Init calls we call Start() in all modules
 	LOG("Application Start --------------");
@@ -115,6 +121,10 @@ bool Application::CleanUp()
 {
 	bool ret = true;
 	p2List_item<Module*>* item = list_modules.getLast();
+
+	//Shut up console LOG's
+	LOG("Closing Console");
+	console_on = false;
 
 	while(item != NULL && ret == true)
 	{

@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClCompile Include="3DEngine\Application.cpp" />
     <ClCompile Include="3DEngine\Color.cpp" />
+    <ClCompile Include="3DEngine\Console.cpp" />
     <ClCompile Include="3DEngine\glmath.cpp" />
     <ClCompile Include="3DEngine\imgui\imgui.cpp" />
     <ClCompile Include="3DEngine\imgui\imgui_demo.cpp" />
@@ -66,6 +67,7 @@
   <ItemGroup>
     <ClInclude Include="3DEngine\Application.h" />
     <ClInclude Include="3DEngine\Color.h" />
+    <ClInclude Include="3DEngine\Console.h" />
     <ClInclude Include="3DEngine\Glew\include\glew.h" />
     <ClInclude Include="3DEngine\glmath.h" />
     <ClInclude Include="3DEngine\Globals.h" />

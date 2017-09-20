@@ -23,6 +23,7 @@ public:
 //	ModulePhysics3D* physics;
 	ModuleEditor* editor;
 
+	bool console_on = false;
 
 private:
 

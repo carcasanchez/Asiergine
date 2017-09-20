@@ -8,7 +8,7 @@ void log(const char file[], int line, const char* format, ...)
 	static char tmp_string2[4096];
 	static va_list  ap;
 
-	//Add Log to console
+
 
 	// Construct the string from variable arguments
 	va_start(ap, format);
@@ -17,4 +17,8 @@ void log(const char file[], int line, const char* format, ...)
 	sprintf_s(tmp_string2, 4096, "\n%s(%d) : %s", file, line, tmp_string);
 	OutputDebugString(tmp_string2);
 	
+	//Add Log to console
+	if (App && App->console_on)
+		App->editor->DrawInConsole(tmp_string2);
+
 }

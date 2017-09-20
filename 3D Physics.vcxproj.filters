@@ -154,6 +154,9 @@
     <ClCompile Include="3DEngine\MathGeoLib\include\Time\Clock.cpp">
       <Filter>Source\Tools\Math\Time</Filter>
     </ClCompile>
+    <ClCompile Include="3DEngine\Console.cpp">
+      <Filter>Source\Tools\imGui\GUI classes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3DEngine\Application.h">
@@ -414,6 +417,9 @@
     <ClInclude Include="3DEngine\MathGeoLib\include\Time\Clock.h">
       <Filter>Source\Tools\Math\Time</Filter>
     </ClInclude>
+    <ClInclude Include="3DEngine\Console.h">
+      <Filter>Source\Tools\imGui\GUI classes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -448,6 +454,9 @@
     </Filter>
     <Filter Include="Source\Tools\Math\Time">
       <UniqueIdentifier>{c1d7344b-e345-4454-96ca-a7bca2c00975}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Tools\imGui\GUI classes">
+      <UniqueIdentifier>{4fe2983d-ebe0-4ecb-a4b1-2a3ec7ceea6e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
