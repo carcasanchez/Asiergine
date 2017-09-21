@@ -58,8 +58,6 @@ update_status ModuleEditor::Update(float dt)
 
 	ManageExampleWindow();
 
-	ManageConfigurationWindow();
-
 			
 	return ret;
 }
