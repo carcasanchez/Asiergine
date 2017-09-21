@@ -52,9 +52,11 @@ update_status ModuleEditor::Update(float dt)
 	ManageMainMenuBar();
 
 	ManageAboutWindow();
+	ManageHardwareWindow();
 
 	ManageConsole();
-	ManageExampleWindow();
+	
+	//ManageExampleWindow();
 			
 	return ret;
 }
@@ -126,14 +128,15 @@ void ModuleEditor::ShowExampleWindow_option()
 void ModuleEditor::Window_option()
 {
 	if (ImGui::MenuItem("Console"))
-	{
 		console_open = true;
-	}
+
+
+	if (ImGui::MenuItem("Hardware info"))
+		hardware_open = true;
 
 	if (ImGui::MenuItem("About the engine"))
-	{
 		about_engine_open = true;
-	}
+
 
 	
 }
@@ -145,6 +148,8 @@ void ModuleEditor::ExitEditor_option()
 		quit_editor = true;
 	}
 }
+
+
 
 
 //EMERGENT WINDOWS management
@@ -199,6 +204,19 @@ void ModuleEditor::ManageAboutWindow()
 		ImGui::Separator();
 		if (ImGui::Button("Click here to check the code repository"))
 			ShellExecute(NULL, "open", "https://github.com/carcasanchez/Asiergine/", NULL, NULL, SW_SHOWNORMAL);
+
+		ImGui::End();
+	}
+}
+
+//Hardware window
+void ModuleEditor::ManageHardwareWindow()
+{
+	if (hardware_open)
+	{
+		ImGui::Begin("Hardware Specs", &hardware_open);
+
+		ImGui::TextWrapped("SDL Version: %i.%i.%i", App->system_specs.sdl_version.major, App->system_specs.sdl_version.minor, App->system_specs.sdl_version.patch);
 
 		ImGui::End();
 	}

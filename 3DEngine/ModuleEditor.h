@@ -32,7 +32,7 @@ private:
 	bool quit_editor = false;
 	bool console_open = false;
 	bool about_engine_open = false;
-
+	bool hardware_open = false;
 
 	void ManageMainMenuBar();
 	void ManageExampleWindow();
@@ -43,8 +43,9 @@ private:
 	void ShowExampleWindow_option();
 	void Window_option();
 	void ExitEditor_option();
+
 	void ManageConsole();
-	
+	void ManageHardwareWindow();
 
 
 };
