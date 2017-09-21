@@ -54,10 +54,6 @@ private:
 	void Window_option();
 	void ExitEditor_option();
 
-	void ManageHardwareWindow();
-
-
-
 };
 
 #endif
