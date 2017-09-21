@@ -157,6 +157,9 @@
     <ClCompile Include="3DEngine\Console.cpp">
       <Filter>Source\Tools\imGui\GUI classes</Filter>
     </ClCompile>
+    <ClCompile Include="3DEngine\parson.c">
+      <Filter>Source\Tools\Parson</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3DEngine\Application.h">
@@ -420,6 +423,9 @@
     <ClInclude Include="3DEngine\Console.h">
       <Filter>Source\Tools\imGui\GUI classes</Filter>
     </ClInclude>
+    <ClInclude Include="3DEngine\parson.h">
+      <Filter>Source\Tools\Parson</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -457,6 +463,9 @@
     </Filter>
     <Filter Include="Source\Tools\imGui\GUI classes">
       <UniqueIdentifier>{4fe2983d-ebe0-4ecb-a4b1-2a3ec7ceea6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Tools\Parson">
+      <UniqueIdentifier>{ac8b6f10-5807-48b2-88e8-8ac0cfb06e97}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
