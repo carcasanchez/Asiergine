@@ -162,9 +162,15 @@ void ModuleEditor::ManageAboutWindow()
 	if (about_engine_open)
 	{
 		ImGui::Begin("about", &about_engine_open);
-
-
-
+		ImGui::Text("ASIERGINE 3D");
+		ImGui::Separator();
+		ImGui::Text("Made by");
+		if(ImGui::Button("Carlos Cabreira Sanchez"))
+			ShellExecute(NULL, "open", "https://github.com/carcasanchez", NULL, NULL, SW_SHOWNORMAL);
+		ImGui::Text("and");
+		if (ImGui::Button("Asier Iglesias Gavarro"))
+			ShellExecute(NULL, "open", "https://es.linkedin.com/in/asier-iglesias-gavarro", NULL, NULL, SW_SHOWNORMAL);
+	
 		ImGui::End();
 	}
 }
