@@ -70,6 +70,12 @@ bool Application::Init()
 	}
 	
 	ms_timer.Start();
+
+	//Get Hardware specs
+	SDL_GetVersion(&system_specs.sdl_version);
+	system_specs.cpus = SDL_GetCPUCount();
+	system_specs.system_ram = SDL_GetSystemRAM()/1000.0f;
+
 	return ret;
 }
 
