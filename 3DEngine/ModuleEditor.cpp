@@ -52,7 +52,6 @@ update_status ModuleEditor::Update(float dt)
 	ManageMainMenuBar();
 
 	ManageAboutWindow();
-	ManageHardwareWindow();
 
 	ManageConsole();
 	ManageConfigurationWindow();
@@ -130,10 +129,6 @@ void ModuleEditor::Window_option()
 {
 	if (ImGui::MenuItem("Console"))
 		console_open = true;
-
-
-	if (ImGui::MenuItem("Hardware info"))
-		hardware_open = true;
 
 	if (ImGui::MenuItem("Configuration"))
 		configuration_open = true;
@@ -213,18 +208,6 @@ void ModuleEditor::ManageAboutWindow()
 	}
 }
 
-//Hardware window
-void ModuleEditor::ManageHardwareWindow()
-{
-	if (hardware_open)
-	{
-		ImGui::Begin("Hardware Specs", &hardware_open);
-
-		ImGui::TextWrapped("SDL Version: %i.%i.%i", App->system_specs.sdl_version.major, App->system_specs.sdl_version.minor, App->system_specs.sdl_version.patch);
-
-		ImGui::End();
-	}
-}
 
 
 //Console management
@@ -246,13 +229,16 @@ void ModuleEditor::ManageConfigurationWindow()
 	if (configuration_open)
 	{
 		ImGui::Begin("Configuration", &configuration_open);
+		//Options menu inside configuration window
 		if (ImGui::BeginMenu("Options"))
 		{
 			ImGui::MenuItem("App");
 			ImGui::EndMenu();
 		}
+		//Application submenu
 		if (ImGui::CollapsingHeader("Application"))
 		{
+			//Here are the text inputs and slider of the application submenu
 			static char str0[128] = "Asiergine";
 			static char str1[128] = "UPC CITM";
 			static int i = 0;
@@ -261,6 +247,7 @@ void ModuleEditor::ManageConfigurationWindow()
 			ImGui::SliderInt("Max FPS", &i, 0, 60);
 			ImGui::TextWrapped("Limit Framerate: ");
 			
+			//Here we have the fps and milliseconds plots
 			std::vector<float> fps_log;
 			std::vector<float> ms_log;
 			fps_log.push_back(60.0);
@@ -272,8 +259,10 @@ void ModuleEditor::ManageConfigurationWindow()
 			ImGui::PlotHistogram("##Milliseconds", &ms_log[0], ms_log.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
 			
 		}
+		//Window submenu
 		if (ImGui::CollapsingHeader("Window"))
 		{
+			//Checkbox and sliders
 			static bool active = true;
 			static float brightness = 1.0f;
 			static int width = 0;
@@ -292,6 +281,33 @@ void ModuleEditor::ManageConfigurationWindow()
 				//App->window->SetResizable(resizable);
 				if (ImGui::IsItemHovered())
 					ImGui::SetTooltip("Restart to apply");
+		}
+		//Hardware specs of your own computer
+		if (ImGui::CollapsingHeader("Hardware Specs"))
+		{
+			ImGui::TextWrapped("SDL Version: %i.%i.%i", App->system_specs.sdl_version.major, App->system_specs.sdl_version.minor, App->system_specs.sdl_version.patch);
+			ImGui::TextWrapped("CPUs: %i", App->system_specs.cpus);
+			ImGui::TextWrapped("System Ram: %f", App->system_specs.system_ram);
+			if (App->system_specs.altivec)
+				ImGui::TextWrapped("AltiVec");
+			if (App->system_specs.rdtsc)
+				ImGui::TextWrapped("RDTSC"); 
+			if (App->system_specs.mmx)
+				ImGui::TextWrapped("MMX");
+			if (App->system_specs.sse)
+				ImGui::TextWrapped("SSE");
+			if (App->system_specs.sse2)
+				ImGui::TextWrapped("SSE2");
+			if (App->system_specs.sse3)
+				ImGui::TextWrapped("SSE3");
+			if (App->system_specs.sse41)
+				ImGui::TextWrapped("SSE41");
+			if (App->system_specs.sse42)
+				ImGui::TextWrapped("SSE42");
+			if (App->system_specs.three_d_now)
+				ImGui::TextWrapped("3DNow");
+			if (App->system_specs.avx)
+				ImGui::TextWrapped("AVX");
 		}
 
 		ImGui::End();
