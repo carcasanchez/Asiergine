@@ -40,7 +40,6 @@ private:
 	void ManageExampleWindow();
 	void ManageAboutWindow();
 	void ManageConsole();
-	void ManageConfigurationWindow();
 
 	void ShowExampleWindow_option();
 	void Window_option();
