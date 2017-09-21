@@ -34,12 +34,6 @@
     <ClCompile Include="3DEngine\Light.cpp">
       <Filter>Source\Containers</Filter>
     </ClCompile>
-    <ClCompile Include="3DEngine\PhysBody3D.cpp">
-      <Filter>Source\Containers</Filter>
-    </ClCompile>
-    <ClCompile Include="3DEngine\Primitive.cpp">
-      <Filter>Source\Containers</Filter>
-    </ClCompile>
     <ClCompile Include="3DEngine\Color.cpp">
       <Filter>Source\Helpers</Filter>
     </ClCompile>
@@ -195,25 +189,10 @@
     <ClInclude Include="3DEngine\Light.h">
       <Filter>Source\Containers</Filter>
     </ClInclude>
-    <ClInclude Include="3DEngine\PhysBody3D.h">
-      <Filter>Source\Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="3DEngine\Primitive.h">
-      <Filter>Source\Containers</Filter>
-    </ClInclude>
     <ClInclude Include="3DEngine\Color.h">
       <Filter>Source\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="3DEngine\glmath.h">
-      <Filter>Source\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="3DEngine\p2DynArray.h">
-      <Filter>Source\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="3DEngine\p2List.h">
-      <Filter>Source\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="3DEngine\p2Point.h">
       <Filter>Source\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="3DEngine\imgui\imgui.h">
