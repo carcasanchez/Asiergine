@@ -55,8 +55,11 @@ update_status ModuleEditor::Update(float dt)
 	ManageHardwareWindow();
 
 	ManageConsole();
-	
-	//ManageExampleWindow();
+
+	ManageExampleWindow();
+
+	ManageConfigurationWindow();
+
 			
 	return ret;
 }
@@ -234,6 +237,8 @@ void ModuleEditor::DrawInConsole(const char * to_console)
 {
 		console.AddLog(to_console);
 }
+
+
 
 
 
