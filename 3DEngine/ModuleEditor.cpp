@@ -162,15 +162,35 @@ void ModuleEditor::ManageAboutWindow()
 	if (about_engine_open)
 	{
 		ImGui::Begin("about", &about_engine_open);
-		ImGui::Text("ASIERGINE 3D");
+		ImGui::TextWrapped("ASIERGINE");
 		ImGui::Separator();
-		ImGui::Text("Made by");
+		ImGui::TextWrapped("Made by");
 		if(ImGui::Button("Carlos Cabreira Sanchez"))
 			ShellExecute(NULL, "open", "https://github.com/carcasanchez", NULL, NULL, SW_SHOWNORMAL);
-		ImGui::Text("and");
+		ImGui::TextWrapped("and");
 		if (ImGui::Button("Asier Iglesias Gavarro"))
 			ShellExecute(NULL, "open", "https://es.linkedin.com/in/asier-iglesias-gavarro", NULL, NULL, SW_SHOWNORMAL);
 	
+		ImGui::Separator();
+		ImGui::TextWrapped("3D Game Engine under MIT license --- Created for educational purposes (Work in Progress)");
+		ImGui::Separator(); 
+		ImGui::Separator();
+
+		ImGui::TextWrapped("LIBRARIES UNDER USAGE:  ---All credits to the authors");
+		if (ImGui::Button("Bullet 2.x"))
+			ShellExecute(NULL, "open", "http://bulletphysics.org/wordpress/", NULL, NULL, SW_SHOWNORMAL);
+		if (ImGui::Button("Glew 7.0"))
+			ShellExecute(NULL, "open", "http://glew.sourceforge.net/", NULL, NULL, SW_SHOWNORMAL);
+		if (ImGui::Button("MathGeoLib"))
+			ShellExecute(NULL, "open", "http://clb.demon.fi/MathGeoLib/nightly/", NULL, NULL, SW_SHOWNORMAL);
+		if (ImGui::Button("ImGui"))
+			ShellExecute(NULL, "open", "https://github.com/ocornut/imgui", NULL, NULL, SW_SHOWNORMAL);
+		if (ImGui::Button("SDL 2"))
+			ShellExecute(NULL, "open", "https://www.libsdl.org/download-2.0.php", NULL, NULL, SW_SHOWNORMAL);
+		if (ImGui::Button("OpenGL 3"))
+			ShellExecute(NULL, "open", "https://www.khronos.org/registry/OpenGL-Refpages/es3.0/", NULL, NULL, SW_SHOWNORMAL);
+
+
 		ImGui::End();
 	}
 }
