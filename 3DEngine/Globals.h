@@ -7,6 +7,15 @@
 #include <windows.h>
 #include <stdio.h>
 
+// Deletes a buffer
+#define RELEASE( x ) \
+    {                \
+    if( x != NULL )  \
+	    {            \
+      delete x;      \
+	  x = NULL;      \
+	    }            \
+}
 
 #define LOG(format, ...) log(__FILE__, __LINE__, format, __VA_ARGS__);
 
