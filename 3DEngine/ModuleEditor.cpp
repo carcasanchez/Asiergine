@@ -293,6 +293,8 @@ void ModuleEditor::ManageConfigurationWindow()
 			ImGui::TextWrapped("SDL Version: %i.%i.%i", App->system_specs.sdl_version.major, App->system_specs.sdl_version.minor, App->system_specs.sdl_version.patch);
 			ImGui::TextWrapped("CPUs: %i", App->system_specs.cpus);
 			ImGui::TextWrapped("System Ram: %f", App->system_specs.system_ram);
+			ImGui::TextWrapped("CPU Cache: %i", App->system_specs.cpu_chache);
+
 			ImGui::Separator();
 			ImGui::TextWrapped("Your hardware uses:");
 			if (App->system_specs.altivec)
