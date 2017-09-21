@@ -52,11 +52,12 @@ update_status ModuleEditor::Update(float dt)
 	ManageMainMenuBar();
 
 	ManageAboutWindow();
+	ManageHardwareWindow();
 
 	ManageConsole();
+
 	ManageExampleWindow();
 
-	ManageConfigurationWindow();
 			
 	return ret;
 }
@@ -128,19 +129,15 @@ void ModuleEditor::ShowExampleWindow_option()
 void ModuleEditor::Window_option()
 {
 	if (ImGui::MenuItem("Console"))
-	{
 		console_open = true;
-	}
+
+
+	if (ImGui::MenuItem("Hardware info"))
+		hardware_open = true;
 
 	if (ImGui::MenuItem("About the engine"))
-	{
 		about_engine_open = true;
-	}
 
-	if (ImGui::MenuItem("Configuration"))
-	{
-		configuration_open = true;
-	}
 
 	
 }
@@ -152,6 +149,8 @@ void ModuleEditor::ExitEditor_option()
 		quit_editor = true;
 	}
 }
+
+
 
 
 //EMERGENT WINDOWS management
@@ -211,6 +210,19 @@ void ModuleEditor::ManageAboutWindow()
 	}
 }
 
+//Hardware window
+void ModuleEditor::ManageHardwareWindow()
+{
+	if (hardware_open)
+	{
+		ImGui::Begin("Hardware Specs", &hardware_open);
+
+		ImGui::TextWrapped("SDL Version: %i.%i.%i", App->system_specs.sdl_version.major, App->system_specs.sdl_version.minor, App->system_specs.sdl_version.patch);
+
+		ImGui::End();
+	}
+}
+
 
 //Console management
 void ModuleEditor::ManageConsole()
@@ -224,6 +236,7 @@ void ModuleEditor::DrawInConsole(const char * to_console)
 		console.AddLog(to_console);
 }
 
+<<<<<<< HEAD
 //Configuration window
 void ModuleEditor::ManageConfigurationWindow()
 {
@@ -278,6 +291,9 @@ void ModuleEditor::ManageConfigurationWindow()
 		ImGui::End();
 	}
 }
+=======
+
+>>>>>>> origin/master
 
 
 

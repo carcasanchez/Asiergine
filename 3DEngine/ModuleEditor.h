@@ -32,20 +32,28 @@ private:
 	bool quit_editor = false;
 	bool console_open = false;
 	bool about_engine_open = false;
+<<<<<<< HEAD
 	bool configuration_open = true;
 
 	bool fullscreen = false;
 	bool resizable = false;
+=======
+
+	bool hardware_open = false;
+
+>>>>>>> origin/master
 
 	void ManageMainMenuBar();
 	void ManageExampleWindow();
 	void ManageAboutWindow();
 	void ManageConsole();
-	void ManageConfigurationWindow();
 
 	void ShowExampleWindow_option();
 	void Window_option();
 	void ExitEditor_option();
+
+	void ManageHardwareWindow();
+
 
 
 };
