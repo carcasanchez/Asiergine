@@ -28,25 +28,23 @@ private:
 		
 	AppConsole console;
 	
-	bool test_window_open = true;
+	bool test_window_open = false;
 	bool quit_editor = false;
 	bool console_open = false;
 	bool about_engine_open = false;
-<<<<<<< HEAD
-	bool configuration_open = true;
+	bool hardware_open = false;
+	bool configuration_open = false;
 
 	bool fullscreen = false;
 	bool resizable = false;
-=======
 
-	bool hardware_open = false;
 
->>>>>>> origin/master
 
 	void ManageMainMenuBar();
 	void ManageExampleWindow();
 	void ManageAboutWindow();
 	void ManageConsole();
+	void ManageConfigurationWindow();
 
 	void ShowExampleWindow_option();
 	void Window_option();

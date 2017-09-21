@@ -55,7 +55,7 @@ update_status ModuleEditor::Update(float dt)
 	ManageHardwareWindow();
 
 	ManageConsole();
-
+	ManageConfigurationWindow();
 	ManageExampleWindow();
 
 			
@@ -134,6 +134,9 @@ void ModuleEditor::Window_option()
 
 	if (ImGui::MenuItem("Hardware info"))
 		hardware_open = true;
+
+	if (ImGui::MenuItem("Configuration"))
+		configuration_open = true;
 
 	if (ImGui::MenuItem("About the engine"))
 		about_engine_open = true;
@@ -236,7 +239,7 @@ void ModuleEditor::DrawInConsole(const char * to_console)
 		console.AddLog(to_console);
 }
 
-<<<<<<< HEAD
+
 //Configuration window
 void ModuleEditor::ManageConfigurationWindow()
 {
@@ -291,9 +294,7 @@ void ModuleEditor::ManageConfigurationWindow()
 		ImGui::End();
 	}
 }
-=======
 
->>>>>>> origin/master
 
 
 
