@@ -130,7 +130,7 @@ void ModuleEditor::Window_option()
 		console_open = true;
 	}
 
-	if (ImGui::MenuItem("About Engine"))
+	if (ImGui::MenuItem("About the engine"))
 	{
 		about_engine_open = true;
 	}
@@ -161,7 +161,7 @@ void ModuleEditor::ManageAboutWindow()
 {
 	if (about_engine_open)
 	{
-		ImGui::Begin("about", &about_engine_open);
+		ImGui::Begin("About", &about_engine_open);
 		ImGui::TextWrapped("ASIERGINE");
 		ImGui::Separator();
 		ImGui::TextWrapped("Made by");
@@ -192,7 +192,7 @@ void ModuleEditor::ManageAboutWindow()
 		ImGui::Separator();
 		ImGui::Separator();
 
-		ImGui::TextWrapped("This software is under the MIT liscence");
+		ImGui::TextWrapped("This software is under the MIT licence");
 		if (ImGui::Button("Click here for more information about the MIT license"))
 			ShellExecute(NULL, "open", "https://github.com/carcasanchez/Asiergine/blob/master/LICENSE", NULL, NULL, SW_SHOWNORMAL);
 	
