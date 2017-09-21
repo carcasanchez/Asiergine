@@ -144,11 +144,9 @@ bool ModuleAudio::PlayFx(unsigned int id, int repeat)
 {
 	bool ret = false;
 
-	Mix_Chunk* chunk = NULL;
-	
-	if(fx.at(id-1, chunk) == true)
+	if (id > 0 && id <= fx.size())
 	{
-		Mix_PlayChannel(-1, chunk, repeat);
+		Mix_PlayChannel(-1, fx[id - 1], repeat);
 		ret = true;
 	}
 
