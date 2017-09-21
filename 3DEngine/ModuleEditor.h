@@ -31,11 +31,17 @@ private:
 	bool test_window_open = false;
 	bool quit_editor = false;
 	bool console_open = false;
+	bool about_engine_open = false;
 
 
 	void ManageMainMenuBar();
 	void ManageExampleWindow();
+
+	void ManageAboutWindow();
+
+
 	void ShowExampleWindow_option();
+	void Window_option();
 	void ExitEditor_option();
 	void ManageConsole();
 	

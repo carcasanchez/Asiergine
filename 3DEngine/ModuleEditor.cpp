@@ -50,6 +50,9 @@ update_status ModuleEditor::Update(float dt)
 	update_status ret = UPDATE_CONTINUE;
 	
 	ManageMainMenuBar();
+
+	ManageAboutWindow();
+
 	ManageConsole();
 	ManageExampleWindow();
 			
@@ -81,17 +84,23 @@ bool ModuleEditor::CleanUp()
 
 
 
-//Main menu bar management
+//MAIN MENU BAR management
 void ModuleEditor::ManageMainMenuBar()
 {
 	if (ImGui::BeginMainMenuBar())
 	{
-		if (ImGui::BeginMenu("Example Window"))
-		{
-			ShowExampleWindow_option();
+
+		if (ImGui::BeginMenu("File"))
+		{			
 			ImGui::EndMenu();
 		}
-		
+
+		if (ImGui::BeginMenu("Window"))
+		{
+			Window_option();
+			ImGui::EndMenu();
+		}
+				
 		if (ImGui::BeginMenu("Exit Editor"))
 		{
 			ExitEditor_option();
@@ -114,6 +123,21 @@ void ModuleEditor::ShowExampleWindow_option()
 	}
 }
 
+void ModuleEditor::Window_option()
+{
+	if (ImGui::MenuItem("Console"))
+	{
+		console_open = true;
+	}
+
+	if (ImGui::MenuItem("About Engine"))
+	{
+		about_engine_open = true;
+	}
+
+	
+}
+
 void ModuleEditor::ExitEditor_option()
 {
 	if (ImGui::MenuItem("Exit"))
@@ -123,6 +147,8 @@ void ModuleEditor::ExitEditor_option()
 }
 
 
+//EMERGENT WINDOWS management
+
 //Example window management
 void ModuleEditor::ManageExampleWindow()
 {
@@ -130,14 +156,25 @@ void ModuleEditor::ManageExampleWindow()
 		ImGui::ShowTestWindow();
 }
 
+//About window
+void ModuleEditor::ManageAboutWindow()
+{
+	if (about_engine_open)
+	{
+		ImGui::Begin("about", &about_engine_open);
 
 
+
+		ImGui::End();
+	}
+}
 
 
 //Console management
 void ModuleEditor::ManageConsole()
 {
-	console.Draw("Asiergine Console", &console_open);
+	if(console_open)
+		console.Draw("Asiergine Console", &console_open);
 }
 
 void ModuleEditor::DrawInConsole(const char * to_console)
