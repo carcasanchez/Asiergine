@@ -55,6 +55,8 @@ update_status ModuleEditor::Update(float dt)
 
 	ManageConsole();
 	ManageExampleWindow();
+
+	ManageConfigurationWindow();
 			
 	return ret;
 }
@@ -133,6 +135,11 @@ void ModuleEditor::Window_option()
 	if (ImGui::MenuItem("About the engine"))
 	{
 		about_engine_open = true;
+	}
+
+	if (ImGui::MenuItem("Configuration"))
+	{
+		configuration_open = true;
 	}
 
 	
@@ -215,6 +222,34 @@ void ModuleEditor::ManageConsole()
 void ModuleEditor::DrawInConsole(const char * to_console)
 {
 		console.AddLog(to_console);
+}
+
+//Configuration window
+void ModuleEditor::ManageConfigurationWindow()
+{
+	if (configuration_open)
+	{
+		ImGui::Begin("Configuration", &configuration_open);
+		if (ImGui::BeginMenu("Options"))
+		{
+			ImGui::MenuItem("App");
+			ImGui::EndMenu();
+		}
+		if (application_open)
+		{
+			ImGui::Begin("Application", &application_open);
+			if (ImGui::BeginMenu("Application"))
+			{
+				static char str0[128] = "Hello, world!";
+				ImGui::InputText("Asiergine", str0, IM_ARRAYSIZE(str0));
+				ImGui::EndMenu();
+			}
+			ImGui::End();
+		}
+		ImGui::TextWrapped("ASIERGINE");
+		ImGui::Separator();
+		ImGui::End();
+	}
 }
 
 
