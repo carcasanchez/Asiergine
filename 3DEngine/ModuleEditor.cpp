@@ -172,7 +172,7 @@ void ModuleEditor::ManageAboutWindow()
 			ShellExecute(NULL, "open", "https://es.linkedin.com/in/asier-iglesias-gavarro", NULL, NULL, SW_SHOWNORMAL);
 	
 		ImGui::Separator();
-		ImGui::TextWrapped("3D Game Engine under MIT license --- Created for educational purposes (Work in Progress)");
+		ImGui::TextWrapped("3D Game Engine created for educational purposes (Work in Progress)");
 		ImGui::Separator(); 
 		ImGui::Separator();
 
@@ -189,7 +189,16 @@ void ModuleEditor::ManageAboutWindow()
 			ShellExecute(NULL, "open", "https://www.libsdl.org/download-2.0.php", NULL, NULL, SW_SHOWNORMAL);
 		if (ImGui::Button("OpenGL 3"))
 			ShellExecute(NULL, "open", "https://www.khronos.org/registry/OpenGL-Refpages/es3.0/", NULL, NULL, SW_SHOWNORMAL);
+		ImGui::Separator();
+		ImGui::Separator();
 
+		ImGui::TextWrapped("This software is under the MIT liscence");
+		if (ImGui::Button("Click here for more information about the MIT license"))
+			ShellExecute(NULL, "open", "https://github.com/carcasanchez/Asiergine/blob/master/LICENSE", NULL, NULL, SW_SHOWNORMAL);
+	
+		ImGui::Separator();
+		if (ImGui::Button("Click here to check the code repository"))
+			ShellExecute(NULL, "open", "https://github.com/carcasanchez/Asiergine/", NULL, NULL, SW_SHOWNORMAL);
 
 		ImGui::End();
 	}
