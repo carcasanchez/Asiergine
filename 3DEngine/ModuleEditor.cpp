@@ -235,19 +235,46 @@ void ModuleEditor::ManageConfigurationWindow()
 			ImGui::MenuItem("App");
 			ImGui::EndMenu();
 		}
-		if (application_open)
+		if (ImGui::CollapsingHeader("Application"))
 		{
-			ImGui::Begin("Application", &application_open);
-			if (ImGui::BeginMenu("Application"))
-			{
-				static char str0[128] = "Hello, world!";
-				ImGui::InputText("Asiergine", str0, IM_ARRAYSIZE(str0));
-				ImGui::EndMenu();
-			}
-			ImGui::End();
+			static char str0[128] = "Asiergine";
+			static char str1[128] = "UPC CITM";
+			static int i = 0;
+			ImGui::InputText("App Name", str0, IM_ARRAYSIZE(str0));
+			ImGui::InputText("Organization", str1, IM_ARRAYSIZE(str0));
+			ImGui::SliderInt("Max FPS", &i, 0, 60);
+			ImGui::TextWrapped("Limit Framerate: ");
+			/*std::vector<int> fps_log;
+			std::vector<float> ms_log;
+			char title[25];
+			sprintf_s(title, 25, "Framerate %.1f", fps_log[fps_log.size() - 1]);
+			ImGui::PlotHistogram("##framerate", &fps_log[0], fps_log.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
+			sprintf_s(title, 25, "Milliseconds %0.1f", ms_log[ms_log.size() - 1]);
+			ImGui::PlotHistogram("##framerate", &ms_log[0], ms_log.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
+			*/
 		}
-		ImGui::TextWrapped("ASIERGINE");
-		ImGui::Separator();
+		if (ImGui::CollapsingHeader("Window"))
+		{
+			static bool active = true;
+			static float brightness = 1.0f;
+			static int width = 0;
+			static int height = 0;
+			ImGui::Checkbox("Active", &active);
+			ImGui::TextWrapped("Icon:  *default*");
+			ImGui::SliderFloat("Brightness", &brightness, 0, 1);
+			ImGui::SliderInt("Width", &width, 0, 3820);
+			ImGui::SliderInt("Height", &height, 0, 2048);
+			ImGui::TextWrapped("Refresh Rate: ");
+			if (ImGui::Checkbox("Fullscreen", &fullscreen))
+				//App->window->SetFullscreen(fullscreen);
+
+			ImGui::SameLine();
+			if (ImGui::Checkbox("Resizable", &resizable))
+				//App->window->SetResizable(resizable);
+				if (ImGui::IsItemHovered())
+					ImGui::SetTooltip("Restart to apply");
+		}
+
 		ImGui::End();
 	}
 }

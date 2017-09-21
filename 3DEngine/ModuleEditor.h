@@ -28,12 +28,14 @@ private:
 		
 	AppConsole console;
 	
-	bool test_window_open = false;
+	bool test_window_open = true;
 	bool quit_editor = false;
 	bool console_open = false;
 	bool about_engine_open = false;
 	bool configuration_open = true;
-	bool application_open = true;
+
+	bool fullscreen = false;
+	bool resizable = false;
 
 	void ManageMainMenuBar();
 	void ManageExampleWindow();
