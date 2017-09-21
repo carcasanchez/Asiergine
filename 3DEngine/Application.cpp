@@ -56,8 +56,7 @@ bool Application::Init()
 		ret = (*item)->Init();
 		item++;
 	}
-
-	
+		
 
 	// After all Init calls we call Start() in all modules
 	LOG("Application Start --------------");
@@ -70,6 +69,7 @@ bool Application::Init()
 	}
 	
 	ms_timer.Start();
+	second_timer.Start();
 
 	//Get Hardware specs
 	SDL_GetVersion(&system_specs.sdl_version);
@@ -96,12 +96,22 @@ bool Application::Init()
 void Application::PrepareUpdate()
 {
 	dt = (float)ms_timer.Read() / 1000.0f;
+	last_frame_miliseconds = (float)ms_timer.Read();
+	
+	if (second_timer.Read() > 1000)
+	{
+		last_second_frames = frame_count;
+		second_timer.Start();
+		frame_count = 0;
+	}
+
 	ms_timer.Start();
 }
 
 // ---------------------------------------------
 void Application::FinishUpdate()
 {
+	frame_count++;
 }
 
 // Call PreUpdate, Update and PostUpdate on all modules
@@ -153,6 +163,12 @@ bool Application::CleanUp()
 		item++;
 	}
 	return ret;
+}
+
+void Application::GetFrames(int & frames, float & miliseconds)
+{
+	frames = last_second_frames - 1 ;
+	miliseconds = last_frame_miliseconds;
 }
 
 void Application::AddModule(Module* mod)

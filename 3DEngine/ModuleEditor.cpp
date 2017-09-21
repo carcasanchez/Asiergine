@@ -261,16 +261,21 @@ void ModuleEditor::ManageConfigurationWindow()
 			ImGui::SliderInt("Max FPS", &i, 0, 60);
 			ImGui::TextWrapped("Limit Framerate: ");
 			
-			std::vector<float> fps_log;
-			std::vector<float> ms_log;
-			fps_log.push_back(60.0);
-			ms_log.push_back(60.0);
+
+			//Framerate Calculation
+			
+			int frames;
+			float milisec;
+			App->GetFrames(frames, milisec);
+
+			fps_log.push_back(frames);
+			ms_log.push_back(milisec);
 			char title[25];
 			sprintf_s(title, 25, "Framerate %.1f", fps_log[fps_log.size() - 1]);
 			ImGui::PlotHistogram("##framerate", &fps_log[0], fps_log.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
 			sprintf_s(title, 25, "Milliseconds %0.1f", ms_log[ms_log.size() - 1]);
 			ImGui::PlotHistogram("##Milliseconds", &ms_log[0], ms_log.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
-			
+
 		}
 		if (ImGui::CollapsingHeader("Window"))
 		{

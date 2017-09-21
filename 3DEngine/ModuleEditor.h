@@ -35,6 +35,10 @@ private:
 	bool hardware_open = false;
 	bool configuration_open = false;
 
+	//Framerate calculation
+	std::vector<float> fps_log;
+	std::vector<float> ms_log;
+
 	bool fullscreen = false;
 	bool resizable = false;
 

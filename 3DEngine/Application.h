@@ -55,6 +55,11 @@ public:
 private:
 
 	Timer	ms_timer;
+	Timer   second_timer;
+	int		frame_count = 0;
+	int last_second_frames;
+	float last_frame_miliseconds;
+
 	float	dt;
 	std::list<Module*> list_modules;
 
@@ -66,6 +71,8 @@ public:
 	bool Init();
 	update_status Update();
 	bool CleanUp();
+
+	void GetFrames(int& frames, float& miliseconds);
 
 	HardwareSpecs system_specs;
 
