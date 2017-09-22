@@ -1,6 +1,7 @@
 #pragma once
 
 #include "parson.h"
+#include <string>
 
 class Application;
 struct PhysBody3D;
@@ -9,8 +10,12 @@ class Module
 {
 private :
 	bool enabled;
+	
+protected:
+	std::string name;
 
 public:
+
 
 
 	Module(bool start_enabled = true)
@@ -51,4 +56,11 @@ public:
 
 	virtual void OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 	{}
+
+
+
+	std::string GetModuleName() 
+	{
+		return name;
+	}
 };

@@ -9,7 +9,7 @@
 
 ModuleEditor::ModuleEditor( bool start_enabled) : Module( start_enabled)
 {
-
+	name = "editor";
 }
 
 ModuleEditor::~ModuleEditor()
