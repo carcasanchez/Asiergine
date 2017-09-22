@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "parson.h"
 
 Application::Application()
 {
@@ -51,9 +52,13 @@ bool Application::Init()
 	// Call Init() in all modules
 	std::list<Module*>::iterator item = list_modules.begin();
 
+	JSON_Value * config_data = json_parse_file("config.json");
+	JSON_Object * object_data = json_value_get_object(config_data);
+	JSON_Object * application_data = json_object_dotget_object(object_data, "App");
+
 	while(item != list_modules.end() && ret == true)
 	{
-		ret = (*item)->Init();
+		ret = (*item)->Init(object_data);
 		item++;
 	}
 		

@@ -16,7 +16,7 @@ ModuleEditor::~ModuleEditor()
 {
 }
 
-bool ModuleEditor::Init()
+bool ModuleEditor::Init(const JSON_Object* config_data)
 {
 	bool ret = true;
 

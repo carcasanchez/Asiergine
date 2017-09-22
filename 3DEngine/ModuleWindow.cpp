@@ -14,7 +14,7 @@ ModuleWindow::~ModuleWindow()
 }
 
 // Called before render is available
-bool ModuleWindow::Init()
+bool ModuleWindow::Init(const JSON_Object* config_data)
 {
 	LOG("Init SDL window & surface");
 	bool ret = true;

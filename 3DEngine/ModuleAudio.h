@@ -13,7 +13,7 @@ public:
 	ModuleAudio( bool start_enabled = true);
 	~ModuleAudio();
 
-	bool Init();
+	bool Init(const JSON_Object* config_data);
 	bool CleanUp();
 
 	// Play a music file

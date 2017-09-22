@@ -14,7 +14,7 @@ public:
 	// Destructor
 	~ModuleEditor();
 	
-	bool Init();
+	bool Init(const JSON_Object* config_data);
 	bool Start();
 	update_status PreUpdate(float dt);
 	update_status Update(float dt);

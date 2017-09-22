@@ -19,7 +19,7 @@ public:
 	ModuleInput(bool start_enabled = true);
 	~ModuleInput();
 
-	bool Init();
+	bool Init(const JSON_Object* config_data);
 	update_status PreUpdate(float dt);
 	bool CleanUp();
 
