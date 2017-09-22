@@ -56,6 +56,9 @@ update_status ModuleEditor::Update(float dt)
 	ManageConsole();
 	ManageConfigurationWindow();
 	ManageExampleWindow();
+	ManageHierarchyWindow();
+	ManageInspectorWindow();
+	ManageProfilerWindow();
 
 			
 	return ret;
@@ -132,6 +135,15 @@ void ModuleEditor::Window_option()
 
 	if (ImGui::MenuItem("Configuration"))
 		configuration_open = true;
+
+	if (ImGui::MenuItem("Hierarchy"))
+		hierarchy_open = true;
+
+	if (ImGui::MenuItem("Inspector"))
+		inspector_open = true;
+
+	if (ImGui::MenuItem("Profiler"))
+		profiler_open = true;
 
 	if (ImGui::MenuItem("About the engine"))
 		about_engine_open = true;
@@ -356,7 +368,41 @@ void ModuleEditor::ManageConfigurationWindow()
 	}
 }
 
+//Hierarchy window
+void ModuleEditor::ManageHierarchyWindow()
+{
+	if (hierarchy_open)
+	{
+		ImGui::Begin("Hierarchy", &hierarchy_open);
+		ImGui::MenuItem("GameObject1");
+		ImGui::MenuItem("GameObject2");
+		ImGui::MenuItem("GameObject3");
+		ImGui::End();
+	}
+}
 
+//Inspector Window
+void ModuleEditor::ManageInspectorWindow()
+{
+	if (inspector_open)
+	{
+		ImGui::Begin("Inspector", &inspector_open);
+		ImGui::MenuItem("GameObject1");
+		ImGui::MenuItem("GameObject2");
+		ImGui::MenuItem("GameObject3");
+		ImGui::End();
+	}
+}
+
+void ModuleEditor::ManageProfilerWindow()
+{
+	if (profiler_open)
+	{
+		ImGui::Begin("Profiler", &profiler_open);
+		ImGui::MenuItem("GameObject");
+		ImGui::End();
+	}
+}
 
 
 

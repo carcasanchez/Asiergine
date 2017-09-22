@@ -34,6 +34,9 @@ private:
 	bool about_engine_open = false;
 	bool hardware_open = false;
 	bool configuration_open = false;
+	bool hierarchy_open = false;
+	bool inspector_open = false;
+	bool profiler_open = false;
 
 	//Framerate calculation
 	std::vector<float> fps_log;
@@ -51,6 +54,9 @@ private:
 	void ManageAboutWindow();
 	void ManageConsole();
 	void ManageConfigurationWindow();
+	void ManageHierarchyWindow();
+	void ManageInspectorWindow();
+	void ManageProfilerWindow();
 
 	void ShowExampleWindow_option();
 	void Window_option();
