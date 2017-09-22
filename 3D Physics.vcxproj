@@ -54,6 +54,7 @@
     <ClCompile Include="3DEngine\MathGeoLib\include\Math\SSEMath.cpp" />
     <ClCompile Include="3DEngine\MathGeoLib\include\Math\TransformOps.cpp" />
     <ClCompile Include="3DEngine\MathGeoLib\include\Time\Clock.cpp" />
+    <ClCompile Include="3DEngine\mmgr\mmgr.cpp" />
     <ClCompile Include="3DEngine\ModuleAudio.cpp" />
     <ClCompile Include="3DEngine\ModuleCamera3D.cpp" />
     <ClCompile Include="3DEngine\ModuleEditor.cpp" />
@@ -138,6 +139,8 @@
     <ClInclude Include="3DEngine\MathGeoLib\include\Math\sse_mathfun.h" />
     <ClInclude Include="3DEngine\MathGeoLib\include\Math\TransformOps.h" />
     <ClInclude Include="3DEngine\MathGeoLib\include\Time\Clock.h" />
+    <ClInclude Include="3DEngine\mmgr\mmgr.h" />
+    <ClInclude Include="3DEngine\mmgr\nommgr.h" />
     <ClInclude Include="3DEngine\Module.h" />
     <ClInclude Include="3DEngine\ModuleAudio.h" />
     <ClInclude Include="3DEngine\ModuleCamera3D.h" />

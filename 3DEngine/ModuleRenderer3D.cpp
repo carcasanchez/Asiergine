@@ -1,11 +1,15 @@
 #include "Globals.h"
-#include "Application.h"
-#include "ModuleRenderer3D.h"
 #include "Glew\include\glew.h"
 #include "SDL\include\SDL_opengl.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
+
+
+#include "Application.h"
+
+#include ".\mmgr\mmgr.h"
+#include "ModuleRenderer3D.h"
 
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */

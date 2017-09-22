@@ -310,6 +310,7 @@ void ModuleEditor::ManageConfigurationWindow()
 			ImGui::TextWrapped("CPUs: %i", App->system_specs.cpus);
 			ImGui::TextWrapped("System Ram: %f", App->system_specs.system_ram);
 			ImGui::TextWrapped("CPU Cache: %i", App->system_specs.cpu_chache);
+			//TODO:   glGetString(GL_VERSION)
 
 			ImGui::Separator();
 			ImGui::TextWrapped("Your hardware uses:");

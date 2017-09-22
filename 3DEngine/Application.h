@@ -1,9 +1,9 @@
 #pragma once
 
-#include <list>
-#include <vector>
 #include "Globals.h"
 #include "Timer.h"
+
+
 #include "Module.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
@@ -94,8 +94,6 @@ private:
 	void AddModule(Module* mod);
 	void PrepareUpdate();
 	void FinishUpdate();
-
-	bool LoadConfig();
 	bool SaveConfig();
 	
 };

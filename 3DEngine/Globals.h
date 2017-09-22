@@ -6,6 +6,10 @@
 
 #include <windows.h>
 #include <stdio.h>
+#include <string>
+#include <list>
+#include <vector>
+
 
 // Deletes a buffer
 #define RELEASE( x ) \

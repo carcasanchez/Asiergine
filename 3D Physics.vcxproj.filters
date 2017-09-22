@@ -154,6 +154,9 @@
     <ClCompile Include="3DEngine\parson.c">
       <Filter>Source\Tools\Parson</Filter>
     </ClCompile>
+    <ClCompile Include="3DEngine\mmgr\mmgr.cpp">
+      <Filter>Source\Tools\mmgr</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3DEngine\Application.h">
@@ -405,6 +408,12 @@
     <ClInclude Include="3DEngine\parson.h">
       <Filter>Source\Tools\Parson</Filter>
     </ClInclude>
+    <ClInclude Include="3DEngine\mmgr\mmgr.h">
+      <Filter>Source\Tools\mmgr</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\mmgr\nommgr.h">
+      <Filter>Source\Tools\mmgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -445,6 +454,9 @@
     </Filter>
     <Filter Include="Source\Tools\Parson">
       <UniqueIdentifier>{ac8b6f10-5807-48b2-88e8-8ac0cfb06e97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Tools\mmgr">
+      <UniqueIdentifier>{241a8fea-3fb6-4995-a16f-2f8aa298e6a0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
