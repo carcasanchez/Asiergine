@@ -242,6 +242,7 @@ void ModuleEditor::ManageConfigurationWindow()
 			static char str0[128] = "Asiergine";
 			static char str1[128] = "UPC CITM";
 			
+			
 			ImGui::InputText("App Name", str0, IM_ARRAYSIZE(str0));
 			ImGui::InputText("Organization", str1, IM_ARRAYSIZE(str0));
 			
@@ -294,14 +295,29 @@ void ModuleEditor::ManageConfigurationWindow()
 			ImGui::SliderInt("Width", &width, 0, 3820);
 			ImGui::SliderInt("Height", &height, 0, 2048);
 			ImGui::TextWrapped("Refresh Rate: ");
-			if (ImGui::Checkbox("Fullscreen", &fullscreen))
-				//App->window->SetFullscreen(fullscreen);
+			if (ImGui::Checkbox("Fullscreen", &fullscreen)) 
+			{				
+				SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_FULLSCREEN);
+			}
 
 			ImGui::SameLine();
-			if (ImGui::Checkbox("Resizable", &resizable))
-				//App->window->SetResizable(resizable);
+			if (ImGui::Checkbox("Resizable", &resizable)) 
+			{
+				//SDL_SetWindowResizable(App->window->window, SDL_WINDOW_RESIZABLE);
 				if (ImGui::IsItemHovered())
 					ImGui::SetTooltip("Restart to apply");
+			}
+
+			if (ImGui::Checkbox("Borderless", &borderless))
+			{
+				//SDL_SetWindowBordered(App->window->window,);
+			}
+				
+			ImGui::SameLine();
+			if (ImGui::Checkbox("Full Desktop", &fulldesktop))
+			{
+				//SDL_SetWindowFullDesktop();
+			}
 		}
 		//Hardware specs of your own computer
 		if (ImGui::CollapsingHeader("Hardware Specs"))

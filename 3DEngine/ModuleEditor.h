@@ -41,6 +41,8 @@ private:
 
 	bool fullscreen = false;
 	bool resizable = false;
+	bool borderless = false;
+	bool fulldesktop = false;
 
 
 
