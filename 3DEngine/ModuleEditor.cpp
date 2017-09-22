@@ -254,6 +254,17 @@ void ModuleEditor::ManageConfigurationWindow()
 			float milisec;
 			App->GetFrames(frames, milisec);
 
+			if (fps_log.size() > 100)
+			{
+				for (int i = 1; i < fps_log.size(); i++)
+				{
+					fps_log[i - 1] = fps_log[i];
+					ms_log[i - 1] = ms_log[i];
+				}
+				fps_log.pop_back();
+				ms_log.pop_back();
+			}
+
 			fps_log.push_back(frames);
 			ms_log.push_back(milisec);
 
