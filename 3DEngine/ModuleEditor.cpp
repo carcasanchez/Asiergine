@@ -241,10 +241,15 @@ void ModuleEditor::ManageConfigurationWindow()
 			//Here are the text inputs and slider of the application submenu
 			static char str0[128] = "Asiergine";
 			static char str1[128] = "UPC CITM";
-			static int i = 0;
+			
 			ImGui::InputText("App Name", str0, IM_ARRAYSIZE(str0));
 			ImGui::InputText("Organization", str1, IM_ARRAYSIZE(str0));
-			ImGui::SliderInt("Max FPS", &i, 0, 60);
+			
+			static int max_fps = 0;
+			if (ImGui::SliderInt("Max FPS", &max_fps, 0, 60))
+			{
+				App->SetMaxFrames(max_fps);
+			}
 			ImGui::TextWrapped("Limit Framerate: ");
 			
 

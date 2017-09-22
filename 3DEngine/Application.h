@@ -60,6 +60,8 @@ private:
 	int last_second_frames;
 	float last_frame_miliseconds;
 
+	int fps_cap = 0;
+
 	float	dt;
 	std::list<Module*> list_modules;
 
@@ -73,6 +75,10 @@ public:
 	bool CleanUp();
 
 	void GetFrames(int& frames, float& miliseconds);
+	void SetMaxFrames(int max_frames)
+	{
+		fps_cap = max_frames;
+	}
 
 	HardwareSpecs system_specs;
 

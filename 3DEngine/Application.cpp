@@ -96,22 +96,27 @@ bool Application::Init()
 void Application::PrepareUpdate()
 {
 	dt = (float)ms_timer.Read() / 1000.0f;
-	last_frame_miliseconds = (float)ms_timer.Read();
 	
-	if (second_timer.Read() > 1000)
-	{
-		last_second_frames = frame_count;
-		second_timer.Start();
-		frame_count = 0;
-	}
-
-	ms_timer.Start();
 }
 
 // ---------------------------------------------
 void Application::FinishUpdate()
 {
+	last_frame_miliseconds = (float)ms_timer.Read();
+	ms_timer.Start();
 	frame_count++;
+
+	if (second_timer.Read() > 1000)
+	{
+		last_second_frames = frame_count;
+		second_timer.Start();
+		frame_count = 0;
+	}		
+
+	if (fps_cap > 0 && last_frame_miliseconds < (1000/ fps_cap))
+	{
+		SDL_Delay(((1000/fps_cap) - last_frame_miliseconds)*2);
+	}
 }
 
 // Call PreUpdate, Update and PostUpdate on all modules
@@ -167,7 +172,7 @@ bool Application::CleanUp()
 
 void Application::GetFrames(int & frames, float & miliseconds)
 {
-	frames = last_second_frames - 1 ;
+	frames = last_second_frames;
 	miliseconds = last_frame_miliseconds;
 }
 
