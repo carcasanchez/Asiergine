@@ -43,6 +43,10 @@ public:
 class Application
 {
 public:
+
+	std::string app_name;
+	std::string org_name;
+
 	ModuleWindow* window;
 	ModuleInput* input;
 	ModuleAudio* audio;
@@ -75,6 +79,8 @@ public:
 	update_status Update();
 	bool CleanUp();
 
+	
+
 	void GetFrames(int& frames, float& miliseconds);
 	void SetMaxFrames(int max_frames)
 	{
@@ -88,6 +94,9 @@ private:
 	void AddModule(Module* mod);
 	void PrepareUpdate();
 	void FinishUpdate();
+
+	bool LoadConfig();
+	bool SaveConfig();
 	
 };
 

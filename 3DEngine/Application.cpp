@@ -49,12 +49,20 @@ bool Application::Init()
 	console_on = true;
 	LOG("Opening Console");
 
-	// Call Init() in all modules
-	std::list<Module*>::iterator item = list_modules.begin();
 
+	//LoadData from Config
 	JSON_Value * config_data = json_parse_file("config.json");
+		
+	assert(config_data != nullptr);
+
+
 	JSON_Object * object_data = json_value_get_object(config_data);
 	JSON_Object * application_data = json_object_dotget_object(object_data, "App");
+	app_name = json_object_dotget_string(application_data, "name");
+	org_name = json_object_dotget_string(application_data, "organization");
+
+	// Call Init() in all modules
+	std::list<Module*>::iterator item = list_modules.begin();
 
 	while(item != list_modules.end() && ret == true)
 	{
@@ -72,6 +80,8 @@ bool Application::Init()
 		ret = (*item)->Start();
 		item++;
 	}
+
+	window->SetTitle(app_name.c_str());
 	
 	ms_timer.Start();
 	second_timer.Start();
@@ -161,6 +171,9 @@ update_status Application::Update()
 bool Application::CleanUp()
 {
 	bool ret = true;
+
+	SaveConfig();
+
 	std::list<Module*>::reverse_iterator item = list_modules.rbegin();
 
 	//Shut up console LOG's
@@ -184,4 +197,38 @@ void Application::GetFrames(int & frames, float & miliseconds)
 void Application::AddModule(Module* mod)
 {
 	list_modules.push_back(mod);
+}
+
+//---------------------------------------------
+
+bool Application::SaveConfig()
+{
+	JSON_Value * config_file = json_parse_file("config.json");
+
+	if (config_file == nullptr)
+	{
+		LOG("ERROR: COULD NOT SAVE DATA TO CONFIG");
+		return false;
+	}
+
+	LOG("Saving data to config--------");
+
+	//Save app data
+	JSON_Object * object_data = json_value_get_object(config_file);
+	JSON_Object* application_data = json_object_dotget_object(object_data, "App");
+	
+	json_object_dotset_string(application_data, "name", app_name.c_str());
+	json_object_dotset_string(application_data, "organization", org_name.c_str());
+	
+	//Save modules data
+	for (std::list<Module*>::iterator it = list_modules.begin(); it!=list_modules.end(); it++)
+	{
+		JSON_Object* module_data = json_object_dotget_object(application_data, (*it)->GetModuleName().c_str());
+		(*it)->SaveConfig(module_data);	
+	}
+
+	json_serialize_to_file(config_file, "config.json");
+
+	return true;
+
 }
