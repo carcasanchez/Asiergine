@@ -15,12 +15,15 @@ public:
 	void Stop();
 
 	Uint32 Read();
+	double ReadMS();
 
 private:
 
 	bool	running;
-	Uint32	started_at;
-	Uint32	stopped_at;
+	Uint64	started_at;
+	Uint64	stopped_at;
+
+	static Uint64 frequency;
 };
 
 #endif //__TIMER_H__

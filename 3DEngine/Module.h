@@ -1,7 +1,7 @@
 #pragma once
 
 #include "parson.h"
-
+#include "Profiler.h"
 
 
 class Application;
@@ -17,6 +17,10 @@ protected:
 
 public:
 
+	Profiler start_profiler;
+	Profiler pre_update_profiler;
+	Profiler update_profiler;
+	Profiler post_update_profiler;
 
 
 	Module(bool start_enabled = true)

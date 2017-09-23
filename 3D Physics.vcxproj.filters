@@ -414,6 +414,9 @@
     <ClInclude Include="3DEngine\mmgr\nommgr.h">
       <Filter>Source\Tools\mmgr</Filter>
     </ClInclude>
+    <ClInclude Include="3DEngine\Profiler.h">
+      <Filter>Source\Tools</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">

@@ -5,9 +5,14 @@
 
 #include "Timer.h"
 
+Uint64 Timer::frequency = 0;
+
 // ---------------------------------------------
 Timer::Timer()
 {
+	if (frequency == 0)
+		frequency = SDL_GetPerformanceFrequency();
+
 	Start();
 }
 
@@ -15,14 +20,14 @@ Timer::Timer()
 void Timer::Start()
 {
 	running = true;
-	started_at = SDL_GetTicks();
+	started_at = SDL_GetPerformanceCounter();
 }
 
 // ---------------------------------------------
 void Timer::Stop()
 {
 	running = false;
-	stopped_at = SDL_GetTicks();
+	stopped_at = SDL_GetPerformanceCounter();
 }
 
 // ---------------------------------------------
@@ -30,12 +35,17 @@ Uint32 Timer::Read()
 {
 	if(running == true)
 	{
-		return SDL_GetTicks() - started_at;
+		return SDL_GetPerformanceCounter() - started_at;
 	}
 	else
 	{
 		return stopped_at - started_at;
 	}
+}
+
+double Timer::ReadMS()
+{
+	return 1000.0 * (double(SDL_GetPerformanceCounter() - started_at) / double(frequency));
 }
 
 

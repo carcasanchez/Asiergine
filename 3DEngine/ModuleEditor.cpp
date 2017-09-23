@@ -30,9 +30,6 @@ bool ModuleEditor::Start()
 {
 	bool ret = true;
 	ImGui_ImplSdlGL3_NewFrame(App->window->window);
-
-
-
 	return ret;
 }
 
@@ -416,7 +413,20 @@ void ModuleEditor::ManageProfilerWindow()
 	if (profiler_open)
 	{
 		ImGui::Begin("Profiler", &profiler_open);
-		ImGui::MenuItem("GameObject");
+		
+		std::list<Module*>::iterator it = App->list_modules.begin();
+
+		for (;it!=App->list_modules.end();it++)
+		{
+			if (ImGui::CollapsingHeader((*it)->GetModuleName().c_str()))
+			{
+				ImGui::TextWrapped("Start Time: %f ms", (*it)->start_profiler.last_check_ms);
+				ImGui::TextWrapped("PreUpdate Time: %f ms", (*it)->pre_update_profiler.last_check_ms);
+				ImGui::TextWrapped("Update Time: %f ms", (*it)->update_profiler.last_check_ms);
+				ImGui::TextWrapped("PostUpdate Time: %f ms", (*it)->post_update_profiler.last_check_ms);
+			}
+		}
+
 		ImGui::End();
 	}
 }

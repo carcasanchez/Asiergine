@@ -79,7 +79,9 @@ bool Application::Init()
 
 	while(item != list_modules.end() && ret == true)
 	{
+		(*item)->start_profiler.StartComprobation();
 		ret = (*item)->Start();
+		(*item)->start_profiler.EndComprobation();
 		item++;
 	}
 
@@ -146,7 +148,9 @@ update_status Application::Update()
 	
 	while(item != list_modules.end() && ret == UPDATE_CONTINUE)
 	{
+		(*item)->pre_update_profiler.StartComprobation();
 		ret = (*item)->PreUpdate(dt);
+		(*item)->pre_update_profiler.EndComprobation();
 		item++;
 	}
 
@@ -154,7 +158,9 @@ update_status Application::Update()
 
 	while(item != list_modules.end() && ret == UPDATE_CONTINUE)
 	{
+		(*item)->update_profiler.StartComprobation();
 		ret = (*item)->Update(dt);
+		(*item)->update_profiler.EndComprobation();
 		item++;
 	}
 
@@ -162,7 +168,9 @@ update_status Application::Update()
 
 	while(item != list_modules.end() && ret == UPDATE_CONTINUE)
 	{
+		(*item)->post_update_profiler.StartComprobation();
 		ret = (*item)->PostUpdate(dt);
+		(*item)->post_update_profiler.EndComprobation();
 		item++;
 	}
 

@@ -57,6 +57,8 @@ public:
 
 	bool console_on = false;
 
+	std::list<Module*> list_modules;
+
 private:
 
 	Timer	ms_timer;
@@ -68,7 +70,7 @@ private:
 	int fps_cap = 0;
 
 	float	dt;
-	std::list<Module*> list_modules;
+
 
 public:
 
