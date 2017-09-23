@@ -307,9 +307,12 @@ void ModuleEditor::ManageConfigurationWindow()
 			ImGui::SliderInt("Width", &width, 0, 3820);
 			ImGui::SliderInt("Height", &height, 0, 2048);
 			ImGui::TextWrapped("Refresh Rate: ");
+			
 			if (ImGui::Checkbox("Fullscreen", &fullscreen)) 
 			{				
-				SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_FULLSCREEN);
+				if(fullscreen)
+					SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_FULLSCREEN);
+				else SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_RESIZABLE);
 			}
 
 			ImGui::SameLine();
