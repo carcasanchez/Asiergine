@@ -205,6 +205,9 @@ void ModuleEditor::ManageAboutWindow()
 			ShellExecute(NULL, "open", "https://www.libsdl.org/download-2.0.php", NULL, NULL, SW_SHOWNORMAL);
 		if (ImGui::Button("OpenGL 3"))
 			ShellExecute(NULL, "open", "https://www.khronos.org/registry/OpenGL-Refpages/es3.0/", NULL, NULL, SW_SHOWNORMAL);
+		if (ImGui::Button("MMGR by Fluid Studios"))
+			ShellExecute(NULL, "open", "http://www.paulnettle.com/", NULL, NULL, SW_SHOWNORMAL);
+
 		ImGui::Separator();
 		ImGui::Separator();
 
