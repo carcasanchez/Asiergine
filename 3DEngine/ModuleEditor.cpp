@@ -251,12 +251,23 @@ void ModuleEditor::ManageConfigurationWindow()
 		if (ImGui::CollapsingHeader("Application"))
 		{
 			//Here are the text inputs and slider of the application submenu
-			static char str0[128] = "Asiergine";
-			static char str1[128] = "UPC CITM";
+		
 			
+			static char str0[200];
+			strcpy_s(str0, App->app_name.c_str());
+
+			static char str1[200];
+			strcpy_s(str1, App->org_name.c_str());
 			
-			ImGui::InputText("App Name", str0, IM_ARRAYSIZE(str0));
-			ImGui::InputText("Organization", str1, IM_ARRAYSIZE(str0));
+			if (ImGui::InputText("App Name", str0, IM_ARRAYSIZE(str0)))
+			{
+				App->app_name = str0;
+				App->window->SetTitle(str0);
+			}
+			if (ImGui::InputText("Organization", str1, IM_ARRAYSIZE(str0)))
+			{
+				App->org_name = str1;
+			}
 			
 			static int max_fps = 0;
 			if (ImGui::SliderInt("Max FPS", &max_fps, 0, 60))
@@ -407,6 +418,12 @@ void ModuleEditor::ManageProfilerWindow()
 	}
 }
 
+
+
+void ModuleEditor::GetInputEvent(SDL_Event* e)
+{
+	ImGui_ImplSdlGL3_ProcessEvent(e);
+}
 
 
 

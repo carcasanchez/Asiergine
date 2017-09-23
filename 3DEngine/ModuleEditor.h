@@ -6,6 +6,8 @@
 #include "MathGeoLib\include\Math.h"
 
 
+typedef union SDL_Event;
+
 class ModuleEditor : public Module
 {
 public:
@@ -23,6 +25,8 @@ public:
 
 	void DrawInConsole(const char*);
 
+
+	void GetInputEvent(SDL_Event* e);
 
 private:
 		
