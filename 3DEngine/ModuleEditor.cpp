@@ -330,10 +330,10 @@ void ModuleEditor::ManageConfigurationWindow()
 			ImGui::SameLine();
 			if (ImGui::Checkbox("Resizable", &resizable)) 
 			{
-				if (resizable)
-					SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_RESIZABLE);
 				if (ImGui::IsItemHovered())
 					ImGui::SetTooltip("Restart to apply");
+				if (resizable)
+					SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_RESIZABLE);
 			}
 
 			if (ImGui::Checkbox("Borderless", &borderless))

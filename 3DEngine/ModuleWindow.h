@@ -29,6 +29,16 @@ public:
 
 	//The surface contained by the window
 	SDL_Surface* screen_surface;
+
+	//Json configuration
+	int window_width;
+	int window_height;
+	bool fullscreen;
+	bool resizable;
+	bool borderless;
+	bool fullscreen_desktop;
+
+	bool SaveConfig();
 };
 
 #endif // __ModuleWindow_H__
