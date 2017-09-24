@@ -10,6 +10,7 @@ Uint64 Timer::frequency = 0;
 // ---------------------------------------------
 Timer::Timer()
 {
+
 	if (frequency == 0)
 		frequency = SDL_GetPerformanceFrequency();
 
@@ -19,28 +20,13 @@ Timer::Timer()
 // ---------------------------------------------
 void Timer::Start()
 {
-	running = true;
 	started_at = SDL_GetPerformanceCounter();
 }
 
 // ---------------------------------------------
-void Timer::Stop()
+Uint64 Timer::ReadTicks()
 {
-	running = false;
-	stopped_at = SDL_GetPerformanceCounter();
-}
-
-// ---------------------------------------------
-Uint32 Timer::Read()
-{
-	if(running == true)
-	{
-		return SDL_GetPerformanceCounter() - started_at;
-	}
-	else
-	{
-		return stopped_at - started_at;
-	}
+	return SDL_GetPerformanceCounter() - started_at;
 }
 
 double Timer::ReadMS()

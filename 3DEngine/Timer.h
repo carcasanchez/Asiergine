@@ -12,17 +12,12 @@ public:
 	Timer();
 
 	void Start();
-	void Stop();
-
-	Uint32 Read();
 	double ReadMS();
+	Uint64 ReadTicks();
+
 
 private:
-
-	bool	running;
 	Uint64	started_at;
-	Uint64	stopped_at;
-
 	static Uint64 frequency;
 };
 

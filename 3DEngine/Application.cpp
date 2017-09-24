@@ -114,27 +114,28 @@ bool Application::Init()
 // ---------------------------------------------
 void Application::PrepareUpdate()
 {
-	dt = (float)ms_timer.Read() / 1000.0f;
+	dt = (float)ms_timer.ReadMS();
+	ms_timer.Start();
+
+	frame_count++;
 	
 }
 
 // ---------------------------------------------
 void Application::FinishUpdate()
 {
-	last_frame_miliseconds = (float)ms_timer.Read();
-	ms_timer.Start();
-	frame_count++;
+	last_frame_miliseconds = (float)ms_timer.ReadMS();		
 
-	if (second_timer.Read() > 1000)
+	if (fps_cap > 0 && last_frame_miliseconds < (1000/ fps_cap))
+	{
+		SDL_Delay(((1000/fps_cap) - int(last_frame_miliseconds)));
+	}
+	
+	if (second_timer.ReadMS() > 1000)
 	{
 		last_second_frames = frame_count;
 		second_timer.Start();
 		frame_count = 0;
-	}		
-
-	if (fps_cap > 0 && last_frame_miliseconds < (1000/ fps_cap))
-	{
-		SDL_Delay(((1000/fps_cap) - last_frame_miliseconds)*2);
 	}
 }
 
