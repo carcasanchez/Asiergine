@@ -47,10 +47,10 @@ private:
 	std::vector<float> ms_log;
 
 	bool fullscreen = false;
-	bool resizable = false;
+	bool resizable = true;
 	bool borderless = false;
 	bool fulldesktop = false;
-
+	SDL_bool bordered = SDL_FALSE;
 
 
 	void ManageMainMenuBar();

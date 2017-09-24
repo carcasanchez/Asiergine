@@ -321,28 +321,33 @@ void ModuleEditor::ManageConfigurationWindow()
 			
 			if (ImGui::Checkbox("Fullscreen", &fullscreen)) 
 			{				
-				if(fullscreen)
+				if (fullscreen)					
 					SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_FULLSCREEN);
+				
 				else SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_RESIZABLE);
 			}
 
 			ImGui::SameLine();
 			if (ImGui::Checkbox("Resizable", &resizable)) 
 			{
-				//SDL_SetWindowResizable(App->window->window, SDL_WINDOW_RESIZABLE);
+				if (resizable)
+					SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_RESIZABLE);
 				if (ImGui::IsItemHovered())
 					ImGui::SetTooltip("Restart to apply");
 			}
 
 			if (ImGui::Checkbox("Borderless", &borderless))
 			{
-				//SDL_SetWindowBordered(App->window->window,);
+				if (borderless)
+					SDL_SetWindowBordered(App->window->window, bordered);
 			}
 				
 			ImGui::SameLine();
 			if (ImGui::Checkbox("Full Desktop", &fulldesktop))
 			{
-				//SDL_SetWindowFullDesktop();
+				if (fulldesktop)
+					SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+				else SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_RESIZABLE);
 			}
 		}
 		//Hardware specs of your own computer
