@@ -23,7 +23,7 @@ Application* App = NULL;
 
 int main(int argc, char ** argv)
 {
-	LOG("Starting game '%s'...", TITLE);
+	LOG("Starting game '%s'...", "ASIERGINE");
 
 	int main_return = EXIT_FAILURE;
 	main_states state = MAIN_CREATION;
@@ -88,7 +88,7 @@ int main(int argc, char ** argv)
 		}
 	}
 
-	LOG("Exiting game '%s'...\n", TITLE);
+	LOG("Exiting game '%s'...\n", App->window->title.c_str());
 
 	delete App;
 	return main_return;

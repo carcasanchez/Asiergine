@@ -42,11 +42,14 @@ bool ModuleWindow::Init(const JSON_Object* config_data)
 		resizable = json_object_dotget_boolean(window_data, "resizable");
 		borderless = json_object_dotget_boolean(window_data, "borderless");
 		fullscreen_desktop = json_object_dotget_boolean(window_data, "fullscreen_desktop");
+		title = json_object_dotget_string(window_data, "title");
+		screen_size = json_object_dotget_number(window_data, "screen_size");
+		vsync = json_object_dotget_boolean(window_data, "vsync");
 
 
 		//Create window
-		int width = window_width * SCREEN_SIZE;
-		int height = window_height * SCREEN_SIZE;
+		int width = window_width * screen_size;
+		int height = window_height * screen_size;
 		Uint32 flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
 
 		//Use OpenGL 2.1
@@ -73,7 +76,7 @@ bool ModuleWindow::Init(const JSON_Object* config_data)
 			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 		}
 
-		window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
+		window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
 
 		if(window == NULL)
 		{
@@ -114,7 +117,7 @@ void ModuleWindow::SetTitle(const char* title)
 vec2 ModuleWindow::GetWindowPixels()
 {
 	vec2 size;
-	size.x = window_width * SCREEN_SIZE;
-	size.x = window_height * SCREEN_SIZE;
+	size.x = window_width * screen_size;
+	size.x = window_height * screen_size;
 	return size;
 }

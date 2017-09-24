@@ -51,7 +51,7 @@ bool ModuleRenderer3D::Init(const JSON_Object* config_data)
 	if(ret == true)
 	{
 		//Use Vsync
-		if(VSYNC && SDL_GL_SetSwapInterval(1) < 0)
+		if(App->window->vsync && SDL_GL_SetSwapInterval(1) < 0)
 			LOG("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
 
 		//Initialize Projection Matrix

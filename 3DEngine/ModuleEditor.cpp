@@ -340,6 +340,7 @@ void ModuleEditor::ManageConfigurationWindow()
 			{
 				if (borderless)
 					SDL_SetWindowBordered(App->window->window, bordered);
+				else SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_RESIZABLE);
 			}
 				
 			ImGui::SameLine();
