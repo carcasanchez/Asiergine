@@ -97,7 +97,7 @@ bool ModuleWindow::Init(const JSON_Object* config_data)
 bool ModuleWindow::CleanUp()
 {
 	LOG("Destroying SDL window and quitting all SDL systems");
-
+	SaveConfig();
 	//Destroy window
 	if(window != NULL)
 	{
@@ -120,4 +120,35 @@ vec2 ModuleWindow::GetWindowPixels()
 	size.x = window_width * screen_size;
 	size.x = window_height * screen_size;
 	return size;
+}
+
+bool ModuleWindow::SaveConfig()
+{
+	JSON_Value * config_file = json_parse_file("config.json");
+
+	if (config_file == nullptr)
+	{
+		LOG("ERROR: COULD NOT SAVE DATA TO CONFIG");
+		return false;
+	}
+
+	LOG("Saving data to config--------");
+
+	//Save window data
+	JSON_Object * object_data = json_value_get_object(config_file);
+	JSON_Object* application_data = json_object_dotget_object(object_data, "App");
+	JSON_Object* window_data = json_object_dotget_object(object_data, "window");
+
+	json_object_dotset_number(window_data, "width", window_width);
+	json_object_dotset_number(window_data, "height", window_height);
+	json_object_dotset_boolean(window_data, "fullscreen", fullscreen);
+	json_object_dotset_boolean(window_data, "resizable", resizable);
+	json_object_dotset_boolean(window_data, "borderless", borderless);
+	json_object_dotset_boolean(window_data, "fullscreen_desktop", fullscreen_desktop);
+
+
+	json_serialize_to_file(config_file, "config.json");
+
+	return true;
+
 }

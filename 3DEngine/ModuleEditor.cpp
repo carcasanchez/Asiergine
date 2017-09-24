@@ -321,10 +321,17 @@ void ModuleEditor::ManageConfigurationWindow()
 			
 			if (ImGui::Checkbox("Fullscreen", &fullscreen)) 
 			{				
-				if (fullscreen)					
+				if (fullscreen)
+				{
 					SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_FULLSCREEN);
+					App->window->fullscreen = true;
+				}
 				
-				else SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_RESIZABLE);
+				else
+				{
+					SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_RESIZABLE);
+					App->window->fullscreen = false;
+				}
 			}
 
 			ImGui::SameLine();
@@ -333,22 +340,44 @@ void ModuleEditor::ManageConfigurationWindow()
 				if (ImGui::IsItemHovered())
 					ImGui::SetTooltip("Restart to apply");
 				if (resizable)
+				{
 					SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_RESIZABLE);
+					App->window->resizable = true;
+				}
+				else 
+				{
+					App->window->resizable = false;
+				}
 			}
 
 			if (ImGui::Checkbox("Borderless", &borderless))
 			{
 				if (borderless)
+				{
 					SDL_SetWindowBordered(App->window->window, bordered);
-				else SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_RESIZABLE);
+					App->window->borderless = true;
+				}
+				else 
+				{
+					SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_RESIZABLE);
+					SDL_SetWindowBordered(App->window->window, SDL_FALSE);
+					App->window->borderless = false;
+				}
 			}
 				
 			ImGui::SameLine();
 			if (ImGui::Checkbox("Full Desktop", &fulldesktop))
 			{
 				if (fulldesktop)
+				{
 					SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_FULLSCREEN_DESKTOP);
-				else SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_RESIZABLE);
+					App->window->fullscreen_desktop = true;
+				}
+				else
+				{
+					SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_RESIZABLE);
+					App->window->fullscreen_desktop = false;
+				}
 			}
 		}
 		//Hardware specs of your own computer
