@@ -9,7 +9,7 @@
 #include <string>
 #include <list>
 #include <vector>
-
+#include "Brofiler\Brofiler.h"
 
 // Deletes a buffer
 #define RELEASE( x ) \

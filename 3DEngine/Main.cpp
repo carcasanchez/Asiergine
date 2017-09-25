@@ -5,10 +5,12 @@
 
 
 
+
 #include "SDL/include/SDL.h"
 
 #pragma comment( lib, "3DEngine/SDL/libx86/SDL2.lib" )
 #pragma comment( lib, "3DEngine/SDL/libx86/SDL2main.lib" )
+#pragma comment( lib, "Dll_s/Brofiler-1.1.2/ProfilerCore32.lib" )
 
 enum main_states
 {
@@ -31,6 +33,8 @@ int main(int argc, char ** argv)
 
 	while (state != MAIN_EXIT)
 	{
+		BROFILER_FRAME("Asiergine");
+	
 		switch (state)
 		{
 		case MAIN_CREATION:

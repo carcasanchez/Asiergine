@@ -47,6 +47,8 @@ update_status ModuleEditor::PreUpdate(float dt)
 
 update_status ModuleEditor::Update(float dt)
 {
+	BROFILER_CATEGORY("Editor Update", Profiler::Color::Olive);
+
 	update_status ret = UPDATE_CONTINUE;
 	
 	ManageMainMenuBar();
@@ -58,8 +60,6 @@ update_status ModuleEditor::Update(float dt)
 	ManageExampleWindow();
 	ManageHierarchyWindow();
 	ManageInspectorWindow();
-	ManageProfilerWindow();
-
 			
 	return ret;
 }
@@ -141,9 +141,6 @@ void ModuleEditor::Window_option()
 
 	if (ImGui::MenuItem("Inspector"))
 		inspector_open = true;
-
-	if (ImGui::MenuItem("Profiler"))
-		profiler_open = true;
 
 	if (ImGui::MenuItem("About the engine"))
 		about_engine_open = true;
@@ -428,28 +425,7 @@ void ModuleEditor::ManageInspectorWindow()
 	}
 }
 
-void ModuleEditor::ManageProfilerWindow()
-{
-	if (profiler_open)
-	{
-		ImGui::Begin("Profiler", &profiler_open);
-		
-		std::list<Module*>::iterator it = App->list_modules.begin();
 
-		for (;it!=App->list_modules.end();it++)
-		{
-			if (ImGui::CollapsingHeader((*it)->GetModuleName().c_str()))
-			{
-				ImGui::TextWrapped("Start Time: %f ms", (*it)->start_profiler.last_check_ms);
-				ImGui::TextWrapped("PreUpdate Time: %f ms", (*it)->pre_update_profiler.last_check_ms);
-				ImGui::TextWrapped("Update Time: %f ms", (*it)->update_profiler.last_check_ms);
-				ImGui::TextWrapped("PostUpdate Time: %f ms", (*it)->post_update_profiler.last_check_ms);
-			}
-		}
-
-		ImGui::End();
-	}
-}
 
 
 

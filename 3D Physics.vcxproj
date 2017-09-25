@@ -66,6 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3DEngine\Application.h" />
+    <ClInclude Include="3DEngine\Brofiler\Brofiler.h" />
     <ClInclude Include="3DEngine\Color.h" />
     <ClInclude Include="3DEngine\Console.h" />
     <ClInclude Include="3DEngine\Glew\include\glew.h" />
@@ -149,7 +150,6 @@
     <ClInclude Include="3DEngine\ModuleRenderer3D.h" />
     <ClInclude Include="3DEngine\ModuleWindow.h" />
     <ClInclude Include="3DEngine\parson.h" />
-    <ClInclude Include="3DEngine\Profiler.h" />
     <ClInclude Include="3DEngine\Timer.h" />
   </ItemGroup>
   <ItemGroup>
@@ -197,6 +197,7 @@
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalIncludeDirectories>Dll_s\Brofiler-1.1.2</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
