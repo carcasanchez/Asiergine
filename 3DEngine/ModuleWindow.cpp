@@ -53,17 +53,17 @@ bool ModuleWindow::Init(const JSON_Object* config_data)
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
 
-		if(window_state.c_str() == "fullscreen" )
+		if(window_state == "fullscreen" )
 		{
 			flags |= SDL_WINDOW_FULLSCREEN;
 		}
 
-		if(window_state.c_str() == "resizable")
+		if(window_state == "resizable")
 		{
 			flags |= SDL_WINDOW_RESIZABLE;
 		}
 
-		if(window_state.c_str() == "fullscreen_desktop")
+		if(window_state == "fullscreen_desktop")
 		{
 			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 		}

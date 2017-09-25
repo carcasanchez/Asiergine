@@ -59,7 +59,7 @@ update_status ModuleEditor::Update(float dt)
 	ManageHierarchyWindow();
 	ManageInspectorWindow();
 	ManageProfilerWindow();
-
+	ImGui::ShowTestWindow();
 			
 	return ret;
 }
@@ -332,7 +332,9 @@ void ModuleEditor::ManageConfigurationWindow()
 			ImGui::SliderInt("Height", &height, 0, 2048);
 			ImGui::TextWrapped("Refresh Rate: ");
 
-			if(ImGui::BeginMenu("Window Options"))
+			if (ImGui::Button("Window Options"))
+				ImGui::OpenPopup("FilePopup");
+			if (ImGui::BeginPopup("FilePopup"))
 			{
 				if (ImGui::MenuItem("Fullscreen"))
 				{
@@ -346,16 +348,17 @@ void ModuleEditor::ManageConfigurationWindow()
 						ImGui::SetTooltip("Restart to apply");
 
 					SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_RESIZABLE);
-					App->window->window_state = "resizable";					
+					App->window->window_state = "resizable";
 				}
 				if (ImGui::MenuItem("Full Desktop"))
 				{
 					SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_FULLSCREEN_DESKTOP);
 					App->window->window_state = "fullscreen_desktop";
 				}
-				ImGui::EndMenu();
+				ImGui::EndPopup();
 			}
 		}
+
 		//Hardware specs of your own computer
 		if (ImGui::CollapsingHeader("Hardware Specs"))
 		{
