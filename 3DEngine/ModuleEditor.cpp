@@ -312,7 +312,13 @@ void ModuleEditor::ManageConfigurationWindow()
 			static float brightness = 1.0f;
 			static int width = 0;
 			static int height = 0;
-			ImGui::Checkbox("Active", &active);
+			if (ImGui::Checkbox("Vsync Active", &active))
+			{
+				App->window->vsync = true;
+			}
+			else
+				App->window->vsync = false;
+
 			ImGui::TextWrapped("Icon:  *default*");
 			ImGui::SliderFloat("Brightness", &brightness, 0, 1);
 			ImGui::SliderInt("Width", &width, 0, 3820);

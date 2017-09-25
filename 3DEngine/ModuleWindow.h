@@ -42,7 +42,7 @@ public:
 
 	std::string title;
 
-	bool SaveConfig();
+	bool SaveConfig(JSON_Object* config_data);
 };
 
 #endif // __ModuleWindow_H__

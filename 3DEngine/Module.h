@@ -54,7 +54,7 @@ public:
 		return UPDATE_CONTINUE;
 	}
 
-	virtual bool SaveConfig(const JSON_Object* config_data)
+	virtual bool SaveConfig(JSON_Object* config_data)
 	{
 		return true;
 	}
