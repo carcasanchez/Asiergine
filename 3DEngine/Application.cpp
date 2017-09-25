@@ -124,8 +124,7 @@ void Application::PrepareUpdate()
 // ---------------------------------------------
 void Application::FinishUpdate()
 {
-	last_frame_miliseconds = (float)ms_timer.ReadMS();		
-
+	
 	if (fps_cap > 0 && last_frame_miliseconds < (1000/ fps_cap))
 	{
 		SDL_Delay(((1000/fps_cap) - int(last_frame_miliseconds)));
@@ -137,6 +136,8 @@ void Application::FinishUpdate()
 		second_timer.Start();
 		frame_count = 0;
 	}
+
+	last_frame_miliseconds = (float)ms_timer.ReadMS();
 }
 
 // Call PreUpdate, Update and PostUpdate on all modules
