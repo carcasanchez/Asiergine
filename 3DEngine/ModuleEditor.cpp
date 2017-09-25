@@ -2,7 +2,10 @@
 #include "ModuleEditor.h"
 #include "Application.h"
 #include "Math.h"
-
+#include "Glew/include/glew.h"
+#include "SDL/include/SDL_opengl.h"
+#include <gl/GL.h>
+#include <gl/GLU.h>
 
 #include "Imgui/imgui_impl_sdl_gl3.h"
 
@@ -393,7 +396,16 @@ void ModuleEditor::ManageConfigurationWindow()
 			ImGui::TextWrapped("CPUs: %i", App->system_specs.cpus);
 			ImGui::TextWrapped("System Ram: %f", App->system_specs.system_ram);
 			ImGui::TextWrapped("CPU Cache: %i", App->system_specs.cpu_chache);
-			//TODO:   glGetString(GL_VERSION)
+
+
+			ImGui::Separator();
+			ImGui::TextColored({ 0, 255, 255, 255 }, "---------GPU Specs-----------");
+
+
+			ImGui::TextColored({ 255, 0, 255, 255 }, "%s", glGetString(GL_VENDOR));
+			ImGui::TextColored({ 255, 0, 255, 255 }, "%s", glGetString(GL_RENDERER));
+			ImGui::TextColored({255, 0, 255, 255}, "%s", glGetString(GL_VERSION));
+			
 
 			ImGui::Separator();
 			ImGui::TextWrapped("Your hardware uses:");
