@@ -327,66 +327,29 @@ void ModuleEditor::ManageConfigurationWindow()
 			ImGui::SliderInt("Width", &width, 0, 3820);
 			ImGui::SliderInt("Height", &height, 0, 2048);
 			ImGui::TextWrapped("Refresh Rate: ");
-			
-			if (ImGui::Checkbox("Fullscreen", &fullscreen)) 
-			{				
-				if (fullscreen)
+
+			if(ImGui::BeginMenu("Window Options"))
+			{
+				if (ImGui::MenuItem("Fullscreen"))
 				{
 					SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_FULLSCREEN);
-					App->window->fullscreen = true;
+					App->window->window_state = "fullscreen";
 				}
-				
-				else
-				{
-					SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_RESIZABLE);
-					App->window->fullscreen = false;
-				}
-			}
 
-			ImGui::SameLine();
-			if (ImGui::Checkbox("Resizable", &resizable)) 
-			{
-				if (ImGui::IsItemHovered())
-					ImGui::SetTooltip("Restart to apply");
-				if (resizable)
+				if (ImGui::MenuItem("Resizable"))
 				{
-					SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_RESIZABLE);
-					App->window->resizable = true;
-				}
-				else 
-				{
-					App->window->resizable = false;
-				}
-			}
+					if (ImGui::IsItemHovered())
+						ImGui::SetTooltip("Restart to apply");
 
-			if (ImGui::Checkbox("Borderless", &borderless))
-			{
-				if (borderless)
-				{
-					SDL_SetWindowBordered(App->window->window, bordered);
-					App->window->borderless = true;
-				}
-				else 
-				{
 					SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_RESIZABLE);
-					SDL_SetWindowBordered(App->window->window, SDL_FALSE);
-					App->window->borderless = false;
+					App->window->window_state = "resizable";					
 				}
-			}
-				
-			ImGui::SameLine();
-			if (ImGui::Checkbox("Full Desktop", &fulldesktop))
-			{
-				if (fulldesktop)
+				if (ImGui::MenuItem("Full Desktop"))
 				{
 					SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_FULLSCREEN_DESKTOP);
-					App->window->fullscreen_desktop = true;
+					App->window->window_state = "fullscreen_desktop";
 				}
-				else
-				{
-					SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_RESIZABLE);
-					App->window->fullscreen_desktop = false;
-				}
+				ImGui::EndMenu();
 			}
 		}
 		//Hardware specs of your own computer
