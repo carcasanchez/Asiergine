@@ -34,13 +34,10 @@ public:
 	int window_width;
 	int window_height;
 	int screen_size;
-	bool fullscreen;
-	bool resizable;
-	bool borderless;
-	bool fullscreen_desktop;
 	bool vsync;
 
 	std::string title;
+	std::string window_state;
 
 	bool SaveConfig(JSON_Object* config_data);
 };
