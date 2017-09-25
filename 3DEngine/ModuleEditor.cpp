@@ -317,8 +317,8 @@ void ModuleEditor::ManageConfigurationWindow()
 			//Checkbox and sliders
 			static bool active = true;
 			static float brightness = 1.0f;
-			static int width = 0;
-			static int height = 0;
+			static int width = 1080;
+			static int height = 960;
 			if (ImGui::Checkbox("Vsync Active", &active))
 			{
 				App->window->vsync = true;
@@ -328,9 +328,15 @@ void ModuleEditor::ManageConfigurationWindow()
 
 			ImGui::TextWrapped("Icon:  *default*");
 			ImGui::SliderFloat("Brightness", &brightness, 0, 1);
-			ImGui::SliderInt("Width", &width, 0, 3820);
-			ImGui::SliderInt("Height", &height, 0, 2048);
-			ImGui::TextWrapped("Refresh Rate: ");
+			if (ImGui::SliderInt("Width", &width, 200, 3820))
+			{
+				App->window->window_width = width;
+			}
+			if (ImGui::SliderInt("Height", &height, 200, 2048))
+			{
+				App->window->window_height = height;
+			}
+			ImGui::TextColored({ 255,0,0,255 }, "Restart to apply window changes");
 
 			if (ImGui::Button("Window Options"))
 				ImGui::OpenPopup("FilePopup");
@@ -344,9 +350,6 @@ void ModuleEditor::ManageConfigurationWindow()
 
 				if (ImGui::MenuItem("Resizable"))
 				{
-					if (ImGui::IsItemHovered())
-						ImGui::SetTooltip("Restart to apply");
-
 					SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_RESIZABLE);
 					App->window->window_state = "resizable";
 				}
