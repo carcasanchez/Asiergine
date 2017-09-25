@@ -38,10 +38,7 @@ bool ModuleWindow::Init(const JSON_Object* config_data)
 		JSON_Object * window_data = json_object_dotget_object(application_data, "window");
 		window_width = json_object_dotget_number(window_data, "width");
 		window_height = json_object_dotget_number(window_data, "height");
-		fullscreen = json_object_dotget_boolean(window_data, "fullscreen");
-		resizable = json_object_dotget_boolean(window_data, "resizable");
-		borderless = json_object_dotget_boolean(window_data, "borderless");
-		fullscreen_desktop = json_object_dotget_boolean(window_data, "fullscreen_desktop");
+		window_state = json_object_dotget_string(window_data, "window_state");
 		title = json_object_dotget_string(window_data, "title");
 		screen_size = json_object_dotget_number(window_data, "screen_size");
 		vsync = json_object_dotget_boolean(window_data, "vsync");
@@ -56,22 +53,17 @@ bool ModuleWindow::Init(const JSON_Object* config_data)
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
 
-		if(fullscreen == true)
+		if(window_state.c_str() == "fullscreen" )
 		{
 			flags |= SDL_WINDOW_FULLSCREEN;
 		}
 
-		if(resizable == true)
+		if(window_state.c_str() == "resizable")
 		{
 			flags |= SDL_WINDOW_RESIZABLE;
 		}
 
-		if(borderless == true)
-		{
-			flags |= SDL_WINDOW_BORDERLESS;
-		}
-
-		if(fullscreen_desktop == true)
+		if(window_state.c_str() == "fullscreen_desktop")
 		{
 			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 		}
@@ -129,10 +121,7 @@ bool ModuleWindow::SaveConfig(JSON_Object* config_data)
 
 	json_object_dotset_number(config_data, "width", window_width);
 	json_object_dotset_number(config_data, "height", window_height);
-	json_object_dotset_boolean(config_data, "fullscreen", fullscreen);
-	json_object_dotset_boolean(config_data, "resizable", resizable);
-	json_object_dotset_boolean(config_data, "borderless", borderless);
-	json_object_dotset_boolean(config_data, "fullscreen_desktop", fullscreen_desktop);
+	json_object_dotset_string(config_data, "window_state", window_state.c_str());
 	json_object_dotset_boolean(config_data, "vsync", vsync);
 
 	return true;
