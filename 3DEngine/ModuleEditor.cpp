@@ -352,19 +352,19 @@ void ModuleEditor::ManageConfigurationWindow()
 			{
 				if (ImGui::MenuItem("Fullscreen"))
 				{
-					SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_FULLSCREEN);
 					App->window->window_state = "fullscreen";
+					SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_FULLSCREEN);
 				}
 
 				if (ImGui::MenuItem("Resizable"))
 				{
-					SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_RESIZABLE);
 					App->window->window_state = "resizable";
+					SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_RESIZABLE);
 				}
 				if (ImGui::MenuItem("Full Desktop"))
 				{
-					SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_FULLSCREEN_DESKTOP);
 					App->window->window_state = "fullscreen_desktop";
+					SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_FULLSCREEN_DESKTOP);
 				}
 				ImGui::EndPopup();
 			}
