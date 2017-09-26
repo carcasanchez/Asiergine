@@ -426,7 +426,7 @@ void ModuleEditor::ManageConfigurationWindow()
 				ImGui::TextWrapped("AVX");
 		}
 
-		//`RENDERING OPTIONS
+		//RENDERING OPTIONS
 		if (ImGui::CollapsingHeader("Rendering"))
 		{
 		
@@ -450,6 +450,21 @@ void ModuleEditor::ManageConfigurationWindow()
 									
 			else if(ImGui::Checkbox("Hard Poly", &App->renderer3D->hard_poly_enabled))
 				(App->renderer3D->hard_poly_enabled) ? glShadeModel(GL_FLAT) : glShadeModel(GL_SMOOTH);
+		}
+
+		//Audio Options
+
+		if (ImGui::CollapsingHeader("Audio"))
+		{
+			ImGui::TextWrapped("Audio Driver:");
+			ImGui::SameLine();
+			ImGui::TextColored({255, 50, 100, 255},"%s", SDL_GetAudioDriver(App->audio->audio_driver));
+
+			ImGui::TextWrapped("Audio Device:");
+			ImGui::SameLine();
+			ImGui::TextColored({ 255, 50, 100, 255 }, "%s", SDL_GetAudioDeviceName(App->audio->audio_device, 0));
+
+			ImGui::SliderInt("Volume", &App->audio->volume, 0, 100);
 		}
 
 
