@@ -429,22 +429,37 @@ void ModuleEditor::ManageConfigurationWindow()
 			if (ImGui::Checkbox("GL Depth", &App->renderer3D->gl_depth_enabled))
 				(&App->renderer3D->gl_depth_enabled) ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
 
-			else if (ImGui::Checkbox("GL Cull Face", &App->renderer3D->gl_cull_face_enabled))
+			if (ImGui::Checkbox("GL Cull Face", &App->renderer3D->gl_cull_face_enabled))
 				(App->renderer3D->gl_cull_face_enabled) ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
 
-			else if (ImGui::Checkbox("GL Lighting", &App->renderer3D->gl_lighting_enabled))
+			if (ImGui::Checkbox("GL Lighting", &App->renderer3D->gl_lighting_enabled))	
 				(App->renderer3D->gl_lighting_enabled) ? glEnable(GL_LIGHTING) : glDisable(GL_LIGHTING);
 
-			else if (ImGui::Checkbox("GL Color Material", &App->renderer3D->gl_color_material_enabled))
+			if (App->renderer3D->gl_lighting_enabled)
+			{
+				ImGui::Separator();
+				ImGui::PushItemWidth(120);
+				static float color[4];
+				if(ImGui::ColorPicker4("Light Color", color));
+				{
+					glLightModelfv(GL_LIGHT_MODEL_AMBIENT, color);
+				}
+				ImGui::PopItemWidth();
+
+				ImGui::Separator();
+			}
+			
+
+			if (ImGui::Checkbox("GL Color Material", &App->renderer3D->gl_color_material_enabled))
 				(App->renderer3D->gl_color_material_enabled) ? glEnable(GL_COLOR_MATERIAL) : glDisable(GL_COLOR_MATERIAL);
 
-			else if (ImGui::Checkbox("GL Texture 2D", &App->renderer3D->gl_texture_2D_enabled))
+			 if (ImGui::Checkbox("GL Texture 2D", &App->renderer3D->gl_texture_2D_enabled))
 				(App->renderer3D->gl_texture_2D_enabled) ? glEnable(GL_TEXTURE_2D) : glDisable(GL_TEXTURE_2D);
 						
-			else if (ImGui::Checkbox("Wireframe mode", &App->renderer3D->gl_wireframe_enabled))
+			 if (ImGui::Checkbox("Wireframe mode", &App->renderer3D->gl_wireframe_enabled))
 				(App->renderer3D->gl_wireframe_enabled) ? glPolygonMode(GL_FRONT_AND_BACK, GL_LINE) : glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 									
-			else if(ImGui::Checkbox("Hard Poly", &App->renderer3D->hard_poly_enabled))
+			 if(ImGui::Checkbox("Hard Poly", &App->renderer3D->hard_poly_enabled))
 				(App->renderer3D->hard_poly_enabled) ? glShadeModel(GL_FLAT) : glShadeModel(GL_SMOOTH);
 		}
 
@@ -501,9 +516,6 @@ void ModuleEditor::ManageInspectorWindow()
 		ImGui::End();
 	}
 }
-
-
-
 
 
 void ModuleEditor::GetInputEvent(SDL_Event* e)
