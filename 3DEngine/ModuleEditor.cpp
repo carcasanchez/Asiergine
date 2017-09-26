@@ -324,14 +324,11 @@ void ModuleEditor::ManageConfigurationWindow()
 		{
 			//Checkbox and sliders
 			static bool vsync_active = App->window->vsync;
-			static float brightness = 1.0f;
 			static int width = 1080;
 			static int height = 960;
 			if (ImGui::Checkbox("Vsync Active", &vsync_active))
 				App->window->vsync = vsync_active;
-
-			ImGui::TextWrapped("Icon:  *default*");
-			ImGui::SliderFloat("Brightness", &brightness, 0, 1);
+			
 			if (ImGui::SliderInt("Width", &width, 200, 3820))
 			{
 				App->window->window_width = width;

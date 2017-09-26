@@ -20,6 +20,8 @@ public:
 
 	void ChangeBackgroundColor(Color c);
 
+	bool SaveConfig(JSON_Object* config_data);
+
 public:
 
 	std::vector<Light> lights;
@@ -29,13 +31,12 @@ public:
 
 
 	//Rendering options--------
-	bool gl_depth_enabled = true;
-	bool gl_cull_face_enabled = true;
-	bool gl_lighting_enabled = true;
-	bool gl_color_material_enabled = true;
-	bool gl_texture_2D_enabled = true;
-	bool gl_wireframe_enabled = false;
-
-	bool hard_poly_enabled = false;
+	bool gl_depth_enabled;
+	bool gl_cull_face_enabled;
+	bool gl_lighting_enabled;
+	bool gl_color_material_enabled;
+	bool gl_texture_2D_enabled;
+	bool gl_wireframe_enabled;
+	bool hard_poly_enabled;
 
 };
