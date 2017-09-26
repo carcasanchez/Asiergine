@@ -19,6 +19,8 @@ public:
 
 	void OnResize(int width, int height);
 
+	void ChangeBackgroundColor(Color c);
+
 public:
 
 	Light lights[MAX_LIGHTS];

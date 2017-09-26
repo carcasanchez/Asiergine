@@ -100,17 +100,17 @@ void Primitive::Scale(float x, float y, float z)
 }
 
 // CUBE ============================================
-Cube::Cube() : Primitive(), size(1.0f, 1.0f, 1.0f)
+Cube_prim::Cube_prim() : Primitive(), size(1.0f, 1.0f, 1.0f)
 {
 	type = PrimitiveTypes::Primitive_Cube;
 }
 
-Cube::Cube(float sizeX, float sizeY, float sizeZ) : Primitive(), size(sizeX, sizeY, sizeZ)
+Cube_prim::Cube_prim(float sizeX, float sizeY, float sizeZ) : Primitive(), size(sizeX, sizeY, sizeZ)
 {
 	type = PrimitiveTypes::Primitive_Cube;
 }
 
-void Cube::InnerRender() const
+void Cube_prim::InnerRender() const
 {	
 	float sx = size.x * 0.5f;
 	float sy = size.y * 0.5f;
@@ -157,7 +157,7 @@ void Cube::InnerRender() const
 	glEnd();
 }
 
-void Cube::Size(float x, float y, float z)
+void Cube_prim::Size(float x, float y, float z)
 {
 	size.x = x;
 	size.y = y;
@@ -165,34 +165,34 @@ void Cube::Size(float x, float y, float z)
 }
 
 // SPHERE ============================================
-Sphere::Sphere() : Primitive(), radius(1.0f)
+Sphere_prim::Sphere_prim() : Primitive(), radius(1.0f)
 {
 	type = PrimitiveTypes::Primitive_Sphere;
 }
 
-Sphere::Sphere(float radius) : Primitive(), radius(radius)
+Sphere_prim::Sphere_prim(float radius) : Primitive(), radius(radius)
 {
 	type = PrimitiveTypes::Primitive_Sphere;
 }
 
-void Sphere::InnerRender() const
+void Sphere_prim::InnerRender() const
 {
 	glutSolidSphere(radius, 25, 25);
 }
 
 
 // CYLINDER ============================================
-Cylinder::Cylinder() : Primitive(), radius(1.0f), height(1.0f)
+Cylinder_prim::Cylinder_prim() : Primitive(), radius(1.0f), height(1.0f)
 {
 	type = PrimitiveTypes::Primitive_Cylinder;
 }
 
-Cylinder::Cylinder(float radius, float height) : Primitive(), radius(radius), height(height)
+Cylinder_prim::Cylinder_prim(float radius, float height) : Primitive(), radius(radius), height(height)
 {
 	type = PrimitiveTypes::Primitive_Cylinder;
 }
 
-void Cylinder::InnerRender() const
+void Cylinder_prim::InnerRender() const
 {
 	int n = 30;
 
@@ -228,6 +228,7 @@ void Cylinder::InnerRender() const
 	glEnd();
 }
 
+/*
 // LINE ==================================================
 Line::Line() : Primitive(), origin(0, 0, 0), destination(1, 1, 1)
 {
@@ -281,4 +282,4 @@ void Plane::InnerRender() const
 	}
 
 	glEnd();
-}
+}*/

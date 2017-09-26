@@ -2,6 +2,7 @@
 #include "ModuleEditor.h"
 #include "Application.h"
 #include "Math.h"
+#include "Primitive.h"
 #include "Glew/include/glew.h"
 #include "SDL/include/SDL_opengl.h"
 #include <gl/GL.h>
@@ -47,19 +48,10 @@ update_status ModuleEditor::PreUpdate(float dt)
 
 update_status ModuleEditor::Update(float dt)
 {
-	BROFILER_CATEGORY("Editor Update", Profiler::Color::Olive);
+	
 
 	update_status ret = UPDATE_CONTINUE;
 	
-	ManageMainMenuBar();
-
-	ManageAboutWindow();
-
-	ManageConsole();
-	ManageConfigurationWindow();
-	ManageExampleWindow();
-	ManageHierarchyWindow();
-	ManageInspectorWindow();
 
 			
 	return ret;
@@ -67,8 +59,27 @@ update_status ModuleEditor::Update(float dt)
 
 update_status ModuleEditor::PostUpdate(float dt)
 {
+
+	BROFILER_CATEGORY("Editor PostUpdate", Profiler::Color::Olive);
+
 	update_status ret = UPDATE_CONTINUE;
+
+	Cube_prim cube(3, 3, 3);
+
+	cube.Render();
+
+	App->renderer3D->ChangeBackgroundColor({255, 0, 0, 255});
+
 	
+	ManageMainMenuBar();
+	ManageAboutWindow();
+	ManageConsole();
+	ManageConfigurationWindow();
+	ManageExampleWindow();
+	ManageHierarchyWindow();
+	ManageInspectorWindow();
+
+
 	ImGui::Render();
 
 	if (quit_editor)

@@ -82,7 +82,7 @@ bool ModuleRenderer3D::Init(const JSON_Object* config_data)
 		glClearDepth(1.0f);
 		
 		//Initialize clear color
-		glClearColor(0.3f, 0.3f, 0.3f, 1.f);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.f);
 
 		//Check for error
 		error = glGetError();
@@ -167,4 +167,9 @@ void ModuleRenderer3D::OnResize(int width, int height)
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+}
+
+void ModuleRenderer3D::ChangeBackgroundColor(Color c)
+{
+	glClearColor(c.r, c.g, c.b, c.a);
 }
