@@ -66,7 +66,7 @@ update_status ModuleEditor::PostUpdate(float dt)
 	Plane_prim plane;
 
 	Cube_prim cube(3, 3, 3);
-	Cube_prim cube2(3, 3, 3);
+	Sphere_prim cube2(1);
 	cube2.SetPos(2, 1, 2);
 	plane.Render();
 	cube.Render();
@@ -424,7 +424,7 @@ void ModuleEditor::ManageConfigurationWindow()
 				ImGui::TextWrapped("AVX");
 		}
 
-		//OPENGL OPTIONS
+		//`RENDERING OPTIONS
 		if (ImGui::CollapsingHeader("Rendering"))
 		{
 		
@@ -442,15 +442,15 @@ void ModuleEditor::ManageConfigurationWindow()
 
 			else if (ImGui::Checkbox("GL Texture 2D", &App->renderer3D->gl_texture_2D_enabled))
 				(App->renderer3D->gl_texture_2D_enabled) ? glEnable(GL_TEXTURE_2D) : glDisable(GL_TEXTURE_2D);
-
+						
 			else if (ImGui::Checkbox("Wireframe mode", &App->renderer3D->gl_wireframe_enabled))
 			{
-				if (App->renderer3D->gl_wireframe_enabled)				
-					glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);				
-				else glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-			}
-				
+				(App->renderer3D->gl_wireframe_enabled) ? glPolygonMode(GL_FRONT_AND_BACK, GL_LINE) : glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 			
+			}
+						
+			else if(ImGui::Checkbox("Hard Poly", &App->renderer3D->hard_poly_enabled))
+				(App->renderer3D->hard_poly_enabled) ? glShadeModel(GL_FLAT) : glShadeModel(GL_SMOOTH);
 		}
 
 
