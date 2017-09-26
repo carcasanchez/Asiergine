@@ -346,7 +346,7 @@ void ModuleEditor::ManageConfigurationWindow()
 			}
 			ImGui::TextColored({ 255,0,0,255 }, "Restart to apply resolution changes");
 
-			if (ImGui::Button("Window Options"))
+			if (ImGui::Button("Window Modes"))
 				ImGui::OpenPopup("FilePopup");
 			if (ImGui::BeginPopup("FilePopup"))
 			{
@@ -372,11 +372,13 @@ void ModuleEditor::ManageConfigurationWindow()
 
 			ImGui::Separator();
 
+			ImGui::PushItemWidth(140);
 			static float color[4];
 			if (ImGui::ColorPicker4("Background Color", color))
 			{
 				App->renderer3D->ChangeBackgroundColor({color[0], color[1], color[2], color[3]});
 			}
+			ImGui::PopItemWidth();
 		}
 
 		//Hardware specs of your own computer
@@ -392,10 +394,10 @@ void ModuleEditor::ManageConfigurationWindow()
 			ImGui::TextColored({ 0, 255, 255, 255 }, "---------GPU Specs-----------");
 
 
-			ImGui::TextColored({ 255, 0, 255, 255 }, "%s", glGetString(GL_VENDOR));
-			ImGui::TextColored({ 255, 0, 255, 255 }, "%s", glGetString(GL_RENDERER));
-			ImGui::TextColored({255, 0, 255, 255}, "%s", glGetString(GL_VERSION));
-			//ImGui::TextColored({ 255, 0, 255, 255 }, "%s", glGetString(GL_SHADING_LANGUAGE_VERSION));
+			ImGui::TextColored({ 255, 0, 255, 255 }, "Vendor: %s", glGetString(GL_VENDOR));
+			ImGui::TextColored({ 255, 0, 255, 255 }, "Renderer: %s", glGetString(GL_RENDERER));
+			ImGui::TextColored({255, 0, 255, 255}, "GL version: %s", glGetString(GL_VERSION));
+			ImGui::TextColored({ 255, 0, 255, 255 }, "GL shading languaje version: %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
 
 
 			
@@ -444,11 +446,8 @@ void ModuleEditor::ManageConfigurationWindow()
 				(App->renderer3D->gl_texture_2D_enabled) ? glEnable(GL_TEXTURE_2D) : glDisable(GL_TEXTURE_2D);
 						
 			else if (ImGui::Checkbox("Wireframe mode", &App->renderer3D->gl_wireframe_enabled))
-			{
 				(App->renderer3D->gl_wireframe_enabled) ? glPolygonMode(GL_FRONT_AND_BACK, GL_LINE) : glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-			
-			}
-						
+									
 			else if(ImGui::Checkbox("Hard Poly", &App->renderer3D->hard_poly_enabled))
 				(App->renderer3D->hard_poly_enabled) ? glShadeModel(GL_FLAT) : glShadeModel(GL_SMOOTH);
 		}
