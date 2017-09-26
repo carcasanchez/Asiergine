@@ -143,11 +143,13 @@ bool ModuleRenderer3D::Init(const JSON_Object* config_data)
 			GLfloat MaterialDiffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 			glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, MaterialDiffuse);
 
-			glEnable(GL_DEPTH_TEST);
-			glEnable(GL_CULL_FACE);
-			glEnable(GL_LIGHTING);
-			glEnable(GL_COLOR_MATERIAL);
-			glEnable(GL_TEXTURE_2D);
+			gl_depth_enabled ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
+			gl_cull_face_enabled ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
+			gl_lighting_enabled ? glEnable(GL_LIGHTING) : glDisable(GL_LIGHTING);
+			gl_color_material_enabled ? glEnable(GL_COLOR_MATERIAL) : glDisable(GL_COLOR_MATERIAL);
+			gl_texture_2D_enabled ? glEnable(GL_TEXTURE_2D) : glDisable(GL_TEXTURE_2D);
+			gl_wireframe_enabled ? glPolygonMode(GL_FRONT_AND_BACK, GL_LINE) : glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+			hard_poly_enabled ? glShadeModel(GL_FLAT) : glShadeModel(GL_SMOOTH);
 
 			lights[0].Active(true);
 		}
