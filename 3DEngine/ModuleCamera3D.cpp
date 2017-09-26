@@ -20,7 +20,31 @@ ModuleCamera3D::ModuleCamera3D( bool start_enabled) : Module(start_enabled)
 
 ModuleCamera3D::~ModuleCamera3D()
 {}
+//---------------------------------------------------------------
+bool ModuleCamera3D::Init(const JSON_Object* config_data)
+{
+	bool ret = true;
 
+	if (SDL_Init(SDL_INIT_VIDEO) < 0)
+	{
+		LOG("SDL_VIDEO could not initialize! SDL_Error: %s\n", SDL_GetError());
+		ret = false;
+	}
+	else {
+		//LoadData from Config
+		JSON_Value * config_data = json_parse_file("config.json");
+
+		assert(config_data != nullptr);
+
+		JSON_Object * object_data = json_value_get_object(config_data);
+		JSON_Object * application_data = json_object_dotget_object(object_data, "App");
+		JSON_Object * camera_data = json_object_dotget_object(application_data, "camera");
+		Position.x = json_object_dotget_number(camera_data, "x");
+		Position.y = json_object_dotget_number(camera_data, "y");
+		Position.z = json_object_dotget_number(camera_data, "z");		
+	}
+	return ret;
+}
 // -----------------------------------------------------------------
 bool ModuleCamera3D::Start()
 {
@@ -141,5 +165,19 @@ void ModuleCamera3D::ControlCamera()
 	}
 
 
+
+}
+
+bool ModuleCamera3D::SaveConfig(JSON_Object* config_data)
+{
+	LOG("Saving data to config--------");
+
+	//Save window data
+
+	json_object_dotset_number(config_data, "x", Position.x);
+	json_object_dotset_number(config_data, "y", Position.y);
+	json_object_dotset_number(config_data, "z", Position.z);
+
+	return true;
 
 }

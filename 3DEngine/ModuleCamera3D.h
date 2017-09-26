@@ -9,6 +9,7 @@ public:
 	ModuleCamera3D(bool start_enabled = true);
 	~ModuleCamera3D();
 
+	bool Init(const JSON_Object* config_data);
 	bool Start();
 	update_status Update(float dt);
 	bool CleanUp();
@@ -18,6 +19,7 @@ public:
 	void Move(const vec3 &Movement);
 	float* GetViewMatrix();
 
+	bool SaveConfig(JSON_Object* config_data);
 private:
 
 	void CalculateViewMatrix();
