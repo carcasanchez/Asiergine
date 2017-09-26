@@ -31,101 +31,126 @@ bool ModuleRenderer3D::Init(const JSON_Object* config_data)
 	LOG("Creating 3D Renderer context");
 	bool ret = true;
 
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 1);
-	
-	//Create context
-	context = SDL_GL_CreateContext(App->window->window);
-	if(context == NULL)
+	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
-		LOG("OpenGL context could not be created! SDL_Error: %s\n", SDL_GetError());
+		LOG("SDL_VIDEO could not initialize! SDL_Error: %s\n", SDL_GetError());
 		ret = false;
 	}
+	else {
+		//LoadData from Config
+		JSON_Value * config_data = json_parse_file("config.json");
 
-	//Init Glew
-	GLenum glew_init = glewInit();
-	if (glew_init != 0)
-	{
-		LOG("GLOW ERROR: could not init %s\n", glewGetErrorString(glew_init));
-		ret = false;
-	}
-	else
-		LOG("Glew succesfully init %s", glewGetString(GLEW_VERSION));
-	
-	if(ret == true)
-	{
-		//Use Vsync
-		if(App->window->vsync && SDL_GL_SetSwapInterval(1) < 0)
-			LOG("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
+		assert(config_data != nullptr);
 
-		//Initialize Projection Matrix
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
+		JSON_Object * object_data = json_value_get_object(config_data);
+		JSON_Object * application_data = json_object_dotget_object(object_data, "App");
+		JSON_Object * renderer_data = json_object_dotget_object(application_data, "renderer");
+		gl_depth_enabled = json_object_dotget_boolean(renderer_data, "gl_depth_enabled");
+		gl_cull_face_enabled = json_object_dotget_boolean(renderer_data, "gl_cull_face_enabled");
+		gl_lighting_enabled = json_object_dotget_boolean(renderer_data, "gl_lighting_enabled");
+		gl_color_material_enabled = json_object_dotget_boolean(renderer_data, "gl_color_material_enabled");
+		gl_texture_2D_enabled = json_object_dotget_boolean(renderer_data, "gl_texture_2D_enabled");
+		gl_wireframe_enabled = json_object_dotget_boolean(renderer_data, "gl_wireframe_enabled");
+		hard_poly_enabled = json_object_dotget_boolean(renderer_data, "hard_poly_enabled");
 
-		//Check for error
-		GLenum error = glGetError();
-		if(error != GL_NO_ERROR)
+
+
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+		SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 1);
+
+		//Create context
+		context = SDL_GL_CreateContext(App->window->window);
+		if (context == NULL)
 		{
-			LOG("Error initializing OpenGL! %s\n", gluErrorString(error));
+			LOG("OpenGL context could not be created! SDL_Error: %s\n", SDL_GetError());
 			ret = false;
 		}
 
-		//Initialize Modelview Matrix
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-
-		//Check for error
-		error = glGetError();
-		if(error != GL_NO_ERROR)
+		//Init Glew
+		GLenum glew_init = glewInit();
+		if (glew_init != 0)
 		{
-			LOG("Error initializing OpenGL! %s\n", gluErrorString(error));
+			LOG("GLOW ERROR: could not init %s\n", glewGetErrorString(glew_init));
 			ret = false;
 		}
-		
-		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-		glClearDepth(1.0f);
-		
-		//Initialize clear color
-		glClearColor(0.0f, 0.0f, 0.0f, 1.f);
-		//Initialize alpha
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		else
+			LOG("Glew succesfully init %s", glewGetString(GLEW_VERSION));
 
-		//Check for error
-		error = glGetError();
-		if(error != GL_NO_ERROR)
+		if (ret == true)
 		{
-			LOG("Error initializing OpenGL! %s\n", gluErrorString(error));
-			ret = false;
+			//Use Vsync
+			if (App->window->vsync && SDL_GL_SetSwapInterval(1) < 0)
+				LOG("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
+
+			//Initialize Projection Matrix
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+
+			//Check for error
+			GLenum error = glGetError();
+			if (error != GL_NO_ERROR)
+			{
+				LOG("Error initializing OpenGL! %s\n", gluErrorString(error));
+				ret = false;
+			}
+
+			//Initialize Modelview Matrix
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();
+
+			//Check for error
+			error = glGetError();
+			if (error != GL_NO_ERROR)
+			{
+				LOG("Error initializing OpenGL! %s\n", gluErrorString(error));
+				ret = false;
+			}
+
+			glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+			glClearDepth(1.0f);
+
+			//Initialize clear color
+			glClearColor(0.0f, 0.0f, 0.0f, 1.f);
+			//Initialize alpha
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+			//Check for error
+			error = glGetError();
+			if (error != GL_NO_ERROR)
+			{
+				LOG("Error initializing OpenGL! %s\n", gluErrorString(error));
+				ret = false;
+			}
+
+			GLfloat LightModelAmbient[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+			glLightModelfv(GL_LIGHT_MODEL_AMBIENT, LightModelAmbient);
+
+			Light first_l;
+			first_l.ref = GL_LIGHT0;
+			first_l.ambient.Set(0.25f, 0.25f, 0.25f, 1.0f);
+			first_l.diffuse.Set(0.75f, 0.75f, 0.75f, 1.0f);
+			first_l.SetPos(0.0f, 0.0f, 2.5f);
+			first_l.Init();
+			lights.push_back(first_l);
+
+			GLfloat MaterialAmbient[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+			glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, MaterialAmbient);
+
+			GLfloat MaterialDiffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+			glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, MaterialDiffuse);
+
+			glEnable(GL_DEPTH_TEST);
+			glEnable(GL_CULL_FACE);
+			glEnable(GL_LIGHTING);
+			glEnable(GL_COLOR_MATERIAL);
+			glEnable(GL_TEXTURE_2D);
+
+			lights[0].Active(true);
 		}
-		
-		GLfloat LightModelAmbient[] = {0.0f, 0.0f, 0.0f, 1.0f};
-		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, LightModelAmbient);
-		
-		Light first_l;
-		first_l.ref = GL_LIGHT0;
-		first_l.ambient.Set(0.25f, 0.25f, 0.25f, 1.0f);
-		first_l.diffuse.Set(0.75f, 0.75f, 0.75f, 1.0f);
-		first_l.SetPos(0.0f, 0.0f, 2.5f);
-		first_l.Init();
-		lights.push_back(first_l);
-		
-		GLfloat MaterialAmbient[] = {1.0f, 1.0f, 1.0f, 1.0f};
-		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, MaterialAmbient);
-
-		GLfloat MaterialDiffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};
-		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, MaterialDiffuse);
-		
-		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_CULL_FACE);
-		glEnable(GL_LIGHTING);
-		glEnable(GL_COLOR_MATERIAL);
-		glEnable(GL_TEXTURE_2D);
-
-		lights[0].Active(true);
 	}
 
 	// Projection matrix for
@@ -194,4 +219,22 @@ void ModuleRenderer3D::OnResize(int width, int height)
 void ModuleRenderer3D::ChangeBackgroundColor(Color c)
 {
 	glClearColor(c.r, c.g, c.b, c.a);
+}
+
+
+bool ModuleRenderer3D::SaveConfig(JSON_Object* config_data)
+{
+	LOG("Saving data to config--------");
+
+	//Save renderer data
+
+	json_object_dotset_boolean(config_data, "gl_depth_enabled", gl_depth_enabled);
+	json_object_dotset_boolean(config_data, "gl_cull_face_enabled", gl_cull_face_enabled);
+	json_object_dotset_boolean(config_data, "gl_lighting_enabled", gl_lighting_enabled);
+	json_object_dotset_boolean(config_data, "gl_color_material_enabled", gl_color_material_enabled);
+	json_object_dotset_boolean(config_data, "gl_texture_2D_enabled", gl_texture_2D_enabled);
+	json_object_dotset_boolean(config_data, "gl_wireframe_enabled", gl_wireframe_enabled);
+	json_object_dotset_boolean(config_data, "hard_poly_enabled", hard_poly_enabled);
+
+	return true;
 }
