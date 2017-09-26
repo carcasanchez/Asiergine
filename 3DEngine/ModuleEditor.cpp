@@ -463,8 +463,15 @@ void ModuleEditor::ManageConfigurationWindow()
 			ImGui::SliderInt("Volume", &App->audio->volume, 0, 100);
 		}
 
-
-
+		//Input Options
+		if (ImGui::CollapsingHeader("Input"))
+		{
+			ImGui::TextWrapped("Mouse position:");
+			ImGui::SameLine();
+			ImGui::TextColored({ 255, 0, 100, 255 }, "X: %i ", App->input->GetMouseX());
+			ImGui::SameLine();
+			ImGui::TextColored({ 255, 0, 100, 255 }, "Y: %i", App->input->GetMouseY());
+		}
 		ImGui::End();
 	}
 }
