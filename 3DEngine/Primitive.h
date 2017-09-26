@@ -1,6 +1,6 @@
 
 #pragma once
-#include ".\MathGeoLib\include\Math.h"
+#include "glmath.h"
 #include "Color.h"
 
 enum PrimitiveTypes
@@ -22,14 +22,14 @@ public:
 	virtual void	Render() const;
 	virtual void	InnerRender() const;
 	void			SetPos(float x, float y, float z);
-	void			SetRotation(float angle, const math::float3 &u);
+	void			SetRotation(float angle, const vec3 &u);
 	void			Scale(float x, float y, float z);
 	PrimitiveTypes	GetType() const;
 
 public:
 	
 	Color color;
-	math::float4x4 transform;
+	mat4x4 transform;
 	bool axis,wire;
 
 protected:
@@ -37,70 +37,61 @@ protected:
 };
 
 // ============================================
-class Cube_prim : public Primitive
+class Cube : public Primitive
 {
 public :
-	Cube_prim();
-	Cube_prim(float sizeX, float sizeY, float sizeZ);
+	Cube();
+	Cube(float sizeX, float sizeY, float sizeZ);
 	void InnerRender() const;
 	void Size(float x, float y, float z);
 
 public:
-	math::OBB geometry;
-};
-
-/*
-// ============================================
-class Sphere_prim : public Primitive
-{
-public:
-	Sphere_prim();
-	Sphere_prim(float radius);
-	void InnerRender() const;
-public:
-	math::Sphere geometry;
+	vec3 size;
 };
 
 // ============================================
-class Cylinder_prim : public Primitive
+class Sphere : public Primitive
 {
 public:
-	Cylinder_prim();
-	Cylinder_prim(float radius, float height);
+	Sphere();
+	Sphere(float radius);
 	void InnerRender() const;
 public:
-	math::Cylinder geometry;
+	float radius;
 };
 
 // ============================================
-class Line_prim : public Primitive
+class Cylinder : public Primitive
 {
 public:
-	Line_prim();
-	Line_prim(float x, float y, float z);
+	Cylinder();
+	Cylinder(float radius, float height);
 	void InnerRender() const;
-public:v
-	math::Line geometry;
+public:
+	float radius;
+	float height;
 };
 
 // ============================================
-class Plane_prim : public Primitive
+class Line : public Primitive
 {
 public:
-	Plane_prim();
-	Plane_prim(float x, float y, float z, float d);
+	Line();
+	Line(float x, float y, float z);
 	void InnerRender() const;
 public:
-	math::Plane geometry;
+	vec3 origin;
+	vec3 destination;
 };
 
 // ============================================
-class Capsule_prim : public Primitive
+class Plane : public Primitive
 {
 public:
-	Capsule_prim();
-	Capsule_prim(float x, float y, float z, float d);
+	Plane();
+	Plane(float x, float y, float z, float d);
 	void InnerRender() const;
 public:
-	math::Capsule geometry;
-};*/
+	vec3 normal;
+	float constant;
+};

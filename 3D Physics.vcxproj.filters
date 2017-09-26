@@ -157,9 +157,6 @@
     <ClCompile Include="3DEngine\mmgr\mmgr.cpp">
       <Filter>Source\Tools\mmgr</Filter>
     </ClCompile>
-    <ClCompile Include="3DEngine\Primitive.cpp">
-      <Filter>Source\Helpers</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3DEngine\Application.h">
@@ -419,9 +416,6 @@
     </ClInclude>
     <ClInclude Include="3DEngine\Brofiler\Brofiler.h">
       <Filter>Source\Tools</Filter>
-    </ClInclude>
-    <ClInclude Include="3DEngine\Primitive.h">
-      <Filter>Source\Helpers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
