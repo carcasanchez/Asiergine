@@ -30,6 +30,13 @@ bool ModuleRenderer3D::Init(const JSON_Object* config_data)
 {
 	LOG("Creating 3D Renderer context");
 	bool ret = true;
+
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 1);
 	
 	//Create context
 	context = SDL_GL_CreateContext(App->window->window);
@@ -39,6 +46,7 @@ bool ModuleRenderer3D::Init(const JSON_Object* config_data)
 		ret = false;
 	}
 
+	//Init Glew
 	GLenum glew_init = glewInit();
 	if (glew_init != 0)
 	{
@@ -83,6 +91,8 @@ bool ModuleRenderer3D::Init(const JSON_Object* config_data)
 		
 		//Initialize clear color
 		glClearColor(0.0f, 0.0f, 0.0f, 1.f);
+		//Initialize alpha
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		//Check for error
 		error = glGetError();
@@ -109,9 +119,11 @@ bool ModuleRenderer3D::Init(const JSON_Object* config_data)
 		
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
-		lights[0].Active(true);
 		glEnable(GL_LIGHTING);
 		glEnable(GL_COLOR_MATERIAL);
+		glEnable(GL_TEXTURE_2D);
+
+		lights[0].Active(true);
 	}
 
 	// Projection matrix for
@@ -141,6 +153,11 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
+	//Call all draw operative
+
+	//Draw ImGui
+	App->editor->DrawUI();
+
 	SDL_GL_SwapWindow(App->window->window);
 	return UPDATE_CONTINUE;
 }

@@ -59,9 +59,6 @@ update_status ModuleEditor::Update(float dt)
 
 update_status ModuleEditor::PostUpdate(float dt)
 {
-
-	BROFILER_CATEGORY("Editor PostUpdate", Profiler::Color::Olive);
-
 	update_status ret = UPDATE_CONTINUE;
 
 	Plane_prim plane;
@@ -70,17 +67,6 @@ update_status ModuleEditor::PostUpdate(float dt)
 	plane.Render();
 	cube.Render();
 
-	
-	ManageMainMenuBar();
-	ManageAboutWindow();
-	ManageConsole();
-	ManageConfigurationWindow();
-	ManageExampleWindow();
-	ManageHierarchyWindow();
-	ManageInspectorWindow();
-
-
-	ImGui::Render();
 
 	if (quit_editor)
 		ret = UPDATE_STOP;
@@ -97,7 +83,18 @@ bool ModuleEditor::CleanUp()
 	return ret;
 }
 
+void ModuleEditor::DrawUI()
+{
+	ManageMainMenuBar();
+	ManageAboutWindow();
+	ManageConsole();
+	ManageConfigurationWindow();
+	ManageExampleWindow();
+	ManageHierarchyWindow();
+	ManageInspectorWindow();
 
+	ImGui::Render();
+}
 
 
 
