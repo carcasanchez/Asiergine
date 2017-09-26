@@ -105,11 +105,13 @@ bool ModuleRenderer3D::Init(const JSON_Object* config_data)
 		GLfloat LightModelAmbient[] = {0.0f, 0.0f, 0.0f, 1.0f};
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, LightModelAmbient);
 		
-		lights[0].ref = GL_LIGHT0;
-		lights[0].ambient.Set(0.25f, 0.25f, 0.25f, 1.0f);
-		lights[0].diffuse.Set(0.75f, 0.75f, 0.75f, 1.0f);
-		lights[0].SetPos(0.0f, 0.0f, 2.5f);
-		lights[0].Init();
+		Light first_l;
+		first_l.ref = GL_LIGHT0;
+		first_l.ambient.Set(0.25f, 0.25f, 0.25f, 1.0f);
+		first_l.diffuse.Set(0.75f, 0.75f, 0.75f, 1.0f);
+		first_l.SetPos(0.0f, 0.0f, 2.5f);
+		first_l.Init();
+		lights.push_back(first_l);
 		
 		GLfloat MaterialAmbient[] = {1.0f, 1.0f, 1.0f, 1.0f};
 		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, MaterialAmbient);
@@ -144,8 +146,8 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	// light 0 on cam pos
 	lights[0].SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
 
-	for(uint i = 0; i < MAX_LIGHTS; ++i)
-		lights[i].Render();
+	for(std::vector<Light>::iterator it = lights.begin(); it!= lights.end(); it++)
+		(*it).Render();
 
 	return UPDATE_CONTINUE;
 }

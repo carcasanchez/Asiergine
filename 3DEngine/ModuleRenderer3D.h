@@ -4,7 +4,6 @@
 #include "glmath.h"
 #include "Light.h"
 
-#define MAX_LIGHTS 8
 
 class ModuleRenderer3D : public Module
 {
@@ -23,7 +22,7 @@ public:
 
 public:
 
-	Light lights[MAX_LIGHTS];
+	std::vector<Light> lights;
 	SDL_GLContext context;
 	mat3x3 NormalMatrix;
 	mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
