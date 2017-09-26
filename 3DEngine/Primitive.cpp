@@ -253,19 +253,19 @@ void Line::InnerRender() const
 
 	glLineWidth(1.0f);
 }
-
+*/
 // PLANE ==================================================
-Plane::Plane() : Primitive(), normal(0, 1, 0), constant(1)
+Plane_prim::Plane_prim() : Primitive(), normal(0, 1, 0), constant(1)
 {
 	type = PrimitiveTypes::Primitive_Plane;
 }
 
-Plane::Plane(float x, float y, float z, float d) : Primitive(), normal(x, y, z), constant(d)
+Plane_prim::Plane_prim(float x, float y, float z, float d) : Primitive(), normal(x, y, z), constant(d)
 {
 	type = PrimitiveTypes::Primitive_Plane;
 }
 
-void Plane::InnerRender() const
+void Plane_prim::InnerRender() const
 {
 	glLineWidth(1.0f);
 
@@ -282,4 +282,4 @@ void Plane::InnerRender() const
 	}
 
 	glEnd();
-}*/
+}

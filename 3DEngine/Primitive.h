@@ -82,16 +82,16 @@ public:
 public:
 	vec3 origin;
 	vec3 destination;
-};
+};*/
 
 // ============================================
-class Plane : public Primitive
+class Plane_prim : public Primitive
 {
 public:
-	Plane();
-	Plane(float x, float y, float z, float d);
+	Plane_prim();
+	Plane_prim(float x, float y, float z, float d);
 	void InnerRender() const;
 public:
 	vec3 normal;
 	float constant;
-};*/
+};

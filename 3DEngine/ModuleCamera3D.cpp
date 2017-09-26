@@ -42,9 +42,44 @@ bool ModuleCamera3D::CleanUp()
 // -----------------------------------------------------------------
 update_status ModuleCamera3D::Update(float dt)
 {	
-	
+	//Move camera rudimentally
+	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
+	{
+		Position.y += 0.01;
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
+	{
+		Position.y -= 0.01;
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
+	{
+		Position.x -= 0.01;
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
+	{
+		Position.x += 0.01;
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT)
+	{
+		Position.z += 0.01;
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_E) == KEY_REPEAT)
+	{
+		Position.z -= 0.01;
+	}
+
+
+
+
 	// Recalculate matrix -------------
 	CalculateViewMatrix();
+
+	
 
 	return UPDATE_CONTINUE;
 }

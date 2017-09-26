@@ -64,11 +64,11 @@ update_status ModuleEditor::PostUpdate(float dt)
 
 	update_status ret = UPDATE_CONTINUE;
 
+	Plane_prim plane;
+
 	Cube_prim cube(3, 3, 3);
-
+	plane.Render();
 	cube.Render();
-
-	App->renderer3D->ChangeBackgroundColor({255, 0, 0, 255});
 
 	
 	ManageMainMenuBar();
@@ -320,6 +320,8 @@ void ModuleEditor::ManageConfigurationWindow()
 			ImGui::PlotHistogram("##Milliseconds", &ms_log[0], ms_log.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
 
 		}
+
+
 		//Window submenu
 		if (ImGui::CollapsingHeader("Window"))
 		{
@@ -345,7 +347,7 @@ void ModuleEditor::ManageConfigurationWindow()
 			{
 				App->window->window_height = height;
 			}
-			ImGui::TextColored({ 255,0,0,255 }, "Restart to apply window changes");
+			ImGui::TextColored({ 255,0,0,255 }, "Restart to apply resolution changes");
 
 			if (ImGui::Button("Window Options"))
 				ImGui::OpenPopup("FilePopup");
@@ -368,6 +370,15 @@ void ModuleEditor::ManageConfigurationWindow()
 					App->window->window_state = "fullscreen_desktop";
 				}
 				ImGui::EndPopup();
+			}
+
+
+			ImGui::Separator();
+
+			static float color[4];
+			if (ImGui::ColorPicker4("Background Color", color))
+			{
+				App->renderer3D->ChangeBackgroundColor({color[0], color[1], color[2], color[3]});
 			}
 		}
 
