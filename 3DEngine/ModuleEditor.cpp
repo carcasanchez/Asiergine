@@ -401,7 +401,6 @@ void ModuleEditor::ManageConfigurationWindow()
 			if (App->system_specs.avx)
 				ImGui::TextWrapped("AVX");
 		}
-
 		ImGui::End();
 	}
 }

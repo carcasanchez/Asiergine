@@ -30,6 +30,15 @@ bool ModuleRenderer3D::Init(const JSON_Object* config_data)
 {
 	LOG("Creating 3D Renderer context");
 	bool ret = true;
+
+
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 1);
+
 	
 	//Create context
 	context = SDL_GL_CreateContext(App->window->window);
@@ -84,6 +93,9 @@ bool ModuleRenderer3D::Init(const JSON_Object* config_data)
 		//Initialize clear color
 		glClearColor(0.3f, 0.3f, 0.3f, 1.f);
 
+		//Initialize alpha
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 		//Check for error
 		error = glGetError();
 		if(error != GL_NO_ERROR)
@@ -112,6 +124,7 @@ bool ModuleRenderer3D::Init(const JSON_Object* config_data)
 		lights[0].Active(true);
 		glEnable(GL_LIGHTING);
 		glEnable(GL_COLOR_MATERIAL);
+		glEnable(GL_TEXTURE_2D);
 	}
 
 	// Projection matrix for
@@ -134,6 +147,9 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 
 	for(uint i = 0; i < MAX_LIGHTS; ++i)
 		lights[i].Render();
+
+	// Projection matrix for
+	OnResize(App->window->window_width, App->window->window_height);
 
 	return UPDATE_CONTINUE;
 }

@@ -8,8 +8,10 @@
 #pragma comment (lib, "3DEngine/glut/glut32.lib")
 
 // ------------------------------------------------------------
-Primitive::Primitive() : transform(IdentityMatrix), color(White), wire(false), axis(false), type(PrimitiveTypes::Primitive_Point)
-{}
+Primitive::Primitive() : color(White), wire(false), axis(false), type(PrimitiveTypes::Primitive_Point)
+{
+	transform.SetIdentity();
+}
 
 // ------------------------------------------------------------
 PrimitiveTypes Primitive::GetType() const
@@ -21,7 +23,7 @@ PrimitiveTypes Primitive::GetType() const
 void Primitive::Render() const
 {
 	glPushMatrix();
-	glMultMatrixf(transform.M);
+	//TODO: clear this --  glMultMatrixf(transform.Col);
 
 	if(axis == true)
 	{
@@ -84,37 +86,40 @@ void Primitive::InnerRender() const
 // ------------------------------------------------------------
 void Primitive::SetPos(float x, float y, float z)
 {
-	transform.translate(x, y, z);
+	transform.SetTranslatePart(x, y, z);
 }
 
 // ------------------------------------------------------------
-void Primitive::SetRotation(float angle, const vec3 &u)
+void Primitive::SetRotation(float angle, const float3 &u)
 {
-	transform.rotate(angle, u);
+	transform.RotateAxisAngle(u, angle);
 }
 
 // ------------------------------------------------------------
 void Primitive::Scale(float x, float y, float z)
 {
-	transform.scale(x, y, z);
+	transform.Scale(x, y, z);
 }
 
 // CUBE ============================================
-Cube::Cube() : Primitive(), size(1.0f, 1.0f, 1.0f)
+Cube_prim::Cube_prim() : Primitive()
 {
 	type = PrimitiveTypes::Primitive_Cube;
+	geometry.axis->Set(1, 1, 1);
 }
 
-Cube::Cube(float sizeX, float sizeY, float sizeZ) : Primitive(), size(sizeX, sizeY, sizeZ)
+Cube_prim::Cube_prim(float sizeX, float sizeY, float sizeZ) : Primitive()
 {
 	type = PrimitiveTypes::Primitive_Cube;
+	geometry.axis->Set(sizeX, sizeY, sizeZ);
+
 }
 
-void Cube::InnerRender() const
+void Cube_prim::InnerRender() const
 {	
-	float sx = size.x * 0.5f;
-	float sy = size.y * 0.5f;
-	float sz = size.z * 0.5f;
+	float sx = geometry.axis->x * 0.5f;
+	float sy = geometry.axis->y * 0.5f;
+	float sz = geometry.axis->z * 0.5f;
 
 	glBegin(GL_QUADS);
 
@@ -157,42 +162,42 @@ void Cube::InnerRender() const
 	glEnd();
 }
 
-void Cube::Size(float x, float y, float z)
+void Cube_prim::Size(float x, float y, float z)
 {
-	size.x = x;
-	size.y = y;
-	size.z = z;
+	geometry.axis->Set(x, y, z);
 }
 
-// SPHERE ============================================
-Sphere::Sphere() : Primitive(), radius(1.0f)
-{
-	type = PrimitiveTypes::Primitive_Sphere;
-}
 
-Sphere::Sphere(float radius) : Primitive(), radius(radius)
+/*
+// Sphere_prim ============================================
+Sphere_prim::Sphere_prim() : Primitive(), radius(1.0f)
 {
 	type = PrimitiveTypes::Primitive_Sphere;
 }
 
-void Sphere::InnerRender() const
+Sphere_prim::Sphere_prim(float radius) : Primitive(), radius(radius)
+{
+	type = PrimitiveTypes::Primitive_Sphere;
+}
+
+void Sphere_prim::InnerRender() const
 {
 	glutSolidSphere(radius, 25, 25);
 }
 
 
 // CYLINDER ============================================
-Cylinder::Cylinder() : Primitive(), radius(1.0f), height(1.0f)
+Cylinder_prim::Cylinder_prim() : Primitive(), radius(1.0f), height(1.0f)
 {
 	type = PrimitiveTypes::Primitive_Cylinder;
 }
 
-Cylinder::Cylinder(float radius, float height) : Primitive(), radius(radius), height(height)
+Cylinder_prim::Cylinder_prim(float radius, float height) : Primitive(), radius(radius), height(height)
 {
 	type = PrimitiveTypes::Primitive_Cylinder;
 }
 
-void Cylinder::InnerRender() const
+void Cylinder_prim::InnerRender() const
 {
 	int n = 30;
 
@@ -281,4 +286,4 @@ void Plane::InnerRender() const
 	}
 
 	glEnd();
-}
+}*/
