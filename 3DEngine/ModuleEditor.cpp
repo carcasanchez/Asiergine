@@ -61,12 +61,17 @@ update_status ModuleEditor::PostUpdate(float dt)
 {
 	update_status ret = UPDATE_CONTINUE;
 
+
+	//------------TODO: move this to a new Module Scene
 	Plane_prim plane;
 
 	Cube_prim cube(3, 3, 3);
+	Cube_prim cube2(3, 3, 3);
+	cube2.SetPos(2, 1, 2);
 	plane.Render();
 	cube.Render();
-
+	cube2.Render();
+	////------------------------------------------
 
 	if (quit_editor)
 		ret = UPDATE_STOP;
@@ -254,12 +259,7 @@ void ModuleEditor::ManageConfigurationWindow()
 	if (configuration_open)
 	{
 		ImGui::Begin("Configuration", &configuration_open);
-		//Options menu inside configuration window
-		if (ImGui::BeginMenu("Options"))
-		{
-			ImGui::MenuItem("App");
-			ImGui::EndMenu();
-		}
+		
 		//Application submenu
 		if (ImGui::CollapsingHeader("Application"))
 		{
@@ -395,6 +395,9 @@ void ModuleEditor::ManageConfigurationWindow()
 			ImGui::TextColored({ 255, 0, 255, 255 }, "%s", glGetString(GL_VENDOR));
 			ImGui::TextColored({ 255, 0, 255, 255 }, "%s", glGetString(GL_RENDERER));
 			ImGui::TextColored({255, 0, 255, 255}, "%s", glGetString(GL_VERSION));
+			//ImGui::TextColored({ 255, 0, 255, 255 }, "%s", glGetString(GL_SHADING_LANGUAGE_VERSION));
+
+
 			
 
 			ImGui::Separator();
@@ -420,6 +423,37 @@ void ModuleEditor::ManageConfigurationWindow()
 			if (App->system_specs.avx)
 				ImGui::TextWrapped("AVX");
 		}
+
+		//OPENGL OPTIONS
+		if (ImGui::CollapsingHeader("Rendering"))
+		{
+		
+			if (ImGui::Checkbox("GL Depth", &App->renderer3D->gl_depth_enabled))
+				(&App->renderer3D->gl_depth_enabled) ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
+
+			else if (ImGui::Checkbox("GL Cull Face", &App->renderer3D->gl_cull_face_enabled))
+				(App->renderer3D->gl_cull_face_enabled) ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
+
+			else if (ImGui::Checkbox("GL Lighting", &App->renderer3D->gl_lighting_enabled))
+				(App->renderer3D->gl_lighting_enabled) ? glEnable(GL_LIGHTING) : glDisable(GL_LIGHTING);
+
+			else if (ImGui::Checkbox("GL Color Material", &App->renderer3D->gl_color_material_enabled))
+				(App->renderer3D->gl_color_material_enabled) ? glEnable(GL_COLOR_MATERIAL) : glDisable(GL_COLOR_MATERIAL);
+
+			else if (ImGui::Checkbox("GL Texture 2D", &App->renderer3D->gl_texture_2D_enabled))
+				(App->renderer3D->gl_texture_2D_enabled) ? glEnable(GL_TEXTURE_2D) : glDisable(GL_TEXTURE_2D);
+
+			else if (ImGui::Checkbox("Wireframe mode", &App->renderer3D->gl_wireframe_enabled))
+			{
+				if (App->renderer3D->gl_wireframe_enabled)				
+					glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);				
+				else glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+			}
+				
+			
+		}
+
+
 
 		ImGui::End();
 	}

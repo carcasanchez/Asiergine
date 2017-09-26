@@ -26,4 +26,12 @@ public:
 	SDL_GLContext context;
 	mat3x3 NormalMatrix;
 	mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
+
+	bool gl_depth_enabled = true;
+	bool gl_cull_face_enabled = true;
+	bool gl_lighting_enabled = true;
+	bool gl_color_material_enabled = true;
+	bool gl_texture_2D_enabled = true;
+	bool gl_wireframe_enabled = false;
+
 };
