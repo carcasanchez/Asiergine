@@ -544,9 +544,9 @@ void ModuleEditor::ManageConfigurationWindow()
 			ImGui::TextColored({ 255, 0, 100, 255 }, "X: %i ", App->input->GetMouseX());
 			ImGui::SameLine();
 			ImGui::TextColored({ 255, 0, 100, 255 }, "Y: %i", App->input->GetMouseY());
-			GetRawInputDeviceList(NULL, &nDevices, sizeof(RAWINPUTDEVICELIST));
+			/*GetRawInputDeviceList(NULL, &nDevices, sizeof(RAWINPUTDEVICELIST));
 			pRawInputDeviceList = (RAWINPUTDEVICELIST*) malloc(sizeof(RAWINPUTDEVICELIST) * nDevices);
-			ImGui::TextWrapped("Num of Devices: %i", GetRawInputDeviceList(pRawInputDeviceList, &nDevices, sizeof(RAWINPUTDEVICELIST)));
+			ImGui::TextWrapped("Num of Devices: %i", GetRawInputDeviceList(pRawInputDeviceList, &nDevices, sizeof(RAWINPUTDEVICELIST)));*/
 		}
 
 		//Vram Usage

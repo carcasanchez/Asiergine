@@ -14,6 +14,8 @@ ModuleCamera3D::ModuleCamera3D( bool start_enabled) : Module(start_enabled)
 
 	Position = vec3(0.0f, 0.0f, 5.0f);
 	Reference = vec3(0.0f, 0.0f, 0.0f);
+	pivotal_point = vec3(0.0f, 0.0f, 0.0f);
+
 
 	name = "camera";
 }
@@ -66,7 +68,7 @@ bool ModuleCamera3D::CleanUp()
 // -----------------------------------------------------------------
 update_status ModuleCamera3D::Update(float dt)
 {	
-	ControlCamera();
+	ControlCamera(dt);
 
 	// Recalculate matrix -------------
 	CalculateViewMatrix();
@@ -131,40 +133,55 @@ void ModuleCamera3D::CalculateViewMatrix()
 }
 
 
-void ModuleCamera3D::ControlCamera()
+void ModuleCamera3D::ControlCamera(float dt)
 {
-	//Move camera rudimentally
+	//FP Control
 	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
 	{
-		Position.y += 0.01;
+		Move(vec3(0, 0, -camera_speed * dt));
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
 	{
-		Position.y -= 0.01;
+		Move(vec3(0, 0, camera_speed * dt));
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
 	{
-		Position.x -= 0.01;
+		Move(vec3(-camera_speed * dt, 0, 0));
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
 	{
-		Position.x += 0.01;
+		Move(vec3(camera_speed * dt, 0, 0));
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT)
+
+	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
 	{
-		Position.z += 0.01;
+		int x = App->input->GetMouseXMotion();	
+		int y = App->input->GetMouseYMotion();
+		if (y != 0)
+		{
+			if(y > 0)
+				Position.y += camera_speed*4 * dt;
+			else if (y < 0)
+				Position.y -= camera_speed*4 * dt;
+
+			Look(Position, Reference, true);
+		}
+		if (x != 0)
+		{
+			if (x > 0)
+				Position.x -= camera_speed * 4 * dt;
+			else if (x < 0)
+				Position.x += camera_speed * 4 * dt;
+
+			Look(Position, Reference, true);
+		}
+
+
 	}
-
-	if (App->input->GetKey(SDL_SCANCODE_E) == KEY_REPEAT)
-	{
-		Position.z -= 0.01;
-	}
-
-
 
 }
 
