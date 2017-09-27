@@ -60,6 +60,67 @@ update_status ModuleEditor::Update(float dt)
 update_status ModuleEditor::PostUpdate(float dt)
 {
 	update_status ret = UPDATE_CONTINUE;
+	
+	glLineWidth(2.0f);
+
+	glBegin(GL_TRIANGLES);
+	glVertex3f(0.f, 0.f, 10.f);
+	glVertex3f(0.f, 0.f, 0.f);
+	glVertex3f(10.f, 0.f, 0.f);
+
+	glVertex3f(10.f, 0.f, 10.f);
+	glVertex3f(0.f, 0.f, 10.f);
+	glVertex3f(10.f, 0.f, 0.f);
+
+	glVertex3f(10.f, 0.f, 10.f);
+	glVertex3f(10.f, 0.f, 0.f);
+	glVertex3f(10.f, 10.f, 0.f);
+
+	glVertex3f(10.f, 10.f, 10.f);
+	glVertex3f(10.f, 0.f, 10.f);
+	glVertex3f(10.f, 10.f, 0.f);
+
+	glVertex3f(10.f, 0.f, 10.f);
+	glVertex3f(10.f, 10.f, 10.f);
+	glVertex3f(0.f, 10.f, 10.f);
+
+	glVertex3f(0.f, 0.f, 10.f);
+	glVertex3f(10.f, 0.f, 10.f);
+	glVertex3f(0.f, 10.f, 10.f);
+
+	glVertex3f(10.f, 10.f, 10.f);
+	glVertex3f(10.f, 10.f, 0.f);
+	glVertex3f(0.f, 10.f, 0.f);
+
+	glVertex3f(0.f, 10.f, 10.f);
+	glVertex3f(10.f, 10.f, 10.f);
+	glVertex3f(0.f, 10.f, 0.f);
+
+	glVertex3f(0.f, 10.f, 10.f);
+	glVertex3f(0.f, 10.f, 0.f);
+	glVertex3f(0.f, 0.f, 0.f);
+
+	glVertex3f(0.f, 0.f, 10.f);
+	glVertex3f(0.f, 10.f, 10.f);
+	glVertex3f(0.f, 0.f, 0.f);
+
+	glVertex3f(0.f, 0.f, 0.f);
+	glVertex3f(0.f, 10.f, 0.f);
+	glVertex3f(10.f, 10.f, 0.f);
+
+	glVertex3f(10.f, 0.f, 0.f);
+	glVertex3f(0.f, 0.f, 0.f);
+	glVertex3f(10.f, 10.f, 0.f);
+
+	uint my_id = 0;
+	glGenBuffers(1, (GLuint*)&(my_id));
+	glBindBuffer(GL_ARRAY_BUFFER, my_id);
+	//glBufferData(GL_ARRAY_BUFFER,sizeof(float)*num_vertices*3, vertices, GL_STATIC_DRAW);
+	
+	glEnd();
+
+	glLineWidth(1.0f);
+
 
 
 	//------------TODO: move this to a new Module Scene
