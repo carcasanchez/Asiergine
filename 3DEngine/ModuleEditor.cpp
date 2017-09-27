@@ -538,12 +538,15 @@ void ModuleEditor::ManageConfigurationWindow()
 
 		//Input Options
 		if (ImGui::CollapsingHeader("Input"))
-		{
+		{			
 			ImGui::TextWrapped("Mouse position:");
 			ImGui::SameLine();
 			ImGui::TextColored({ 255, 0, 100, 255 }, "X: %i ", App->input->GetMouseX());
 			ImGui::SameLine();
 			ImGui::TextColored({ 255, 0, 100, 255 }, "Y: %i", App->input->GetMouseY());
+			GetRawInputDeviceList(NULL, &nDevices, sizeof(RAWINPUTDEVICELIST));
+			pRawInputDeviceList = (RAWINPUTDEVICELIST*) malloc(sizeof(RAWINPUTDEVICELIST) * nDevices);
+			ImGui::TextWrapped("Num of Devices: %i", GetRawInputDeviceList(pRawInputDeviceList, &nDevices, sizeof(RAWINPUTDEVICELIST)));
 		}
 		ImGui::End();
 	}

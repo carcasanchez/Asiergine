@@ -43,6 +43,9 @@ private:
 	bool inspector_open = false;
 
 
+	UINT nDevices;
+	PRAWINPUTDEVICELIST pRawInputDeviceList;
+
 	//Framerate calculation
 	std::vector<float> fps_log;
 	std::vector<float> ms_log;
