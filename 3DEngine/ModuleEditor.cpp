@@ -548,6 +548,38 @@ void ModuleEditor::ManageConfigurationWindow()
 			pRawInputDeviceList = (RAWINPUTDEVICELIST*) malloc(sizeof(RAWINPUTDEVICELIST) * nDevices);
 			ImGui::TextWrapped("Num of Devices: %i", GetRawInputDeviceList(pRawInputDeviceList, &nDevices, sizeof(RAWINPUTDEVICELIST)));
 		}
+
+		//Vram Usage
+		if (ImGui::CollapsingHeader("VRAM Usage"))
+		{
+
+			const GLubyte* v = glGetString(GL_VENDOR);
+			char vendor[10];
+
+			for (int i = 0; i<10; i++)
+			{
+				vendor[i] = v[i];
+			}
+
+			if (strcmp(vendor, "NVIDIA Corporation") == 0)
+			{
+				GLint total_mem_kb = 0;
+				glGetIntegerv(GL_GPU_MEM_INFO_TOTAL_AVAILABLE_MEM_NVX,
+					&total_mem_kb);
+
+				GLint cur_avail_mem_kb = 0;
+				glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX,
+					&cur_avail_mem_kb);
+
+				ImGui::TextWrapped("VRAM usage: %i kb", total_mem_kb);
+				ImGui::TextWrapped("VRAM available: %i kb", cur_avail_mem_kb);
+				//char title[25];
+				//sprintf_s(title, 25, "Framerate %.1f", fps_log[fps_log.size() - 1]);
+				//ImGui::PlotHistogram("##framerate", &fps_log[0], fps_log.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
+			}
+			else (ImGui::TextWrapped("VRam Usage only available for NVIDIA devices"));
+
+		}
 		ImGui::End();
 	}
 }
