@@ -63,62 +63,89 @@ update_status ModuleEditor::PostUpdate(float dt)
 	
 	glLineWidth(2.0f);
 
+	/*glBegin(GL_TRIANGLES);
+	glVertex3f(0.f, 0.f, 10.f);
+	glVertex3f(0.f, 0.f, 0.f);
+	glVertex3f(10.f, 0.f, 0.f);
+
+	glVertex3f(10.f, 0.f, 10.f);
+	glVertex3f(0.f, 0.f, 10.f);
+	glVertex3f(10.f, 0.f, 0.f);
+
+	glVertex3f(10.f, 0.f, 10.f);
+	glVertex3f(10.f, 0.f, 0.f);
+	glVertex3f(10.f, 10.f, 0.f);
+
+	glVertex3f(10.f, 10.f, 10.f);
+	glVertex3f(10.f, 0.f, 10.f);
+	glVertex3f(10.f, 10.f, 0.f);
+
+	glVertex3f(10.f, 0.f, 10.f);
+	glVertex3f(10.f, 10.f, 10.f);
+	glVertex3f(0.f, 10.f, 10.f);
+
+	glVertex3f(0.f, 0.f, 10.f);
+	glVertex3f(10.f, 0.f, 10.f);
+	glVertex3f(0.f, 10.f, 10.f);
+
+	glVertex3f(10.f, 10.f, 10.f);
+	glVertex3f(10.f, 10.f, 0.f);
+	glVertex3f(0.f, 10.f, 0.f);
+
+	glVertex3f(0.f, 10.f, 10.f);
+	glVertex3f(10.f, 10.f, 10.f);
+	glVertex3f(0.f, 10.f, 0.f);
+
+	glVertex3f(0.f, 10.f, 10.f);
+	glVertex3f(0.f, 10.f, 0.f);
+	glVertex3f(0.f, 0.f, 0.f);
+
+	glVertex3f(0.f, 0.f, 10.f);
+	glVertex3f(0.f, 10.f, 10.f);
+	glVertex3f(0.f, 0.f, 0.f);
+
+	glVertex3f(0.f, 0.f, 0.f);
+	glVertex3f(0.f, 10.f, 0.f);
+	glVertex3f(10.f, 10.f, 0.f);
+
+	glVertex3f(10.f, 0.f, 0.f);
+	glVertex3f(0.f, 0.f, 0.f);
+	glVertex3f(10.f, 10.f, 0.f);
+	glEnd();*/
+
+	
 	glBegin(GL_TRIANGLES);
-	glVertex3f(0.f, 0.f, 10.f);
-	glVertex3f(0.f, 0.f, 0.f);
-	glVertex3f(10.f, 0.f, 0.f);
+	
+	vertex.push_back(10.f);
+	vertex.push_back(0.f);
+	vertex.push_back(10.f);
 
-	glVertex3f(10.f, 0.f, 10.f);
-	glVertex3f(0.f, 0.f, 10.f);
-	glVertex3f(10.f, 0.f, 0.f);
+	vertex.push_back(10.f);
+	vertex.push_back(0.f);
+	vertex.push_back(0.f);
 
-	glVertex3f(10.f, 0.f, 10.f);
-	glVertex3f(10.f, 0.f, 0.f);
-	glVertex3f(10.f, 10.f, 0.f);
+	vertex.push_back(10.f);
+	vertex.push_back(10.f);
+	vertex.push_back(0.f);
 
-	glVertex3f(10.f, 10.f, 10.f);
-	glVertex3f(10.f, 0.f, 10.f);
-	glVertex3f(10.f, 10.f, 0.f);
+	vertex.push_back(10.f);
+	vertex.push_back(10.f);
+	vertex.push_back(10.f);
 
-	glVertex3f(10.f, 0.f, 10.f);
-	glVertex3f(10.f, 10.f, 10.f);
-	glVertex3f(0.f, 10.f, 10.f);
+	vertex.push_back(10.f);
+	vertex.push_back(0.f);
+	vertex.push_back(10.f);
 
-	glVertex3f(0.f, 0.f, 10.f);
-	glVertex3f(10.f, 0.f, 10.f);
-	glVertex3f(0.f, 10.f, 10.f);
-
-	glVertex3f(10.f, 10.f, 10.f);
-	glVertex3f(10.f, 10.f, 0.f);
-	glVertex3f(0.f, 10.f, 0.f);
-
-	glVertex3f(0.f, 10.f, 10.f);
-	glVertex3f(10.f, 10.f, 10.f);
-	glVertex3f(0.f, 10.f, 0.f);
-
-	glVertex3f(0.f, 10.f, 10.f);
-	glVertex3f(0.f, 10.f, 0.f);
-	glVertex3f(0.f, 0.f, 0.f);
-
-	glVertex3f(0.f, 0.f, 10.f);
-	glVertex3f(0.f, 10.f, 10.f);
-	glVertex3f(0.f, 0.f, 0.f);
-
-	glVertex3f(0.f, 0.f, 0.f);
-	glVertex3f(0.f, 10.f, 0.f);
-	glVertex3f(10.f, 10.f, 0.f);
-
-	glVertex3f(10.f, 0.f, 0.f);
-	glVertex3f(0.f, 0.f, 0.f);
-	glVertex3f(10.f, 10.f, 0.f);
+	vertex.push_back(10.f);
+	vertex.push_back(10.f);
+	vertex.push_back(0.f);
 
 	uint my_id = 0;
 	glGenBuffers(1, (GLuint*)&(my_id));
 	glBindBuffer(GL_ARRAY_BUFFER, my_id);
-	//glBufferData(GL_ARRAY_BUFFER,sizeof(float)*num_vertices*3, vertices, GL_STATIC_DRAW);
-	
-	glEnd();
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*vertex.size() * 3, &vertex, GL_STATIC_DRAW);
 
+	glEnd();
 	glLineWidth(1.0f);
 
 

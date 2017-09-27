@@ -42,6 +42,8 @@ private:
 	bool hierarchy_open = false;
 	bool inspector_open = false;
 
+	//Geometry
+	std::vector<float> vertex;
 
 //	UINT nDevices;
 //	PRAWINPUTDEVICELIST pRawInputDeviceList;
