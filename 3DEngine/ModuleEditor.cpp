@@ -544,9 +544,13 @@ void ModuleEditor::ManageConfigurationWindow()
 			ImGui::TextColored({ 255, 0, 100, 255 }, "X: %i ", App->input->GetMouseX());
 			ImGui::SameLine();
 			ImGui::TextColored({ 255, 0, 100, 255 }, "Y: %i", App->input->GetMouseY());
-			/*GetRawInputDeviceList(NULL, &nDevices, sizeof(RAWINPUTDEVICELIST));
+		/*	GetRawInputDeviceList(NULL, &nDevices, sizeof(RAWINPUTDEVICELIST));
 			pRawInputDeviceList = (RAWINPUTDEVICELIST*) malloc(sizeof(RAWINPUTDEVICELIST) * nDevices);
-			ImGui::TextWrapped("Num of Devices: %i", GetRawInputDeviceList(pRawInputDeviceList, &nDevices, sizeof(RAWINPUTDEVICELIST)));*/
+
+			ImGui::TextWrapped("Num of Devices: %i", GetRawInputDeviceList(pRawInputDeviceList, &nDevices, sizeof(RAWINPUTDEVICELIST)));
+
+			free(pRawInputDeviceList);*/
+
 		}
 
 		//Vram Usage
@@ -554,9 +558,9 @@ void ModuleEditor::ManageConfigurationWindow()
 		{
 
 			const GLubyte* v = glGetString(GL_VENDOR);
-			char vendor[10];
+			char vendor[30];
 
-			for (int i = 0; i<10; i++)
+			for (int i = 0; i<30; i++)
 			{
 				vendor[i] = v[i];
 			}
@@ -571,11 +575,32 @@ void ModuleEditor::ManageConfigurationWindow()
 				glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX,
 					&cur_avail_mem_kb);
 
-				ImGui::TextWrapped("VRAM usage: %i kb", total_mem_kb);
-				ImGui::TextWrapped("VRAM available: %i kb", cur_avail_mem_kb);
-				//char title[25];
-				//sprintf_s(title, 25, "Framerate %.1f", fps_log[fps_log.size() - 1]);
-				//ImGui::PlotHistogram("##framerate", &fps_log[0], fps_log.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
+				char vram[25];
+				vram_log.push_back(((float)total_mem_kb) / 1000.f);
+				if (vram_log.size() > 100)
+				{
+					for (int i = 0; vram_log.size() > i-1; i++)
+					{
+						vram_log[i] = vram_log[i + 1];
+					}
+					vram_log.pop_back();
+				}
+				sprintf_s(vram, 25, "VRAM usage: %.3f Mb", ((float)total_mem_kb) / 1000.f);
+				ImGui::PlotHistogram("##VRAM usage: ", &vram_log[0], vram_log.size(), 0, vram, 0.0f, 100.0f, ImVec2(310, 100));
+
+				char vram_curr[50];
+				curr_vram_log.push_back(((float)cur_avail_mem_kb) / 1000.f);
+				if (curr_vram_log.size() > 100)
+				{
+					for (int i = 0; curr_vram_log.size() > i - 1; i++)
+					{
+						curr_vram_log[i] = curr_vram_log[i + 1];
+					}
+					curr_vram_log.pop_back();
+				}
+				sprintf_s(vram_curr, 50, "VRAM Aviable: %.3f Mb", ((float)cur_avail_mem_kb) / 1000.f);
+				ImGui::PlotHistogram("##VRAM Aviable: ", &curr_vram_log[0], curr_vram_log.size(), 0, vram_curr, 0.0f, 100.0f, ImVec2(310, 100));
+
 			}
 			else (ImGui::TextWrapped("VRam Usage only available for NVIDIA devices"));
 

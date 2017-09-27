@@ -50,6 +50,10 @@ private:
 	std::vector<float> fps_log;
 	std::vector<float> ms_log;
 
+	//Vram calculation
+	std::vector<float> vram_log;
+	std::vector<float> curr_vram_log;
+
 	bool fullscreen = false;
 	bool resizable = true;
 	bool borderless = false;

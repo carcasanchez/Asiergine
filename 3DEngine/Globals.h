@@ -9,6 +9,7 @@
 #include <string>
 #include <list>
 #include <vector>
+#include <queue>
 #include "Brofiler\Brofiler.h"
 
 // Deletes a buffer
