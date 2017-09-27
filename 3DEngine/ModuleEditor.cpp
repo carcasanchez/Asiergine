@@ -547,6 +547,7 @@ void ModuleEditor::ManageConfigurationWindow()
 			GetRawInputDeviceList(NULL, &nDevices, sizeof(RAWINPUTDEVICELIST));
 			pRawInputDeviceList = (RAWINPUTDEVICELIST*) malloc(sizeof(RAWINPUTDEVICELIST) * nDevices);
 			ImGui::TextWrapped("Num of Devices: %i", GetRawInputDeviceList(pRawInputDeviceList, &nDevices, sizeof(RAWINPUTDEVICELIST)));
+			free(pRawInputDeviceList);
 		}
 
 		//Vram Usage
@@ -554,9 +555,9 @@ void ModuleEditor::ManageConfigurationWindow()
 		{
 
 			const GLubyte* v = glGetString(GL_VENDOR);
-			char vendor[10];
+			char vendor[30];
 
-			for (int i = 0; i<10; i++)
+			for (int i = 0; i<30; i++)
 			{
 				vendor[i] = v[i];
 			}
@@ -571,8 +572,9 @@ void ModuleEditor::ManageConfigurationWindow()
 				glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX,
 					&cur_avail_mem_kb);
 
-				ImGui::TextWrapped("VRAM usage: %i kb", total_mem_kb);
-				ImGui::TextWrapped("VRAM available: %i kb", cur_avail_mem_kb);
+				ImGui::TextWrapped("VRAM usage: %.3f Mb", ((float) total_mem_kb)/1000.f);
+				//ImGui::PlotHistogram("VRAM usage: ",)
+				ImGui::TextWrapped("VRAM available: %.3f Mb",((float) cur_avail_mem_kb)/1000.f);
 				//char title[25];
 				//sprintf_s(title, 25, "Framerate %.1f", fps_log[fps_log.size() - 1]);
 				//ImGui::PlotHistogram("##framerate", &fps_log[0], fps_log.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
