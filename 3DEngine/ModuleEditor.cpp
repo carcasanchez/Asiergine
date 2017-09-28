@@ -37,7 +37,7 @@ bool ModuleEditor::Start()
 
 
 
-	//---
+	//---1
 	vertex[0] = 20.f;
 	vertex[1] = 20.f;
 	vertex[2] = 30.f;
@@ -49,8 +49,8 @@ bool ModuleEditor::Start()
 	vertex[6] = 30.f;
 	vertex[7] = 20.f;
 	vertex[8] = 20.f;
-
-	//-----
+	
+	//-----2
 	vertex[9] = 30.f;
 	vertex[10] = 20.f;
 	vertex[11] = 30.f;
@@ -63,9 +63,7 @@ bool ModuleEditor::Start()
 	vertex[16] = 20.f;
 	vertex[17] = 20.f;
 
-	//------
-
-
+	//------3
 	vertex[18] = 30.f;
 	vertex[19] = 20.f;
 	vertex[20] = 30.f;
@@ -77,8 +75,8 @@ bool ModuleEditor::Start()
 	vertex[24] = 30.f;
 	vertex[25] = 30.f;
 	vertex[26] = 20.f;
-//-----
 
+	//-----4
 	vertex[27] = 30.f;
 	vertex[28] = 30.f;
 	vertex[29] = 30.f;
@@ -91,8 +89,7 @@ bool ModuleEditor::Start()
 	vertex[34] = 30.f;
 	vertex[35] = 20.f;
 
-	//---------------
-
+	//---------------5
 	vertex[36] = 30.f;
 	vertex[37] = 20.f;
 	vertex[38] = 30.f;
@@ -106,50 +103,46 @@ bool ModuleEditor::Start()
 	vertex[44] = 30.f;
 
 
-	//--------------
-
-	vertex[45] = 30.f;
+	//--------------6
+	vertex[45] = 20.f;
 	vertex[46] = 20.f;
 	vertex[47] = 30.f;
 
 	vertex[48] = 30.f;
-	vertex[49] = 30.f;
+	vertex[49] = 20.f;
 	vertex[50] = 30.f;
 
 	vertex[51] = 20.f;
 	vertex[52] = 30.f;
 	vertex[53] = 30.f;
 
-	//---------------
-
-	vertex[54] = 20.f;
-	vertex[55] = 20.f;
+	//---------------7
+	vertex[54] = 30.f;
+	vertex[55] = 30.f;
 	vertex[56] = 30.f;
 
 	vertex[57] = 30.f;
-	vertex[58] = 20.f;
-	vertex[59] = 30.f;
+	vertex[58] = 30.f;
+	vertex[59] = 20.f;
 
 	vertex[60] = 20.f;
 	vertex[61] = 30.f;
-	vertex[62] = 30.f;
+	vertex[62] = 20.f;
 
-	//---------------
-
-	vertex[63] = 30.f;
+	//---------------8
+	vertex[63] = 20.f;
 	vertex[64] = 30.f;
 	vertex[65] = 30.f;
 
 	vertex[66] = 30.f;
 	vertex[67] = 30.f;
-	vertex[68] = 20.f;
+	vertex[68] = 30.f;
 
 	vertex[69] = 20.f;
 	vertex[70] = 30.f;
 	vertex[71] = 20.f;
 
-	//---------------
-
+	//---------------9
 	vertex[72] = 20.f;
 	vertex[73] = 30.f;
 	vertex[74] = 30.f;
@@ -163,59 +156,44 @@ bool ModuleEditor::Start()
 	vertex[80] = 20.f;
 
 
-	//-----------
+	//-----------10
 	vertex[81] = 20.f;
-	vertex[82] = 30.f;
+	vertex[82] = 20.f;
 	vertex[83] = 30.f;
 
 	vertex[84] = 20.f;
 	vertex[85] = 30.f;
-	vertex[86] = 20.f;
+	vertex[86] = 30.f;
 
 	vertex[87] = 20.f;
 	vertex[88] = 20.f;
 	vertex[89] = 20.f;
 
-	//-----------
+	//-----------11	
 	vertex[90] = 20.f;
 	vertex[91] = 20.f;
-	vertex[92] = 30.f;
+	vertex[92] = 20.f;
 
 	vertex[93] = 20.f;
 	vertex[94] = 30.f;
-	vertex[95] = 30.f;
+	vertex[95] = 20.f;
 
-	vertex[96] = 20.f;
-	vertex[97] = 20.f;
+	vertex[96] = 30.f;
+	vertex[97] = 30.f;
 	vertex[98] = 20.f;
 
-	//-----------
-	vertex[99] = 20.f;
+	//-----------12
+	vertex[99] = 30.f;
 	vertex[100] = 20.f;
 	vertex[101] = 20.f;
 
 	vertex[102] = 20.f;
-	vertex[103] = 30.f;
+	vertex[103] = 20.f;
 	vertex[104] = 20.f;
 
 	vertex[105] = 30.f;
 	vertex[106] = 30.f;
 	vertex[107] = 20.f;
-
-
-	//-----------
-	vertex[108] = 20.f;
-	vertex[109] = 30.f;
-	vertex[110] = 20.f;
-
-	vertex[111] = 20.f;
-	vertex[112] = 30.f;
-	vertex[113] = 30.f;
-
-	vertex[114] = 30.f;
-	vertex[115] = 30.f;
-	vertex[116] = 30.f;
-
 
 
 	//alloc vertex
@@ -264,50 +242,51 @@ update_status ModuleEditor::PostUpdate(float dt)
 
 	//Direct mode drawing
 	glBegin(GL_TRIANGLES);
+	//1
 	glVertex3f(0.f, 0.f, 10.f);
 	glVertex3f(0.f, 0.f, 0.f);
 	glVertex3f(10.f, 0.f, 0.f);
-
+	//2
 	glVertex3f(10.f, 0.f, 10.f);
 	glVertex3f(0.f, 0.f, 10.f);
 	glVertex3f(10.f, 0.f, 0.f);
-
+	//3
 	glVertex3f(10.f, 0.f, 10.f);
 	glVertex3f(10.f, 0.f, 0.f);
 	glVertex3f(10.f, 10.f, 0.f);
-
+	//4
 	glVertex3f(10.f, 10.f, 10.f);
 	glVertex3f(10.f, 0.f, 10.f);
 	glVertex3f(10.f, 10.f, 0.f);
-
+	//5
 	glVertex3f(10.f, 0.f, 10.f);
 	glVertex3f(10.f, 10.f, 10.f);
 	glVertex3f(0.f, 10.f, 10.f);
-
+	//6
 	glVertex3f(0.f, 0.f, 10.f);
 	glVertex3f(10.f, 0.f, 10.f);
 	glVertex3f(0.f, 10.f, 10.f);
-
+	//7
 	glVertex3f(10.f, 10.f, 10.f);
 	glVertex3f(10.f, 10.f, 0.f);
 	glVertex3f(0.f, 10.f, 0.f);
-
+	//8
 	glVertex3f(0.f, 10.f, 10.f);
 	glVertex3f(10.f, 10.f, 10.f);
 	glVertex3f(0.f, 10.f, 0.f);
-
+	//9
 	glVertex3f(0.f, 10.f, 10.f);
 	glVertex3f(0.f, 10.f, 0.f);
 	glVertex3f(0.f, 0.f, 0.f);
-
+	//10
 	glVertex3f(0.f, 0.f, 10.f);
 	glVertex3f(0.f, 10.f, 10.f);
 	glVertex3f(0.f, 0.f, 0.f);
-
+	//11
 	glVertex3f(0.f, 0.f, 0.f);
 	glVertex3f(0.f, 10.f, 0.f);
 	glVertex3f(10.f, 10.f, 0.f);
-
+	//12
 	glVertex3f(10.f, 0.f, 0.f);
 	glVertex3f(0.f, 0.f, 0.f);
 	glVertex3f(10.f, 10.f, 0.f);
