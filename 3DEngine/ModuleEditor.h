@@ -43,7 +43,8 @@ private:
 	bool inspector_open = false;
 
 	//Geometry
-	float vertex[20];
+	float vertex[100];
+	int num_of_vertex= 0;
 
 //	UINT nDevices;
 //	PRAWINPUTDEVICELIST pRawInputDeviceList;
