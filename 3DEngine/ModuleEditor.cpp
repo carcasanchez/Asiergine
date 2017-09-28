@@ -34,6 +34,41 @@ bool ModuleEditor::Start()
 {
 	bool ret = true;
 	ImGui_ImplSdlGL3_NewFrame(App->window->window);
+
+
+
+	//---
+	vertex[0] = 20.f;
+	vertex[1] = 20.f;
+	vertex[2] = 20.f;
+
+	vertex[3] = 30.f;
+	vertex[4] = 20.f;
+	vertex[5] = 20.f;
+
+	vertex[6] = 30.f;
+	vertex[7] = 30.f;
+	vertex[8] = 20.f;
+
+	//-----
+	vertex[9] = 20.f;
+	vertex[10] = 20.f;
+	vertex[11] = 20.f;
+
+	vertex[12] = 30.f;
+	vertex[13] = 30.f;
+	vertex[14] = 20.f;
+
+	vertex[15] = 20.f;
+	vertex[16] = 20.f;
+	vertex[17] = 30.f;
+
+	glGenBuffers(1, (GLuint*)&(array_id));
+	glBindBuffer(GL_ARRAY_BUFFER, array_id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float)* 6 * 3, vertex, GL_STATIC_DRAW);
+
+
+
 	return ret;
 }
 
@@ -53,6 +88,8 @@ update_status ModuleEditor::Update(float dt)
 	update_status ret = UPDATE_CONTINUE;
 	
 
+
+
 			
 	return ret;
 }
@@ -63,7 +100,9 @@ update_status ModuleEditor::PostUpdate(float dt)
 	
 	glLineWidth(2.0f);
 
-	/*glBegin(GL_TRIANGLES);
+
+	/*//Direct mode drawing
+	glBegin(GL_TRIANGLES);
 	glVertex3f(0.f, 0.f, 10.f);
 	glVertex3f(0.f, 0.f, 0.f);
 	glVertex3f(10.f, 0.f, 0.f);
@@ -114,52 +153,28 @@ update_status ModuleEditor::PostUpdate(float dt)
 	glEnd();*/
 
 	
-	glBegin(GL_TRIANGLES);
+
+	//Array drawing
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glBindBuffer(GL_ARRAY_BUFFER, array_id);
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
+	// ... draw other buffers
+	glDrawArrays(GL_TRIANGLES, 0, 6 * 3);
+	glDisableClientState(GL_VERTEX_ARRAY);
+
+	//-----
+
 	
-	vertex.push_back(10.f);
-	vertex.push_back(0.f);
-	vertex.push_back(10.f);
-
-	vertex.push_back(10.f);
-	vertex.push_back(0.f);
-	vertex.push_back(0.f);
-
-	vertex.push_back(10.f);
-	vertex.push_back(10.f);
-	vertex.push_back(0.f);
-
-	vertex.push_back(10.f);
-	vertex.push_back(10.f);
-	vertex.push_back(10.f);
-
-	vertex.push_back(10.f);
-	vertex.push_back(0.f);
-	vertex.push_back(10.f);
-
-	vertex.push_back(10.f);
-	vertex.push_back(10.f);
-	vertex.push_back(0.f);
-
-	uint my_id = 0;
-	glGenBuffers(1, (GLuint*)&(my_id));
-	glBindBuffer(GL_ARRAY_BUFFER, my_id);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*vertex.size() * 3, &vertex, GL_STATIC_DRAW);
 
 	glEnd();
 	glLineWidth(1.0f);
 
 
 
-	//------------TODO: move this to a new Module Scene
 	Plane_prim plane;
-
-	Cube_prim cube(3, 3, 3);
-	Sphere_prim cube2(1);
-	cube2.SetPos(2, 1, 2);
 	plane.Render();
-	cube.Render();
-	cube2.Render();
-	////------------------------------------------
+
 
 	if (quit_editor)
 		ret = UPDATE_STOP;

@@ -43,7 +43,7 @@ private:
 	bool inspector_open = false;
 
 	//Geometry
-	std::vector<float> vertex;
+	float vertex[20];
 
 //	UINT nDevices;
 //	PRAWINPUTDEVICELIST pRawInputDeviceList;
@@ -76,6 +76,9 @@ private:
 	void Window_option();
 	void ExitEditor_option();
 
+
+
+	uint array_id = 0;
 };
 
 #endif
