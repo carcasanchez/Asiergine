@@ -203,9 +203,9 @@ bool ModuleEditor::Start()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float)* num_of_vertex * 3, vertex, GL_STATIC_DRAW);
 
 	//alloc indices
-	//glGenBuffers(1, (GLuint*) &(my_indices));
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
-	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint)*num_indices, indices, GL_STATIC_DRAW);
+	glGenBuffers(1, (GLuint*) &(my_indices));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint)*num_indices, indices, GL_STATIC_DRAW);
 
 
 	return ret;
@@ -241,7 +241,7 @@ update_status ModuleEditor::PostUpdate(float dt)
 
 
 	//Direct mode drawing
-	glBegin(GL_TRIANGLES);
+	/*glBegin(GL_TRIANGLES);
 	//1
 	glVertex3f(0.f, 0.f, 10.f);
 	glVertex3f(0.f, 0.f, 0.f);
@@ -290,24 +290,27 @@ update_status ModuleEditor::PostUpdate(float dt)
 	glVertex3f(10.f, 0.f, 0.f);
 	glVertex3f(0.f, 0.f, 0.f);
 	glVertex3f(10.f, 10.f, 0.f);
-	glEnd();
+	glEnd();*/
 
 	
 
 	//Array drawing
 
 	glEnableClientState(GL_VERTEX_ARRAY);
-	glBindBuffer(GL_ARRAY_BUFFER, array_id);
+	/*glBindBuffer(GL_ARRAY_BUFFER, array_id);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 	// ... draw other buffers
-	glDrawArrays(GL_TRIANGLES, 0, num_of_vertex * 3);
+	glDrawArrays(GL_TRIANGLES, 0, num_of_vertex * 3);*/
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
+	glDrawElements(GL_TRIANGLES, my_indices, GL_UNSIGNED_INT, NULL);
+
 	glDisableClientState(GL_VERTEX_ARRAY);
 	
 
 	//-----
-/*		glEnableClientState(GL_VERTEX_ARRAY);
-	glVertexPointer(3, GL_FLOAT, 0, vertices);
-	glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_BYTE, indices);
+	/*glEnableClientState(GL_VERTEX_ARRAY);
 	
 	glDisableClientState(GL_VERTEX_ARRAY);*/
 

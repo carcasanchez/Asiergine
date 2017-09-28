@@ -47,14 +47,15 @@ private:
 	float vertex[120];
 
 	//--indice elements
-	float vertices[24] =
+	float vertices[9] =
 	{
-		0.0, 0.0, 0.0, //0
-		4.0, 0.0, 0.0, //1
-		0.0, 40.0, 0.0, //2
+		10.0, 0.0, 0.0, //0
+		0.0, 0.0, 0.0, //1
+		10.0, 10.0, 0.0, //2
+		
 	};
-	GLubyte indices[36]=
-	{0 ,1 ,2 };
+	GLubyte indices[3] =
+	{ 0 ,1 ,2};
 
 	int num_of_vertex= 0;
 	int my_indices = 0;
