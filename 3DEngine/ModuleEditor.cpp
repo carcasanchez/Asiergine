@@ -105,48 +105,129 @@ bool ModuleEditor::Start()
 	vertex[43] = 30.f;
 	vertex[44] = 30.f;
 
-	/*//Direct mode drawing
-	glBegin(GL_TRIANGLES);
 
-	glVertex3f(10.f, 0.f, 10.f);
-	glVertex3f(10.f, 10.f, 10.f);
-	glVertex3f(0.f, 10.f, 10.f);
+	//--------------
 
-	glVertex3f(0.f, 0.f, 10.f);
-	glVertex3f(10.f, 0.f, 10.f);
-	glVertex3f(0.f, 10.f, 10.f);
+	vertex[45] = 30.f;
+	vertex[46] = 20.f;
+	vertex[47] = 30.f;
 
-	glVertex3f(10.f, 10.f, 10.f);
-	glVertex3f(10.f, 10.f, 0.f);
-	glVertex3f(0.f, 10.f, 0.f);
+	vertex[48] = 30.f;
+	vertex[49] = 30.f;
+	vertex[50] = 30.f;
 
-	glVertex3f(0.f, 10.f, 10.f);
-	glVertex3f(10.f, 10.f, 10.f);
-	glVertex3f(0.f, 10.f, 0.f);
+	vertex[51] = 20.f;
+	vertex[52] = 30.f;
+	vertex[53] = 30.f;
 
-	glVertex3f(0.f, 10.f, 10.f);
-	glVertex3f(0.f, 10.f, 0.f);
-	glVertex3f(0.f, 0.f, 0.f);
+	//---------------
 
-	glVertex3f(0.f, 0.f, 10.f);
-	glVertex3f(0.f, 10.f, 10.f);
-	glVertex3f(0.f, 0.f, 0.f);
+	vertex[54] = 20.f;
+	vertex[55] = 20.f;
+	vertex[56] = 30.f;
 
-	glVertex3f(0.f, 0.f, 0.f);
-	glVertex3f(0.f, 10.f, 0.f);
-	glVertex3f(10.f, 10.f, 0.f);
+	vertex[57] = 30.f;
+	vertex[58] = 20.f;
+	vertex[59] = 30.f;
 
-	glVertex3f(10.f, 0.f, 0.f);
-	glVertex3f(0.f, 0.f, 0.f);
-	glVertex3f(10.f, 10.f, 0.f);
-	glEnd();*/
+	vertex[60] = 20.f;
+	vertex[61] = 30.f;
+	vertex[62] = 30.f;
+
+	//---------------
+
+	vertex[63] = 30.f;
+	vertex[64] = 30.f;
+	vertex[65] = 30.f;
+
+	vertex[66] = 30.f;
+	vertex[67] = 30.f;
+	vertex[68] = 20.f;
+
+	vertex[69] = 20.f;
+	vertex[70] = 30.f;
+	vertex[71] = 20.f;
+
+	//---------------
+
+	vertex[72] = 20.f;
+	vertex[73] = 30.f;
+	vertex[74] = 30.f;
+
+	vertex[75] = 20.f;
+	vertex[76] = 30.f;
+	vertex[77] = 20.f;
+
+	vertex[78] = 20.f;
+	vertex[79] = 20.f;
+	vertex[80] = 20.f;
 
 
-	num_of_vertex = 32;
+	//-----------
+	vertex[81] = 20.f;
+	vertex[82] = 30.f;
+	vertex[83] = 30.f;
+
+	vertex[84] = 20.f;
+	vertex[85] = 30.f;
+	vertex[86] = 20.f;
+
+	vertex[87] = 20.f;
+	vertex[88] = 20.f;
+	vertex[89] = 20.f;
+
+	//-----------
+	vertex[90] = 20.f;
+	vertex[91] = 20.f;
+	vertex[92] = 30.f;
+
+	vertex[93] = 20.f;
+	vertex[94] = 30.f;
+	vertex[95] = 30.f;
+
+	vertex[96] = 20.f;
+	vertex[97] = 20.f;
+	vertex[98] = 20.f;
+
+	//-----------
+	vertex[99] = 20.f;
+	vertex[100] = 20.f;
+	vertex[101] = 20.f;
+
+	vertex[102] = 20.f;
+	vertex[103] = 30.f;
+	vertex[104] = 20.f;
+
+	vertex[105] = 30.f;
+	vertex[106] = 30.f;
+	vertex[107] = 20.f;
+
+
+	//-----------
+	vertex[108] = 20.f;
+	vertex[109] = 30.f;
+	vertex[110] = 20.f;
+
+	vertex[111] = 20.f;
+	vertex[112] = 30.f;
+	vertex[113] = 30.f;
+
+	vertex[114] = 30.f;
+	vertex[115] = 30.f;
+	vertex[116] = 30.f;
+
+
+
+	//alloc vertex
+	num_of_vertex = 39;
 	glGenBuffers(1, (GLuint*)&(array_id));
 	glBindBuffer(GL_ARRAY_BUFFER, array_id);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float)* num_of_vertex * 3, vertex, GL_STATIC_DRAW);
 
+	//alloc indices
+	//glGenBuffers(1, (GLuint*) &(my_indices));
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
+	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint)*num_indices, indices, GL_STATIC_DRAW);
 
 
 	return ret;
@@ -181,7 +262,7 @@ update_status ModuleEditor::PostUpdate(float dt)
 	glLineWidth(2.0f);
 
 
-	/*//Direct mode drawing
+	//Direct mode drawing
 	glBegin(GL_TRIANGLES);
 	glVertex3f(0.f, 0.f, 10.f);
 	glVertex3f(0.f, 0.f, 0.f);
@@ -230,7 +311,7 @@ update_status ModuleEditor::PostUpdate(float dt)
 	glVertex3f(10.f, 0.f, 0.f);
 	glVertex3f(0.f, 0.f, 0.f);
 	glVertex3f(10.f, 10.f, 0.f);
-	glEnd();*/
+	glEnd();
 
 	
 
@@ -242,10 +323,14 @@ update_status ModuleEditor::PostUpdate(float dt)
 	// ... draw other buffers
 	glDrawArrays(GL_TRIANGLES, 0, num_of_vertex * 3);
 	glDisableClientState(GL_VERTEX_ARRAY);
+	
 
 	//-----
-
+/*		glEnableClientState(GL_VERTEX_ARRAY);
+	glVertexPointer(3, GL_FLOAT, 0, vertices);
+	glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_BYTE, indices);
 	
+	glDisableClientState(GL_VERTEX_ARRAY);*/
 
 	glEnd();
 	glLineWidth(1.0f);

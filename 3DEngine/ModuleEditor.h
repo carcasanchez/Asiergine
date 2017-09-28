@@ -7,6 +7,7 @@
 
 
 typedef union SDL_Event;
+typedef unsigned char GLubyte;
 
 class ModuleEditor : public Module
 {
@@ -43,8 +44,21 @@ private:
 	bool inspector_open = false;
 
 	//Geometry
-	float vertex[100];
+	float vertex[120];
+
+	//--indice elements
+	float vertices[24] =
+	{
+		0.0, 0.0, 0.0, //0
+		4.0, 0.0, 0.0, //1
+		0.0, 40.0, 0.0, //2
+	};
+	GLubyte indices[36]=
+	{0 ,1 ,2 };
+
 	int num_of_vertex= 0;
+	int my_indices = 0;
+	int num_indices = 8;
 
 //	UINT nDevices;
 //	PRAWINPUTDEVICELIST pRawInputDeviceList;
