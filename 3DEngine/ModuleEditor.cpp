@@ -209,7 +209,7 @@ bool ModuleEditor::Start()
 
 	glGenBuffers(1, (GLuint*) &(my_indices));
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLubyte)*36, indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLubyte)*36*4, indices, GL_STATIC_DRAW);
 
 
 	return ret;
