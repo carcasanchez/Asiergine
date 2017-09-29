@@ -205,7 +205,7 @@ bool ModuleEditor::Start()
 	//alloc indices
 	glGenBuffers(1, (GLuint*) &(my_indices));
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint)*num_indices, indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLubyte)*36, indices, GL_STATIC_DRAW);
 
 
 	return ret;
@@ -297,28 +297,22 @@ update_status ModuleEditor::PostUpdate(float dt)
 	//Array drawing
 
 	glEnableClientState(GL_VERTEX_ARRAY);
-	/*glBindBuffer(GL_ARRAY_BUFFER, array_id);
+	//glBindBuffer(GL_ARRAY_BUFFER, array_id);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 	// ... draw other buffers
-	glDrawArrays(GL_TRIANGLES, 0, num_of_vertex * 3);*/
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
-	glVertexPointer(3, GL_FLOAT, 0, NULL);
-	glDrawElements(GL_TRIANGLES, my_indices, GL_UNSIGNED_INT, NULL);
-
+	glDrawArrays(GL_TRIANGLES, 0, num_of_vertex * 3);
 	glDisableClientState(GL_VERTEX_ARRAY);
 	
 
 	//-----
-	/*glEnableClientState(GL_VERTEX_ARRAY);
-	
-	glDisableClientState(GL_VERTEX_ARRAY);*/
+	glEnableClientState(GL_VERTEX_ARRAY);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
+	glVertexPointer(3, GL_FLOAT, 0, vertices);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_BYTE, indices);
+	glDisableClientState(GL_VERTEX_ARRAY);
 
 	glEnd();
 	glLineWidth(1.0f);
-
-
-
 
 	Plane_prim plane;
 	plane.Render();
