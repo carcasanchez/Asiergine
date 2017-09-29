@@ -48,7 +48,7 @@ private:
 	float vertex[120];
 
 	//--indice elements
-	GLfloat vertex2[24] =
+	float vertex2[24] =
 	{
 		2.0, -1.0,  1.0,
 		4.0, -1.0,  1.0,
@@ -61,7 +61,7 @@ private:
 		2.0,  1.0, -1.0,
 	};
 
-	GLubyte indices[36] =		
+	int indices[36] =		
 		{0, 1, 2,
 		2, 3, 0,	
 		1, 5, 6,
