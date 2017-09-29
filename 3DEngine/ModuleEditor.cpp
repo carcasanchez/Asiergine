@@ -36,7 +36,7 @@ bool ModuleEditor::Start()
 	ImGui_ImplSdlGL3_NewFrame(App->window->window);
 
 
-
+	//------Cube 2
 	//---1
 	vertex[0] = 20.f;
 	vertex[1] = 20.f;
@@ -197,12 +197,16 @@ bool ModuleEditor::Start()
 
 
 	//alloc vertex
-	num_of_vertex = 39;
+	/*num_of_vertex = 39;
 	glGenBuffers(1, (GLuint*)&(array_id));
 	glBindBuffer(GL_ARRAY_BUFFER, array_id);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float)* num_of_vertex * 3, vertex, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float)* num_of_vertex * 3, vertex, GL_STATIC_DRAW);*/
 
 	//alloc indices
+	glGenBuffers(1, (GLuint*)&(array_id2));
+	glBindBuffer(GL_ARRAY_BUFFER, array_id2);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float)* 8 * 3, vertex2, GL_STATIC_DRAW);
+
 	glGenBuffers(1, (GLuint*) &(my_indices));
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLubyte)*36, indices, GL_STATIC_DRAW);
@@ -296,20 +300,29 @@ update_status ModuleEditor::PostUpdate(float dt)
 
 	//Array drawing
 
-	glEnableClientState(GL_VERTEX_ARRAY);
-	//glBindBuffer(GL_ARRAY_BUFFER, array_id);
+/*	glEnableClientState(GL_VERTEX_ARRAY);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 	// ... draw other buffers
 	glDrawArrays(GL_TRIANGLES, 0, num_of_vertex * 3);
-	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_VERTEX_ARRAY);*/
 	
 
-	//-----
+
+
+	//Index drawing
+
 	glEnableClientState(GL_VERTEX_ARRAY);
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
-	glVertexPointer(3, GL_FLOAT, 0, vertices);
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_BYTE, indices);
+
+	glBindBuffer(GL_ARRAY_BUFFER, array_id2);
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
+
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, NULL);
+
 	glDisableClientState(GL_VERTEX_ARRAY);
+
+
+
 
 	glEnd();
 	glLineWidth(1.0f);
