@@ -47,6 +47,8 @@ private:
 	bool hierarchy_open = false;
 	bool inspector_open = false;
 
+	bool unlimitedFramerate = true;
+
 	//Geometry
 	float vertex[120];
 
@@ -92,7 +94,7 @@ float vertex2[24] =
 	bool resizable = true;
 	bool borderless = false;
 	bool fulldesktop = false;
-	
+	int max_fps = 0;
 
 
 	void ManageMainMenuBar();

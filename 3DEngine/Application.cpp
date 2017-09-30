@@ -133,14 +133,16 @@ void Application::FinishUpdate()
 		App->editor->calculate_fps_graph = true;
 	}
 	
-	/*if (fps_cap > 0 && last_frame_miliseconds < (1000/ fps_cap))
+	last_frame_miliseconds = (float)ms_timer.ReadMS();
+
+	if (fps_cap > 0 && last_frame_miliseconds < ms_cap)
 	{
-		SDL_Delay(((1000/fps_cap) - int(last_frame_miliseconds)));
+		SDL_Delay(ms_cap - last_frame_miliseconds);
 	}
-	*/
-	
 
 	last_frame_miliseconds = (float)ms_timer.ReadMS();
+
+
 }
 
 // Call PreUpdate, Update and PostUpdate on all modules

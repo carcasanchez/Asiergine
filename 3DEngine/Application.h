@@ -87,6 +87,7 @@ public:
 	void GetFrames(int& frames, float& miliseconds);
 	void SetMaxFrames(int max_frames)
 	{
+		fps_cap = max_frames;
 		ms_cap = (max_frames > 0) ? 1000 / max_frames : 0;
 	}
 

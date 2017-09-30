@@ -548,12 +548,22 @@ void ModuleEditor::ManageConfigurationWindow()
 				App->org_name = str1;
 			}
 			
-			static int max_fps = 0;
-			if (ImGui::SliderInt("Max FPS", &max_fps, 0, 60))
+			if (ImGui::Checkbox("Unlimited Framerate", &unlimitedFramerate))
 			{
-				App->SetMaxFrames(max_fps);
+				if (unlimitedFramerate) App->SetMaxFrames(0);
+				else 
+				{
+					App->SetMaxFrames(max_fps);
+				}
+			};
+			if (!unlimitedFramerate)
+			{
+				if (ImGui::SliderInt("Max FPS", &max_fps, 10, 60))
+				{
+					App->SetMaxFrames(max_fps);
+				}
+				ImGui::TextWrapped("Limit Framerate: ");
 			}
-			ImGui::TextWrapped("Limit Framerate: ");
 			
 
 			//Framerate Calculation
