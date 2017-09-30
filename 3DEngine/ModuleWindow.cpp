@@ -113,6 +113,14 @@ vec2 ModuleWindow::GetWindowPixels()
 	return size;
 }
 
+bool ModuleWindow::SwitchVSync()
+{
+	if(SDL_GL_SetSwapInterval(vsync) < 0)
+		LOG("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
+
+	return true;
+}
+
 bool ModuleWindow::SaveConfig(JSON_Object* config_data)
 {
 	LOG("Saving data to config--------");

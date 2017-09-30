@@ -22,6 +22,7 @@ public:
 
 	bool SaveConfig(JSON_Object* config_data);
 
+
 public:
 
 	std::vector<Light> lights;

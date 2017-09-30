@@ -89,6 +89,9 @@ bool Application::Init()
 	ms_timer.Start();
 	second_timer.Start();
 
+	//set fps cap at Unlimited
+	SetMaxFrames(0);
+
 	//Get Hardware specs
 	SDL_GetVersion(&system_specs.sdl_version);
 	system_specs.cpus = SDL_GetCPUCount();
@@ -115,7 +118,6 @@ void Application::PrepareUpdate()
 {
 	dt = (float)ms_timer.ReadMS();
 	ms_timer.Start();
-
 	frame_count++;
 	
 }
@@ -123,18 +125,19 @@ void Application::PrepareUpdate()
 // ---------------------------------------------
 void Application::FinishUpdate()
 {
+	if (second_timer.ReadMS() > 1000)
+	{
+		second_timer.Start();
+		last_second_frames = frame_count;
+		frame_count = 0;
+	}
 	
-	if (fps_cap > 0 && last_frame_miliseconds < (1000/ fps_cap))
+	/*if (fps_cap > 0 && last_frame_miliseconds < (1000/ fps_cap))
 	{
 		SDL_Delay(((1000/fps_cap) - int(last_frame_miliseconds)));
 	}
+	*/
 	
-	if (second_timer.ReadMS() > 1000)
-	{
-		last_second_frames = frame_count;
-		second_timer.Start();
-		frame_count = 0;
-	}
 
 	last_frame_miliseconds = (float)ms_timer.ReadMS();
 }

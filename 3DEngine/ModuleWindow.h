@@ -23,6 +23,9 @@ public:
 
 	vec2 GetWindowPixels();
 
+
+	bool SwitchVSync();
+
 public:
 	//The window we'll be rendering to
 	SDL_Window* window;

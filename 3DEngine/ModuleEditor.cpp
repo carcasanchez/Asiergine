@@ -586,7 +586,10 @@ void ModuleEditor::ManageConfigurationWindow()
 			static int width = 1080;
 			static int height = 960;
 			if (ImGui::Checkbox("Vsync Active", &vsync_active))
+			{
 				App->window->vsync = vsync_active;
+				App->window->SwitchVSync();
+			}
 			
 			if (ImGui::SliderInt("Width", &width, 200, 3820))
 			{
