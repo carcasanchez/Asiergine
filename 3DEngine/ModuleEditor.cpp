@@ -301,6 +301,7 @@ update_status ModuleEditor::PostUpdate(float dt)
 	//Array drawing
 
 	glEnableClientState(GL_VERTEX_ARRAY);
+	glBindBuffer(GL_ARRAY_BUFFER, array_id);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 	// ... draw other buffers
 	glDrawArrays(GL_TRIANGLES, 0, num_of_vertex * 3);
