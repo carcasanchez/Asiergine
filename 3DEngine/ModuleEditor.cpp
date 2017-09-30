@@ -3,12 +3,7 @@
 #include "Application.h"
 #include "Math.h"
 #include "Primitive.h"
-#include "Glew/include/glew.h"
-#include "SDL/include/SDL_opengl.h"
-#include <gl/GL.h>
-#include <gl/GLU.h>
 
-#include "Imgui/imgui_impl_sdl_gl3.h"
 
 
 
@@ -328,7 +323,6 @@ update_status ModuleEditor::PostUpdate(float dt)
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, NULL);
 
 	glDisableClientState(GL_VERTEX_ARRAY);
-
 
 
 
