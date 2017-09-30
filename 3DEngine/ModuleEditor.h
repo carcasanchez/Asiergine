@@ -5,6 +5,7 @@
 #include "imgui\imgui.h"
 #include "MathGeoLib\include\Math.h"
 
+#define MAX_FPS_LOG 100
 
 typedef union SDL_Event;
 typedef unsigned char GLubyte;
@@ -30,6 +31,8 @@ public:
 
 
 	void GetInputEvent(SDL_Event* e);
+
+	bool calculate_fps_graph = false;
 
 private:
 

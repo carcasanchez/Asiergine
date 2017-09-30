@@ -11,6 +11,8 @@
 #include "Imgui/imgui_impl_sdl_gl3.h"
 
 
+
+
 ModuleEditor::ModuleEditor( bool start_enabled) : Module( start_enabled)
 {
 	name = "editor";
@@ -34,6 +36,11 @@ bool ModuleEditor::Start()
 {
 	bool ret = true;
 	ImGui_ImplSdlGL3_NewFrame(App->window->window);
+
+	//reserve for fps_log
+	fps_log = std::vector<float>(MAX_FPS_LOG, 0);
+	ms_log = std::vector<float>(MAX_FPS_LOG, 0);
+
 
 
 	//------Cube 2
@@ -551,30 +558,35 @@ void ModuleEditor::ManageConfigurationWindow()
 
 			//Framerate Calculation
 			
-			int frames;
-			float milisec;
-			App->GetFrames(frames, milisec);
-
-			if (fps_log.size() > 100)
+			if (calculate_fps_graph)
 			{
-				for (int i = 1; i < fps_log.size(); i++)
+				int frames;
+				float milisec;
+				App->GetFrames(frames, milisec);
+
+				if (fps_log.size() > MAX_FPS_LOG)
 				{
-					fps_log[i - 1] = fps_log[i];
-					ms_log[i - 1] = ms_log[i];
+					for (int i = 1; i < fps_log.size(); i++)
+					{
+						fps_log[i - 1] = fps_log[i];
+						ms_log[i - 1] = ms_log[i];
+					}
+					fps_log.pop_back();
+					ms_log.pop_back();
 				}
-				fps_log.pop_back();
-				ms_log.pop_back();
-			}
 
-			fps_log.push_back(frames);
-			ms_log.push_back(milisec);
-
+				
+					fps_log.push_back(frames);
+					ms_log.push_back(milisec);
+					calculate_fps_graph = false;
+			}	
+			
 			char title[25];
 			sprintf_s(title, 25, "Framerate %.1f", fps_log[fps_log.size() - 1]);
 			ImGui::PlotHistogram("##framerate", &fps_log[0], fps_log.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
 			sprintf_s(title, 25, "Milliseconds %0.1f", ms_log[ms_log.size() - 1]);
 			ImGui::PlotHistogram("##Milliseconds", &ms_log[0], ms_log.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
-
+			
 		}
 
 

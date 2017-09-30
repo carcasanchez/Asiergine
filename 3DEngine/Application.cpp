@@ -130,6 +130,7 @@ void Application::FinishUpdate()
 		second_timer.Start();
 		last_second_frames = frame_count;
 		frame_count = 0;
+		App->editor->calculate_fps_graph = true;
 	}
 	
 	/*if (fps_cap > 0 && last_frame_miliseconds < (1000/ fps_cap))
