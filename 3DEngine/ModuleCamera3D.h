@@ -24,6 +24,7 @@ private:
 
 	void CalculateViewMatrix();
 	void ControlCamera(float dt);
+	void ResetCamera();
 
 public:
 	
@@ -32,6 +33,7 @@ public:
 	vec3 ViewVector;
 
 	float camera_speed = 0.01;
+	float camera_sensitivity = 0.01;
 
 private:
 

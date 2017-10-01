@@ -52,7 +52,7 @@ bool ModuleCamera3D::Start()
 {
 	LOG("Setting up the camera");
 	bool ret = true;
-
+	Look(Position, Reference, true);
 
 	return ret;
 }
@@ -138,22 +138,22 @@ void ModuleCamera3D::ControlCamera(float dt)
 	//FP Control
 	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
 	{
-		Move(vec3(0, 0, -camera_speed * dt));
+		Move(Z*-camera_speed*dt);
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
 	{
-		Move(vec3(0, 0, camera_speed * dt));
+		Move(Z*camera_speed*dt);
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
 	{
-		Move(vec3(-camera_speed * dt, 0, 0));
+		Move(X*-camera_speed*dt);
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
 	{
-		Move(vec3(camera_speed * dt, 0, 0));
+		Move(X*camera_speed*dt);
 	}
 
 
@@ -164,18 +164,18 @@ void ModuleCamera3D::ControlCamera(float dt)
 		if (y != 0)
 		{
 			if(y > 0)
-				Position.y += camera_speed*4 * dt;
+				Position += Y*camera_sensitivity * dt*y;
 			else if (y < 0)
-				Position.y -= camera_speed*4 * dt;
+				Position += Y*camera_sensitivity * dt*y;
 
 			Look(Position, Reference, true);
 		}
 		if (x != 0)
 		{
 			if (x > 0)
-				Position.x -= camera_speed * 4 * dt;
+				Position += X*camera_sensitivity * dt*x;
 			else if (x < 0)
-				Position.x += camera_speed * 4 * dt;
+				Position += X*camera_sensitivity * dt*x;
 
 			Look(Position, Reference, true);
 		}
@@ -183,6 +183,23 @@ void ModuleCamera3D::ControlCamera(float dt)
 
 	}
 
+	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
+	{
+		ResetCamera();
+	}
+
+}
+
+void ModuleCamera3D::ResetCamera()
+{
+	X = vec3(1.0f, 0.0f, 0.0f);
+	Y = vec3(0.0f, 1.0f, 0.0f);
+	Z = vec3(0.0f, 0.0f, 1.0f);
+
+	Position = vec3(5.0f, 5.0f, 5.0f);
+	Reference = vec3(0.0f, 0.0f, 0.0f);
+
+	CalculateViewMatrix();
 }
 
 bool ModuleCamera3D::SaveConfig(JSON_Object* config_data)
