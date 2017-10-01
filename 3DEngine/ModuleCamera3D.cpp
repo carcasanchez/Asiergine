@@ -72,8 +72,7 @@ update_status ModuleCamera3D::Update(float dt)
 
 	// Recalculate matrix -------------
 	CalculateViewMatrix();
-
-	
+		
 
 	return UPDATE_CONTINUE;
 }
@@ -173,14 +172,23 @@ void ModuleCamera3D::ControlCamera(float dt)
 		if (x != 0)
 		{
 			if (x > 0)
-				Position += X*camera_sensitivity * dt*x;
+				Position -= X*camera_sensitivity * dt*x;
 			else if (x < 0)
-				Position += X*camera_sensitivity * dt*x;
+				Position -= X*camera_sensitivity * dt*x;
 
 			Look(Position, Reference, true);
 		}
 
 
+	}
+
+	if (App->input->GetMouseZ() == 1)
+	{
+		Position -= Z;
+	}
+	else if (App->input->GetMouseZ() == -1)
+	{
+		Position += Z;
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
