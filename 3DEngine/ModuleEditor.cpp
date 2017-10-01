@@ -2,7 +2,7 @@
 #include "ModuleEditor.h"
 #include "Application.h"
 #include "Math.h"
-#include "Primitive.h"
+
 
 
 
@@ -328,6 +328,9 @@ update_status ModuleEditor::PostUpdate(float dt)
 
 	glEnd();
 	glLineWidth(1.0f);
+
+	Sphere_prim sphere(8.f,16,8);
+	sphere.draw(0.f, 0.f, 0.f);
 
 	Plane_prim plane;
 	plane.Render();

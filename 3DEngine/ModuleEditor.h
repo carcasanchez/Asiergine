@@ -1,15 +1,15 @@
-#ifndef _MODULE_EDITOR_H_
-#define _MODULE_EDITOR_H_
+#pragma once
 #include "Module.h"
 #include "Console.h"
 #include "imgui\imgui.h"
 #include "MathGeoLib\include\Math.h"
-#include "Glew/include/glew.h"
+/*#include "Glew/include/glew.h"
 #include "SDL/include/SDL_opengl.h"
 #include <gl/GL.h>
-#include <gl/GLU.h>
+#include <gl/GLU.h>*/
 
 #include "Imgui/imgui_impl_sdl_gl3.h"
+#include "Primitive.h"
 
 #define MAX_FPS_LOG 100
 
@@ -88,6 +88,7 @@ float vertex2[24] =
 	int num_indices = 36;
 	
 
+
 //	UINT nDevices;
 //	PRAWINPUTDEVICELIST pRawInputDeviceList;
 
@@ -123,57 +124,5 @@ float vertex2[24] =
 
 	uint array_id = 0;
 	uint array_id2 = 0;
-	public:
-		class SSphere
-		{
-		protected:
-			std::vector<GLfloat> vertices_s;
-			std::vector<GLushort> indices_s;
-
-		public:
-			SSphere(float radius, unsigned int rings, unsigned int sectors)
-			{
-				float const R = 1. / (float)(rings - 1);
-				float const S = 1. / (float)(sectors - 1);
-				int r, s;
-
-				vertices_s.resize(rings * sectors * 3);
-
-				std::vector<GLfloat>::iterator v = vertices_s.begin();
-
-				for (r = 0; r < rings; r++) for (s = 0; s < sectors; s++) {
-					float const y = sin(-M_PI_2 + M_PI * r * R);
-					float const x = cos(2 * M_PI * s * S) * sin(M_PI * r * R);
-					float const z = sin(2 * M_PI * s * S) * sin(M_PI * r * R);
-
-					*v++ = x * radius;
-					*v++ = y * radius;
-					*v++ = z * radius;
-				}
-
-				indices_s.resize(rings * sectors * 4);
-				std::vector<GLushort>::iterator i = indices_s.begin();
-				for (r = 0; r < rings - 1; r++) for (s = 0; s < sectors - 1; s++) {
-					*i++ = r * sectors + s;
-					*i++ = r * sectors + (s + 1);
-					*i++ = (r + 1) * sectors + (s + 1);
-					*i++ = (r + 1) * sectors + s;
-				}
-			}
-
-			void draw(GLfloat x, GLfloat y, GLfloat z)
-			{
-
-				glEnableClientState(GL_VERTEX_ARRAY);
-
-
-				glVertexPointer(3, GL_FLOAT, 0, &vertices_s[0]);
-				glDrawElements(GL_QUADS, indices_s.size(), GL_UNSIGNED_SHORT, &indices_s[0]);
-			}
-		};
 };
-
-
-
-#endif
 

@@ -1,7 +1,5 @@
 
 #include "Globals.h"
-#include <gl/GL.h>
-#include <gl/GLU.h>
 #include "Primitive.h"
 
 
@@ -161,11 +159,53 @@ Sphere_prim::Sphere_prim() : Primitive(), radius(1.0f)
 	type = PrimitiveTypes::Primitive_Sphere;
 }
 
-Sphere_prim::Sphere_prim(float radius) : Primitive(), radius(radius)
+Sphere_prim::Sphere_prim(float radius, unsigned int rings, unsigned int sectors) : Primitive(), radius(radius) , rings(rings) , sectors(sectors)
 {
-	type = PrimitiveTypes::Primitive_Sphere;
-}
+	//type = PrimitiveTypes::Primitive_Sphere;
+	float const R = 1. / (float)(rings - 1);
+	float const S = 1. / (float)(sectors - 1);
+	int r, s;
 
+	vertices_s.resize(rings * sectors * 3);
+
+	std::vector<GLfloat>::iterator v = vertices_s.begin();
+
+	for (r = 0; r < rings; r++) for (s = 0; s < sectors; s++) {
+		float const y = sin(-M_PI_2 + M_PI * r * R);
+		float const x = cos(2 * M_PI * s * S) * sin(M_PI * r * R);
+		float const z = sin(2 * M_PI * s * S) * sin(M_PI * r * R);
+
+		*v++ = x * radius;
+		*v++ = y * radius;
+		*v++ = z * radius;
+	}
+
+	indices_s.resize(rings * sectors * 4);
+	std::vector<GLushort>::iterator i = indices_s.begin();
+	for (r = 0; r < rings - 1; r++) for (s = 0; s < sectors - 1; s++) {
+		*i++ = r * sectors + s;
+		*i++ = r * sectors + (s + 1);
+		*i++ = (r + 1) * sectors + (s + 1);
+		*i++ = (r + 1) * sectors + s;
+	}
+	uint array_id3 = 0;
+	glGenBuffers(1, (GLuint*)&(array_id3));
+	glBindBuffer(GL_ARRAY_BUFFER, array_id3);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 8 * 3, &vertices_s[0], GL_STATIC_DRAW);
+
+	uint my_indices = 0;
+	glGenBuffers(1, (GLuint*) &(my_indices));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLubyte) * 36 * 4, &indices_s[0], GL_STATIC_DRAW); 
+}
+void Sphere_prim::draw(GLfloat x, GLfloat y, GLfloat z)
+{
+	glEnableClientState(GL_VERTEX_ARRAY);
+
+	glVertexPointer(3, GL_FLOAT, 0, &vertices_s[0]);
+	glDrawElements(GL_TRIANGLES, indices_s.size(), GL_UNSIGNED_SHORT, &indices_s[0]);
+	glDisableClientState(GL_VERTEX_ARRAY);
+}
 void Sphere_prim::InnerRender() const
 {
 }

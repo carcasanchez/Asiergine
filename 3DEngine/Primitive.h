@@ -2,6 +2,10 @@
 #pragma once
 #include "glmath.h"
 #include "Color.h"
+#include "Glew/include/glew.h"
+#include "SDL/include/SDL_opengl.h"
+#include <gl/GL.h>
+#include <gl/GLU.h>
 
 enum PrimitiveTypes
 {
@@ -54,10 +58,16 @@ class Sphere_prim : public Primitive
 {
 public:
 	Sphere_prim();
-	Sphere_prim(float radius);
+	Sphere_prim(float radius, unsigned int rings, unsigned int sectors);
 	void InnerRender() const;
+	void draw(GLfloat x, GLfloat y, GLfloat z);
 public:
 	float radius;
+	uint rings;
+	uint sectors;
+protected:
+	std::vector<GLfloat> vertices_s;
+	std::vector<GLushort> indices_s;
 };
 
 // ============================================
