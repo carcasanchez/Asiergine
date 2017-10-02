@@ -160,6 +160,12 @@
     <ClCompile Include="3DEngine\Primitive.cpp">
       <Filter>Source\Helpers</Filter>
     </ClCompile>
+    <ClCompile Include="3DEngine\ModuleFileSystem.cpp">
+      <Filter>Source\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="3DEngine\Geometry.cpp">
+      <Filter>Source\Containers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3DEngine\Application.h">
@@ -422,6 +428,12 @@
     </ClInclude>
     <ClInclude Include="3DEngine\Primitive.h">
       <Filter>Source\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\ModuleFileSystem.h">
+      <Filter>Source\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\Geometry.h">
+      <Filter>Source\Containers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

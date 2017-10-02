@@ -12,6 +12,7 @@
 #include "ModuleCamera3D.h"
 //#include "ModulePhysics3D.h"
 #include "ModuleEditor.h"
+#include "ModuleFileSystem.h"
 
 
 struct HardwareSpecs
@@ -54,6 +55,7 @@ public:
 	ModuleCamera3D* camera;
 //	ModulePhysics3D* physics;
 	ModuleEditor* editor;
+	ModuleFileSystem* file_system;
 
 	bool console_on = false;
 
