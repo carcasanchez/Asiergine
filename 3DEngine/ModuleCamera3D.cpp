@@ -160,27 +160,43 @@ void ModuleCamera3D::ControlCamera(float dt)
 	{
 		int x = App->input->GetMouseXMotion();	
 		int y = App->input->GetMouseYMotion();
-		if (y != 0)
+		if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)
 		{
-			if(y > 0)
-				Position += Y*camera_sensitivity * dt*y;
-			else if (y < 0)
-				Position += Y*camera_sensitivity * dt*y;
+			if (y != 0)
+			{	
+				Move(Y*camera_speed*dt*y);
 
-			Look(Position, Reference, true);
+			}
+			if (x != 0)
+			{
+				Move(X*-camera_speed*dt*x);
+			}
 		}
-		if (x != 0)
+		else
 		{
-			if (x > 0)
-				Position -= X*camera_sensitivity * dt*x;
-			else if (x < 0)
-				Position -= X*camera_sensitivity * dt*x;
+			if (y != 0)
+			{
+				if (y > 0)
+					Position += Y*camera_sensitivity * dt*y;
+				else if (y < 0)
+					Position += Y*camera_sensitivity * dt*y;
 
-			Look(Position, Reference, true);
+				Look(Position, Reference, true);
+			}
+			if (x != 0)
+			{
+				if (x > 0)
+					Position -= X*camera_sensitivity * dt*x;
+				else if (x < 0)
+					Position -= X*camera_sensitivity * dt*x;
+
+				Look(Position, Reference, true);
+			}
 		}
 
 
 	}
+
 
 	if (App->input->GetMouseZ() == 1)
 	{
