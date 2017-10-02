@@ -298,7 +298,13 @@ update_status ModuleEditor::PostUpdate(float dt)
 	glVertex3f(10.f, 10.f, 0.f);
 	glEnd();*/
 
-	
+
+	//TODO: DELETE DIS
+	const char* f_path = App->input->GetFileDropped();
+	if (f_path != nullptr)
+	{
+		LOG("%s", f_path);
+	}
 
 	//Array drawing
 

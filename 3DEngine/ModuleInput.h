@@ -33,6 +33,17 @@ public:
 		return mouse_buttons[id];
 	}
 
+	const char* GetFileDropped()
+	{
+		if (file_dropped)
+		{
+			file_dropped = false;
+			return file_path.c_str();
+		}
+		else return nullptr;
+
+	}
+
 	int GetMouseX() const
 	{
 		return mouse_x;
@@ -58,6 +69,7 @@ public:
 		return mouse_y_motion;
 	}
 
+
 private:
 	KEY_STATE* keyboard;
 	KEY_STATE mouse_buttons[MAX_MOUSE_BUTTONS];
@@ -66,5 +78,9 @@ private:
 	int mouse_z;
 	int mouse_x_motion;
 	int mouse_y_motion;
-	//int mouse_z_motion;
+
+
+	bool file_dropped = false;
+	std::string file_path;
+
 };
