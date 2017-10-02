@@ -54,7 +54,6 @@ bool ModuleRenderer3D::Init(const JSON_Object* config_data)
 		hard_poly_enabled = json_object_dotget_boolean(renderer_data, "hard_poly_enabled");
 
 
-
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);

@@ -318,7 +318,7 @@ update_status ModuleEditor::PostUpdate(float dt)
 	glBindBuffer(GL_ARRAY_BUFFER, array_id2);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
-	glDrawElements(GL_TRIANGLES, 36/3, GL_UNSIGNED_INT, NULL);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, NULL);
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 
