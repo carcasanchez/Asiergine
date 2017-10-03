@@ -65,7 +65,7 @@ update_status ModuleEditor::Update(float dt)
 	const char* f_path = App->input->GetFileDropped();
 	if (f_path != nullptr)
 	{
-		LOG("%s", f_path);
+		App->file_system->LoadGeometry(f_path);
 	}
 
 
