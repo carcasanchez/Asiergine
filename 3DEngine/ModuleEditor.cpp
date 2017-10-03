@@ -39,15 +39,8 @@ bool ModuleEditor::Start()
 
 
 
+	App->file_system->LoadGeometry("hanga");
 	
-	//alloc indices
-	glGenBuffers(1, (uint*)&(array_id2));
-	glBindBuffer(GL_ARRAY_BUFFER, array_id2);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float)* 8 * 3, vertex2, GL_STATIC_DRAW);
-
-	glGenBuffers(1, (uint*)&(my_indices));
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int)*36, indices, GL_STATIC_DRAW);
 
 
 	return ret;

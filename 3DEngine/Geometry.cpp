@@ -6,17 +6,20 @@
 #include ".\mmgr\mmgr.h"
 
 
-Geometry::Geometry()
+Geometry::Geometry(float* ver, uint* ind, uint num_vert, uint num_ind): vertices(ver), indices(ind), num_vertices(num_vert), num_indices(num_ind)
 {
+	//alloc vertices
+	glGenBuffers(1, (uint*)&(id_vertices));
+	glBindBuffer(GL_ARRAY_BUFFER, id_vertices);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_vertices * 3, vertices, GL_STATIC_DRAW);
+
+	//alloc indices
+	glGenBuffers(1, (uint*)&(id_indices));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * num_indices, indices, GL_STATIC_DRAW);
 }
 
-Geometry::~Geometry()
-{
-	if(vertices != nullptr)
-		delete[] vertices;
-	if (indices != nullptr)
-		delete[] indices;
-}
+Geometry::~Geometry(){}
 
 void Geometry::Draw()
 {

@@ -3,14 +3,14 @@
 
 struct Geometry
 {
-	Geometry();
+	Geometry(float* ver, uint* ind, uint num_vert, uint num_ind);
 	~Geometry();
 
 	void Draw();
 
 	uint id_vertices = 0;  //id in VRAM
 	uint num_vertices = 0;
-	uint* vertices = nullptr;
+	float* vertices = nullptr;
 
 	uint id_indices = 0;  //id in VRAM
 	uint num_indices = 0;

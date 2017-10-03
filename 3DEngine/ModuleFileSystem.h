@@ -12,6 +12,7 @@ public:
 
 	bool Init(const JSON_Object* config_data);
 	bool Start();
+	bool CleanUp();
 
 	bool LoadGeometry(const char* path);
 
