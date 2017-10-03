@@ -1,5 +1,6 @@
 #pragma once
 #include "Module.h"
+#include "Geometry.h"
 
 
 class ModuleFileSystem : public Module
@@ -11,6 +12,8 @@ public:
 
 	bool Init(const JSON_Object* config_data);
 	bool Start();
+
+	std::vector<Geometry*> geometries;
 
 private:
 

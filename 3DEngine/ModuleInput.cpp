@@ -1,5 +1,6 @@
 #include "Globals.h"
 #include "Application.h"
+#include ".\mmgr\mmgr.h"
 #include "ModuleInput.h"
 
 #define MAX_KEYS 300

@@ -1,5 +1,6 @@
 #include "Globals.h"
 #include "Application.h"
+#include ".\mmgr\mmgr.h"
 #include "ModuleWindow.h"
 
 ModuleWindow::ModuleWindow(bool start_enabled) : Module(start_enabled)

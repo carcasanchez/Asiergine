@@ -1,5 +1,6 @@
 #include "Globals.h"
 #include "Application.h"
+#include ".\mmgr\mmgr.h"
 #include "ModuleAudio.h"
 
 #pragma comment( lib, "3DEngine/SDL_mixer/libx86/SDL2_mixer.lib" )

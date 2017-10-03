@@ -57,8 +57,7 @@ private:
 
 	bool unlimitedFramerate = true;
 
-	//Geometry
-	float vertex[120];
+
 
 	//--indice elements
 float vertex2[24] =
@@ -83,9 +82,9 @@ float vertex2[24] =
 		0, 4, 6,  2, 0, 6,
 };
 
-	int num_of_vertex= 0;
+
 	uint my_indices = 0;
-	int num_indices = 36;
+
 	
 
 
@@ -119,10 +118,10 @@ float vertex2[24] =
 	void ShowExampleWindow_option();
 	void Window_option();
 	void ExitEditor_option();
+	
 
-
-
-	uint array_id = 0;
 	uint array_id2 = 0;
+
+	Plane_prim plane;
 };
 
