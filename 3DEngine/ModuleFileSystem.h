@@ -13,6 +13,9 @@ public:
 	bool Init(const JSON_Object* config_data);
 	bool Start();
 
+	bool LoadGeometry(const char* path);
+
+
 	std::vector<Geometry*> geometries;
 
 private:

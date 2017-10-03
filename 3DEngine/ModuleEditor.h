@@ -3,10 +3,6 @@
 #include "Console.h"
 #include "imgui\imgui.h"
 #include "MathGeoLib\include\Math.h"
-/*#include "Glew/include/glew.h"
-#include "SDL/include/SDL_opengl.h"
-#include <gl/GL.h>
-#include <gl/GLU.h>*/
 
 #include "Imgui/imgui_impl_sdl_gl3.h"
 #include "Primitive.h"
@@ -34,6 +30,7 @@ public:
 	bool CleanUp();
 
 	void DrawUI();
+	void DrawGeometry();
 	void DrawInConsole(const char*);
 
 

@@ -84,25 +84,6 @@ update_status ModuleEditor::PostUpdate(float dt)
 {
 	update_status ret = UPDATE_CONTINUE;
 	
-	
-	//Index drawing
-	glLineWidth(2.0f);
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glBindBuffer(GL_ARRAY_BUFFER, array_id2);
-	glVertexPointer(3, GL_FLOAT, 0, NULL);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, NULL);
-
-	glDisableClientState(GL_VERTEX_ARRAY);
-	
-	glLineWidth(1.0f);
-
-
-
-	
-	plane.Render();
-
-
 	if (quit_editor)
 		ret = UPDATE_STOP;
 	return ret;
@@ -118,6 +99,8 @@ bool ModuleEditor::CleanUp()
 	return ret;
 }
 
+
+//Draw functions------------------------------------------------------------------------
 void ModuleEditor::DrawUI()
 {
 	ManageMainMenuBar();
@@ -131,9 +114,19 @@ void ModuleEditor::DrawUI()
 	ImGui::Render();
 }
 
+void ModuleEditor::DrawGeometry()
+{
+	plane.Render();
+
+	for (std::vector<Geometry*>::iterator it = App->file_system->geometries.begin(); it != App->file_system->geometries.end(); it++)
+	{
+		(*it)->Draw();
+	}
+}
 
 
-//MAIN MENU BAR management
+
+//MAIN MENU BAR management------------------------------------------------------------------------
 void ModuleEditor::ManageMainMenuBar()
 {
 	if (ImGui::BeginMainMenuBar())
@@ -206,14 +199,14 @@ void ModuleEditor::ExitEditor_option()
 
 //EMERGENT WINDOWS management
 
-//Example window management
+//Example window management------------------------------------------------------------------------
 void ModuleEditor::ManageExampleWindow()
 {
 	if (test_window_open == true)
 		ImGui::ShowTestWindow();
 }
 
-//About window
+//About window------------------------------------------------------------------------
 void ModuleEditor::ManageAboutWindow()
 {
 	if (about_engine_open)
@@ -270,7 +263,7 @@ void ModuleEditor::ManageAboutWindow()
 
 
 
-//Console management
+//Console management------------------------------------------------------------------------
 void ModuleEditor::ManageConsole()
 {
 	if(console_open)
@@ -283,7 +276,7 @@ void ModuleEditor::DrawInConsole(const char * to_console)
 }
 
 
-//Configuration window
+//Configuration window------------------------------------------------------------------------
 void ModuleEditor::ManageConfigurationWindow()
 {
 	if (configuration_open)
@@ -596,7 +589,7 @@ void ModuleEditor::ManageConfigurationWindow()
 	}
 }
 
-//Hierarchy window
+//Hierarchy window------------------------------------------------------------------------
 void ModuleEditor::ManageHierarchyWindow()
 {
 	if (hierarchy_open)
@@ -609,7 +602,7 @@ void ModuleEditor::ManageHierarchyWindow()
 	}
 }
 
-//Inspector Window
+//Inspector Window------------------------------------------------------------------------
 void ModuleEditor::ManageInspectorWindow()
 {
 	if (inspector_open)

@@ -31,3 +31,12 @@ bool ModuleFileSystem::Start()
 
 	return ret;
 }
+
+
+//Loads data from a given path
+bool ModuleFileSystem::LoadGeometry(const char * path)
+{
+
+
+	return false;
+}

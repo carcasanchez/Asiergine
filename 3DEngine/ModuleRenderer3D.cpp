@@ -183,9 +183,10 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 {
 	//Call all draw operative
 
-	//TODO: Call Module Scene Draw--------------
 	//TODO: Call Debug Draw--------------
 
+	//Draw Geometries
+	App->editor->DrawGeometry();
 	//Draw ImGui
 	App->editor->DrawUI();
 
