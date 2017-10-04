@@ -62,6 +62,10 @@ update_status ModuleEditor::Update(float dt)
 		App->file_system->LoadGeometry(f_path);
 	}
 
+	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
+	{
+		debug_draw = !debug_draw;
+	}
 
 			
 	return ret;
@@ -108,6 +112,9 @@ void ModuleEditor::DrawGeometry()
 	for (std::vector<Geometry*>::iterator it = App->file_system->geometries.begin(); it != App->file_system->geometries.end(); it++)
 	{
 		(*it)->Draw();
+		
+		if(debug_draw)
+			(*it)->DebugDraw();
 	}
 }
 

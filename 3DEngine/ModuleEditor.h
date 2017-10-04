@@ -88,9 +88,8 @@ private:
 	void Window_option();
 	void ExitEditor_option();
 	
-
-	uint array_id2 = 0;
-
 	Plane_prim plane;
+
+	bool debug_draw = false;
 };
 

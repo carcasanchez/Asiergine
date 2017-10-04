@@ -119,7 +119,18 @@ bool ModuleFileSystem::LoadGeometry(const char * path)
 					}
 				}
 			}
+
 			Geometry* new_geom = new Geometry(vertices, indices, numVertx, numInd);
+
+
+			//Copy normals
+			if (scene->mMeshes[i]->HasNormals())
+			{
+				new_geom->normals = new float[numVertx * 3];
+				memcpy(new_geom->normals, scene->mMeshes[i]->mNormals, sizeof(float) * numVertx * 3);
+			}
+
+		
 			geometries.push_back(new_geom);
 			LOG("New mesh created from %s", path);
 

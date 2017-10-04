@@ -7,6 +7,7 @@ struct Geometry
 	~Geometry();
 
 	void Draw();
+	void DebugDraw();
 
 	uint id_vertices = 0;  //id in VRAM
 	uint num_vertices = 0;
@@ -15,5 +16,10 @@ struct Geometry
 	uint id_indices = 0;  //id in VRAM
 	uint num_indices = 0;
 	uint* indices = nullptr;
+
+	float* normals = nullptr;
+
+
+
 	
 };
