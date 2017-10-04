@@ -61,7 +61,7 @@ bool ModuleFileSystem::CleanUp()
 //Loads data from a given path
 bool ModuleFileSystem::LoadGeometry(const char * path)
 {
-	//TODO: load geom from path
+	
 
 /*	//--indice elements
 	float vertex[24] =

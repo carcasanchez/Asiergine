@@ -190,6 +190,29 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	//Draw ImGui
 	App->editor->DrawUI();
 
+
+	//Draw Debug Axis
+	glLineWidth(3.f);
+	glBegin(GL_LINES);
+
+	//x
+	glColor3f(3.0f, 0.0f, 0.0f);
+	glVertex3f(0, 0, 0);
+	glVertex3f(3, 0, 0);
+
+	//y
+	glColor3f(0.0f, 3.0f, 0.0f);
+	glVertex3f(0, 0, 0);
+	glVertex3f(0, 3, 0);
+
+	//z
+	glColor3f(0.0f, 0.0f, 3.0f);
+	glVertex3f(0, 0, 0);
+	glVertex3f(0, 0, 3);
+
+	glLineWidth(1.0);
+	glEnd();
+
 	SDL_GL_SwapWindow(App->window->window);
 	return UPDATE_CONTINUE;
 }
