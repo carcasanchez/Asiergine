@@ -91,5 +91,9 @@ private:
 	Plane_prim plane;
 
 	bool debug_draw = false;
+
+
+	uint check_id = 0;
+	
 };
 

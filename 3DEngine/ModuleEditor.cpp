@@ -37,6 +37,28 @@ bool ModuleEditor::Start()
 	fps_log = std::vector<float>(MAX_FPS_LOG, 0);
 	ms_log = std::vector<float>(MAX_FPS_LOG, 0);
 
+
+	GLubyte checkImage[10][10][4];
+	for (int i = 0; i < 10; i++) {
+		for (int j = 0; j < 10; j++) {
+			int c = ((((i & 0x8) == 0) ^ (((j & 0x8)) == 0))) * 255;
+			checkImage[i][j][0] = (GLubyte)c;
+			checkImage[i][j][1] = (GLubyte)c;
+			checkImage[i][j][2] = (GLubyte)c;
+			checkImage[i][j][3] = (GLubyte)255;
+		}
+	}
+
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glGenTextures(1, &check_id);
+	glBindTexture(GL_TEXTURE_2D, check_id);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 10, 10,
+		0, GL_RGBA, GL_UNSIGNED_BYTE, checkImage);
+
 	return ret;
 }
 
@@ -74,6 +96,67 @@ update_status ModuleEditor::Update(float dt)
 update_status ModuleEditor::PostUpdate(float dt)
 {
 	update_status ret = UPDATE_CONTINUE;
+
+
+	
+
+	glBindTexture(GL_TEXTURE_2D, check_id);
+
+	glBegin(GL_TRIANGLES);
+	
+
+	glVertex3f(0.f, 0.f, 10.f);
+	glTexCoord2f(0.f, 0.f);
+
+	glVertex3f(0.f, 0.f, 0.f);
+	glTexCoord2f(10.f, 10.f);
+
+	glVertex3f(10.f, 0.f, 0.f);
+	glTexCoord2f(10.f, 0.f);
+
+	glVertex3f(10.f, 0.f, 10.f);
+	glTexCoord2f(0.f, 0.f);
+
+	glVertex3f(0.f, 0.f, 10.f);
+	glTexCoord2f(0.f, 10.f);
+
+	glVertex3f(10.f, 0.f, 0.f);
+	glTexCoord2f(10.f, 10.f);
+//
+
+	glVertex3f(10.f, 0.f, 10.f);
+	glVertex3f(10.f, 0.f, 0.f);
+	glVertex3f(10.f, 10.f, 0.f);
+	glVertex3f(10.f, 10.f, 10.f);
+	glVertex3f(10.f, 0.f, 10.f);
+	glVertex3f(10.f, 10.f, 0.f);
+	glVertex3f(10.f, 0.f, 10.f);
+	glVertex3f(10.f, 10.f, 10.f);
+	glVertex3f(0.f, 10.f, 10.f);
+	glVertex3f(0.f, 0.f, 10.f);
+	glVertex3f(10.f, 0.f, 10.f);
+	glVertex3f(0.f, 10.f, 10.f);
+	glVertex3f(10.f, 10.f, 10.f);
+	glVertex3f(10.f, 10.f, 0.f);
+	glVertex3f(0.f, 10.f, 0.f);
+	glVertex3f(0.f, 10.f, 10.f);
+	glVertex3f(10.f, 10.f, 10.f);
+	glVertex3f(0.f, 10.f, 0.f);
+	glVertex3f(0.f, 10.f, 10.f);
+	glVertex3f(0.f, 10.f, 0.f);
+	glVertex3f(0.f, 0.f, 0.f);
+	glVertex3f(0.f, 0.f, 10.f);
+	glVertex3f(0.f, 10.f, 10.f);
+	glVertex3f(0.f, 0.f, 0.f);
+	glVertex3f(0.f, 0.f, 0.f);
+	glVertex3f(0.f, 10.f, 0.f);
+	glVertex3f(10.f, 10.f, 0.f);
+	glVertex3f(10.f, 0.f, 0.f);
+	glVertex3f(0.f, 0.f, 0.f);
+	glVertex3f(10.f, 10.f, 0.f);
+	glEnd();
+
+	glBindTexture(GL_TEXTURE_2D, 0);
 	
 	if (quit_editor)
 		ret = UPDATE_STOP;
