@@ -166,6 +166,9 @@
     <ClCompile Include="3DEngine\Geometry.cpp">
       <Filter>Source\Containers</Filter>
     </ClCompile>
+    <ClCompile Include="3DEngine\Texture.cpp">
+      <Filter>Source\Containers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3DEngine\Application.h">
@@ -435,6 +438,33 @@
     <ClInclude Include="3DEngine\Geometry.h">
       <Filter>Source\Containers</Filter>
     </ClInclude>
+    <ClInclude Include="3DEngine\Devil\include\config.h">
+      <Filter>Source\Tools\DevIL</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\Devil\include\devil_internal_exports.h">
+      <Filter>Source\Tools\DevIL</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\Devil\include\il.h">
+      <Filter>Source\Tools\DevIL</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\Devil\include\il_wrap.h">
+      <Filter>Source\Tools\DevIL</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\Devil\include\ilu.h">
+      <Filter>Source\Tools\DevIL</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\Devil\include\ilu_region.h">
+      <Filter>Source\Tools\DevIL</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\Devil\include\ilut.h">
+      <Filter>Source\Tools\DevIL</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\Devil\include\ilut_config.h">
+      <Filter>Source\Tools\DevIL</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\Texture.h">
+      <Filter>Source\Containers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -478,6 +508,9 @@
     </Filter>
     <Filter Include="Source\Tools\mmgr">
       <UniqueIdentifier>{241a8fea-3fb6-4995-a16f-2f8aa298e6a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Tools\DevIL">
+      <UniqueIdentifier>{5a04a3d1-5e59-4924-9e06-b21e11fb6e60}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

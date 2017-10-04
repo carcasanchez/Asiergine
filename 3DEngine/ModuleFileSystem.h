@@ -1,6 +1,7 @@
 #pragma once
 #include "Module.h"
 #include "Geometry.h"
+#include "Texture.h"
 
 
 class ModuleFileSystem : public Module
@@ -15,6 +16,7 @@ public:
 	bool CleanUp();
 
 	bool LoadGeometry(const char* path);
+	Texture* LoadTexture(const char * path);
 
 
 	std::vector<Geometry*> geometries;

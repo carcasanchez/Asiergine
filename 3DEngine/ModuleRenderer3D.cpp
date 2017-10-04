@@ -211,6 +211,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	glVertex3f(0, 0, 3);
 
 	glLineWidth(1.0);
+	glColor3f(1.0f, 1.0f, 1.0f);
 	glEnd();
 
 	SDL_GL_SwapWindow(App->window->window);

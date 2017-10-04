@@ -96,8 +96,6 @@ update_status ModuleEditor::Update(float dt)
 update_status ModuleEditor::PostUpdate(float dt)
 {
 	update_status ret = UPDATE_CONTINUE;
-
-
 	
 
 	glBindTexture(GL_TEXTURE_2D, check_id);
@@ -105,8 +103,35 @@ update_status ModuleEditor::PostUpdate(float dt)
 	glBegin(GL_TRIANGLES);
 	
 	glVertex3d(0.f, 0.f, 0.f);
+	glTexCoord2d(0.f, 0.f);
 	glVertex3d(10.f, 0.f, 0.f);
+	glTexCoord2d(10.f, 0.f);
 	glVertex3d(10.f, 0.f, 10.f);
+	glTexCoord2d(10.f, 10.f);
+	
+
+	glVertex3d(0.f, 0.f, 0.f);
+	glTexCoord2d(0.f, 0.f);
+	glVertex3d(10.f, 0.f, 10.f);
+	glTexCoord2d(10.f, 10.f);
+	glVertex3d(0.f, 0.f, 10.f);
+	glTexCoord2d(0.f, 10.f);
+
+
+	glVertex3d(10.f, 0.f, 10.f);
+	glTexCoord2d(10.f, 10.f);
+	glVertex3d(10.f, 0.f, 0.f);
+	glTexCoord2d(10.f, 0.f);
+	glVertex3d(10.f, 10.f, 10.f);
+	glTexCoord2d(0.f, 10.f);
+
+
+	glVertex3d(10.f, 0.f, 0.f);
+	glTexCoord2d(10.f, 10.f);
+	glVertex3d(10.f, 10.f, 0.f);
+	glTexCoord2d(10.f, 0.f);
+	glVertex3d(10.f, 10.f, 10.f);
+	glTexCoord2d(0.f, 10.f);
 	
 	glEnd();
 

@@ -3,14 +3,25 @@
 #include ".\mmgr\mmgr.h"
 #include "ModuleFileSystem.h"
 
+
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"
 #include "Assimp/include/postprocess.h"
 #include "Assimp/include/cfileio.h"
+
+#include "Devil\include\il.h"
+#include "Devil\include\ilu.h"
+#include "Devil\include\ilut.h"
+
+
 #pragma comment (lib, "3DEngine/Assimp/libx86/assimp.lib")
+#pragma comment(lib, "3DEngine/Devil/libx86/DevIL.lib")
+#pragma comment(lib, "3DEngine/Devil/libx86/ILU.lib")
+#pragma comment(lib, "3DEngine/Devil/libx86/ILUT.lib")
 
 ModuleFileSystem::ModuleFileSystem()
 {
+
 }
 
 ModuleFileSystem::ModuleFileSystem(bool start_enabled) : Module(start_enabled)
@@ -30,6 +41,16 @@ bool ModuleFileSystem::Init(const JSON_Object* config_data)
 	struct aiLogStream stream;
 	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
 	aiAttachLogStream(&stream);
+
+
+	//Init DevIL libs
+	ilInit();
+	iluInit();	ilutRenderer(ILUT_OPENGL);	ILuint devilError = ilGetError();
+	if (devilError != IL_NO_ERROR)
+	{
+		printf("Devil Error (ilInit: %s\n", iluErrorString(devilError));
+		exit(2);
+	}
 	
 	return ret;
 }
@@ -61,8 +82,6 @@ bool ModuleFileSystem::CleanUp()
 //Loads data from a given path
 bool ModuleFileSystem::LoadGeometry(const char * path)
 {
-	
-
 /*	//--indice elements
 	float vertex[24] =
 	{
@@ -85,7 +104,6 @@ bool ModuleFileSystem::LoadGeometry(const char * path)
 		5, 4, 0,  1, 5, 0,
 		0, 4, 6,  2, 0, 6,
 	};*/
-
 
 	const aiScene* scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality);
 	if (scene != nullptr && scene->HasMeshes())
@@ -143,4 +161,30 @@ bool ModuleFileSystem::LoadGeometry(const char * path)
 
 	
 	return true;
+}
+
+
+Texture* ModuleFileSystem::LoadTexture(const char * path)
+{
+	//Gen image
+	ILuint ImgId = 0;
+	ilGenImages(1, &ImgId);
+	ilBindImage(ImgId);
+
+	//load from path
+	ilLoadImage(path);
+
+	//Allocate memory
+	float width = ilGetInteger(IL_IMAGE_WIDTH);
+	float height = ilGetInteger(IL_IMAGE_HEIGHT);
+	GLubyte* pixmap = new GLubyte[width * height * 3];
+	ilCopyPixels(0, 0, 0, width, height, 1, IL_RGB,
+		IL_UNSIGNED_BYTE, pixmap);
+
+	Texture* new_text = new Texture(width, height, pixmap);
+
+	ilBindImage(0);
+	ilDeleteImage(ImgId);
+
+	return new_text;
 }
