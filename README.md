@@ -1,8 +1,14 @@
-#Asiergine v0.4
+#Asiergine v0.5
 
 3D Game Engine made by Asier Iglesias and Carlos Cabreira
 
 #Changelog
+
+
+###v0.5
+-Polished camera control
+-Geometry load from fbx added
+-Geometry and vertex normals drawing added
 
 ###v0.4
 -Added unpolished camera control
