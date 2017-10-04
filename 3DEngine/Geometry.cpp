@@ -19,7 +19,14 @@ Geometry::Geometry(float* ver, uint* ind, uint num_vert, uint num_ind): vertices
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * num_indices, indices, GL_STATIC_DRAW);
 }
 
-Geometry::~Geometry(){}
+Geometry::~Geometry()
+{
+	delete[] vertices;
+	delete[] indices;
+
+
+
+}
 
 void Geometry::Draw()
 {

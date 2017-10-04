@@ -37,12 +37,6 @@ bool ModuleEditor::Start()
 	fps_log = std::vector<float>(MAX_FPS_LOG, 0);
 	ms_log = std::vector<float>(MAX_FPS_LOG, 0);
 
-
-
-	App->file_system->LoadGeometry("hanga");
-	
-
-
 	return ret;
 }
 
