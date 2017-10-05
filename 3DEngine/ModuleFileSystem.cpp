@@ -91,105 +91,45 @@ bool ModuleFileSystem::CleanUp()
 //Loads data from a given path
 bool ModuleFileSystem::LoadGeometry(const char * path)
 {
-	//--indice elements
-	float vertex[24] =
-	{
-		20.0, 20.0,  20.0,
-		20.0, 20.0,  10.0,
-		10.0, 20.0,  20.0,
-		10.0, 20.0,  10.0,
+	bool ret = true;
 
-		20.0, 10.0, 20.0,
-		20.0, 10.0, 10.0,
-		10.0,  10.0, 20.0,
-		10.0, 10.0, 10.0,
-	};
+	Geometry* new_geom = nullptr;
+	float* vertices = nullptr;
+	float* normals = nullptr;
+	uint* indices = nullptr;
+	int numVertx = 0, numInd = 0;
+	int text_id =0 ;
+	float* texture_coords = nullptr;
 
-	uint index[36] =
-	{	1, 0, 2,  3, 1, 2,
-		3, 2, 6,  7, 3, 6,
-		3, 7, 5,  1, 3, 5,
-		7, 6, 4,  5, 7, 4,
-		5, 4, 0,  1, 5, 0,
-		0, 4, 6,  2, 0, 6,
-	};
 
-	uint uv[36*2] = 
-	{ 
-		1, 1,
-		1, 0,
-		0, 0,
-
-		1, 1,
-		0, 1,
-		0, 0,
-
-		1, 1,
-		1, 0,
-		0, 0,
-
-		1, 1,
-		0, 1,
-		0, 0,
-
-		1, 1,
-		1, 0,
-		0, 0,
-
-		1, 1,
-		0, 1,
-		0, 0,
-
-		1, 1,
-		1, 0,
-		0, 0,
-
-		1, 1,
-		0, 1,
-		0, 0,
-
-		1, 1,
-		1, 0,
-		0, 0,
-
-		1, 1,
-		0, 1,
-		0, 0,
-
-		1, 1,
-		1, 0,
-		0, 0,
-
-		1, 1,
-		0, 1,
-		0, 0,
-	};
+	const aiScene* scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality);
 
 
 
-	Geometry* new_geom = new Geometry(vertex, index, 24, 36, LoadTexture("Lenna.png"), uv);
-
-
-	geometries.push_back(new_geom);
-
-	/*const aiScene* scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality);
 	if (scene != nullptr && scene->HasMeshes())
 	{
-		// Use scene->mNumMeshes to iterate on scene->mMeshes array
-		
+		//Search for textures
+		if (scene->HasMaterials())
+			if (scene->mMaterials[0]->GetTextureCount(aiTextureType_DIFFUSE) > 0)
+			{
+				aiString text_path;
+				scene->mMaterials[0]->GetTexture(aiTextureType_DIFFUSE, 0, &text_path);
+				text_id = LoadTexture(text_path.C_Str());
+			}
+
+		// Use scene->mNumMeshes to iterate on scene->mMeshes array		
 		for (int i = 0, j = scene->mNumMeshes; i < j; i++)
 		{
-			int numVertx = scene->mMeshes[i]->mNumVertices;
-			int numInd = scene->mMeshes[i]->mNumFaces*3;
+			numVertx = scene->mMeshes[i]->mNumVertices;
+			numInd = scene->mMeshes[i]->mNumFaces*3;
 
 			//Copy vertex
-			float* vertices = new float[numVertx * 3];
+			vertices = new float[numVertx * 3];
 			memcpy(vertices, scene->mMeshes[i]->mVertices, sizeof(float) * numVertx * 3);
 			LOG("New mesh with %d vertices", numVertx);
 			
 			//Copy indices
-			uint* indices = new uint[numInd * 3];
-	
+			 indices = new uint[numInd * 3];	
 			if(scene->mMeshes[i]->HasFaces())
 			{
 				for (int k = 0; k < scene->mMeshes[i]->mNumFaces; k++)
@@ -204,30 +144,52 @@ bool ModuleFileSystem::LoadGeometry(const char * path)
 					}
 				}
 			}
-
-			Geometry* new_geom = new Geometry(vertices, indices, numVertx, numInd);
-
+			
 
 			//Copy normals
 			if (scene->mMeshes[i]->HasNormals())
 			{
-				new_geom->normals = new float[numVertx * 3];
-				memcpy(new_geom->normals, scene->mMeshes[i]->mNormals, sizeof(float) * numVertx * 3);
-			}
+				normals = new float[numVertx * 3];
+				memcpy(normals, scene->mMeshes[i]->mNormals, sizeof(float) * numVertx * 3);
+			}	
 
+			//copy texture coords
+			if (scene->mMeshes[i]->HasTextureCoords(0))
+			{
+				texture_coords = new float[numVertx * 2];
+				for (int k = 0; k < numVertx; ++k) {
+
+					texture_coords[k * 2] = scene->mMeshes[i]->mTextureCoords[0][k].x;
+					texture_coords[k * 2 + 1] = scene->mMeshes[i]->mTextureCoords[0][k].y;
+
+				}
+			}
 		
-			geometries.push_back(new_geom);
-			LOG("New mesh created from %s", path);
 
 		}		
+
+		
+
 		
 		aiReleaseImport(scene);
 	}
 	else
+	{
 		LOG("Error loading scene %s", path);
-*/
-	
-	return true;
+		ret = false;
+	}
+
+
+	//If everything goes OK, create a new Mesh
+	if (ret)
+	{
+		new_geom = new Geometry(vertices, indices, numVertx, numInd, text_id, texture_coords);
+		new_geom->normals = normals;
+		geometries.push_back(new_geom);
+	}
+
+
+	return ret;
 }
 
 
@@ -247,6 +209,7 @@ GLuint ModuleFileSystem::LoadTexture(const char * path)
 	if (devilError != IL_NO_ERROR)
 	{
 		LOG("Devil Error (ilInit: %s)", iluErrorString(devilError));	
+		return 0;
 	}
 
 	// If the image is flipped
@@ -265,6 +228,7 @@ GLuint ModuleFileSystem::LoadTexture(const char * path)
 	if (devilError != IL_NO_ERROR)
 	{
 		LOG("Devil Error (ilInit: %s)", iluErrorString(devilError));
+		return 0;
 	}
 
 	//Send texture to GPU
@@ -282,9 +246,8 @@ GLuint ModuleFileSystem::LoadTexture(const char * path)
 	if (devilError != IL_NO_ERROR)
 	{
 		LOG("Devil Error (ilInit: %s)", iluErrorString(devilError));
+		return 0;
 	}
 
-	//Store the ID in file system
-	textureIDs.push_back(img_id);
 	return img_id;
 }

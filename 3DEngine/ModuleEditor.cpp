@@ -36,9 +36,6 @@ bool ModuleEditor::Start()
 	//reserve for fps_log
 	fps_log = std::vector<float>(MAX_FPS_LOG, 0);
 	ms_log = std::vector<float>(MAX_FPS_LOG, 0);
-
-
-	App->file_system->LoadGeometry("");
 	
 	return ret;
 }
@@ -79,9 +76,9 @@ update_status ModuleEditor::PostUpdate(float dt)
 	update_status ret = UPDATE_CONTINUE;	
 
 
-	glBegin(GL_TRIANGLES);
+	/*glBegin(GL_TRIANGLES);
 	
-	/*glTexCoord2d(0.f, 0.f);
+	glTexCoord2d(0.f, 0.f);
 	glVertex3d(0.f, 0.f, 0.f);	
 	glTexCoord2d(1.f, 0.f);
 	glVertex3d(10.f, 0.f, 0.f);
@@ -109,9 +106,9 @@ update_status ModuleEditor::PostUpdate(float dt)
 	glVertex3d(10.f, 10.f, 0.f);
 	glTexCoord2d(1.f, 0.f);
 	glVertex3d(10.f, 10.f, 10.f);
-	glTexCoord2d(0.f, 1.f);*/
+	glTexCoord2d(0.f, 1.f);
 	
-	glEnd();
+	glEnd();*/
 
 	
 	if (quit_editor)

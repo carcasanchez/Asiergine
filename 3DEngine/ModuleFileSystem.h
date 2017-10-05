@@ -19,7 +19,6 @@ public:
 
 
 	std::vector<Geometry*> geometries;
-	std::vector<int> textureIDs;
 
 private:
 
