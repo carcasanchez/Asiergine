@@ -166,9 +166,6 @@
     <ClCompile Include="3DEngine\Geometry.cpp">
       <Filter>Source\Containers</Filter>
     </ClCompile>
-    <ClCompile Include="3DEngine\Texture.cpp">
-      <Filter>Source\Containers</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3DEngine\Application.h">
@@ -461,9 +458,6 @@
     </ClInclude>
     <ClInclude Include="3DEngine\Devil\include\ilut_config.h">
       <Filter>Source\Tools\DevIL</Filter>
-    </ClInclude>
-    <ClInclude Include="3DEngine\Texture.h">
-      <Filter>Source\Containers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -183,10 +183,20 @@ GLuint ModuleFileSystem::LoadTexture(const char * path)
 	//load from path
 	ilLoadImage(path);
 
+
+
 	ILuint devilError = ilGetError();
 	if (devilError != IL_NO_ERROR)
 	{
 		LOG("Devil Error (ilInit: %s)", iluErrorString(devilError));	
+	}
+
+	// If the image is flipped
+	ILinfo ImageInfo;
+	iluGetImageInfo(&ImageInfo);
+	if (ImageInfo.Origin == IL_ORIGIN_UPPER_LEFT)
+	{
+		iluFlipImage();
 	}
 
 	ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
@@ -199,7 +209,7 @@ GLuint ModuleFileSystem::LoadTexture(const char * path)
 		LOG("Devil Error (ilInit: %s)", iluErrorString(devilError));
 	}
 
-
+	//Send texture to GPU
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	glGenTextures(1, &img_id);
 	glBindTexture(GL_TEXTURE_2D, img_id);
@@ -216,7 +226,7 @@ GLuint ModuleFileSystem::LoadTexture(const char * path)
 		LOG("Devil Error (ilInit: %s)", iluErrorString(devilError));
 	}
 
-
-
+	//Store the ID in file system
+	textureIDs.push_back(img_id);
 	return img_id;
 }

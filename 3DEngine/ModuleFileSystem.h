@@ -1,7 +1,6 @@
 #pragma once
 #include "Module.h"
 #include "Geometry.h"
-#include "Texture.h"
 
 
 class ModuleFileSystem : public Module
@@ -20,6 +19,7 @@ public:
 
 
 	std::vector<Geometry*> geometries;
+	std::vector<int> textureIDs;
 
 private:
 

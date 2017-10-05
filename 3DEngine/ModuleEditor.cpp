@@ -86,23 +86,22 @@ update_status ModuleEditor::PostUpdate(float dt)
 
 	glBegin(GL_TRIANGLES);
 	
-	glVertex3d(0.f, 0.f, 0.f);
 	glTexCoord2d(0.f, 0.f);
-	glVertex3d(10.f, 0.f, 0.f);
+	glVertex3d(0.f, 0.f, 0.f);	
 	glTexCoord2d(1.f, 0.f);
-	glVertex3d(10.f, 0.f, 10.f);
+	glVertex3d(10.f, 0.f, 0.f);
 	glTexCoord2d(1.f, 1.f);
-	
+	glVertex3d(10.f, 0.f, 10.f);
 
-	glVertex3d(0.f, 0.f, 0.f);
 	glTexCoord2d(0.f, 0.f);
-	glVertex3d(10.f, 0.f, 10.f);
+	glVertex3d(0.f, 0.f, 0.f);
 	glTexCoord2d(1.f, 1.f);
-	glVertex3d(0.f, 0.f, 10.f);
-	glTexCoord2d(0.f, 1.f);
-
-
 	glVertex3d(10.f, 0.f, 10.f);
+	glTexCoord2d(0.f, 1.f);
+	glVertex3d(0.f, 0.f, 10.f);
+
+
+	/*glVertex3d(10.f, 0.f, 10.f);
 	glTexCoord2d(1.f, 1.f);
 	glVertex3d(10.f, 0.f, 0.f);
 	glTexCoord2d(1.f, 0.f);
@@ -115,7 +114,7 @@ update_status ModuleEditor::PostUpdate(float dt)
 	glVertex3d(10.f, 10.f, 0.f);
 	glTexCoord2d(1.f, 0.f);
 	glVertex3d(10.f, 10.f, 10.f);
-	glTexCoord2d(0.f, 1.f);
+	glTexCoord2d(0.f, 1.f);*/
 	
 	glEnd();
 
