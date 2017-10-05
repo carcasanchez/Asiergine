@@ -45,12 +45,21 @@ bool ModuleFileSystem::Init(const JSON_Object* config_data)
 
 	//Init DevIL libs
 	ilInit();
-	iluInit();	ilutRenderer(ILUT_OPENGL);	ILuint devilError = ilGetError();
+	iluInit();
+	ilutRenderer(ILUT_OPENGL);
+
+	ILuint devilError = ilGetError();
 	if (devilError != IL_NO_ERROR)
 	{
-		printf("Devil Error (ilInit: %s\n", iluErrorString(devilError));
-		exit(2);
-	}
+		LOG("Devil Error (ilInit: %s)", iluErrorString(devilError));
+	}
+
+	//Check DevIL version
+	else if (ilGetInteger(IL_VERSION_NUM) < IL_VERSION || iluGetInteger(ILU_VERSION_NUM) < ILU_VERSION || ilutGetInteger(ILUT_VERSION_NUM) < ILUT_VERSION)
+	{
+		LOG("DevIL version is different!\n");
+	}
+	else LOG("DevIL succesfully loaded");
 	
 	return ret;
 }
@@ -164,27 +173,50 @@ bool ModuleFileSystem::LoadGeometry(const char * path)
 }
 
 
-Texture* ModuleFileSystem::LoadTexture(const char * path)
+GLuint ModuleFileSystem::LoadTexture(const char * path)
 {
 	//Gen image
-	ILuint ImgId = 0;
-	ilGenImages(1, &ImgId);
-	ilBindImage(ImgId);
+	ILuint img_id = 0;
+	ilGenImages(1, &img_id);
+	ilBindImage(img_id);
 
 	//load from path
 	ilLoadImage(path);
 
-	//Allocate memory
-	float width = ilGetInteger(IL_IMAGE_WIDTH);
-	float height = ilGetInteger(IL_IMAGE_HEIGHT);
-	GLubyte* pixmap = new GLubyte[width * height * 3];
-	ilCopyPixels(0, 0, 0, width, height, 1, IL_RGB,
-		IL_UNSIGNED_BYTE, pixmap);
+	ILuint devilError = ilGetError();
+	if (devilError != IL_NO_ERROR)
+	{
+		LOG("Devil Error (ilInit: %s)", iluErrorString(devilError));	
+	}
 
-	Texture* new_text = new Texture(width, height, pixmap);
+	ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
+	
+	
 
-	ilBindImage(0);
-	ilDeleteImage(ImgId);
+	devilError = ilGetError();
+	if (devilError != IL_NO_ERROR)
+	{
+		LOG("Devil Error (ilInit: %s)", iluErrorString(devilError));
+	}
 
-	return new_text;
+
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glGenTextures(1, &img_id);
+	glBindTexture(GL_TEXTURE_2D, img_id);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, ilGetInteger(IL_IMAGE_FORMAT), ilGetInteger(IL_IMAGE_WIDTH), ilGetInteger(IL_IMAGE_HEIGHT),
+		0, ilGetInteger(IL_IMAGE_FORMAT), GL_UNSIGNED_BYTE, ilGetData());
+	
+	devilError = ilGetError();
+	if (devilError != IL_NO_ERROR)
+	{
+		LOG("Devil Error (ilInit: %s)", iluErrorString(devilError));
+	}
+
+
+
+	return img_id;
 }
