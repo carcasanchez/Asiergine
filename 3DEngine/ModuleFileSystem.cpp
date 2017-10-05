@@ -105,17 +105,18 @@ bool ModuleFileSystem::LoadGeometry(const char * path)
 	const aiScene* scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality);
 
 
+	//Search for textures
+	if (scene->HasMaterials())
+		if (scene->mMaterials[0]->GetTextureCount(aiTextureType_DIFFUSE) > 0)
+		{
+			aiString text_path;
+			scene->mMaterials[0]->GetTexture(aiTextureType_DIFFUSE, 0, &text_path);
+			text_id = LoadTexture(text_path.C_Str());
+		}
+
 
 	if (scene != nullptr && scene->HasMeshes())
 	{
-		//Search for textures
-		if (scene->HasMaterials())
-			if (scene->mMaterials[0]->GetTextureCount(aiTextureType_DIFFUSE) > 0)
-			{
-				aiString text_path;
-				scene->mMaterials[0]->GetTexture(aiTextureType_DIFFUSE, 0, &text_path);
-				text_id = LoadTexture(text_path.C_Str());
-			}
 
 		// Use scene->mNumMeshes to iterate on scene->mMeshes array		
 		for (int i = 0, j = scene->mNumMeshes; i < j; i++)
@@ -164,14 +165,19 @@ bool ModuleFileSystem::LoadGeometry(const char * path)
 
 				}
 			}
-		
+
+
+			//If everything goes OK, create a new Mesh
+			if (ret)
+			{
+				new_geom = new Geometry(vertices, indices, numVertx, numInd, text_id, texture_coords);
+				new_geom->normals = normals;
+				geometries.push_back(new_geom);
+			}
 
 		}		
-
 		
-
 		
-		aiReleaseImport(scene);
 	}
 	else
 	{
@@ -180,15 +186,9 @@ bool ModuleFileSystem::LoadGeometry(const char * path)
 	}
 
 
-	//If everything goes OK, create a new Mesh
-	if (ret)
-	{
-		new_geom = new Geometry(vertices, indices, numVertx, numInd, text_id, texture_coords);
-		new_geom->normals = normals;
-		geometries.push_back(new_geom);
-	}
+	
 
-
+	aiReleaseImport(scene);
 	return ret;
 }
 
@@ -205,10 +205,10 @@ GLuint ModuleFileSystem::LoadTexture(const char * path)
 
 
 
-	ILuint devilError = ilGetError();
-	if (devilError != IL_NO_ERROR)
+	ILuint devilError1 = ilGetError();
+	if (devilError1 != IL_NO_ERROR)
 	{
-		LOG("Devil Error (ilInit: %s)", iluErrorString(devilError));	
+		LOG("Devil Error (ilInit: %s)", iluErrorString(devilError1));	
 		return 0;
 	}
 
@@ -224,10 +224,10 @@ GLuint ModuleFileSystem::LoadTexture(const char * path)
 	
 	
 
-	devilError = ilGetError();
-	if (devilError != IL_NO_ERROR)
+	ILuint devilError2 = ilGetError();
+	if (devilError2 != IL_NO_ERROR)
 	{
-		LOG("Devil Error (ilInit: %s)", iluErrorString(devilError));
+		LOG("Devil Error (ilInit: %s)", iluErrorString(devilError2));
 		return 0;
 	}
 
@@ -239,13 +239,13 @@ GLuint ModuleFileSystem::LoadTexture(const char * path)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexImage2D(GL_TEXTURE_2D, 0, ilGetInteger(IL_IMAGE_FORMAT), ilGetInteger(IL_IMAGE_WIDTH), ilGetInteger(IL_IMAGE_HEIGHT),
-		0, ilGetInteger(IL_IMAGE_FORMAT), GL_UNSIGNED_BYTE, ilGetData());
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, ilGetInteger(IL_IMAGE_WIDTH), ilGetInteger(IL_IMAGE_HEIGHT),
+		0, GL_RGBA, GL_UNSIGNED_BYTE, ilGetData());
 	
-	devilError = ilGetError();
-	if (devilError != IL_NO_ERROR)
+	ILuint devilError3 = ilGetError();
+	if (devilError3 != IL_NO_ERROR)
 	{
-		LOG("Devil Error (ilInit: %s)", iluErrorString(devilError));
+		LOG("Devil Error (ilInit: %s)", iluErrorString(devilError3));
 		return 0;
 	}
 

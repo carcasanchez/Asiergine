@@ -14,9 +14,9 @@ Geometry::Geometry(float* ver, uint* ind, uint num_vert, uint num_ind, uint tex_
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_vertices * 3, vertices, GL_STATIC_DRAW);
 
 
-	GLenum error = glGetError();
+	/*GLenum error = glGetError();
 	if (error != GL_NO_ERROR)
-		LOG("Error Storing Vertices! %s\n", gluErrorString(error));
+		LOG("Error Storing Vertices! %s\n", gluErrorString(error));*/
 
 
 	//alloc indices
@@ -25,7 +25,7 @@ Geometry::Geometry(float* ver, uint* ind, uint num_vert, uint num_ind, uint tex_
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * num_indices, indices, GL_STATIC_DRAW);
 
 
-	error = glGetError();
+	GLenum error = glGetError();
 	if (error != GL_NO_ERROR)
 		LOG("Error Storing Indices! %s\n", gluErrorString(error));
 	
@@ -33,8 +33,8 @@ Geometry::Geometry(float* ver, uint* ind, uint num_vert, uint num_ind, uint tex_
 	if (texture_id != 0)
 	{
 		//alloc texture coords
-		glGenBuffers(1, (uint*)&(texture_id));
-		glBindBuffer(GL_ARRAY_BUFFER, texture_id);
+		glGenBuffers(1, (uint*)&(text_coord_id));
+		glBindBuffer(GL_ARRAY_BUFFER, text_coord_id);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_vertices * 2, texture_coords, GL_STATIC_DRAW);
 
 		error = glGetError();
@@ -61,36 +61,24 @@ void Geometry::Draw()
 	glBindBuffer(GL_ARRAY_BUFFER, id_vertices);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 
-	GLenum error = glGetError();
-	if (error != GL_NO_ERROR)
-		LOG("Error Drawing Vertices! %s\n", gluErrorString(error));
-
-
+	
 	if (texture_id != 0)
 	{
 		//Bind textures
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glBindTexture(GL_TEXTURE_2D, texture_id);
-		glBindBuffer(GL_ARRAY_BUFFER, texture_id);
-		glTexCoordPointer(2, GL_INT, 0, NULL);
-
-		//Check for error
-		error = glGetError();
-		if (error != GL_NO_ERROR)		
-			LOG("Error Drawing textures! %s\n", gluErrorString(error));
-		
+		glBindBuffer(GL_ARRAY_BUFFER, text_coord_id);
+		glTexCoordPointer(2, GL_FLOAT, 0, NULL);		
 	}
 
 	//Bind indices and draw
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);
 	glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
 
-	error = glGetError();
-	if (error != GL_NO_ERROR)
-		LOG("Error Drawing Geometry! %s\n", gluErrorString(error));
-
+	
 	glDisableClientState(GL_VERTEX_ARRAY);	
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
 }
 
