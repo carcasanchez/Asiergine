@@ -92,8 +92,5 @@ private:
 
 	bool debug_draw = false;
 
-
-	uint check_id = 0;
-	
 };
 

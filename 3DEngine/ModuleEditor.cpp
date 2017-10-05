@@ -38,11 +38,8 @@ bool ModuleEditor::Start()
 	ms_log = std::vector<float>(MAX_FPS_LOG, 0);
 
 
-
-	check_id = App->file_system->LoadTexture("Lenna.dds");
-
-
-
+	App->file_system->LoadGeometry("");
+	
 	return ret;
 }
 
@@ -79,14 +76,12 @@ update_status ModuleEditor::Update(float dt)
 
 update_status ModuleEditor::PostUpdate(float dt)
 {
-	update_status ret = UPDATE_CONTINUE;
-	
+	update_status ret = UPDATE_CONTINUE;	
 
-	glBindTexture(GL_TEXTURE_2D, check_id);
 
 	glBegin(GL_TRIANGLES);
 	
-	glTexCoord2d(0.f, 0.f);
+	/*glTexCoord2d(0.f, 0.f);
 	glVertex3d(0.f, 0.f, 0.f);	
 	glTexCoord2d(1.f, 0.f);
 	glVertex3d(10.f, 0.f, 0.f);
@@ -101,7 +96,7 @@ update_status ModuleEditor::PostUpdate(float dt)
 	glVertex3d(0.f, 0.f, 10.f);
 
 
-	/*glVertex3d(10.f, 0.f, 10.f);
+	glVertex3d(10.f, 0.f, 10.f);
 	glTexCoord2d(1.f, 1.f);
 	glVertex3d(10.f, 0.f, 0.f);
 	glTexCoord2d(1.f, 0.f);
@@ -118,7 +113,6 @@ update_status ModuleEditor::PostUpdate(float dt)
 	
 	glEnd();
 
-	glBindTexture(GL_TEXTURE_2D, 0);
 	
 	if (quit_editor)
 		ret = UPDATE_STOP;
@@ -134,6 +128,7 @@ bool ModuleEditor::CleanUp()
 
 	return ret;
 }
+
 
 
 //Draw functions------------------------------------------------------------------------
@@ -659,6 +654,10 @@ void ModuleEditor::GetInputEvent(SDL_Event* e)
 {
 	ImGui_ImplSdlGL3_ProcessEvent(e);
 }
+
+
+
+
 
 
 

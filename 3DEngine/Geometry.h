@@ -3,7 +3,7 @@
 
 struct Geometry
 {
-	Geometry(float* ver, uint* ind, uint num_vert, uint num_ind);
+	Geometry(float* ver, uint* ind, uint num_vert, uint num_ind, uint texture_id = 0, uint* texture_coords = nullptr);
 	~Geometry();
 
 	void Draw();
@@ -19,7 +19,7 @@ struct Geometry
 
 	float* normals = nullptr;
 
-
+	uint texture_id = 0;
 
 	
 };

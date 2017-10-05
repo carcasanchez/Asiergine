@@ -6,7 +6,7 @@
 #include ".\mmgr\mmgr.h"
 
 
-Geometry::Geometry(float* ver, uint* ind, uint num_vert, uint num_ind): vertices(ver), indices(ind), num_vertices(num_vert), num_indices(num_ind)
+Geometry::Geometry(float* ver, uint* ind, uint num_vert, uint num_ind, uint tex_id, uint* texture_coords): vertices(ver), indices(ind), num_vertices(num_vert), num_indices(num_ind), texture_id(tex_id)
 {
 	//alloc vertices
 	glGenBuffers(1, (uint*)&(id_vertices));
@@ -17,25 +17,44 @@ Geometry::Geometry(float* ver, uint* ind, uint num_vert, uint num_ind): vertices
 	glGenBuffers(1, (uint*)&(id_indices));
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * num_indices, indices, GL_STATIC_DRAW);
+
+
+	if (texture_id != 0)
+	{
+		//alloc texture coords
+		glGenBuffers(1, (uint*)&(texture_id));
+		glBindBuffer(GL_ARRAY_BUFFER, texture_id);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * num_indices, texture_coords, GL_STATIC_DRAW);
+	}
+	else LOG("Warning: --------Loading Mesh Without Texture");
+
 }
 
 Geometry::~Geometry()
 {
-	delete[] vertices;
-	delete[] indices;
+//	delete[] vertices;
+//	delete[] indices;
 }
 
 void Geometry::Draw()
 {
+	glBindTexture(GL_TEXTURE, texture_id);
+
 	glEnableClientState(GL_VERTEX_ARRAY);
 
 	glBindBuffer(GL_ARRAY_BUFFER, id_vertices);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);	
+	//glBindBuffer(GL_ARRAY_BUFFER, texture_id);
 
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
+	//glTexCoordPointer(2, GL_INT, 0, NULL);
 	glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
 
 	glDisableClientState(GL_VERTEX_ARRAY);
+
+
+	glBindTexture(GL_TEXTURE, 0);
+
 }
 
 void Geometry::DebugDraw()
