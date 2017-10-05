@@ -24,7 +24,7 @@ Geometry::Geometry(float* ver, uint* ind, uint num_vert, uint num_ind, uint tex_
 		//alloc texture coords
 		glGenBuffers(1, (uint*)&(texture_id));
 		glBindBuffer(GL_ARRAY_BUFFER, texture_id);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * num_indices, texture_coords, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * num_indices*2, texture_coords, GL_STATIC_DRAW);
 	}
 	else LOG("Warning: --------Loading Mesh Without Texture");
 
@@ -40,19 +40,23 @@ void Geometry::Draw()
 {
 	glBindTexture(GL_TEXTURE, texture_id);
 
+	//Bind vertices
 	glEnableClientState(GL_VERTEX_ARRAY);
-
 	glBindBuffer(GL_ARRAY_BUFFER, id_vertices);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);	
-	//glBindBuffer(GL_ARRAY_BUFFER, texture_id);
-
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
-	//glTexCoordPointer(2, GL_INT, 0, NULL);
+
+	//Bind textures
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glBindBuffer(GL_ARRAY_BUFFER, texture_id);
+	glTexCoordPointer(2, GL_INT, 0, NULL);
+
+
+	//Bind indices and draw
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);
 	glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
 
+	
 	glDisableClientState(GL_VERTEX_ARRAY);
-
-
 	glBindTexture(GL_TEXTURE, 0);
 
 }
