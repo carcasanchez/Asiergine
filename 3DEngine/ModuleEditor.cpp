@@ -274,6 +274,10 @@ void ModuleEditor::ManageAboutWindow()
 			ShellExecute(NULL, "open", "http://www.paulnettle.com/", NULL, NULL, SW_SHOWNORMAL);
 		if (ImGui::Button("Parson"))
 			ShellExecute(NULL, "open", "https://github.com/kgabis/parson", NULL, NULL, SW_SHOWNORMAL);
+		if (ImGui::Button("Devil"))
+			ShellExecute(NULL, "open", "http://openil.sourceforge.net/", NULL, NULL, SW_SHOWNORMAL);
+		if (ImGui::Button("Assimp"))
+			ShellExecute(NULL, "open", "http://assimp.sourceforge.net/", NULL, NULL, SW_SHOWNORMAL);
 
 
 
