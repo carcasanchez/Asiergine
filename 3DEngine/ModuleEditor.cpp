@@ -50,8 +50,7 @@ update_status ModuleEditor::PreUpdate(float dt)
 }
 
 update_status ModuleEditor::Update(float dt)
-{
-	
+{	
 
 	update_status ret = UPDATE_CONTINUE;
 	
@@ -62,7 +61,9 @@ update_status ModuleEditor::Update(float dt)
 		App->file_system->LoadGeometry(f_path);
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
+
+	//Check debug key
+	if (App->input->GetKey(DEBUG_KEY) == KEY_DOWN)
 	{
 		debug_draw = !debug_draw;
 	}
@@ -74,8 +75,6 @@ update_status ModuleEditor::Update(float dt)
 update_status ModuleEditor::PostUpdate(float dt)
 {
 	update_status ret = UPDATE_CONTINUE;	
-
-
 	/*glBegin(GL_TRIANGLES);
 	
 	glTexCoord2d(0.f, 0.f);

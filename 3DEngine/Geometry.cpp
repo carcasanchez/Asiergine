@@ -93,6 +93,7 @@ void Geometry::DebugDraw()
 {
 	glEnableClientState(GL_VERTEX_ARRAY);
 
+	//Draw Normals
 	glBindBuffer(GL_ARRAY_BUFFER, id_vertices);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);
 		for (uint i = 0; i < num_vertices * 3; i += 3)

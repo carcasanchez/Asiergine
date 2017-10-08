@@ -39,6 +39,8 @@ void log(const char file[], int line, const char* format, ...);
 
 #define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
 
+#define DEBUG_KEY SDL_SCANCODE_F1
+
 typedef unsigned int uint;
 
 enum update_status
