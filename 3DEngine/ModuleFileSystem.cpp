@@ -182,6 +182,7 @@ bool ModuleFileSystem::LoadGeometry(const char * path)
 				new_geom = new Geometry(vertices, indices, numVertx, numInd, text_id, texture_coords);
 				new_geom->normals = normals;
 				geometries.push_back(new_geom);
+				delete[] texture_coords;
 			}
 
 		}		
@@ -196,7 +197,6 @@ bool ModuleFileSystem::LoadGeometry(const char * path)
 
 
 	
-
 	aiReleaseImport(scene);
 	return ret;
 }

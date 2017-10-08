@@ -50,6 +50,9 @@ Geometry::~Geometry()
 {
 	delete[] vertices;
 	delete[] indices;
+	delete[] normals;
+
+	glDeleteTextures(1, &texture_id);
 }
 
 void Geometry::Draw()
