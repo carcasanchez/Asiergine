@@ -53,6 +53,10 @@ Geometry::~Geometry()
 	delete[] normals;
 
 	glDeleteTextures(1, &texture_id);
+
+	glDeleteBuffers(1, &text_coord_id);
+	glDeleteBuffers(1, &id_vertices);
+	glDeleteBuffers(1, &id_indices);
 }
 
 void Geometry::Draw()

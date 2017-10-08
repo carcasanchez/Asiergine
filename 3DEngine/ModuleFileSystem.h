@@ -17,6 +17,8 @@ public:
 	bool LoadGeometry(const char* path);
 	GLuint LoadTexture(const char * path);
 
+	void UnloadGeometry();
+
 
 	std::vector<Geometry*> geometries;
 

@@ -74,12 +74,7 @@ bool ModuleFileSystem::Start()
 
 bool ModuleFileSystem::CleanUp()
 {
-	//Release geometries
-	for (std::vector<Geometry*>::iterator it = geometries.begin(); it != geometries.end(); it++)
-	{
-		if ((*it) != nullptr)
-			delete (*it);
-	}
+	UnloadGeometry();
 
 	// detach log stream
 	aiDetachAllLogStreams();
@@ -101,6 +96,7 @@ bool ModuleFileSystem::LoadGeometry(const char * path)
 	int text_id =0 ;
 	float* texture_coords = nullptr;
 
+	UnloadGeometry();
 
 	const aiScene* scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality);
 
@@ -259,4 +255,16 @@ GLuint ModuleFileSystem::LoadTexture(const char * path)
 	}
 
 	return img_id;
+}
+
+void ModuleFileSystem::UnloadGeometry()
+{
+	//Release geometries
+	for (std::vector<Geometry*>::iterator it = geometries.begin(); it != geometries.end(); it++)
+	{
+		if ((*it) != nullptr)
+			delete (*it);
+	}
+	geometries.clear();
+	
 }
