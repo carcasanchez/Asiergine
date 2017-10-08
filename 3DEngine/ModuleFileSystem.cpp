@@ -109,9 +109,18 @@ bool ModuleFileSystem::LoadGeometry(const char * path)
 	if (scene->HasMaterials())
 		if (scene->mMaterials[0]->GetTextureCount(aiTextureType_DIFFUSE) > 0)
 		{
-			aiString text_path;
-			scene->mMaterials[0]->GetTexture(aiTextureType_DIFFUSE, 0, &text_path);
-			text_id = LoadTexture(text_path.C_Str());
+			aiString s;
+			scene->mMaterials[0]->GetTexture(aiTextureType_DIFFUSE, 0, &s);
+			std::string  texture_name = s.C_Str();
+			std::string  geom_path = path;
+
+			//Construc the general path for the texture
+			while (geom_path.back() != '\\')
+			{
+				geom_path.pop_back();
+			}
+			geom_path += texture_name;
+			text_id = LoadTexture(geom_path.c_str());
 		}
 
 
