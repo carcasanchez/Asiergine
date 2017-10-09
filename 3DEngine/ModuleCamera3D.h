@@ -29,7 +29,7 @@ private:
 public:
 	
 	vec3 X, Y, Z, Position, Reference;
-	vec3 pivotal_point;
+
 	vec3 ViewVector;
 
 	float camera_speed = 0.01;

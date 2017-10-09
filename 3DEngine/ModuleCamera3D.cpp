@@ -7,16 +7,8 @@
 
 ModuleCamera3D::ModuleCamera3D( bool start_enabled) : Module(start_enabled)
 {
-	CalculateViewMatrix();
 
-	X = vec3(1.0f, 0.0f, 0.0f);
-	Y = vec3(0.0f, 1.0f, 0.0f);
-	Z = vec3(0.0f, 0.0f, 1.0f);
-
-	Position = vec3(0.0f, 0.0f, 5.0f);
-	Reference = vec3(0.0f, 0.0f, 0.0f);
-	pivotal_point = vec3(0.0f, 0.0f, 0.0f);
-
+	ResetCamera();
 
 	name = "camera";
 }
@@ -73,6 +65,10 @@ update_status ModuleCamera3D::Update(float dt)
 
 	// Recalculate matrix -------------
 	CalculateViewMatrix();
+
+	Cube_prim c;
+	c.SetPos(Reference.x, Reference.y, Reference.z);
+	c.Render();
 		
 
 	return UPDATE_CONTINUE;
@@ -135,33 +131,61 @@ void ModuleCamera3D::CalculateViewMatrix()
 
 void ModuleCamera3D::ControlCamera(float dt)
 {
-	//FP Control
+
+	vec3 RefDist = Reference - Position;
+
 	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
-	{
 		Move(Z*-camera_speed*dt);
-	}
 
 	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
-	{
 		Move(Z*camera_speed*dt);
-	}
 
 	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
-	{
 		Move(X*-camera_speed*dt);
-	}
 
 	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
-	{
 		Move(X*camera_speed*dt);
-	}
 
+	int x = App->input->GetMouseXMotion();
+	int y = App->input->GetMouseYMotion();
 
 	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
 	{
-		int x = App->input->GetMouseXMotion();	
-		int y = App->input->GetMouseYMotion();
-		if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)
+			//FP control
+			
+			if (x != 0)
+			{
+				X = rotate(X, -camera_speed*x*dt, vec3(0.0f, 1.0f, 0.0f));
+				Y = rotate(Y, -camera_speed*x*dt, vec3(0.0f, 1.0f, 0.0f));
+				Z = rotate(Z, -camera_speed*x*dt, vec3(0.0f, 1.0f, 0.0f));
+
+			}
+			
+			if (y != 0)
+			{				
+
+				Y = rotate(Y, -camera_speed*y*dt, X);
+				Z = rotate(Z, -camera_speed*y*dt, X);
+
+
+				if (Y.y < 0.0f)
+				{
+					Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
+					Y = cross(Z, X);
+				}
+			}
+		
+			
+			//Adjust reference
+
+			
+
+		//	Reference = Position -(Z * length(Reference));
+
+			
+
+
+	/*	Pan the Camera
 		{
 			if (y != 0)
 			{	
@@ -173,27 +197,41 @@ void ModuleCamera3D::ControlCamera(float dt)
 				Move(X*-camera_speed*dt*x);
 			}
 		}
-		else
-		{
-			if (y != 0)
-			{
-				if (y > 0)
-					Position += Y*camera_sensitivity * dt*y;
-				else if (y < 0)
-					Position += Y*camera_sensitivity * dt*y;
+		*/
 
-				Look(Position, Reference, true);
-			}
+	}
+	else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)
+	{		
+
+		/*//Orbit Control
+
 			if (x != 0)
 			{
-				if (x > 0)
-					Position -= X*camera_sensitivity * dt*x;
-				else if (x < 0)
-					Position -= X*camera_sensitivity * dt*x;
-
-				Look(Position, Reference, true);
+				X = rotate(X, -camera_speed*x*dt, vec3(0.0f, 1.0f, 0.0f));
+				Y = rotate(Y, -camera_speed*x*dt, vec3(0.0f, 1.0f, 0.0f));
+				Z = rotate(Z, -camera_speed*x*dt, vec3(0.0f, 1.0f, 0.0f));
 			}
-		}
+
+			if (y != 0)
+			{
+
+				Y = rotate(Y, -camera_speed*y*dt, X);
+				Z = rotate(Z, -camera_speed*y*dt, X);
+
+
+				if (Y.y < 0.0f)
+				{
+					Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
+					Y = cross(Z, X);
+				}
+			}
+
+
+			X = normalize(X);
+			Y = normalize(Y);
+			Z = normalize(Z);
+
+			Position = Reference + Z * length(Position);*/
 
 
 	}
@@ -223,6 +261,9 @@ void ModuleCamera3D::ResetCamera()
 
 	Position = vec3(5.0f, 5.0f, 5.0f);
 	Reference = vec3(0.0f, 0.0f, 0.0f);
+	
+
+	LookAt(Reference);
 
 	CalculateViewMatrix();
 }

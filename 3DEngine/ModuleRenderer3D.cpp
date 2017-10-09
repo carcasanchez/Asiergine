@@ -187,8 +187,6 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	//Draw Geometries
 	App->editor->DrawGeometry();
-	//Draw ImGui
-	App->editor->DrawUI();
 
 
 	//Draw Debug Axis
@@ -213,6 +211,13 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	glLineWidth(1.0);
 	glColor3f(1.0f, 1.0f, 1.0f);
 	glEnd();
+
+
+	//Draw ImGui
+	App->editor->DrawUI();
+
+
+	
 
 	SDL_GL_SwapWindow(App->window->window);
 	return UPDATE_CONTINUE;
