@@ -155,17 +155,17 @@ void ModuleCamera3D::ControlCamera(float dt)
 			
 			if (x != 0)
 			{
-				X = rotate(X, -camera_speed*x*dt, vec3(0.0f, 1.0f, 0.0f));
-				Y = rotate(Y, -camera_speed*x*dt, vec3(0.0f, 1.0f, 0.0f));
-				Z = rotate(Z, -camera_speed*x*dt, vec3(0.0f, 1.0f, 0.0f));
+				X = rotate(X, -camera_sensitivity*x*dt, vec3(0.0f, 1.0f, 0.0f));
+				Y = rotate(Y, -camera_sensitivity*x*dt, vec3(0.0f, 1.0f, 0.0f));
+				Z = rotate(Z, -camera_sensitivity*x*dt, vec3(0.0f, 1.0f, 0.0f));
 
 			}
 			
 			if (y != 0)
 			{				
 
-				Y = rotate(Y, -camera_speed*y*dt, X);
-				Z = rotate(Z, -camera_speed*y*dt, X);
+				Y = rotate(Y, -camera_sensitivity*y*dt, X);
+				Z = rotate(Z, -camera_sensitivity*y*dt, X);
 
 
 				if (Y.y < 0.0f)
@@ -177,10 +177,9 @@ void ModuleCamera3D::ControlCamera(float dt)
 		
 			
 			//Adjust reference
-
-			
-
-		//	Reference = Position -(Z * length(Reference));
+						
+			vec3 distance = Reference - Position;			
+			Reference = Position -(Z * length(distance));
 
 			
 
@@ -203,20 +202,31 @@ void ModuleCamera3D::ControlCamera(float dt)
 	else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)
 	{		
 
-		/*//Orbit Control
+		//Orbit Control
+	
+		//Position = rotate(Position, camera_sensitivity*dt, Reference + vec3(0.0f, 1.0f, 0.0f));
+		
 
 			if (x != 0)
 			{
-				X = rotate(X, -camera_speed*x*dt, vec3(0.0f, 1.0f, 0.0f));
-				Y = rotate(Y, -camera_speed*x*dt, vec3(0.0f, 1.0f, 0.0f));
-				Z = rotate(Z, -camera_speed*x*dt, vec3(0.0f, 1.0f, 0.0f));
+		/*		math::Quat temp;
+				float angle = camera_sensitivity*dt*x;
+				temp.x = temp.z = 0;
+				temp.y = sin(angle / 2);
+				temp.w = cos(angle / 2);
+
+				LookAt(Reference);
+
+				//X = rotate(X, -camera_sensitivity*x*dt, vec3(0.0f, 1.0f, 0.0f));
+				//Y = rotate(Y, -camera_sensitivity*x*dt, vec3(0.0f, 1.0f, 0.0f));
+				//Z = rotate(Z, -camera_sensitivity*x*dt, vec3(0.0f, 1.0f, 0.0f));
 			}
 
 			if (y != 0)
 			{
 
-				Y = rotate(Y, -camera_speed*y*dt, X);
-				Z = rotate(Z, -camera_speed*y*dt, X);
+				Y = rotate(Y, -camera_sensitivity*y*dt, X);
+				Z = rotate(Z, -camera_sensitivity*y*dt, X);
 
 
 				if (Y.y < 0.0f)
@@ -224,12 +234,7 @@ void ModuleCamera3D::ControlCamera(float dt)
 					Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
 					Y = cross(Z, X);
 				}
-			}
-
-
-			X = normalize(X);
-			Y = normalize(Y);
-			Z = normalize(Z);
+			}		
 
 			Position = Reference + Z * length(Position);*/
 

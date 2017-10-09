@@ -51,6 +51,7 @@ private:
 	bool configuration_open = false;
 	bool hierarchy_open = false;
 	bool inspector_open = false;
+	bool camera_config_open = false;
 
 	bool unlimitedFramerate = true;
 

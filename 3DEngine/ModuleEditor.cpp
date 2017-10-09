@@ -449,6 +449,28 @@ void ModuleEditor::ManageConfigurationWindow()
 			ImGui::PopItemWidth();
 		}
 
+		//Camera Submenu
+		if (ImGui::CollapsingHeader("Camera"))
+		{
+			float cam_vel = App->camera->camera_speed * 5000;
+			ImGui::SliderFloat("Camera Speed", &cam_vel, 0, 200);
+			App->camera->camera_speed = cam_vel / 5000;
+
+			float cam_sens = App->camera->camera_sensitivity*1000;
+			ImGui::SliderFloat("Camera Sensitivity", &cam_sens, 0, 100);
+			App->camera->camera_sensitivity = cam_sens/1000;
+
+
+			ImGui::TextColored(ImVec4(255, 100, 0, 255), "Camera Position");
+			ImGui::TextColored(ImVec4(100, 0, 255, 255), "X: %.3f   ", App->camera->Position.x);
+			ImGui::SameLine();
+			ImGui::TextColored(ImVec4(100, 0, 255, 255), "Y: %.3f   ", App->camera->Position.y);
+			ImGui::SameLine();
+			ImGui::TextColored(ImVec4(100, 0, 255, 255), "Z: %.3f"   , App->camera->Position.z);
+
+
+		}
+
 		//Hardware specs of your own computer
 		if (ImGui::CollapsingHeader("Hardware Specs"))
 		{
