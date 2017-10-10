@@ -14,8 +14,8 @@ public:
 	bool Start();
 	bool CleanUp();
 
-	bool LoadGeometry(const char* path);
-	GLuint LoadTexture(const char * path);
+	void LoadFile(const char* path);
+	
 
 	void UnloadGeometry();
 
@@ -23,5 +23,8 @@ public:
 	std::vector<Geometry*> geometries;
 
 private:
+
+	bool LoadGeometry(const char* path);
+	GLuint LoadTexture(const char * path);
 
 };

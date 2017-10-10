@@ -82,6 +82,43 @@ bool ModuleFileSystem::CleanUp()
 	return true;
 }
 
+void ModuleFileSystem::LoadFile(const char * path)
+{
+	std::string tmp = path;
+	std::string extension;
+	
+	while (tmp.back() != '.')
+	{
+		extension.push_back(tmp.back());
+		tmp.pop_back();
+	}
+
+	//Normalize to lower case
+	std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
+
+	//Extension is reversed for optimization
+	if (extension.compare("xbf") == 0)
+	{
+		LoadGeometry(path);
+	}
+	else if (extension.compare("gnp") == 0 || extension.compare("gpj") == 0 || extension.compare("sdd") == 0)
+	{
+		if (geometries.empty())
+		{
+			LOG("WARNING: Scene has no geometries. Could not load texture.")
+		}
+		else
+		{
+			//Loads texture and puts it in all geometry
+			int new_id = LoadTexture(path);
+			for (int i = 0; i < geometries.size(); i++)
+				geometries[i]->texture_id = new_id;
+		}
+		
+	}
+
+}
+
 
 //Loads data from a given path
 bool ModuleFileSystem::LoadGeometry(const char * path)

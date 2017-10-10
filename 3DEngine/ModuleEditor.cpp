@@ -67,12 +67,11 @@ update_status ModuleEditor::Update(float dt)
 	update_status ret = UPDATE_CONTINUE;
 	
 	//Check if Asset has been dropped and load geometry
-	const char* f_path = App->input->GetFileDropped();
+	const char* f_path = App->input->GetFileDropped();	
 	if (f_path != nullptr)
 	{
-		App->file_system->LoadGeometry(f_path);
+		App->file_system->LoadFile(f_path);
 	}
-
 
 	//Check debug key
 	if (App->input->GetKey(DEBUG_KEY) == KEY_DOWN)
