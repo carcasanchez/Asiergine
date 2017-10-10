@@ -25,6 +25,7 @@ private:
 	void CalculateViewMatrix();
 	void ControlCamera(float dt);
 	void ResetCamera();
+	vec3 GetArcballVector(int x, int y);
 
 public:
 	
@@ -38,4 +39,5 @@ public:
 private:
 
 	mat4x4 ViewMatrix, ViewMatrixInverse;
-};
+	
+}

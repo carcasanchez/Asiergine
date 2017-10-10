@@ -3,6 +3,7 @@
 #include ".\mmgr\mmgr.h"
 #include "PhysBody3D.h"
 #include "ModuleCamera3D.h"
+#include "ModuleWindow.h"
 
 
 ModuleCamera3D::ModuleCamera3D( bool start_enabled) : Module(start_enabled)
@@ -132,7 +133,6 @@ void ModuleCamera3D::CalculateViewMatrix()
 void ModuleCamera3D::ControlCamera(float dt)
 {
 
-	vec3 RefDist = Reference - Position;
 
 	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
 		Move(Z*-camera_speed*dt);
@@ -151,111 +151,79 @@ void ModuleCamera3D::ControlCamera(float dt)
 
 	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
 	{
-			//FP control
-			
-			if (x != 0)
-			{
-				X = rotate(X, -camera_sensitivity*x*dt, vec3(0.0f, 1.0f, 0.0f));
-				Y = rotate(Y, -camera_sensitivity*x*dt, vec3(0.0f, 1.0f, 0.0f));
-				Z = rotate(Z, -camera_sensitivity*x*dt, vec3(0.0f, 1.0f, 0.0f));
+		//FP control
 
-			}
-			
-			if (y != 0)
-			{				
-
-				Y = rotate(Y, -camera_sensitivity*y*dt, X);
-				Z = rotate(Z, -camera_sensitivity*y*dt, X);
-
-
-				if (Y.y < 0.0f)
-				{
-					Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
-					Y = cross(Z, X);
-				}
-			}
-		
-			
-			//Adjust reference
-						
-			vec3 distance = Reference - Position;			
-			Reference = Position -(Z * length(distance));
-
-			
-
-
-	/*	Pan the Camera
+		if (x != 0)
 		{
-			if (y != 0)
-			{	
-				Move(Y*camera_speed*dt*y);
+			X = rotate(X, -camera_sensitivity*x*dt, vec3(0.0f, 1.0f, 0.0f));
+			Y = rotate(Y, -camera_sensitivity*x*dt, vec3(0.0f, 1.0f, 0.0f));
+			Z = rotate(Z, -camera_sensitivity*x*dt, vec3(0.0f, 1.0f, 0.0f));
 
-			}
-			if (x != 0)
+		}
+
+		if (y != 0)
+		{
+
+			Y = rotate(Y, -camera_sensitivity*y*dt, X);
+			Z = rotate(Z, -camera_sensitivity*y*dt, X);
+
+
+			if (Y.y < 0.0f)
 			{
-				Move(X*-camera_speed*dt*x);
+				Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
+				Y = cross(Z, X);
 			}
 		}
-		*/
+
+
+		//Adjust reference
+
+		vec3 distance = Reference - Position;
+		Reference = Position - (Z * length(distance));
+
+
+
+
+		/*	Pan the Camera
+			{
+				if (y != 0)
+				{
+					Move(Y*camera_speed*dt*y);
+
+				}
+				if (x != 0)
+				{
+					Move(X*-camera_speed*dt*x);
+				}
+			}
+			*/
 
 	}
 	else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)
-	{		
-
-		//Orbit Control
-	
-		//Position = rotate(Position, camera_sensitivity*dt, Reference + vec3(0.0f, 1.0f, 0.0f));
+	{
 		
+		if (y != 0)
+		{
+			Position = (rotate(Position, x*camera_sensitivity*dt, X) * (Position - Reference)) + Reference;
 
-			if (x != 0)
-			{
-		/*		math::Quat temp;
-				float angle = camera_sensitivity*dt*x;
-				temp.x = temp.z = 0;
-				temp.y = sin(angle / 2);
-				temp.w = cos(angle / 2);
-
-				LookAt(Reference);
-
-				//X = rotate(X, -camera_sensitivity*x*dt, vec3(0.0f, 1.0f, 0.0f));
-				//Y = rotate(Y, -camera_sensitivity*x*dt, vec3(0.0f, 1.0f, 0.0f));
-				//Z = rotate(Z, -camera_sensitivity*x*dt, vec3(0.0f, 1.0f, 0.0f));
-			}
-
-			if (y != 0)
-			{
-
-				Y = rotate(Y, -camera_sensitivity*y*dt, X);
-				Z = rotate(Z, -camera_sensitivity*y*dt, X);
-
-
-				if (Y.y < 0.0f)
-				{
-					Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
-					Y = cross(Z, X);
-				}
-			}		
-
-			Position = Reference + Z * length(Position);*/
-
-
+		}
 	}
 
+		if (App->input->GetMouseZ() == 1)
+		{
+			Position -= Z;
+		}
+		else if (App->input->GetMouseZ() == -1)
+		{
+			Position += Z;
+		}
 
-	if (App->input->GetMouseZ() == 1)
-	{
-		Position -= Z;
-	}
-	else if (App->input->GetMouseZ() == -1)
-	{
-		Position += Z;
-	}
+		if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
+		{
+			ResetCamera();
+		}
 
-	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
-	{
-		ResetCamera();
-	}
-
+	
 }
 
 void ModuleCamera3D::ResetCamera()
@@ -284,5 +252,22 @@ bool ModuleCamera3D::SaveConfig(JSON_Object* config_data)
 	json_object_dotset_number(config_data, "z", Position.z);
 
 	return true;
+	
+}
 
+
+vec3 ModuleCamera3D::GetArcballVector(int x, int y) {
+
+	int win_x=0, win_y = 0;
+
+	vec3 P = vec3(1.0*x /  * App->window-> - 1.0,
+		1.0*y / x * 2 - 1.0,
+		0);
+	P.y = -P.y;
+	float OP_squared = P.x * P.x + P.y * P.y;
+	if (OP_squared <= 1 * 1)
+		P.z = sqrt(1 * 1 - OP_squared);  // Pythagore
+	else
+		P = normalize(P);  // nearest point
+	return P;
 }
