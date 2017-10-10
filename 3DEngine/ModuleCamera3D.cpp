@@ -284,7 +284,6 @@ void ModuleCamera3D::AdaptToGeometry(const Geometry * g)
 
 
 	LookAt(Reference);
-
 }
 
 
