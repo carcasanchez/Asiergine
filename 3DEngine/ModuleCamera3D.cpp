@@ -4,6 +4,7 @@
 #include "PhysBody3D.h"
 #include "ModuleCamera3D.h"
 #include "ModuleWindow.h"
+#include "Geometry.h"
 
 
 ModuleCamera3D::ModuleCamera3D( bool start_enabled) : Module(start_enabled)
@@ -258,6 +259,32 @@ bool ModuleCamera3D::SaveConfig(JSON_Object* config_data)
 
 	return true;
 	
+}
+
+void ModuleCamera3D::AdaptToGeometry(const Geometry * g)
+{
+	math::AABB box(float3(0, 0, 0), float3(0, 0, 0));
+	std::vector <float3> vertex_array;
+	
+	for (int i = 0; i < g->num_vertices*3; i+=3)
+	{
+		vertex_array.push_back(float3(g->vertices[i], g->vertices[i+1], g->vertices[i+2]));			
+	}
+
+	box.Enclose(&vertex_array[0], g->num_vertices);
+
+
+	Position.x = box.maxPoint.x*1.5;
+	Position.y = box.maxPoint.y*1.5;
+	Position.z = box.maxPoint.z*1.5;
+
+	Reference.x = box.CenterPoint().x;
+	Reference.y = box.CenterPoint().y;
+	Reference.z = box.CenterPoint().z;
+
+
+	LookAt(Reference);
+
 }
 
 
