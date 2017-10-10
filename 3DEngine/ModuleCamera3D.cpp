@@ -201,14 +201,29 @@ void ModuleCamera3D::ControlCamera(float dt)
 	}
 	else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)
 	{
-		
+
+		Position -= Reference;
+
+		if (x != 0)
+		{
+
+			X = rotate(X, -(float)x * camera_sensitivity*dt , vec3(0.0f, 1.0f, 0.0f));
+			Y = rotate(Y, -(float)x * camera_sensitivity*dt , vec3(0.0f, 1.0f, 0.0f));
+			Z = rotate(Z, -(float)x * camera_sensitivity*dt , vec3(0.0f, 1.0f, 0.0f));
+		}
+
 		if (y != 0)
 		{
-			Position = (rotate(Position, x*camera_sensitivity*dt, X) * (Position - Reference)) + Reference;
-
+			Y = rotate(Y, -(float)y * camera_sensitivity*dt, X);
+			Z = rotate(Z, -(float)y * camera_sensitivity*dt, X);
 		}
+
+		if (Y.y > 0.0f)
+			Position = Reference + Z * length(Position);
 	}
 
+
+	//Move camera in the local Z axis
 		if (App->input->GetMouseZ() == 1)
 		{
 			Position -= Z;
@@ -218,6 +233,7 @@ void ModuleCamera3D::ControlCamera(float dt)
 			Position += Z;
 		}
 
+		//Reset Camera to 0, 0, 0 
 		if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
 		{
 			ResetCamera();
@@ -256,18 +272,3 @@ bool ModuleCamera3D::SaveConfig(JSON_Object* config_data)
 }
 
 
-vec3 ModuleCamera3D::GetArcballVector(int x, int y) {
-
-	int win_x=0, win_y = 0;
-
-	vec3 P = vec3(1.0*x /  * App->window-> - 1.0,
-		1.0*y / x * 2 - 1.0,
-		0);
-	P.y = -P.y;
-	float OP_squared = P.x * P.x + P.y * P.y;
-	if (OP_squared <= 1 * 1)
-		P.z = sqrt(1 * 1 - OP_squared);  // Pythagore
-	else
-		P = normalize(P);  // nearest point
-	return P;
-}
