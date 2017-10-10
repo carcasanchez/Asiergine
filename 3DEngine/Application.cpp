@@ -70,7 +70,8 @@ bool Application::Init()
 
 	while(item != list_modules.end() && ret == true)
 	{
-		ret = (*item)->Init(object_data);
+		JSON_Object * module_data = json_object_dotget_object(application_data, (*item)->GetModuleName().c_str());
+		ret = (*item)->Init(module_data);
 		item++;
 	}
 		

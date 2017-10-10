@@ -24,6 +24,18 @@ bool ModuleEditor::Init(const JSON_Object* config_data)
 
 	ImGui_ImplSdlGL3_Init(App->window->window);
 	
+		//LoadData from Config
+	assert(config_data != nullptr);
+
+	test_window_open = json_object_dotget_boolean(config_data, "test_window_open");
+	console_open = json_object_dotget_boolean(config_data, "console_open");
+	about_engine_open = json_object_dotget_boolean(config_data, "about_engine_open");
+	hardware_open = json_object_dotget_boolean(config_data, "hardware_open");
+	configuration_open = json_object_dotget_boolean(config_data, "configuration_open");
+	hierarchy_open = json_object_dotget_boolean(config_data, "hierarchy_open");
+	inspector_open = json_object_dotget_boolean(config_data, "inspector_open");
+	camera_config_open = json_object_dotget_boolean(config_data, "camera_config_open");
+	
 
 	return ret;
 }
@@ -677,7 +689,22 @@ void ModuleEditor::GetInputEvent(SDL_Event* e)
 	ImGui_ImplSdlGL3_ProcessEvent(e);
 }
 
+bool ModuleEditor::SaveConfig(JSON_Object* config_data)
+{
+	LOG("Saving data to config--------");
 
+	//Save renderer data
+	json_object_dotset_boolean(config_data, "test_window_open", test_window_open);
+	json_object_dotset_boolean(config_data, "console_open", console_open);
+	json_object_dotset_boolean(config_data, "about_engine_open", about_engine_open);
+	json_object_dotset_boolean(config_data, "hardware_open", hardware_open);
+	json_object_dotset_boolean(config_data, "configuration_open", configuration_open);
+	json_object_dotset_boolean(config_data, "hierarchy_open", hierarchy_open);
+	json_object_dotset_boolean(config_data, "inspector_open", inspector_open);
+	json_object_dotset_boolean(config_data, "camera_config_open", camera_config_open);
+
+	return true;
+}
 
 
 

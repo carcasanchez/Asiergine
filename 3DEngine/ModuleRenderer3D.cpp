@@ -38,20 +38,15 @@ bool ModuleRenderer3D::Init(const JSON_Object* config_data)
 	}
 	else {
 		//LoadData from Config
-		JSON_Value * config_data = json_parse_file("config.json");
-
 		assert(config_data != nullptr);
 
-		JSON_Object * object_data = json_value_get_object(config_data);
-		JSON_Object * application_data = json_object_dotget_object(object_data, "App");
-		JSON_Object * renderer_data = json_object_dotget_object(application_data, "renderer");
-		gl_depth_enabled = json_object_dotget_boolean(renderer_data, "gl_depth_enabled");
-		gl_cull_face_enabled = json_object_dotget_boolean(renderer_data, "gl_cull_face_enabled");
-		gl_lighting_enabled = json_object_dotget_boolean(renderer_data, "gl_lighting_enabled");
-		gl_color_material_enabled = json_object_dotget_boolean(renderer_data, "gl_color_material_enabled");
-		gl_texture_2D_enabled = json_object_dotget_boolean(renderer_data, "gl_texture_2D_enabled");
-		gl_wireframe_enabled = json_object_dotget_boolean(renderer_data, "gl_wireframe_enabled");
-		hard_poly_enabled = json_object_dotget_boolean(renderer_data, "hard_poly_enabled");
+		gl_depth_enabled = json_object_dotget_boolean(config_data, "gl_depth_enabled");
+		gl_cull_face_enabled = json_object_dotget_boolean(config_data, "gl_cull_face_enabled");
+		gl_lighting_enabled = json_object_dotget_boolean(config_data, "gl_lighting_enabled");
+		gl_color_material_enabled = json_object_dotget_boolean(config_data, "gl_color_material_enabled");
+		gl_texture_2D_enabled = json_object_dotget_boolean(config_data, "gl_texture_2D_enabled");
+		gl_wireframe_enabled = json_object_dotget_boolean(config_data, "gl_wireframe_enabled");
+		hard_poly_enabled = json_object_dotget_boolean(config_data, "hard_poly_enabled");
 
 
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);

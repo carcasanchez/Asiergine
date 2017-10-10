@@ -35,7 +35,7 @@ public:
 
 
 	void GetInputEvent(SDL_Event* e);
-
+	bool SaveConfig(JSON_Object* config_data);
 	bool calculate_fps_graph = false;
 
 	

@@ -29,20 +29,14 @@ bool ModuleWindow::Init(const JSON_Object* config_data)
 	else
 	{
 		//LoadData from Config
-		JSON_Value * config_data = json_parse_file("config.json");
+		assert(config_data != nullptr);		
 
-		assert(config_data != nullptr);
-
-
-		JSON_Object * object_data = json_value_get_object(config_data);
-		JSON_Object * application_data = json_object_dotget_object(object_data, "App");
-		JSON_Object * window_data = json_object_dotget_object(application_data, "window");
-		window_width = json_object_dotget_number(window_data, "width");
-		window_height = json_object_dotget_number(window_data, "height");
-		window_state = json_object_dotget_string(window_data, "window_state");
-		title = json_object_dotget_string(window_data, "title");
-		screen_size = json_object_dotget_number(window_data, "screen_size");
-		vsync = json_object_dotget_boolean(window_data, "vsync");
+		window_width = json_object_dotget_number(config_data, "width");
+		window_height = json_object_dotget_number(config_data, "height");
+		window_state = json_object_dotget_string(config_data, "window_state");
+		title = json_object_dotget_string(config_data, "title");
+		screen_size = json_object_dotget_number(config_data, "screen_size");
+		vsync = json_object_dotget_boolean(config_data, "vsync");
 
 
 		//Create window
