@@ -3,6 +3,8 @@
 #include "Globals.h"
 #include "glmath.h"
 
+class Geometry;
+
 class ModuleCamera3D : public Module
 {
 public:
@@ -20,11 +22,14 @@ public:
 	float* GetViewMatrix();
 
 	bool SaveConfig(JSON_Object* config_data);
+	void AdaptToGeometry(const Geometry*);
+
 private:
 
 	void CalculateViewMatrix();
 	void ControlCamera(float dt);
 	void ResetCamera();
+
 
 public:
 	
