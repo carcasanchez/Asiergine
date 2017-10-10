@@ -65,12 +65,7 @@ update_status ModuleCamera3D::Update(float dt)
 	ControlCamera(dt);
 
 	// Recalculate matrix -------------
-	CalculateViewMatrix();
-
-	Cube_prim c;
-	c.SetPos(Reference.x, Reference.y, Reference.z);
-	c.Render();
-		
+	CalculateViewMatrix();		
 
 	return UPDATE_CONTINUE;
 }
@@ -152,22 +147,19 @@ void ModuleCamera3D::ControlCamera(float dt)
 	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
 	{
 		//FP control
-
 		if (x != 0)
 		{
 			X = rotate(X, -camera_sensitivity*x*dt, vec3(0.0f, 1.0f, 0.0f));
 			Y = rotate(Y, -camera_sensitivity*x*dt, vec3(0.0f, 1.0f, 0.0f));
 			Z = rotate(Z, -camera_sensitivity*x*dt, vec3(0.0f, 1.0f, 0.0f));
-
 		}
 
 		if (y != 0)
 		{
-
 			Y = rotate(Y, -camera_sensitivity*y*dt, X);
 			Z = rotate(Z, -camera_sensitivity*y*dt, X);
-
-
+			
+			//Cap Camera Y axis
 			if (Y.y < 0.0f)
 			{
 				Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
@@ -175,15 +167,10 @@ void ModuleCamera3D::ControlCamera(float dt)
 			}
 		}
 
-
 		//Adjust reference
-
 		vec3 distance = Reference - Position;
 		Reference = Position - (Z * length(distance));
-
-
-
-
+		
 		/*	Pan the Camera
 			{
 				if (y != 0)
@@ -201,12 +188,11 @@ void ModuleCamera3D::ControlCamera(float dt)
 	}
 	else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)
 	{
-
+		//Orbital Control
 		Position -= Reference;
 
 		if (x != 0)
 		{
-
 			X = rotate(X, -(float)x * camera_sensitivity*dt , vec3(0.0f, 1.0f, 0.0f));
 			Y = rotate(Y, -(float)x * camera_sensitivity*dt , vec3(0.0f, 1.0f, 0.0f));
 			Z = rotate(Z, -(float)x * camera_sensitivity*dt , vec3(0.0f, 1.0f, 0.0f));
@@ -219,11 +205,17 @@ void ModuleCamera3D::ControlCamera(float dt)
 		}
 
 		if (Y.y > 0.0f)
-			Position = Reference + Z * length(Position);
+			Position = Reference + Z * length(Position);	
+
+		//Cap Camera Y axis
+		if (Y.y < 0.0f)
+		{
+			Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
+			Y = cross(Z, X);
+		}
 	}
 
-
-	//Move camera in the local Z axis
+		//Move camera in the local Z axis
 		if (App->input->GetMouseZ() == 1)
 		{
 			Position -= Z;
@@ -232,14 +224,11 @@ void ModuleCamera3D::ControlCamera(float dt)
 		{
 			Position += Z;
 		}
-
 		//Reset Camera to 0, 0, 0 
 		if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
 		{
 			ResetCamera();
-		}
-
-	
+		}	
 }
 
 void ModuleCamera3D::ResetCamera()
