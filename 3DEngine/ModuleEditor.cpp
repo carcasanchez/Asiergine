@@ -250,7 +250,7 @@ void ModuleEditor::ExitEditor_option()
 //Example window management------------------------------------------------------------------------
 void ModuleEditor::ManageExampleWindow()
 {
-	//if (test_window_open == true)
+	if (test_window_open == true)
 		ImGui::ShowTestWindow();
 }
 
@@ -670,9 +670,27 @@ void ModuleEditor::ManageInspectorWindow()
 	if (inspector_open)
 	{
 		ImGui::Begin("Inspector", &inspector_open);
-		ImGui::MenuItem("GameObject1");
-		ImGui::MenuItem("GameObject2");
-		ImGui::MenuItem("GameObject3");
+		
+		for (int i = 0; i < App->file_system->geometries.size(); i++)
+		{
+			Geometry* g = App->file_system->geometries[i];
+						
+			if (ImGui::TreeNode("","Geometry %i", i))
+			{
+				ImGui::TextColored(ImVec4(255, 255, 0, 255), "Location  X: %f  Y: %f  Z: %f",
+					g->location.x, g->location.y, g->location.z);
+				ImGui::TextColored(ImVec4(255, 255, 0, 255), "Scale X: %f  Y: %f  Z: %f",
+					g->scale.x, g->scale.y, g->scale.z);
+
+				float3 euler = g->rotation.ToEulerXYZ();
+				ImGui::TextColored(ImVec4(255, 255, 0, 255), "Rotation  X: %f  Y: %f  Z: %f",
+					euler.x, euler.y, euler.z);
+
+				ImGui::TreePop();				
+			}
+		}
+
+
 		ImGui::End();
 	}
 }
