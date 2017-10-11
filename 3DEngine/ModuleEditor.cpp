@@ -32,7 +32,6 @@ bool ModuleEditor::Init(const JSON_Object* config_data)
 	about_engine_open = json_object_dotget_boolean(config_data, "about_engine_open");
 	hardware_open = json_object_dotget_boolean(config_data, "hardware_open");
 	configuration_open = json_object_dotget_boolean(config_data, "configuration_open");
-	hierarchy_open = json_object_dotget_boolean(config_data, "hierarchy_open");
 	inspector_open = json_object_dotget_boolean(config_data, "inspector_open");
 	camera_config_open = json_object_dotget_boolean(config_data, "camera_config_open");
 	
@@ -146,7 +145,6 @@ void ModuleEditor::DrawUI()
 	ManageConsole();
 	ManageConfigurationWindow();
 	ManageExampleWindow();
-	ManageHierarchyWindow();
 	ManageInspectorWindow();
 
 	ImGui::Render();
@@ -213,9 +211,6 @@ void ModuleEditor::Window_option()
 
 	if (ImGui::MenuItem("Configuration"))
 		configuration_open = true;
-
-	if (ImGui::MenuItem("Hierarchy"))
-		hierarchy_open = true;
 
 	if (ImGui::MenuItem("Inspector"))
 		inspector_open = true;
@@ -478,8 +473,6 @@ void ModuleEditor::ManageConfigurationWindow()
 			ImGui::TextColored(ImVec4(100, 0, 255, 255), "Y: %.3f   ", App->camera->Position.y);
 			ImGui::SameLine();
 			ImGui::TextColored(ImVec4(100, 0, 255, 255), "Z: %.3f"   , App->camera->Position.z);
-
-
 		}
 
 		//Hardware specs of your own computer
@@ -591,13 +584,6 @@ void ModuleEditor::ManageConfigurationWindow()
 			ImGui::TextColored({ 255, 0, 100, 255 }, "X: %i ", App->input->GetMouseX());
 			ImGui::SameLine();
 			ImGui::TextColored({ 255, 0, 100, 255 }, "Y: %i", App->input->GetMouseY());
-		/*	GetRawInputDeviceList(NULL, &nDevices, sizeof(RAWINPUTDEVICELIST));
-			pRawInputDeviceList = (RAWINPUTDEVICELIST*) malloc(sizeof(RAWINPUTDEVICELIST) * nDevices);
-
-			ImGui::TextWrapped("Num of Devices: %i", GetRawInputDeviceList(pRawInputDeviceList, &nDevices, sizeof(RAWINPUTDEVICELIST)));
-
-			free(pRawInputDeviceList);*/
-
 		}
 
 		//Vram Usage
@@ -649,6 +635,10 @@ void ModuleEditor::ManageConfigurationWindow()
 				ImGui::PlotHistogram("##VRAM Aviable: ", &curr_vram_log[0], curr_vram_log.size(), 0, vram_curr, 0.0f, 100.0f, ImVec2(310, 100));
 
 			}
+			else if (strcmp(vendor, "AMD") == 0)
+			{
+
+			}
 			else (ImGui::TextWrapped("VRam Usage only available for NVIDIA devices"));
 
 		}
@@ -656,18 +646,7 @@ void ModuleEditor::ManageConfigurationWindow()
 	}
 }
 
-//Hierarchy window------------------------------------------------------------------------
-void ModuleEditor::ManageHierarchyWindow()
-{
-	if (hierarchy_open)
-	{
-		ImGui::Begin("Hierarchy", &hierarchy_open);
-		ImGui::MenuItem("GameObject1");
-		ImGui::MenuItem("GameObject2");
-		ImGui::MenuItem("GameObject3");
-		ImGui::End();
-	}
-}
+
 
 //Inspector Window------------------------------------------------------------------------
 void ModuleEditor::ManageInspectorWindow()
@@ -698,7 +677,6 @@ bool ModuleEditor::SaveConfig(JSON_Object* config_data)
 	json_object_dotset_boolean(config_data, "about_engine_open", about_engine_open);
 	json_object_dotset_boolean(config_data, "hardware_open", hardware_open);
 	json_object_dotset_boolean(config_data, "configuration_open", configuration_open);
-	json_object_dotset_boolean(config_data, "hierarchy_open", hierarchy_open);
 	json_object_dotset_boolean(config_data, "inspector_open", inspector_open);
 	json_object_dotset_boolean(config_data, "camera_config_open", camera_config_open);
 

@@ -49,7 +49,6 @@ private:
 	bool about_engine_open = false;
 	bool hardware_open = false;
 	bool configuration_open = false;
-	bool hierarchy_open = false;
 	bool inspector_open = false;
 	bool camera_config_open = false;
 
@@ -81,7 +80,6 @@ private:
 	void ManageAboutWindow();
 	void ManageConsole();
 	void ManageConfigurationWindow();
-	void ManageHierarchyWindow();
 	void ManageInspectorWindow();
 
 

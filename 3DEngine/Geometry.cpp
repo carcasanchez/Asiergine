@@ -12,37 +12,22 @@ Geometry::Geometry(float* ver, uint* ind, uint num_vert, uint num_ind, uint tex_
 	glGenBuffers(1, (uint*)&(id_vertices));
 	glBindBuffer(GL_ARRAY_BUFFER, id_vertices);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_vertices * 3, vertices, GL_STATIC_DRAW);
-
-
-	/*GLenum error = glGetError();
-	if (error != GL_NO_ERROR)
-		LOG("Error Storing Vertices! %s\n", gluErrorString(error));*/
-
+	
 
 	//alloc indices
 	glGenBuffers(1, (uint*)&(id_indices));
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * num_indices, indices, GL_STATIC_DRAW);
-
-
-	GLenum error = glGetError();
-	if (error != GL_NO_ERROR)
-		LOG("Error Storing Indices! %s\n", gluErrorString(error));
-	
+		
 
 	if (texture_id != 0)
 	{
 		//alloc texture coords
 		glGenBuffers(1, (uint*)&(text_coord_id));
 		glBindBuffer(GL_ARRAY_BUFFER, text_coord_id);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_vertices * 2, texture_coords, GL_STATIC_DRAW);
-
-		error = glGetError();
-		if (error != GL_NO_ERROR)
-			LOG("Error Storing textures! %s\n", gluErrorString(error));
-
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_vertices * 2, texture_coords, GL_STATIC_DRAW);		
 	}
-	else LOG("Warning: --------Loading Mesh Without Texture");
+
 
 }
 

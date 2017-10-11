@@ -57,7 +57,7 @@ bool ModuleFileSystem::Init(const JSON_Object* config_data)
 	//Check DevIL version
 	else if (ilGetInteger(IL_VERSION_NUM) < IL_VERSION || iluGetInteger(ILU_VERSION_NUM) < ILU_VERSION || ilutGetInteger(ILUT_VERSION_NUM) < ILUT_VERSION)
 	{
-		LOG("DevIL version is different!\n");
+		LOG("DevIL version is different!");
 	}
 	else LOG("DevIL succesfully loaded");
 	
@@ -86,22 +86,27 @@ void ModuleFileSystem::LoadFile(const char * path)
 {
 	std::string tmp = path;
 	std::string extension;
+
+	LOG("Loading file from %s", path);
 	
+	//Get file extension (reversed)
 	while (tmp.back() != '.')
 	{
 		extension.push_back(tmp.back());
 		tmp.pop_back();
 	}
-
 	//Normalize to lower case
 	std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
+	//Reverse to be human readable
+	std::reverse(extension.begin(), extension.end());
 
-	//Extension is reversed for optimization
-	if (extension.compare("xbf") == 0)
+
+	//Check if extension is valid
+	if (extension.compare("fbx") == 0)
 	{
 		LoadGeometry(path);
 	}
-	else if (extension.compare("gnp") == 0 || extension.compare("gpj") == 0 || extension.compare("sdd") == 0)
+	else if (extension.compare("png") == 0 || extension.compare("jpg") == 0 || extension.compare("dds") == 0)
 	{
 		if (geometries.empty())
 		{
@@ -112,10 +117,8 @@ void ModuleFileSystem::LoadFile(const char * path)
 			//Loads texture and puts it in all geometry
 			int new_id = LoadTexture(path);
 
-			if (new_id != 0)
-			{
+			if (new_id != 0)			{
 				glDeleteTextures(1, &geometries[0]->texture_id);
-
 				for (int i = 0; i < geometries.size(); i++)
 					geometries[i]->texture_id = new_id;
 			}
@@ -123,6 +126,7 @@ void ModuleFileSystem::LoadFile(const char * path)
 		}
 		
 	}
+	else LOG("ERROR: File extension '.%s' not allowed", extension.c_str());
 
 }
 
@@ -161,6 +165,9 @@ bool ModuleFileSystem::LoadGeometry(const char * path)
 			}
 			geom_path += texture_name;
 			text_id = LoadTexture(geom_path.c_str());
+			
+			if(text_id==0)
+				LOG("Warning: --------Loading Mesh Without Texture");
 		}
 
 
@@ -176,7 +183,6 @@ bool ModuleFileSystem::LoadGeometry(const char * path)
 			//Copy vertex
 			vertices = new float[numVertx * 3];
 			memcpy(vertices, scene->mMeshes[i]->mVertices, sizeof(float) * numVertx * 3);
-			LOG("New mesh with %d vertices", numVertx);
 			
 			//Copy indices
 			 indices = new uint[numInd * 3];	
@@ -222,6 +228,8 @@ bool ModuleFileSystem::LoadGeometry(const char * path)
 				new_geom = new Geometry(vertices, indices, numVertx, numInd, text_id, texture_coords);
 				new_geom->normals = normals;
 				geometries.push_back(new_geom);
+				LOG("New mesh with %d vertices", numVertx);
+
 				App->camera->AdaptToGeometry(new_geom);
 				delete[] texture_coords;
 			}
@@ -299,6 +307,7 @@ GLuint ModuleFileSystem::LoadTexture(const char * path)
 		return 0;
 	}
 
+	LOG("Loaded Texture Successfully");
 	return img_id;
 }
 
