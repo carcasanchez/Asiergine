@@ -82,6 +82,16 @@ private:
 	void ManageConfigurationWindow();
 	void ManageInspectorWindow();
 
+	//Configuration Window
+	void ConfigAppMenu();
+	void ConfigWindowMenu();
+	void ConfigCameraMenu();
+	void ConfigHardSpecsMenu();
+	void ConfigRenderingMenu();
+	void ConfigAudioMenu();
+	void ConfigInputMenu();
+	void ConfigVramUsageMenu();
+
 
 	void ShowExampleWindow_option();
 	void Window_option();
