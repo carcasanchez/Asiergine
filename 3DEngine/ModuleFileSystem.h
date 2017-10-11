@@ -32,7 +32,7 @@ private:
 	void SearchNode(const aiNode* n, const aiScene* scene);
 
 
-	bool LoadGeometry(const aiMesh*, const aiScene*);
+	bool LoadGeometry(const aiMesh*, const aiScene*, const aiNode*);
 
 	int SearchForTexture(const aiScene* scene, const char* path);
 	GLuint LoadTexture(const char * path);

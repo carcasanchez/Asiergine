@@ -89,7 +89,7 @@ void ModuleFileSystem::LoadFile(const char * path)
 	std::string tmp = path;
 	std::string extension;
 
-	LOG("Loading file from %s", path);
+	LOG("-----------------------Loading file from %s", path);
 	
 	//Get file extension (reversed)
 	while (tmp.back() != '.')
@@ -167,7 +167,7 @@ void ModuleFileSystem::SearchNode(const aiNode* n, const aiScene* scene)
 	for (int i = 0; i < n->mNumMeshes; i++)
 	{
 		aiMesh* m = scene->mMeshes[n->mMeshes[i]];
-		LoadGeometry(m, scene);
+		LoadGeometry(m, scene, n);
 	}
 
 	//Searches for children nodes
@@ -176,7 +176,7 @@ void ModuleFileSystem::SearchNode(const aiNode* n, const aiScene* scene)
 }
 
 //Loads meshes from FBX node
-bool ModuleFileSystem::LoadGeometry(const aiMesh* m, const aiScene* scene)
+bool ModuleFileSystem::LoadGeometry(const aiMesh* m, const aiScene* scene, const aiNode*n)
 {
 	bool ret = true;
 	
@@ -238,8 +238,26 @@ bool ModuleFileSystem::LoadGeometry(const aiMesh* m, const aiScene* scene)
 	{
 		Geometry* new_geom = new Geometry(vertices, indices, numVertx, numInd, text_id, texture_coords);
 		new_geom->normals = normals;
+
+		//Store transform
+		aiVector3D location;
+		aiVector3D scale;
+		aiQuaternion rotation;
+		n->mTransformation.Decompose(scale, rotation, location);
+		new_geom->location.x = location.x;
+		new_geom->location.y = location.y;
+		new_geom->location.z = location.z;
+		new_geom->scale.x = scale.x;
+		new_geom->scale.y = scale.y;
+		new_geom->scale.z = scale.z;
+		new_geom->rotation.x = rotation.x;
+		new_geom->rotation.y = rotation.y;
+		new_geom->rotation.z = rotation.z;
+		new_geom->rotation.w = rotation.w;
+
+
 		geometries.push_back(new_geom);
-		LOG("New mesh with %d vertices", numVertx);
+		LOG("New mesh with %d vertices loaded in position %.3f - %.3f - %.3f", numVertx, location.x, location.y, location.z);
 		delete[] texture_coords;		
 	}
 
