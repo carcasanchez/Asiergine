@@ -218,9 +218,13 @@ void ModuleCamera3D::ControlCamera(float dt)
 			Position += Z;
 		}
 		//Reset Camera to 0, 0, 0 
-		if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
+		if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
 		{
 			ResetCamera();
+		}
+		if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
+		{
+			AdaptToGeometry();
 		}	
 }
 
