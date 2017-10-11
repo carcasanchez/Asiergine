@@ -25,15 +25,22 @@ public:
 	// Play a previously loaded WAV
 	bool PlayFx(unsigned int fx, int repeat = 0);
 
+	void ChangeVolume(int new_volume);
 
-	int volume = 50;
+	int GetVolume()
+	{
+		return volume;
+	}
+
+
+	
 	int audio_driver = 0;
 	int audio_device = 0;
 
 private:
 
 	
-
+	int volume = 50;
 	Mix_Music*			music;
 	std::vector<Mix_Chunk*> fx;
 };

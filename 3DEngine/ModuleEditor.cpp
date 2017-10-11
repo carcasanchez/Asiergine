@@ -573,7 +573,11 @@ void ModuleEditor::ManageConfigurationWindow()
 			ImGui::SameLine();
 			ImGui::TextColored({ 255, 50, 100, 255 }, "%s", SDL_GetAudioDeviceName(App->audio->audio_device, 0));
 
-			ImGui::SliderInt("Volume", &App->audio->volume, 0, 100);
+			int volume = App->audio->GetVolume();
+			if (ImGui::SliderInt("Volume", &volume, 0, 100))
+			{
+				App->audio->ChangeVolume(volume);
+			}
 		}
 
 		//Input Options
