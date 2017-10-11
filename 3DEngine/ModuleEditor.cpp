@@ -85,39 +85,6 @@ update_status ModuleEditor::Update(float dt)
 update_status ModuleEditor::PostUpdate(float dt)
 {
 	update_status ret = UPDATE_CONTINUE;	
-	/*glBegin(GL_TRIANGLES);
-	
-	glTexCoord2d(0.f, 0.f);
-	glVertex3d(0.f, 0.f, 0.f);	
-	glTexCoord2d(1.f, 0.f);
-	glVertex3d(10.f, 0.f, 0.f);
-	glTexCoord2d(1.f, 1.f);
-	glVertex3d(10.f, 0.f, 10.f);
-
-	glTexCoord2d(0.f, 0.f);
-	glVertex3d(0.f, 0.f, 0.f);
-	glTexCoord2d(1.f, 1.f);
-	glVertex3d(10.f, 0.f, 10.f);
-	glTexCoord2d(0.f, 1.f);
-	glVertex3d(0.f, 0.f, 10.f);
-
-
-	glVertex3d(10.f, 0.f, 10.f);
-	glTexCoord2d(1.f, 1.f);
-	glVertex3d(10.f, 0.f, 0.f);
-	glTexCoord2d(1.f, 0.f);
-	glVertex3d(10.f, 10.f, 10.f);
-	glTexCoord2d(0.f, 1.f);
-
-
-	glVertex3d(10.f, 0.f, 0.f);
-	glTexCoord2d(1.f, 1.f);
-	glVertex3d(10.f, 10.f, 0.f);
-	glTexCoord2d(1.f, 0.f);
-	glVertex3d(10.f, 10.f, 10.f);
-	glTexCoord2d(0.f, 1.f);
-	
-	glEnd();*/
 
 	
 	if (quit_editor)
@@ -238,7 +205,7 @@ void ModuleEditor::ExitEditor_option()
 //Example window management------------------------------------------------------------------------
 void ModuleEditor::ManageExampleWindow()
 {
-	if (test_window_open == true)
+	//if (test_window_open == true)
 		ImGui::ShowTestWindow();
 }
 
