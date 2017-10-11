@@ -2,6 +2,9 @@
 #include "Module.h"
 #include "Geometry.h"
 
+struct aiNode;
+struct aiMesh;
+struct aiScene;
 
 class ModuleFileSystem : public Module
 {
@@ -24,7 +27,16 @@ public:
 
 private:
 
-	bool LoadGeometry(const char* path);
+	
+	bool LoadFBX(const char* path);
+	void SearchNode(const aiNode* n, const aiScene* scene);
+
+
+	bool LoadGeometry(const aiMesh*, const aiScene*);
+
+	int SearchForTexture(const aiScene* scene, const char* path);
 	GLuint LoadTexture(const char * path);
+
+	int first_texture_id = 0;
 
 };

@@ -23,6 +23,7 @@ public:
 
 	bool SaveConfig(JSON_Object* config_data);
 	void AdaptToGeometry(const Geometry*);
+	void AdaptToGeometry();
 
 private:
 

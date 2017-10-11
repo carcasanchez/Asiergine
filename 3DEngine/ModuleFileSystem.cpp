@@ -82,6 +82,8 @@ bool ModuleFileSystem::CleanUp()
 	return true;
 }
 
+
+//Load General file and identify the format
 void ModuleFileSystem::LoadFile(const char * path)
 {
 	std::string tmp = path;
@@ -95,6 +97,8 @@ void ModuleFileSystem::LoadFile(const char * path)
 		extension.push_back(tmp.back());
 		tmp.pop_back();
 	}
+
+
 	//Normalize to lower case
 	std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
 	//Reverse to be human readable
@@ -104,7 +108,7 @@ void ModuleFileSystem::LoadFile(const char * path)
 	//Check if extension is valid
 	if (extension.compare("fbx") == 0)
 	{
-		LoadGeometry(path);
+		LoadFBX(path);
 	}
 	else if (extension.compare("png") == 0 || extension.compare("jpg") == 0 || extension.compare("dds") == 0)
 	{
@@ -113,7 +117,7 @@ void ModuleFileSystem::LoadFile(const char * path)
 			LOG("WARNING: Scene has no geometries. Could not load texture.")
 		}
 		else
-		{
+		{	
 			//Loads texture and puts it in all geometry
 			int new_id = LoadTexture(path);
 
@@ -131,25 +135,123 @@ void ModuleFileSystem::LoadFile(const char * path)
 }
 
 
-//Loads data from a given path
-bool ModuleFileSystem::LoadGeometry(const char * path)
+//Load FBX scene----------------------------------
+bool ModuleFileSystem::LoadFBX(const char * path)
 {
 	bool ret = true;
+	const aiScene* scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality);
+	if (scene != nullptr && scene->HasMeshes())
+	{
+		UnloadGeometry();
 
-	Geometry* new_geom = nullptr;
+		first_texture_id = SearchForTexture(scene, path);
+		SearchNode(scene->mRootNode, scene);	
+
+		aiReleaseImport(scene);
+
+		App->camera->AdaptToGeometry();
+	}
+	else
+	{
+		LOG("Error loading scene %s", path);
+		ret = false;
+	}
+
+	return ret;
+}
+
+//Searches every FBX node for data
+void ModuleFileSystem::SearchNode(const aiNode* n, const aiScene* scene)
+{
+	//Loads all geometry of the node
+	for (int i = 0; i < n->mNumMeshes; i++)
+	{
+		aiMesh* m = scene->mMeshes[n->mMeshes[i]];
+		LoadGeometry(m, scene);
+	}
+
+	//Searches for children nodes
+	for (int i = 0; i < n->mNumChildren; i++)
+		SearchNode(n->mChildren[i], scene);
+}
+
+//Loads meshes from FBX node
+bool ModuleFileSystem::LoadGeometry(const aiMesh* m, const aiScene* scene)
+{
+	bool ret = true;
+	
 	float* vertices = nullptr;
 	float* normals = nullptr;
 	uint* indices = nullptr;
-	int numVertx = 0, numInd = 0;
-	int text_id =0 ;
 	float* texture_coords = nullptr;
 
-	UnloadGeometry();
+	int numVertx = m->mNumVertices; 
+	int numInd = m->mNumFaces * 3;
 
-	const aiScene* scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality);
+	//Asigns the id of the first FBX texture (allocated previoulsy)
+	int text_id = first_texture_id;
+	
+
+	//Copy vertices
+	vertices = new float[numVertx * 3];
+	memcpy(vertices, m->mVertices, sizeof(float) * numVertx * 3);
+			
+			
+	//Copy indices
+	 indices = new uint[numInd * 3];	
+	if(m->HasFaces())
+	{
+		for (int k = 0; k < m->mNumFaces; k++)
+		{
+			if (m->mFaces[k].mNumIndices != 3)
+			{
+				LOG("WARNING, geometry face with != 3 indices!");
+			}
+			else
+				memcpy(&indices[k * 3], m->mFaces[k].mIndices, 3 * sizeof(uint));
+		}
+	}
+			
+
+	//Copy normals
+	if (m->HasNormals())
+	{
+		normals = new float[numVertx * 3];
+		memcpy(normals, m->mNormals, sizeof(float) * numVertx * 3);
+	}	
 
 
-	//Search for textures
+	//copy texture coords
+	if (m->HasTextureCoords(0))
+	{
+		texture_coords = new float[numVertx * 2];
+		for (int k = 0; k < numVertx; ++k) 
+		{
+			texture_coords[k * 2] = m->mTextureCoords[0][k].x;
+			texture_coords[k * 2 + 1] = m->mTextureCoords[0][k].y;
+		}
+	}
+
+
+	//If everything goes OK, create a new Mesh
+	if (ret)
+	{
+		Geometry* new_geom = new Geometry(vertices, indices, numVertx, numInd, text_id, texture_coords);
+		new_geom->normals = normals;
+		geometries.push_back(new_geom);
+		LOG("New mesh with %d vertices", numVertx);
+		delete[] texture_coords;		
+	}
+
+	return ret;
+}
+
+//Get the very first texture of the FBX (called once)
+int ModuleFileSystem::SearchForTexture(const aiScene* scene, const char* path)
+{
+	int text_id = 0;
+	
+	
 	if (scene->HasMaterials())
 		if (scene->mMaterials[0]->GetTextureCount(aiTextureType_DIFFUSE) > 0)
 		{
@@ -165,92 +267,28 @@ bool ModuleFileSystem::LoadGeometry(const char * path)
 			}
 			geom_path += texture_name;
 			text_id = LoadTexture(geom_path.c_str());
-			
-			if(text_id==0)
-				LOG("Warning: --------Loading Mesh Without Texture");
+
+			if (text_id == 0)
+				LOG("Warning: --------Loading Scene Without Texture");
 		}
 
+	return text_id;
+}
 
-	if (scene != nullptr && scene->HasMeshes())
+//Empty the geometry array
+void ModuleFileSystem::UnloadGeometry()
+{
+	//Release geometries
+	for (std::vector<Geometry*>::iterator it = geometries.begin(); it != geometries.end(); it++)
 	{
-
-		// Use scene->mNumMeshes to iterate on scene->mMeshes array		
-		for (int i = 0, j = scene->mNumMeshes; i < j; i++)
-		{
-			numVertx = scene->mMeshes[i]->mNumVertices;
-			numInd = scene->mMeshes[i]->mNumFaces*3;
-
-			//Copy vertex
-			vertices = new float[numVertx * 3];
-			memcpy(vertices, scene->mMeshes[i]->mVertices, sizeof(float) * numVertx * 3);
-			
-			//Copy indices
-			 indices = new uint[numInd * 3];	
-			if(scene->mMeshes[i]->HasFaces())
-			{
-				for (int k = 0; k < scene->mMeshes[i]->mNumFaces; k++)
-				{
-					if (scene->mMeshes[i]->mFaces[k].mNumIndices != 3)
-					{
-						LOG("WARNING, geometry face with != 3 indices!");
-					}
-					else
-					{
-						memcpy(&indices[k * 3], scene->mMeshes[i]->mFaces[k].mIndices, 3 * sizeof(uint));
-					}
-				}
-			}
-			
-
-			//Copy normals
-			if (scene->mMeshes[i]->HasNormals())
-			{
-				normals = new float[numVertx * 3];
-				memcpy(normals, scene->mMeshes[i]->mNormals, sizeof(float) * numVertx * 3);
-			}	
-
-			//copy texture coords
-			if (scene->mMeshes[i]->HasTextureCoords(0))
-			{
-				texture_coords = new float[numVertx * 2];
-				for (int k = 0; k < numVertx; ++k) {
-
-					texture_coords[k * 2] = scene->mMeshes[i]->mTextureCoords[0][k].x;
-					texture_coords[k * 2 + 1] = scene->mMeshes[i]->mTextureCoords[0][k].y;
-
-				}
-			}
-
-
-			//If everything goes OK, create a new Mesh
-			if (ret)
-			{
-				new_geom = new Geometry(vertices, indices, numVertx, numInd, text_id, texture_coords);
-				new_geom->normals = normals;
-				geometries.push_back(new_geom);
-				LOG("New mesh with %d vertices", numVertx);
-
-				App->camera->AdaptToGeometry(new_geom);
-				delete[] texture_coords;
-			}
-
-		}		
-		
-		
+		if ((*it) != nullptr)
+			delete (*it);
 	}
-	else
-	{
-		LOG("Error loading scene %s", path);
-		ret = false;
-	}
-
-
-	
-	aiReleaseImport(scene);
-	return ret;
+	geometries.clear();	
 }
 
 
+//Load texture from image-----------------------------
 GLuint ModuleFileSystem::LoadTexture(const char * path)
 {
 	//Gen image
@@ -311,13 +349,3 @@ GLuint ModuleFileSystem::LoadTexture(const char * path)
 	return img_id;
 }
 
-void ModuleFileSystem::UnloadGeometry()
-{
-	//Release geometries
-	for (std::vector<Geometry*>::iterator it = geometries.begin(); it != geometries.end(); it++)
-	{
-		if ((*it) != nullptr)
-			delete (*it);
-	}
-	geometries.clear();	
-}

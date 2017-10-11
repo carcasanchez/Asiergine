@@ -281,4 +281,48 @@ void ModuleCamera3D::AdaptToGeometry(const Geometry * g)
 	LookAt(Reference);
 }
 
+void ModuleCamera3D::AdaptToGeometry()
+{
+	if (App->file_system->geometries.empty())
+		return;
+
+	std::vector<float3> vertices;
+
+	for (int i = 0; i < App->file_system->geometries.size(); i++)
+	{
+		//Generate AABBS for each geom in scene
+		math::AABB new_aabb(float3(0, 0, 0), float3(0, 0, 0));
+		std::vector <float3> vertex_array;
+
+		Geometry* g = App->file_system->geometries[i];
+		for (int j = 0; j < g->num_vertices * 3; j += 3)
+		{
+			vertex_array.push_back(float3(g->vertices[j], g->vertices[j + 1], g->vertices[j + 2]));
+		}
+
+		new_aabb.Enclose(&vertex_array[0], g->num_vertices);
+
+		//Stores the 8 vertices of the box in a general array
+		for (int j = 0; j < 8; j++)
+		{
+			vertices.push_back(new_aabb.CornerPoint(j));
+		}
+	}
+
+	
+	//Creates a general AABB 
+	math::AABB general(float3(0, 0, 0), float3(0, 0, 0));
+	general.Enclose(&vertices[0], vertices.size());
+	
+	Position.x = general.maxPoint.x*1.5;
+	Position.y = general.maxPoint.y*1.5;
+	Position.z = general.maxPoint.z*1.5;
+
+	Reference.x = general.CenterPoint().x;
+	Reference.y = general.CenterPoint().y;
+	Reference.z = general.CenterPoint().z;
+
+	LookAt(Reference);
+}
+
 
