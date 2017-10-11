@@ -111,8 +111,15 @@ void ModuleFileSystem::LoadFile(const char * path)
 		{
 			//Loads texture and puts it in all geometry
 			int new_id = LoadTexture(path);
-			for (int i = 0; i < geometries.size(); i++)
-				geometries[i]->texture_id = new_id;
+
+			if (new_id != 0)
+			{
+				glDeleteTextures(1, &geometries[0]->texture_id);
+
+				for (int i = 0; i < geometries.size(); i++)
+					geometries[i]->texture_id = new_id;
+			}
+			
 		}
 		
 	}
@@ -303,6 +310,5 @@ void ModuleFileSystem::UnloadGeometry()
 		if ((*it) != nullptr)
 			delete (*it);
 	}
-	geometries.clear();
-	
+	geometries.clear();	
 }
