@@ -400,11 +400,13 @@ void ModuleEditor::ManageInspectorWindow()
 	{
 		ImGui::Begin("Inspector", &inspector_open);
 		
-		for (int i = 0; i < App->file_system->geometries.size(); i++)
+		if(ImGui::CollapsingHeader("Geometries"))
+			for (int i = 0; i < App->file_system->geometries.size(); i++)
 		{
 			Geometry* g = App->file_system->geometries[i];
-						
-			if (ImGui::TreeNode("","Geometry %i", i))
+			std::string node_name = "Geometry "+ std::to_string(i+1);
+					
+			if (ImGui::TreeNodeEx(node_name.c_str()))
 			{
 				ImGui::TextColored(ImVec4(255, 255, 0, 255), "Location  X: %f  Y: %f  Z: %f",
 					g->location.x, g->location.y, g->location.z);
@@ -415,8 +417,15 @@ void ModuleEditor::ManageInspectorWindow()
 				ImGui::TextColored(ImVec4(255, 255, 0, 255), "Rotation  X: %f  Y: %f  Z: %f",
 					euler.x, euler.y, euler.z);
 
+				ImGui::TextColored(ImVec4(1, 0.5, 0.2, 1), "Triangle Count: %i", g->num_indices/3);
+
 				ImGui::TreePop();				
 			}
+		}
+
+		if (ImGui::CollapsingHeader("Textures"))
+		{
+
 		}
 
 
@@ -425,26 +434,7 @@ void ModuleEditor::ManageInspectorWindow()
 }
 
 
-void ModuleEditor::GetInputEvent(SDL_Event* e)
-{
-	ImGui_ImplSdlGL3_ProcessEvent(e);
-}
-
-bool ModuleEditor::SaveConfig(JSON_Object* config_data)
-{
-	LOG("Saving data to config--------");
-
-	//Save renderer data
-	json_object_dotset_boolean(config_data, "test_window_open", test_window_open);
-	json_object_dotset_boolean(config_data, "console_open", console_open);
-	json_object_dotset_boolean(config_data, "about_engine_open", about_engine_open);
-	json_object_dotset_boolean(config_data, "hardware_open", hardware_open);
-	json_object_dotset_boolean(config_data, "configuration_open", configuration_open);
-	json_object_dotset_boolean(config_data, "inspector_open", inspector_open);
-	json_object_dotset_boolean(config_data, "camera_config_open", camera_config_open);
-
-	return true;
-}
+//Submenus of config window-------------------------------------------------------------
 
 //Application submenu on Configuration window
 void ModuleEditor::ConfigAppMenu()
@@ -769,6 +759,29 @@ void ModuleEditor::ConfigVramUsageMenu()
 
 	}
 	else (ImGui::TextWrapped("VRam Usage only available for NVIDIA devices"));
+}
+
+
+//Utility--------------------------------------------------------------------------------
+void ModuleEditor::GetInputEvent(SDL_Event* e)
+{
+	ImGui_ImplSdlGL3_ProcessEvent(e);
+}
+
+bool ModuleEditor::SaveConfig(JSON_Object* config_data)
+{
+	LOG("Saving data to config--------");
+
+	//Save renderer data
+	json_object_dotset_boolean(config_data, "test_window_open", test_window_open);
+	json_object_dotset_boolean(config_data, "console_open", console_open);
+	json_object_dotset_boolean(config_data, "about_engine_open", about_engine_open);
+	json_object_dotset_boolean(config_data, "hardware_open", hardware_open);
+	json_object_dotset_boolean(config_data, "configuration_open", configuration_open);
+	json_object_dotset_boolean(config_data, "inspector_open", inspector_open);
+	json_object_dotset_boolean(config_data, "camera_config_open", camera_config_open);
+
+	return true;
 }
 
 

@@ -187,7 +187,7 @@ bool ModuleFileSystem::LoadGeometry(const aiMesh* m, const aiScene* scene, const
 
 	int numVertx = m->mNumVertices; 
 	int numInd = m->mNumFaces * 3;
-
+	
 	//Asigns the id of the first FBX texture (allocated previoulsy)
 	int text_id = first_texture_id;
 	
