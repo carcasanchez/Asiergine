@@ -55,11 +55,6 @@ private:
 	bool unlimitedFramerate = true;
 
 
-
-
-//	UINT nDevices;
-//	PRAWINPUTDEVICELIST pRawInputDeviceList;
-
 	//Framerate calculation
 	std::vector<float> fps_log;
 	std::vector<float> ms_log;
@@ -97,7 +92,7 @@ private:
 	void Window_option();
 	void ExitEditor_option();
 	
-	Plane_prim plane;
+	Plane_prim grid;
 
 	bool debug_draw = false;
 

@@ -168,7 +168,7 @@ void ModuleEditor::DrawUI()
 
 void ModuleEditor::DrawGeometry()
 {
-	plane.Render();
+	grid.Render();
 
 	for (std::vector<Geometry*>::iterator it = App->file_system->geometries.begin(); it != App->file_system->geometries.end(); it++)
 	{
