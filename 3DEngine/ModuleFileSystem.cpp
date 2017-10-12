@@ -125,6 +125,8 @@ void ModuleFileSystem::LoadFile(const char * path)
 				glDeleteTextures(1, &geometries[0]->texture_id);
 				for (int i = 0; i < geometries.size(); i++)
 					geometries[i]->texture_id = new_id;
+
+				first_texture_id = new_id;
 			}
 			
 		}
@@ -362,6 +364,10 @@ GLuint ModuleFileSystem::LoadTexture(const char * path)
 		LOG("Devil Error (ilInit: %s)", iluErrorString(devilError3));
 		return 0;
 	}
+
+	first_texture_dimensions.x = ilGetInteger(IL_IMAGE_WIDTH);
+	first_texture_dimensions.y = ilGetInteger(IL_IMAGE_HEIGHT);
+	
 
 	LOG("Loaded Texture Successfully");
 	return img_id;

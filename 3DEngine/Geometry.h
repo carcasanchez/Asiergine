@@ -22,9 +22,11 @@ struct Geometry
 
 	uint texture_id = 0;
 	uint text_coord_id = 0;
+	float2 texture_size;
 
 	float3 location;
 	float3 scale;
 	Quat rotation;
 	
+
 };

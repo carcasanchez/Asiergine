@@ -400,31 +400,57 @@ void ModuleEditor::ManageInspectorWindow()
 	{
 		ImGui::Begin("Inspector", &inspector_open);
 		
-		if(ImGui::CollapsingHeader("Geometries"))
-			for (int i = 0; i < App->file_system->geometries.size(); i++)
+		if (ImGui::CollapsingHeader("Geometries"))
 		{
-			Geometry* g = App->file_system->geometries[i];
-			std::string node_name = "Geometry "+ std::to_string(i+1);
-					
-			if (ImGui::TreeNodeEx(node_name.c_str()))
+			int total_triangles = 0;
+
+			//Calculate total triangle account;
+			for (int i = 0; i < App->file_system->geometries.size(); i++)
 			{
-				ImGui::TextColored(ImVec4(255, 255, 0, 255), "Location  X: %f  Y: %f  Z: %f",
-					g->location.x, g->location.y, g->location.z);
-				ImGui::TextColored(ImVec4(255, 255, 0, 255), "Scale X: %f  Y: %f  Z: %f",
-					g->scale.x, g->scale.y, g->scale.z);
-
-				float3 euler = g->rotation.ToEulerXYZ();
-				ImGui::TextColored(ImVec4(255, 255, 0, 255), "Rotation  X: %f  Y: %f  Z: %f",
-					euler.x, euler.y, euler.z);
-
-				ImGui::TextColored(ImVec4(1, 0.5, 0.2, 1), "Triangle Count: %i", g->num_indices/3);
-
-				ImGui::TreePop();				
+				Geometry* g = App->file_system->geometries[i];
+				total_triangles += g->num_indices / 3;
 			}
+			ImGui::TextColored(ImVec4(1, 0, 1, 1), "Total Triangle Count: %i", total_triangles);
+
+
+			for (int i = 0; i < App->file_system->geometries.size(); i++)
+			{
+				Geometry* g = App->file_system->geometries[i];
+				std::string node_name = "Geometry " + std::to_string(i + 1);
+
+				if (ImGui::TreeNodeEx(node_name.c_str()))
+				{
+					ImGui::TextColored(ImVec4(255, 255, 0, 255), "Location  X: %f  Y: %f  Z: %f",
+						g->location.x, g->location.y, g->location.z);
+					ImGui::TextColored(ImVec4(255, 255, 0, 255), "Scale X: %f  Y: %f  Z: %f",
+						g->scale.x, g->scale.y, g->scale.z);
+
+					float3 euler = g->rotation.ToEulerXYZ();
+					ImGui::TextColored(ImVec4(255, 255, 0, 255), "Rotation  X: %f  Y: %f  Z: %f",
+						euler.x, euler.y, euler.z);
+
+					ImGui::TextColored(ImVec4(1, 0.5, 0.2, 1), "Triangle Count: %i", g->num_indices / 3);
+					
+					ImGui::TreePop();
+				}
+			}
+
 		}
 
 		if (ImGui::CollapsingHeader("Textures"))
 		{
+			uint id = App->file_system->GetFirstTextureId();
+
+			if (id != 0)
+			{
+			ImVec2 size;
+			size.x = App->file_system->GetFirstTextureDim().x;
+			size.y = App->file_system->GetFirstTextureDim().y;
+
+			ImGui::Image((ImTextureID)id, ImVec2(200, 200));
+			ImGui::TextColored(ImVec4(0, 255, 0, 255), "%i x %i", (int)size.x, (int)size.y);
+
+			}
 
 		}
 

@@ -18,9 +18,16 @@ public:
 	bool CleanUp();
 
 	void LoadFile(const char* path);
-	
-
 	void UnloadGeometry();
+	
+	int GetFirstTextureId()
+	{
+		return first_texture_id;
+	}
+	float2 GetFirstTextureDim()
+	{
+		return first_texture_dimensions;
+	}
 
 
 	std::vector<Geometry*> geometries;
@@ -38,5 +45,6 @@ private:
 	GLuint LoadTexture(const char * path);
 
 	int first_texture_id = 0;
+	math::float2 first_texture_dimensions;
 
 };
