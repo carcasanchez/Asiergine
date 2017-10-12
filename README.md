@@ -4,6 +4,13 @@
 
 #Changelog
 
+###v0.7
+-Added Inspector Window to show all geometry transform, polycount and textures.
+-Solved numerous bugs and crashes when load a FBX file
+-Reorganized code to be more human readable
+-Solved camera bug when its aligned to the Y axis
+-Solved numerous little load and save bugs
+
 ###v0.6.1
 -Polished camera control
 -Textures could be loaded from image file 

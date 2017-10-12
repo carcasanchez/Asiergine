@@ -142,47 +142,46 @@ void ModuleCamera3D::ControlCamera(float dt)
 
 	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
 	{
-		//FP control
-		if (x != 0)
+		if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)
 		{
-			X = rotate(X, -camera_sensitivity*x*dt, vec3(0.0f, 1.0f, 0.0f));
-			Y = rotate(Y, -camera_sensitivity*x*dt, vec3(0.0f, 1.0f, 0.0f));
-			Z = rotate(Z, -camera_sensitivity*x*dt, vec3(0.0f, 1.0f, 0.0f));
-		}
+			//Pan the Camera			
+			if (y != 0)
+				Move(Y*camera_sensitivity*dt*y);
 
-		if (y != 0)
+			if (x != 0)
+				Move(X*-camera_sensitivity*dt*x);
+		}
+		else
 		{
-			Y = rotate(Y, -camera_sensitivity*y*dt, X);
-			Z = rotate(Z, -camera_sensitivity*y*dt, X);
-
-			//Cap Camera Y axis
-			if (Y.y < 0.0f)
+			//FP control
+			if (x != 0)
 			{
-				Y = rotate(Y, (float)y * camera_sensitivity*dt, X);
-				Z = rotate(Z, (float)y * camera_sensitivity*dt, X);
-			}		
-			
-		}
-
-		//Adjust reference
-		vec3 distance = Reference - Position;
-		Reference = Position - (Z * length(distance));
-		
-		/*	Pan the Camera
-			{
-				if (y != 0)
-				{
-					Move(Y*camera_speed*dt*y);
-
-				}
-				if (x != 0)
-				{
-					Move(X*-camera_speed*dt*x);
-				}
+				X = rotate(X, -camera_sensitivity*x*dt, vec3(0.0f, 1.0f, 0.0f));
+				Y = rotate(Y, -camera_sensitivity*x*dt, vec3(0.0f, 1.0f, 0.0f));
+				Z = rotate(Z, -camera_sensitivity*x*dt, vec3(0.0f, 1.0f, 0.0f));
 			}
-			*/
 
-	}
+			if (y != 0)
+			{
+				Y = rotate(Y, -camera_sensitivity*y*dt, X);
+				Z = rotate(Z, -camera_sensitivity*y*dt, X);
+
+				//Cap Camera Y axis
+				if (Y.y < 0.0f)
+				{
+					Y = rotate(Y, (float)y * camera_sensitivity*dt, X);
+					Z = rotate(Z, (float)y * camera_sensitivity*dt, X);
+				}
+
+			}
+
+			//Adjust reference
+			vec3 distance = Reference - Position;
+			Reference = Position - (Z * length(distance));
+		}
+		
+	
+}
 	else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)
 	{
 		//Orbital Control
