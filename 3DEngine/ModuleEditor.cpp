@@ -434,7 +434,6 @@ void ModuleEditor::ManageInspectorWindow()
 					ImGui::TreePop();
 				}
 			}
-
 		}
 
 		if (ImGui::CollapsingHeader("Textures"))
@@ -449,11 +448,8 @@ void ModuleEditor::ManageInspectorWindow()
 
 			ImGui::Image((ImTextureID)id, ImVec2(200, 200));
 			ImGui::TextColored(ImVec4(0, 255, 0, 255), "%i x %i", (int)size.x, (int)size.y);
-
 			}
-
 		}
-
 
 		ImGui::End();
 	}
