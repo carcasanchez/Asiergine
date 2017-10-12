@@ -618,10 +618,10 @@ void ModuleEditor::ConfigHardSpecsMenu()
 	ImGui::Separator();
 	ImGui::TextColored({ 0, 255, 255, 255 }, "---------GPU Specs-----------");
 	
-	ImGui::TextColored({ 255, 0, 255, 255 }, "Vendor: %s", glGetString(GL_VENDOR));
-	ImGui::TextColored({ 255, 0, 255, 255 }, "Renderer: %s", glGetString(GL_RENDERER));
-	ImGui::TextColored({ 255, 0, 255, 255 }, "GL version: %s", glGetString(GL_VERSION));
-	ImGui::TextColored({ 255, 0, 255, 255 }, "GL shading languaje version: %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
+	ImGui::TextColored({ 1, 1, 0, 1 }, "Vendor: %s", glGetString(GL_VENDOR));
+	ImGui::TextColored({ 1, 1, 0, 1 }, "Renderer: %s", glGetString(GL_RENDERER));
+	ImGui::TextColored({ 1, 1, 0, 1 }, "GL version: %s", glGetString(GL_VERSION));
+	ImGui::TextColored({ 1, 1, 0, 1 }, "GL shading languaje version: %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
 	
 	//To see which one of these your computer uses
 	ImGui::Separator();
