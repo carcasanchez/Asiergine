@@ -32,6 +32,10 @@ bool ModuleCamera3D::Init(const JSON_Object* config_data)
 	Reference.y = json_object_dotget_number(config_data, "reference_y");
 	Reference.z = json_object_dotget_number(config_data, "reference_z");
 
+	camera_speed = json_object_dotget_number(config_data, "speed");
+	camera_sensitivity = json_object_dotget_number(config_data, "sensitivity");
+
+
 	return ret;
 }
 // -----------------------------------------------------------------
@@ -218,7 +222,7 @@ void ModuleCamera3D::ControlCamera(float dt)
 			Position += Z;
 		}
 		//Reset Camera to 0, 0, 0 
-		if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
+		if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
 		{
 			ResetCamera();
 		}
@@ -255,6 +259,9 @@ bool ModuleCamera3D::SaveConfig(JSON_Object* config_data)
 	json_object_dotset_number(config_data, "reference_x", Reference.x);
 	json_object_dotset_number(config_data, "reference_y", Reference.y);
 	json_object_dotset_number(config_data, "reference_z", Reference.z);
+
+	json_object_dotset_number(config_data, "speed", camera_speed);
+	json_object_dotset_number(config_data, "sensitivity", camera_sensitivity);
 
 	return true;
 	
