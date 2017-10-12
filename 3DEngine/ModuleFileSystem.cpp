@@ -124,7 +124,13 @@ void ModuleFileSystem::LoadFile(const char * path)
 			if (new_id != 0)			{
 				glDeleteTextures(1, &geometries[0]->texture_id);
 				for (int i = 0; i < geometries.size(); i++)
+				{
 					geometries[i]->texture_id = new_id;
+					if (geometries[i]->text_coord_id == 0)
+					{
+						LOG("WARNING: Geometry without texture coords");
+					}
+				}
 
 				first_texture_id = new_id;
 			}
@@ -221,6 +227,7 @@ bool ModuleFileSystem::LoadGeometry(const aiMesh* m, const aiScene* scene, const
 		normals = new float[numVertx * 3];
 		memcpy(normals, m->mNormals, sizeof(float) * numVertx * 3);
 	}	
+	else LOG("WARNING: Loading Geometry without normals");
 
 
 	//copy texture coords
@@ -233,7 +240,7 @@ bool ModuleFileSystem::LoadGeometry(const aiMesh* m, const aiScene* scene, const
 			texture_coords[k * 2 + 1] = m->mTextureCoords[0][k].y;
 		}
 	}
-
+	else LOG("WARNING: Loading Geometry without texture coords");
 
 	//If everything goes OK, create a new Mesh
 	if (ret)
