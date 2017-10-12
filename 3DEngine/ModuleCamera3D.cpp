@@ -124,8 +124,7 @@ void ModuleCamera3D::CalculateViewMatrix()
 
 void ModuleCamera3D::ControlCamera(float dt)
 {
-
-
+	//Displacement
 	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
 		Move(Z*-camera_speed*dt);
 
@@ -155,13 +154,14 @@ void ModuleCamera3D::ControlCamera(float dt)
 		{
 			Y = rotate(Y, -camera_sensitivity*y*dt, X);
 			Z = rotate(Z, -camera_sensitivity*y*dt, X);
-			
+
 			//Cap Camera Y axis
 			if (Y.y < 0.0f)
 			{
-				Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
-				Y = cross(Z, X);
-			}
+				Y = rotate(Y, (float)y * camera_sensitivity*dt, X);
+				Z = rotate(Z, (float)y * camera_sensitivity*dt, X);
+			}		
+			
 		}
 
 		//Adjust reference
@@ -199,37 +199,34 @@ void ModuleCamera3D::ControlCamera(float dt)
 		{
 			Y = rotate(Y, -(float)y * camera_sensitivity*dt, X);
 			Z = rotate(Z, -(float)y * camera_sensitivity*dt, X);
-		}
-
-		if (Y.y > 0.0f)
-			Position = Reference + Z * length(Position);	
+		}		
 
 		//Cap Camera Y axis
 		if (Y.y < 0.0f)
 		{
-			Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
-			Y = cross(Z, X);
+			Y = rotate(Y, (float)y * camera_sensitivity*dt, X);
+			Z = rotate(Z, (float)y * camera_sensitivity*dt, X);
 		}
+		
+		//Locate camera around reference
+		if (Y.y > 0.0f)
+			Position = Reference + Z * length(Position);
 	}
 
-		//Move camera in the local Z axis
-		if (App->input->GetMouseZ() == 1)
-		{
-			Position -= Z;
-		}
-		else if (App->input->GetMouseZ() == -1)
-		{
-			Position += Z;
-		}
-		//Reset Camera to 0, 0, 0 
-		if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
-		{
-			ResetCamera();
-		}
-		if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
-		{
-			AdaptToGeometry();
-		}	
+	//Move camera in the local Z axis
+	if (App->input->GetMouseZ() == 1)
+		Position -= Z;
+	else if (App->input->GetMouseZ() == -1)
+		Position += Z;
+		
+	//Reset Camera to 0, 0, 0 
+	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
+		ResetCamera();
+
+	//Adapt camera to geometry in scene
+	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
+		AdaptToGeometry();
+		
 }
 
 void ModuleCamera3D::ResetCamera()
