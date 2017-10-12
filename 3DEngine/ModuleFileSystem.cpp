@@ -287,7 +287,7 @@ int ModuleFileSystem::SearchForTexture(const aiScene* scene, const char* path)
 			text_id = LoadTexture(geom_path.c_str());
 
 			if (text_id == 0)
-				LOG("Warning: --------Loading Scene Without Texture");
+				LOG("Warning: --------Scene missing textures");
 		}
 
 	return text_id;

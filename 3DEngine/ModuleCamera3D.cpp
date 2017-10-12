@@ -280,9 +280,9 @@ void ModuleCamera3D::AdaptToGeometry(const Geometry * g)
 	box.Enclose(&vertex_array[0], g->num_vertices);
 
 
-	Position.x = box.maxPoint.x*1.5;
-	Position.y = box.maxPoint.y*1.5;
-	Position.z = box.maxPoint.z*1.5;
+	Position.x = box.maxPoint.x + 5;
+	Position.y = box.maxPoint.y + 5;
+	Position.z = box.maxPoint.z + 5;
 
 	Reference.x = box.CenterPoint().x;
 	Reference.y = box.CenterPoint().y;
@@ -325,9 +325,9 @@ void ModuleCamera3D::AdaptToGeometry()
 	math::AABB general(float3(0, 0, 0), float3(0, 0, 0));
 	general.Enclose(&vertices[0], vertices.size());
 	
-	Position.x = general.maxPoint.x*1.5;
-	Position.y = general.maxPoint.y*1.5;
-	Position.z = general.maxPoint.z*1.5;
+	Position.x = general.maxPoint.x + 5;
+	Position.y = general.maxPoint.y + 5;
+	Position.z = general.maxPoint.z + 5;
 
 	Reference.x = general.CenterPoint().x;
 	Reference.y = general.CenterPoint().y;
