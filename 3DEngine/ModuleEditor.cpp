@@ -186,9 +186,9 @@ void ModuleEditor::ManageMainMenuBar()
 {
 	if (ImGui::BeginMainMenuBar())
 	{
-
-		if (ImGui::BeginMenu("File"))
-		{			
+		if (ImGui::BeginMenu("Exit Editor"))
+		{
+			ExitEditor_option();
 			ImGui::EndMenu();
 		}
 
@@ -197,12 +197,12 @@ void ModuleEditor::ManageMainMenuBar()
 			Window_option();
 			ImGui::EndMenu();
 		}
-				
-		if (ImGui::BeginMenu("Exit Editor"))
+		if (ImGui::MenuItem("About"))
 		{
-			ExitEditor_option();
-			ImGui::EndMenu();
+			about_engine_open = true;
 		}
+				
+	
 		ImGui::EndMainMenuBar();
 	}
 }
@@ -230,12 +230,6 @@ void ModuleEditor::Window_option()
 
 	if (ImGui::MenuItem("Inspector"))
 		inspector_open = true;
-
-	if (ImGui::MenuItem("About the engine"))
-		about_engine_open = true;
-
-
-	
 }
 
 void ModuleEditor::ExitEditor_option()
