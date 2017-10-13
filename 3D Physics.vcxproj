@@ -13,7 +13,9 @@
   <ItemGroup>
     <ClCompile Include="3DEngine\Application.cpp" />
     <ClCompile Include="3DEngine\Color.cpp" />
+    <ClCompile Include="3DEngine\Component.cpp" />
     <ClCompile Include="3DEngine\Console.cpp" />
+    <ClCompile Include="3DEngine\GameObject.cpp" />
     <ClCompile Include="3DEngine\Geometry.cpp" />
     <ClCompile Include="3DEngine\glmath.cpp" />
     <ClCompile Include="3DEngine\imgui\imgui.cpp" />
@@ -71,6 +73,7 @@
     <ClInclude Include="3DEngine\Application.h" />
     <ClInclude Include="3DEngine\Brofiler\Brofiler.h" />
     <ClInclude Include="3DEngine\Color.h" />
+    <ClInclude Include="3DEngine\Component.h" />
     <ClInclude Include="3DEngine\Console.h" />
     <ClInclude Include="3DEngine\Devil\include\config.h" />
     <ClInclude Include="3DEngine\Devil\include\devil_internal_exports.h" />
@@ -80,6 +83,7 @@
     <ClInclude Include="3DEngine\Devil\include\ilut_config.h" />
     <ClInclude Include="3DEngine\Devil\include\ilu_region.h" />
     <ClInclude Include="3DEngine\Devil\include\il_wrap.h" />
+    <ClInclude Include="3DEngine\GameObject.h" />
     <ClInclude Include="3DEngine\Geometry.h" />
     <ClInclude Include="3DEngine\Glew\include\glew.h" />
     <ClInclude Include="3DEngine\glmath.h" />
