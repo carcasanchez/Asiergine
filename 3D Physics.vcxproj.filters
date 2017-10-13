@@ -172,6 +172,9 @@
     <ClCompile Include="3DEngine\GameObject.cpp">
       <Filter>Source\Containers</Filter>
     </ClCompile>
+    <ClCompile Include="3DEngine\CompTransform.cpp">
+      <Filter>Source\Containers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3DEngine\Application.h">
@@ -469,6 +472,9 @@
       <Filter>Source\Containers</Filter>
     </ClInclude>
     <ClInclude Include="3DEngine\GameObject.h">
+      <Filter>Source\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\CompTransform.h">
       <Filter>Source\Containers</Filter>
     </ClInclude>
   </ItemGroup>
