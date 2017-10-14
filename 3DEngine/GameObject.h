@@ -21,7 +21,7 @@ public:
 
 	const GameObject* GetParent() { return parent; }
 	std::vector<GameObject*> GetChildrens() { return children;}
-	void SetParent(GameObject*);
+	void SetParent(GameObject* new_parent);
 
 private:
 

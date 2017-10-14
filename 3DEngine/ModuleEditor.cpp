@@ -400,7 +400,7 @@ void ModuleEditor::ManageHierarchyWindow()
 {
 	if (hierarchy_open)
 	{
-		ImGui::Begin("Hierarchy", &inspector_open);
+		ImGui::Begin("Hierarchy", &hierarchy_open);
 
 		if (ImGui::TreeNode("Scene"))
 		{

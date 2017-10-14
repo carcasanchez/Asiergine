@@ -13,6 +13,7 @@ Component::~Component()
 
 void Component::Enable()
 {
+	active = true;
 }
 
 void Component::Update()
@@ -21,4 +22,5 @@ void Component::Update()
 
 void Component::Disable()
 {
+	active = false;
 }
