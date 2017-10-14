@@ -1,4 +1,5 @@
 #include "ModuleScene.h"
+#include ".\mmgr\mmgr.h"
 #include "GameObject.h"
 
 
@@ -16,6 +17,10 @@ bool ModuleScene::Init(const JSON_Object * config_data)
 {
 
 	root = CreateGameObject("Root");
+	CreateGameObject("Child1", root);
+	GameObject* child2 = CreateGameObject("Child2", root);
+	CreateGameObject("Child3", child2);
+	CreateGameObject("Child4", child2);
 
 	return true;
 }
@@ -35,6 +40,10 @@ bool ModuleScene::SaveConfig(JSON_Object * config_data)
 
 bool ModuleScene::CleanUp()
 {
+	//Delete root and all its children
+	root->CleanUp();
+	delete root;
+	root = nullptr;
 	return true;
 }
 

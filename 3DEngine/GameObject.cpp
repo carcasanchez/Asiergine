@@ -1,7 +1,8 @@
 #include "GameObject.h"
-#include "Component.h"
 #include "Application.h"
 #include "Globals.h"
+#include ".\mmgr\mmgr.h"
+#include "Component.h"
 
 GameObject::GameObject(const char* name): name(name)
 {}
@@ -29,6 +30,23 @@ void GameObject::Update()
 		}
 
 		children[i]->Update();
+	}
+}
+
+void GameObject::CleanUp()
+{
+
+	//Delete components
+	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); it++)
+	{
+		delete (*it);
+	}
+
+	//Delete children
+	for (std::vector<GameObject*>::iterator it = children.begin(); it != children.end(); it++)
+	{
+		(*it)->CleanUp();
+		delete (*it);
 	}
 }
 

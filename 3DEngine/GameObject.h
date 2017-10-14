@@ -13,6 +13,7 @@ public:
 	~GameObject();
 
 	void Update();
+	void CleanUp();
 
 	Component* GetComponentByType(ComponentType type);
 	
