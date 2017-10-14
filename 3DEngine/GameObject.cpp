@@ -51,12 +51,15 @@ Component* GameObject::GetComponentByType(ComponentType type)
 
 void GameObject::SetParent(GameObject* new_parent)
 {
-	//Delete this object from the old parent childrens	
-	for (std::vector<GameObject*>::iterator it = parent->children.begin(); it != parent->children.end(); it++)
-	{
-		if ((*it) == this)
+
+	if (parent)
+	{//Delete this object from the old parent childrens	
+		for (std::vector<GameObject*>::iterator it = parent->children.begin(); it != parent->children.end(); it++)
 		{
-			parent->children.erase(it);
+			if ((*it) == this)
+			{
+				parent->children.erase(it);
+			}
 		}
 	}
 

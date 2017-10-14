@@ -3,6 +3,7 @@
 #include ".\mmgr\mmgr.h"
 #include "ModuleEditor.h"
 #include "Math.h"
+#include "GameObject.h"
 
 
 
@@ -34,7 +35,7 @@ bool ModuleEditor::Init(const JSON_Object* config_data)
 	configuration_open = json_object_dotget_boolean(config_data, "configuration_open");
 	inspector_open = json_object_dotget_boolean(config_data, "inspector_open");
 	camera_config_open = json_object_dotget_boolean(config_data, "camera_config_open");
-	
+	hierarchy_open = json_object_dotget_boolean(config_data, "hierarchy_open");
 
 	return ret;
 }
@@ -161,7 +162,7 @@ void ModuleEditor::DrawUI()
 	ManageConsole();
 	ManageConfigurationWindow();
 	ManageExampleWindow();
-	ManageInspectorWindow();
+	ManageHierarchyWindow();
 
 	ImGui::Render();
 }
@@ -228,13 +229,14 @@ void ModuleEditor::Window_option()
 	if (ImGui::MenuItem("Configuration"))
 		configuration_open = true;
 
+	if (ImGui::MenuItem("Hierarchy"))
+		hierarchy_open = true;
+
 	if (ImGui::MenuItem("Inspector"))
 		inspector_open = true;
 
 	if (ImGui::MenuItem("About the engine"))
 		about_engine_open = true;
-
-
 	
 }
 
@@ -394,13 +396,25 @@ void ModuleEditor::ManageConfigurationWindow()
 
 
 //Inspector Window------------------------------------------------------------------------
-void ModuleEditor::ManageInspectorWindow()
+void ModuleEditor::ManageHierarchyWindow()
 {
-	if (inspector_open)
+	if (hierarchy_open)
 	{
-		ImGui::Begin("Inspector", &inspector_open);
+		ImGui::Begin("Hierarchy", &inspector_open);
+
+		if (ImGui::TreeNode("Scene"))
+		{
+			 std::vector<GameObject*> root_childrens = App->scene->root->GetChildrens();
+						
+			for (std::vector<GameObject*>::iterator it = root_childrens.begin(); it != root_childrens.end(); it++)
+			{
+				ManageHierarchyChildren(*(it));
+			}
+	
+			ImGui::TreePop();
+		}
 		
-		if (ImGui::CollapsingHeader("Geometries"))
+		/*if (ImGui::CollapsingHeader("Geometries"))
 		{
 			int total_triangles = 0;
 
@@ -449,9 +463,25 @@ void ModuleEditor::ManageInspectorWindow()
 			ImGui::Image((ImTextureID)id, ImVec2(200, 200));
 			ImGui::TextColored(ImVec4(0, 255, 0, 255), "%i x %i", (int)size.x, (int)size.y);
 			}
-		}
+		}*/
 
 		ImGui::End();
+	}
+}
+
+void ModuleEditor::ManageHierarchyChildren(GameObject* object)
+{
+	if (ImGui::TreeNode(object->GetName()))
+	{
+		std::vector<GameObject*> childrens = object->GetChildrens();
+		
+		for (std::vector<GameObject*>::iterator it = childrens.begin(); it != childrens.end(); it++)
+		{
+			ManageHierarchyChildren(*(it));
+		}
+
+
+		ImGui::TreePop();
 	}
 }
 

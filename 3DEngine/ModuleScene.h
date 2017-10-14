@@ -22,11 +22,12 @@ public:
 
 	GameObject* CreateGameObject(const char* name, GameObject* parent = nullptr);
 
+	GameObject* root = nullptr;
+
 
 private:
 	bool SaveConfig(JSON_Object* config_data);
 
-	GameObject* root = nullptr;
 
 };
 

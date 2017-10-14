@@ -19,6 +19,7 @@ public:
 	const char* GetName() const { return name.c_str(); }
 
 	const GameObject* GetParent() { return parent; }
+	std::vector<GameObject*> GetChildrens() { return children;}
 	void SetParent(GameObject*);
 
 private:
