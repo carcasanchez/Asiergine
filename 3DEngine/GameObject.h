@@ -9,7 +9,7 @@ enum ComponentType;
 class GameObject
 {
 public:
-	GameObject();
+	GameObject(const char* name);
 	~GameObject();
 
 	void Update();
@@ -18,12 +18,15 @@ public:
 	
 	const char* GetName() const { return name.c_str(); }
 
+	const GameObject* GetParent() { return parent; }
+	void SetParent(GameObject*);
+
 private:
+
 	GameObject* parent = nullptr;
 	std::string name;
 
 	std::vector<Component*> components;
 	std::vector<GameObject*> children;
-
 
 };

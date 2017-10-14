@@ -11,6 +11,7 @@
 #include <vector>
 #include <queue>
 #include "Brofiler\Brofiler.h"
+#include "MathGeoLib\include\Math.h"
 
 // Deletes a buffer
 #define RELEASE( x ) \

@@ -3,9 +3,8 @@
 #include "Application.h"
 #include "Globals.h"
 
-GameObject::GameObject()
-{
-}
+GameObject::GameObject(const char* name): name(name)
+{}
 
 GameObject::~GameObject()
 {
@@ -18,6 +17,18 @@ void GameObject::Update()
 	{
 		(*it)->Update();
 		++it;
+	}
+
+	for (int i = 0; i < children.size(); i++)
+	{
+	    //Check parent correlation
+		if (children[i]->GetParent() != this)
+		{
+			LOG("YOU ARE ADOPTED");
+			assert(1 == 0);
+		}
+
+		children[i]->Update();
 	}
 }
 
@@ -36,4 +47,20 @@ Component* GameObject::GetComponentByType(ComponentType type)
 		}
 	}
 	return nullptr;
+}
+
+void GameObject::SetParent(GameObject* new_parent)
+{
+	//Delete this object from the old parent childrens	
+	for (std::vector<GameObject*>::iterator it = parent->children.begin(); it != parent->children.end(); it++)
+	{
+		if ((*it) == this)
+		{
+			parent->children.erase(it);
+		}
+	}
+
+	parent = new_parent;
+	parent->children.push_back(this);
+
 }

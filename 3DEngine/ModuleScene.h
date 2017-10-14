@@ -4,6 +4,7 @@
 #include "Globals.h"
 #include "Module.h"
 
+
 class GameObject;
 
 class ModuleScene : public Module
@@ -19,10 +20,13 @@ public:
 	update_status Update(float dt);
 	bool CleanUp();
 
+	GameObject* CreateGameObject(const char* name, GameObject* parent = nullptr);
+
+
 private:
 	bool SaveConfig(JSON_Object* config_data);
 
-	GameObject* root;
+	GameObject* root = nullptr;
 
 };
 

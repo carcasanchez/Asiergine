@@ -4,6 +4,7 @@
 
 ModuleScene::ModuleScene(bool start_enabled) : Module(start_enabled)
 {
+	root = nullptr;
 	name = "scene";
 }
 
@@ -13,11 +14,17 @@ ModuleScene::~ModuleScene()
 
 bool ModuleScene::Init(const JSON_Object * config_data)
 {
+
+	root = CreateGameObject("Root");
+
 	return true;
 }
 
 update_status ModuleScene::Update(float dt)
 {
+
+	root->Update();
+
 	return UPDATE_CONTINUE;
 }
 
@@ -29,5 +36,24 @@ bool ModuleScene::SaveConfig(JSON_Object * config_data)
 bool ModuleScene::CleanUp()
 {
 	return true;
+}
+
+
+//Game Object related Utility-----------------------------
+GameObject * ModuleScene::CreateGameObject(const char* object_name, GameObject* parent)
+{
+	GameObject* new_object = new GameObject(object_name);
+
+	if (parent == nullptr && root != nullptr)
+	{
+		new_object->SetParent(root);
+	}
+	
+	else if (parent)
+	{
+		new_object->SetParent(parent);
+	}
+
+	return new_object;
 }
 
