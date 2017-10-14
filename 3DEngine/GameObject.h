@@ -19,7 +19,7 @@ public:
 	const char* GetName() const { return name.c_str(); }
 
 private:
-	GameObject* parent = NULL;
+	GameObject* parent = nullptr;
 	std::string name;
 
 	std::vector<Component*> components;

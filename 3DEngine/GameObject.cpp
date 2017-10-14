@@ -13,20 +13,26 @@ GameObject::~GameObject()
 
 void GameObject::Update()
 {
+	std::vector<Component*>::iterator it = components.begin();
+	while (it != components.end())
+	{
+		(*it)->Update();
+		++it;
+	}
 }
 
 Component* GameObject::GetComponentByType(ComponentType type)
 {
 	if (components.empty() == false)
 	{
-		std::vector<Component*>::iterator compon = components.begin();
-		while (compon != components.end())
+		std::vector<Component*>::iterator it = components.begin();
+		while (it != components.end())
 		{
-			if ((*compon)->GetType() == type)
+			if ((*it)->GetType() == type)
 			{
-				return (*compon);
+				return (*it);
 			}
-			++compon;
+			++it;
 		}
 	}
 	return nullptr;

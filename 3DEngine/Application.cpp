@@ -13,7 +13,7 @@ Application::Application()
 	//physics = new ModulePhysics3D(this);
 	editor = new ModuleEditor();
 	file_system = new ModuleFileSystem();
-
+	scene = new ModuleScene();
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
@@ -27,6 +27,7 @@ Application::Application()
 	//AddModule(physics);
 	AddModule(editor);
 	AddModule(file_system);
+	AddModule(scene);
 
 	// Renderer last!
 	AddModule(renderer3D);

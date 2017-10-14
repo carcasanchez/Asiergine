@@ -175,6 +175,9 @@
     <ClCompile Include="3DEngine\CompTransform.cpp">
       <Filter>Source\Containers</Filter>
     </ClCompile>
+    <ClCompile Include="3DEngine\ModuleScene.cpp">
+      <Filter>Source\Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3DEngine\Application.h">
@@ -476,6 +479,9 @@
     </ClInclude>
     <ClInclude Include="3DEngine\CompTransform.h">
       <Filter>Source\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\ModuleScene.h">
+      <Filter>Source\Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
