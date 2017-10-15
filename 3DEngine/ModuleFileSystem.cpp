@@ -261,6 +261,9 @@ bool ModuleFileSystem::LoadGeometry(const aiMesh* m, GameObject* obj)
 		ComponentMesh* new_m = obj->CreateComponent_Mesh(vertices, indices, numVertx, numInd, 0, texture_coords);
 		new_m->SetNormals(normals);
 		delete[] texture_coords;		
+		delete[] vertices;
+		delete[] indices;
+		delete[] normals;
 	}
 
 	return ret;
