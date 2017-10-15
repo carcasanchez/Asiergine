@@ -4,6 +4,9 @@
 #include "PhysBody3D.h"
 #include "ModuleCamera3D.h"
 #include "ModuleWindow.h"
+#include "GameObject.h"
+#include "Component.h"
+#include "ComponentMesh.h"
 
 
 
@@ -223,8 +226,8 @@ void ModuleCamera3D::ControlCamera(float dt)
 		ResetCamera();
 
 	//Adapt camera to geometry in scene
-	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
-		AdaptToGeometry();
+	/*if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
+		AdaptToGeometry();*/
 		
 }
 
@@ -263,9 +266,9 @@ bool ModuleCamera3D::SaveConfig(JSON_Object* config_data)
 	
 }
 
-void ModuleCamera3D::AdaptToGeometry()
+/*void ModuleCamera3D::AdaptToGeometry()
 {
-/*	math::AABB box(float3(0, 0, 0), float3(0, 0, 0));
+	math::AABB box(float3(0, 0, 0), float3(0, 0, 0));
 	std::vector <float3> vertex_array;
 	
 	for (int i = 0; i < g->num_vertices*3; i+=3)
@@ -285,51 +288,44 @@ void ModuleCamera3D::AdaptToGeometry()
 	Reference.z = box.CenterPoint().z;
 
 
-	LookAt(Reference);*/
-}
+	LookAt(Reference);
+}*/
 
-/*void ModuleCamera3D::AdaptToGeometry()
+void ModuleCamera3D::AdaptToGeometry(GameObject* game_object)
 {
-	if (App->file_system->geometries.empty())
+	if (game_object == nullptr)
 		return;
 
 	std::vector<float3> vertices;
+	ComponentMesh* it = (ComponentMesh*)game_object->GetComponentByType(COMPONENT_TRANSFORM);
+	
 
-	for (int i = 0; i < App->file_system->geometries.size(); i++)
+	//Generate AABBS for each geom in scene
+	math::AABB new_aabb(float3(0, 0, 0), float3(0, 0, 0));
+	std::vector <float3> vertex_array;
+
+	for (int j = 0; j < it->GetNumVertices() * 3; j += 3)
 	{
-		//Generate AABBS for each geom in scene
-		math::AABB new_aabb(float3(0, 0, 0), float3(0, 0, 0));
-		std::vector <float3> vertex_array;
-
-		Geometry* g = App->file_system->geometries[i];
-		for (int j = 0; j < g->num_vertices * 3; j += 3)
-		{
-			vertex_array.push_back(float3(g->vertices[j], g->vertices[j + 1], g->vertices[j + 2]));
-		}
-
-		new_aabb.Enclose(&vertex_array[0], g->num_vertices);
-
-		//Stores the 8 vertices of the box in a general array
-		for (int j = 0; j < 8; j++)
-		{
-			vertices.push_back(new_aabb.CornerPoint(j));
-		}
+		vertex_array.push_back(float3(it->GetVertices()[j], it->GetVertices()[j + 1], it->GetVertices()[j + 2]));
 	}
 
-	
-	//Creates a general AABB 
-	math::AABB general(float3(0, 0, 0), float3(0, 0, 0));
-	general.Enclose(&vertices[0], vertices.size());
-	
-	Position.x = general.maxPoint.x + 5;
-	Position.y = general.maxPoint.y + 5;
-	Position.z = general.maxPoint.z + 5;
+	new_aabb.Enclose(&vertex_array[0], it->GetNumVertices());
 
-	Reference.x = general.CenterPoint().x;
-	Reference.y = general.CenterPoint().y;
-	Reference.z = general.CenterPoint().z;
+	//Stores the 8 vertices of the box in a general array
+	for (int j = 0; j < 8; j++)
+	{
+		vertices.push_back(new_aabb.CornerPoint(j));
+	}
+
+	Position.x = new_aabb.maxPoint.x + 5;
+	Position.y = new_aabb.maxPoint.y + 5;
+	Position.z = new_aabb.maxPoint.z + 5;
+
+	Reference.x = new_aabb.CenterPoint().x;
+	Reference.y = new_aabb.CenterPoint().y;
+	Reference.z = new_aabb.CenterPoint().z;
 
 	LookAt(Reference);
-}*/
+}
 
 

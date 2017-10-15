@@ -149,7 +149,7 @@ bool ModuleFileSystem::LoadFBX(const char * path)
 
 		aiReleaseImport(scene);
 
-		App->camera->AdaptToGeometry();
+		//App->camera->AdaptToGeometry();
 	}
 	else
 	{
