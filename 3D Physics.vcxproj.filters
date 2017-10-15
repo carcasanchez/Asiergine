@@ -166,17 +166,17 @@
     <ClCompile Include="3DEngine\Geometry.cpp">
       <Filter>Source\Containers</Filter>
     </ClCompile>
-    <ClCompile Include="3DEngine\Component.cpp">
-      <Filter>Source\Containers</Filter>
-    </ClCompile>
     <ClCompile Include="3DEngine\GameObject.cpp">
-      <Filter>Source\Containers</Filter>
-    </ClCompile>
-    <ClCompile Include="3DEngine\CompTransform.cpp">
       <Filter>Source\Containers</Filter>
     </ClCompile>
     <ClCompile Include="3DEngine\ModuleScene.cpp">
       <Filter>Source\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="3DEngine\Component.cpp">
+      <Filter>Source\Containers\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="3DEngine\CompTransform.cpp">
+      <Filter>Source\Containers\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -471,17 +471,17 @@
     <ClInclude Include="3DEngine\Devil\include\ilut_config.h">
       <Filter>Source\Tools\DevIL</Filter>
     </ClInclude>
-    <ClInclude Include="3DEngine\Component.h">
-      <Filter>Source\Containers</Filter>
-    </ClInclude>
     <ClInclude Include="3DEngine\GameObject.h">
-      <Filter>Source\Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="3DEngine\CompTransform.h">
       <Filter>Source\Containers</Filter>
     </ClInclude>
     <ClInclude Include="3DEngine\ModuleScene.h">
       <Filter>Source\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\Component.h">
+      <Filter>Source\Containers\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\CompTransform.h">
+      <Filter>Source\Containers\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -529,6 +529,9 @@
     </Filter>
     <Filter Include="Source\Tools\DevIL">
       <UniqueIdentifier>{5a04a3d1-5e59-4924-9e06-b21e11fb6e60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Containers\Components">
+      <UniqueIdentifier>{17e0469d-65de-46f4-96f1-8e885b760955}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

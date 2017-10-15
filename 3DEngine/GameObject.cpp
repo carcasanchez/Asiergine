@@ -1,8 +1,8 @@
 #include "GameObject.h"
 #include "Application.h"
-#include "Globals.h"
 #include ".\mmgr\mmgr.h"
 #include "Component.h"
+#include "CompTransform.h"
 
 GameObject::GameObject(const char* name): name(name)
 {}
@@ -84,4 +84,26 @@ void GameObject::SetParent(GameObject* new_parent)
 	parent = new_parent;
 	parent->children.push_back(this);
 
+}
+
+//CREATE COMPONENT METHODS----------------------------------------------------
+Component * GameObject::CreateComponent_Transform(float3 trans , float3 scale, Quat rot)
+{
+	if (GetComponentByType(COMPONENT_TRANSFORM) != nullptr)
+	{
+		LOG("ERROR: GameObject %s already has a transform component!", name.c_str());
+		return nullptr;
+	}
+
+	CompTransform* new_transform = new CompTransform(this);
+
+	new_transform->SetTranslation(trans.x, trans.y, trans.z);
+	new_transform->SetScale(scale.x, scale.y, scale.z);
+	new_transform->SetRotation(rot.x, rot.y, rot.z, rot.w);
+
+	components.push_back(new_transform);
+
+	LOG("Creating new Transform Component in %s", name.c_str());
+
+	return new_transform;
 }

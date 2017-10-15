@@ -21,7 +21,8 @@ bool ModuleScene::Init(const JSON_Object * config_data)
 	GameObject* child2 = CreateGameObject("Child2", root);
 	CreateGameObject("Child3", child2);
 	CreateGameObject("Child4", child2);
-
+	child2->CreateComponent_Transform();
+	child2->CreateComponent_Transform();
 	return true;
 }
 

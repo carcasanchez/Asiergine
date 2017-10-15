@@ -1,8 +1,8 @@
 #pragma once
-#include <string>
-#include <vector>
+#include "Globals.h"
 
 class Component;
+class CompTransform;
 
 enum ComponentType;
 
@@ -22,6 +22,8 @@ public:
 	const GameObject* GetParent() { return parent; }
 	std::vector<GameObject*> GetChildrens() { return children;}
 	void SetParent(GameObject* new_parent);
+
+	Component* CreateComponent_Transform(float3 trans = float3(0, 0, 0), float3 scaling = float3(1, 1, 1), Quat rot = Quat::identity);
 
 private:
 

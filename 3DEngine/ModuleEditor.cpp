@@ -2,7 +2,6 @@
 #include "Application.h"
 #include ".\mmgr\mmgr.h"
 #include "ModuleEditor.h"
-#include "Math.h"
 #include "GameObject.h"
 
 

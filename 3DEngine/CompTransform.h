@@ -5,7 +5,7 @@
 class CompTransform : public Component
 {
 public:
-	CompTransform(ComponentType type, GameObject* game_object);
+	CompTransform(GameObject* game_object);
 	~CompTransform() {}
 
 	math::float3 GetTranslation();
@@ -19,6 +19,6 @@ public:
 
 private:
 	math::float3 translation;
-	math::float3 scaling;
+	math::float3 scale;
 	math::Quat rotation;
 };

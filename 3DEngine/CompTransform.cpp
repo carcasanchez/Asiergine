@@ -1,9 +1,12 @@
 #include "CompTransform.h"
 #include "Application.h"
 
-CompTransform::CompTransform(ComponentType type, GameObject * game_object):Component(type,game_object)
+CompTransform::CompTransform(GameObject * game_object):Component(game_object)
 {
-
+	type = COMPONENT_TRANSFORM;
+	translation = float3(0, 0, 0);
+	scale = float3(1, 1, 1);
+	rotation = Quat::identity;
 }
 
 math::float3 CompTransform::GetTranslation()
@@ -20,14 +23,14 @@ void CompTransform::SetTranslation(float x, float y, float z)
 
 math::float3 CompTransform::GetScale()
 {
-	return scaling;
+	return scale;
 }
 
 void CompTransform::SetScale(float x, float y, float z)
 {
-	scaling.x = x;
-	scaling.y = y;
-	scaling.z = z;
+	scale.x = x;
+	scale.y = y;
+	scale.z = z;
 }
 
 math::Quat CompTransform::GetRotation()

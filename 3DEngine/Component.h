@@ -11,7 +11,7 @@ enum ComponentType
 class Component
 {
 public:
-	Component(ComponentType type, GameObject* game_object);
+	Component(GameObject* game_object);
 	~Component();
 
 	virtual void Enable();
@@ -27,6 +27,7 @@ public:
 private:
 	bool active = true;
 
-	ComponentType type;
+protected:
 	GameObject* game_object = nullptr;
+	ComponentType type;
 };

@@ -3,7 +3,7 @@
 #include "GameObject.h"
 #include "Globals.h"
 
-Component::Component(ComponentType type, GameObject* game_object) : type(type), game_object(game_object)
+Component::Component(GameObject* game_object) : game_object(game_object)
 {
 }
 
