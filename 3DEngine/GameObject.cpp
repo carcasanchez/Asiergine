@@ -4,6 +4,7 @@
 #include "Component.h"
 #include "CompTransform.h"
 #include "ComponentMesh.h"
+#include "ComponentMaterial.h"
 
 GameObject::GameObject(const char* name): name(name)
 {}
@@ -116,4 +117,13 @@ ComponentMesh * GameObject::CreateComponent_Mesh(float * ver, uint * ind, uint n
 	components.push_back(new_mesh);
 	LOG("Creating new Mesh with %i vertices in %s", new_mesh->GetNumVertices(), name.c_str());
 	return new_mesh;
+}
+
+ComponentMaterial * GameObject::CreateComponent_Material()
+{
+	ComponentMaterial* new_mat = new ComponentMaterial(this);
+
+	components.push_back(new_mat);
+	LOG("Creating new Material  in %s", name.c_str());
+	return new_mat;
 }
