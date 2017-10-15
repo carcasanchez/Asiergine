@@ -3,6 +3,7 @@
 #include ".\mmgr\mmgr.h"
 #include "Component.h"
 #include "CompTransform.h"
+#include "ComponentMesh.h"
 
 GameObject::GameObject(const char* name): name(name)
 {}
@@ -87,7 +88,7 @@ void GameObject::SetParent(GameObject* new_parent)
 }
 
 //CREATE COMPONENT METHODS----------------------------------------------------
-Component * GameObject::CreateComponent_Transform(float3 trans , float3 scale, Quat rot)
+CompTransform * GameObject::CreateComponent_Transform(float3 trans , float3 scale, Quat rot)
 {
 	if (GetComponentByType(COMPONENT_TRANSFORM) != nullptr)
 	{
@@ -106,4 +107,13 @@ Component * GameObject::CreateComponent_Transform(float3 trans , float3 scale, Q
 	LOG("Creating new Transform Component in %s", name.c_str());
 
 	return new_transform;
+}
+
+ComponentMesh * GameObject::CreateComponent_Mesh(float * ver, uint * ind, uint num_vert, uint num_ind, uint texture_id, float * texture_coords)
+{
+	ComponentMesh* new_mesh = new ComponentMesh(this, ver, ind, num_vert, num_ind, texture_id, texture_coords);
+	
+	components.push_back(new_mesh);
+	LOG("Creating new Mesh with %i vertices in %s", new_mesh->GetNumVertices(), name.c_str());
+	return new_mesh;
 }

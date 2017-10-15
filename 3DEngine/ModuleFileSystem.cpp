@@ -2,7 +2,8 @@
 #include "Application.h"
 #include ".\mmgr\mmgr.h"
 #include "ModuleFileSystem.h"
-
+#include "GameObject.h"
+#include "ComponentMesh.h"
 
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"
@@ -64,17 +65,10 @@ bool ModuleFileSystem::Init(const JSON_Object* config_data)
 	return ret;
 }
 
-bool ModuleFileSystem::Start()
-{
-	bool ret = true;
 
-
-	return ret;
-}
 
 bool ModuleFileSystem::CleanUp()
 {
-	UnloadGeometry();
 
 	// detach log stream
 	aiDetachAllLogStreams();
@@ -110,7 +104,7 @@ void ModuleFileSystem::LoadFile(const char * path)
 	{
 		LoadFBX(path);
 	}
-	else if (extension.compare("png") == 0 || extension.compare("jpg") == 0 || extension.compare("dds") == 0)
+/*	else if (extension.compare("png") == 0 || extension.compare("jpg") == 0 || extension.compare("dds") == 0)
 	{
 		if (geometries.empty())
 		{
@@ -137,7 +131,7 @@ void ModuleFileSystem::LoadFile(const char * path)
 			
 		}
 		
-	}
+	}*/
 	else LOG("ERROR: File extension '.%s' not allowed", extension.c_str());
 
 }
@@ -150,9 +144,7 @@ bool ModuleFileSystem::LoadFBX(const char * path)
 	const aiScene* scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality);
 	if (scene != nullptr && scene->HasMeshes())
 	{
-		UnloadGeometry();
-
-		first_texture_id = SearchForTexture(scene, path);
+		//first_texture_id = SearchForTexture(scene, path);
 		SearchNode(scene->mRootNode, scene);	
 
 		aiReleaseImport(scene);
@@ -168,14 +160,16 @@ bool ModuleFileSystem::LoadFBX(const char * path)
 	return ret;
 }
 
-//Searches every FBX node for data
+//Searches every FBX node for data and loades one GameObject per node
 void ModuleFileSystem::SearchNode(const aiNode* n, const aiScene* scene)
 {
-	//Loads all geometry of the node
+	GameObject* obj = LoadNewObject(n);
+
+	//Loads all meshes of the node	
 	for (int i = 0; i < n->mNumMeshes; i++)
 	{
 		aiMesh* m = scene->mMeshes[n->mMeshes[i]];
-		LoadGeometry(m, scene, n);
+		LoadGeometry(m, obj);
 	}
 
 	//Searches for children nodes
@@ -183,21 +177,40 @@ void ModuleFileSystem::SearchNode(const aiNode* n, const aiScene* scene)
 		SearchNode(n->mChildren[i], scene);
 }
 
+//Creates new object and loads transform
+GameObject * ModuleFileSystem::LoadNewObject(const aiNode * n)
+{	
+	GameObject* new_obj = App->scene->CreateGameObject(n->mName.C_Str());
+	
+	aiVector3D location;
+	aiVector3D scale;
+	aiQuaternion rotation;
+
+	//Decompose transformation matrix
+	n->mTransformation.Decompose(scale, rotation, location);
+
+	new_obj->CreateComponent_Transform(float3(location.x, location.y, location.z), float3(scale.x, scale.y, scale.z), Quat(rotation.x, rotation.y, rotation.z, rotation.w));
+
+	return new_obj;
+}
+
 //Loads meshes from FBX node
-bool ModuleFileSystem::LoadGeometry(const aiMesh* m, const aiScene* scene, const aiNode*n)
+bool ModuleFileSystem::LoadGeometry(const aiMesh* m, GameObject* obj)
 {
 	bool ret = true;
 	
+	//Data to fill------------------------------
 	float* vertices = nullptr;
 	float* normals = nullptr;
 	uint* indices = nullptr;
 	float* texture_coords = nullptr;
 
+
 	int numVertx = m->mNumVertices; 
 	int numInd = m->mNumFaces * 3;
+	//------------------------------------------
 	
-	//Asigns the id of the first FBX texture (allocated previoulsy)
-	int text_id = first_texture_id;
+
 	
 
 	//Copy vertices
@@ -245,35 +258,15 @@ bool ModuleFileSystem::LoadGeometry(const aiMesh* m, const aiScene* scene, const
 	//If everything goes OK, create a new Mesh
 	if (ret)
 	{
-		Geometry* new_geom = new Geometry(vertices, indices, numVertx, numInd, text_id, texture_coords);
-		new_geom->normals = normals;
-
-		//Store transform
-		aiVector3D location;
-		aiVector3D scale;
-		aiQuaternion rotation;
-		n->mTransformation.Decompose(scale, rotation, location);
-		new_geom->location.x = location.x;
-		new_geom->location.y = location.y;
-		new_geom->location.z = location.z;
-		new_geom->scale.x = scale.x;
-		new_geom->scale.y = scale.y;
-		new_geom->scale.z = scale.z;
-		new_geom->rotation.x = rotation.x;
-		new_geom->rotation.y = rotation.y;
-		new_geom->rotation.z = rotation.z;
-		new_geom->rotation.w = rotation.w;
-
-
-		geometries.push_back(new_geom);
-		LOG("New mesh with %d vertices loaded in position %.3f - %.3f - %.3f", numVertx, location.x, location.y, location.z);
+		ComponentMesh* new_m = obj->CreateComponent_Mesh(vertices, indices, numVertx, numInd, 0, texture_coords);
+		new_m->SetNormals(normals);
 		delete[] texture_coords;		
 	}
 
 	return ret;
 }
 
-//Get the very first texture of the FBX (called once)
+/*//Get the very first texture of the FBX (called once)
 int ModuleFileSystem::SearchForTexture(const aiScene* scene, const char* path)
 {
 	int text_id = 0;
@@ -302,17 +295,6 @@ int ModuleFileSystem::SearchForTexture(const aiScene* scene, const char* path)
 	return text_id;
 }
 
-//Empty the geometry array
-void ModuleFileSystem::UnloadGeometry()
-{
-	//Release geometries
-	for (std::vector<Geometry*>::iterator it = geometries.begin(); it != geometries.end(); it++)
-	{
-		if ((*it) != nullptr)
-			delete (*it);
-	}
-	geometries.clear();	
-}
 
 
 //Load texture from image-----------------------------
@@ -378,5 +360,5 @@ GLuint ModuleFileSystem::LoadTexture(const char * path)
 
 	LOG("Loaded Texture Successfully");
 	return img_id;
-}
+}*/
 

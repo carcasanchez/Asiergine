@@ -1,4 +1,4 @@
-#include "Geometry.h"
+#include "ComponentMesh.h"
 #include "Glew/include/glew.h"
 #include "SDL/include/SDL_opengl.h"
 #include <gl/GL.h>
@@ -6,14 +6,15 @@
 #include ".\mmgr\mmgr.h"
 
 
-Geometry::Geometry(float* ver, uint* ind, uint num_vert, uint num_ind, uint tex_id, float* texture_coords): vertices(ver), indices(ind), num_vertices(num_vert), num_indices(num_ind), texture_id(tex_id)
+ComponentMesh::ComponentMesh(GameObject* game_object, float* ver, uint* ind, uint num_vert, uint num_ind, uint tex_id, float* texture_coords): vertices(ver), indices(ind), num_vertices(num_vert), num_indices(num_ind), texture_id(tex_id), Component(game_object)
 {
+	type = COMPONENT_MESH;
+
 	//alloc vertices
 	glGenBuffers(1, (uint*)&(id_vertices));
 	glBindBuffer(GL_ARRAY_BUFFER, id_vertices);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_vertices * 3, vertices, GL_STATIC_DRAW);
 	
-
 	//alloc indices
 	glGenBuffers(1, (uint*)&(id_indices));
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);
@@ -26,11 +27,9 @@ Geometry::Geometry(float* ver, uint* ind, uint num_vert, uint num_ind, uint tex_
 		glBindBuffer(GL_ARRAY_BUFFER, text_coord_id);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_vertices * 2, texture_coords, GL_STATIC_DRAW);
 	}
-
-
 }
 
-Geometry::~Geometry()
+ComponentMesh::~ComponentMesh()
 {
 	delete[] vertices;
 	delete[] indices;
@@ -43,7 +42,7 @@ Geometry::~Geometry()
 	glDeleteBuffers(1, &id_indices);
 }
 
-void Geometry::Draw()
+void ComponentMesh::Draw()
 {
 	glBindTexture(GL_TEXTURE, texture_id);
 
@@ -74,7 +73,7 @@ void Geometry::Draw()
 
 }
 
-void Geometry::DebugDraw()
+void ComponentMesh::DebugDraw()
 {
 	glEnableClientState(GL_VERTEX_ARRAY);
 

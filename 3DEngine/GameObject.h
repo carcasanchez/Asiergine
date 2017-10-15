@@ -3,6 +3,7 @@
 
 class Component;
 class CompTransform;
+class ComponentMesh;
 
 enum ComponentType;
 
@@ -23,7 +24,9 @@ public:
 	std::vector<GameObject*> GetChildrens() { return children;}
 	void SetParent(GameObject* new_parent);
 
-	Component* CreateComponent_Transform(float3 trans = float3(0, 0, 0), float3 scaling = float3(1, 1, 1), Quat rot = Quat::identity);
+	CompTransform* CreateComponent_Transform(float3 trans = float3(0, 0, 0), float3 scaling = float3(1, 1, 1), Quat rot = Quat::identity);
+	ComponentMesh* CreateComponent_Mesh(float* ver, uint* ind, uint num_vert, uint num_ind, uint texture_id = 0, float* texture_coords = nullptr);
+
 
 private:
 
