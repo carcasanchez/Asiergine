@@ -30,7 +30,6 @@ public:
 	bool CleanUp();
 
 	void DrawUI();
-	void DrawGeometry();
 	void DrawInConsole(const char*);
 
 

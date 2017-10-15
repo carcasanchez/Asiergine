@@ -166,19 +166,6 @@ void ModuleEditor::DrawUI()
 	ImGui::Render();
 }
 
-void ModuleEditor::DrawGeometry()
-{
-	plane.Render();
-
-	/*for (std::vector<Geometry*>::iterator it = App->file_system->geometries.begin(); it != App->file_system->geometries.end(); it++)
-	{
-		(*it)->Draw();
-		
-		if(debug_draw)
-			(*it)->DebugDraw();
-	}*/
-}
-
 
 
 //MAIN MENU BAR management------------------------------------------------------------------------

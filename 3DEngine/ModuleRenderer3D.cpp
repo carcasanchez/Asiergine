@@ -10,7 +10,7 @@
 #include ".\mmgr\mmgr.h"
 
 #include "ModuleRenderer3D.h"
-
+#include "ComponentMesh.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
@@ -181,7 +181,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	//TODO: Call Debug Draw--------------
 
 	//Draw Geometries
-	App->editor->DrawGeometry();
+	DrawGeometry();
 
 
 	//Draw Debug Axis
@@ -263,4 +263,20 @@ bool ModuleRenderer3D::SaveConfig(JSON_Object* config_data)
 	json_object_dotset_boolean(config_data, "hard_poly_enabled", hard_poly_enabled);
 
 	return true;
+}
+
+void ModuleRenderer3D::SetMeshToDraw(ComponentMesh * m)
+{
+	meshes_to_draw.push(m);
+}
+
+void ModuleRenderer3D::DrawGeometry()
+{
+	plane.Render();
+	while (meshes_to_draw.empty() == false)
+	{
+		meshes_to_draw.front()->Draw();
+		meshes_to_draw.pop();		
+	}
+
 }

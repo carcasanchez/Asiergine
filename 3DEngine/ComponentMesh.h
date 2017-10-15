@@ -10,11 +10,12 @@ public:
 
 	void Draw();
 	void DebugDraw();
+	void Update();
 
 	void SetNormals(float* n) { normals = n; }
 
 	int GetNumVertices() { return num_vertices; }
-	float* GetVertices() { return vertices; }
+	const float* GetVertices() { return vertices; }
 
 private:
 	uint id_vertices = 0;  //id in VRAM

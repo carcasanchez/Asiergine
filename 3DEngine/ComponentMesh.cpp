@@ -4,7 +4,8 @@
 #include <gl/GL.h>
 #include <gl/GLU.h>
 #include ".\mmgr\mmgr.h"
-
+#include "Application.h"
+#include "ModuleRenderer3D.h"
 
 ComponentMesh::ComponentMesh(GameObject* game_object, float* ver, uint* ind, uint num_vert, uint num_ind, uint tex_id, float* texture_coords): vertices(ver), indices(ind), num_vertices(num_vert), num_indices(num_ind), texture_id(tex_id), Component(game_object)
 {
@@ -93,4 +94,10 @@ void ComponentMesh::DebugDraw()
 	glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
 
 	glDisableClientState(GL_VERTEX_ARRAY);
+}
+
+
+void ComponentMesh::Update()
+{
+	App->renderer3D->SetMeshToDraw(this);
 }

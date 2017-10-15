@@ -297,16 +297,20 @@ void ModuleCamera3D::AdaptToGeometry(GameObject* game_object)
 		return;
 
 	std::vector<float3> vertices;
-	ComponentMesh* it = (ComponentMesh*)game_object->GetComponentByType(COMPONENT_TRANSFORM);
+	ComponentMesh* it = (ComponentMesh*)game_object->GetComponentByType(COMPONENT_MESH);
 	
+	if (it == nullptr)
+		return;
 
 	//Generate AABBS for each geom in scene
 	math::AABB new_aabb(float3(0, 0, 0), float3(0, 0, 0));
 	std::vector <float3> vertex_array;
 
+	const float* original_vertices = it->GetVertices();
+
 	for (int j = 0; j < it->GetNumVertices() * 3; j += 3)
 	{
-		vertex_array.push_back(float3(it->GetVertices()[j], it->GetVertices()[j + 1], it->GetVertices()[j + 2]));
+		vertex_array.push_back(float3(original_vertices[j], original_vertices[j + 1], original_vertices[j + 2]));
 	}
 
 	new_aabb.Enclose(&vertex_array[0], it->GetNumVertices());

@@ -145,11 +145,11 @@ bool ModuleFileSystem::LoadFBX(const char * path)
 	if (scene != nullptr && scene->HasMeshes())
 	{
 		//first_texture_id = SearchForTexture(scene, path);
-		SearchNode(scene->mRootNode, scene);	
+		GameObject* obj = SearchNode(scene->mRootNode, scene);
 
 		aiReleaseImport(scene);
 
-		//App->camera->AdaptToGeometry();
+		
 	}
 	else
 	{
@@ -161,7 +161,7 @@ bool ModuleFileSystem::LoadFBX(const char * path)
 }
 
 //Searches every FBX node for data and loades one GameObject per node
-void ModuleFileSystem::SearchNode(const aiNode* n, const aiScene* scene)
+GameObject* ModuleFileSystem::SearchNode(const aiNode* n, const aiScene* scene)
 {
 	GameObject* obj = LoadNewObject(n);
 
@@ -175,6 +175,10 @@ void ModuleFileSystem::SearchNode(const aiNode* n, const aiScene* scene)
 	//Searches for children nodes
 	for (int i = 0; i < n->mNumChildren; i++)
 		SearchNode(n->mChildren[i], scene);
+
+	//App->camera->AdaptToGeometry(obj);
+
+	return obj;
 }
 
 //Creates new object and loads transform
@@ -210,9 +214,6 @@ bool ModuleFileSystem::LoadGeometry(const aiMesh* m, GameObject* obj)
 	int numInd = m->mNumFaces * 3;
 	//------------------------------------------
 	
-
-	
-
 	//Copy vertices
 	vertices = new float[numVertx * 3];
 	memcpy(vertices, m->mVertices, sizeof(float) * numVertx * 3);

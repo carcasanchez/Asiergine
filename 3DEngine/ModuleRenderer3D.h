@@ -3,7 +3,9 @@
 #include "Globals.h"
 #include "glmath.h"
 #include "Light.h"
+#include "Primitive.h"
 
+class ComponentMesh;
 
 class ModuleRenderer3D : public Module
 {
@@ -22,6 +24,7 @@ public:
 
 	bool SaveConfig(JSON_Object* config_data);
 
+	void SetMeshToDraw(ComponentMesh*);
 
 public:
 
@@ -40,4 +43,11 @@ public:
 	bool gl_wireframe_enabled;
 	bool hard_poly_enabled;
 
+
+private:
+	std::queue<ComponentMesh*> meshes_to_draw;
+
+	void DrawGeometry();
+
+	Plane_prim plane;
 };
