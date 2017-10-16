@@ -133,3 +133,13 @@ ComponentMaterial * GameObject::CreateComponent_Material(uint texture_id)
 	LOG("Creating new Material  in %s", name.c_str());
 	return new_mat;
 }
+
+void GameObject::OnEditor()
+{
+	
+	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); it++)
+	{
+		(*it)->OnEditor();
+	}
+	
+}

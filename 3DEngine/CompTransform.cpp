@@ -1,5 +1,6 @@
 #include "CompTransform.h"
 #include "Application.h"
+#include "imgui\imgui.h"
 
 CompTransform::CompTransform(GameObject * game_object):Component(game_object)
 {
@@ -44,4 +45,14 @@ void CompTransform::SetRotation(float x, float y, float z, float w)
 	rotation.y = y;
 	rotation.z = z;
 	rotation.w = w;
+}
+
+void CompTransform::OnEditor()
+{
+	ImGui::TextWrapped("Translation: ");
+	ImGui::DragFloat("X: ", &translation.x);
+	
+	ImGui::DragFloat("Y: ", &translation.y);
+
+	ImGui::DragFloat("Z: ", &translation.z);
 }

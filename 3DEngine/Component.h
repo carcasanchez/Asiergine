@@ -24,6 +24,7 @@ public:
 	ComponentType GetType() const { return type; }
 	GameObject* GetGameObject() const { return game_object; }
 
+	virtual void OnEditor() {}
 
 
 protected:

@@ -30,6 +30,8 @@ public:
 	ComponentMesh* CreateComponent_Mesh(float* ver, uint* ind, uint num_vert, uint num_ind, uint texture_id = 0, float* texture_coords = nullptr);
 	ComponentMaterial* CreateComponent_Material(uint texture_id);
 
+	void OnEditor();
+
 
 private:
 

@@ -127,6 +127,7 @@ update_status ModuleEditor::Update(float dt)
 		debug_draw = !debug_draw;
 	}
 
+	
 			
 	return ret;
 }
@@ -162,6 +163,7 @@ void ModuleEditor::DrawUI()
 	ManageConfigurationWindow();
 	ManageExampleWindow();
 	ManageHierarchyWindow();
+	ManageInspectorWindow();
 
 	ImGui::Render();
 }
@@ -381,7 +383,7 @@ void ModuleEditor::ManageConfigurationWindow()
 
 
 
-//Inspector Window------------------------------------------------------------------------
+//Hierarchy Window------------------------------------------------------------------------
 void ModuleEditor::ManageHierarchyWindow()
 {
 	if (hierarchy_open)
@@ -459,6 +461,12 @@ void ModuleEditor::ManageHierarchyChildren(GameObject* object)
 {
 	if (ImGui::TreeNode(object->GetName()))
 	{
+		//Check selected object
+		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
+		{
+			selected_object = object;
+		}
+
 		std::vector<GameObject*> childrens = object->GetChildrens();
 		
 		for (std::vector<GameObject*>::iterator it = childrens.begin(); it != childrens.end(); it++)
@@ -471,6 +479,17 @@ void ModuleEditor::ManageHierarchyChildren(GameObject* object)
 	}
 }
 
+//Inspector Window------------------------------------------------------------------------
+void ModuleEditor::ManageInspectorWindow()
+{
+	if (inspector_open)
+	{
+		ImGui::Begin("Inspector", &inspector_open);
+		if(selected_object != nullptr)
+			selected_object->OnEditor();
+		ImGui::End();
+	}
+}
 
 //Submenus of config window-------------------------------------------------------------
 

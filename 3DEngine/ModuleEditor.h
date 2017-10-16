@@ -37,6 +37,8 @@ public:
 	bool SaveConfig(JSON_Object* config_data);
 	bool calculate_fps_graph = false;
 
+	GameObject* GetSelectedGameObject() { return selected_object; }
+
 	
 private:
 
@@ -82,6 +84,7 @@ private:
 	void ManageConfigurationWindow();
 	void ManageHierarchyWindow();
 	void ManageHierarchyChildren(GameObject*);
+	void ManageInspectorWindow();
 
 	//Configuration Window
 	void ConfigAppMenu();
@@ -101,6 +104,9 @@ private:
 	Plane_prim plane;
 
 	bool debug_draw = false;
+
+	bool selected = false;
+	GameObject* selected_object = nullptr;
 
 };
 
