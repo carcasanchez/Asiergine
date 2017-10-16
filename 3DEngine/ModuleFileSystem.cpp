@@ -144,11 +144,10 @@ bool ModuleFileSystem::LoadFBX(const char * path)
 	const aiScene* scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality);
 	if (scene != nullptr && scene->HasMeshes())
 	{
-		//first_texture_id = SearchForTexture(scene, path);
+
+		texture_id = SearchForTexture(scene, path);
+
 		GameObject* obj = SearchNode(scene->mRootNode, scene);
-
-		obj->CreateComponent_Material(SearchForTexture(scene, path));
-
 		aiReleaseImport(scene);		
 	}
 	else
@@ -170,13 +169,13 @@ GameObject* ModuleFileSystem::SearchNode(const aiNode* n, const aiScene* scene)
 	{
 		aiMesh* m = scene->mMeshes[n->mMeshes[i]];
 		LoadGeometry(m, obj);
+		obj->CreateComponent_Material(texture_id);
 	}
 
 	//Searches for children nodes
 	for (int i = 0; i < n->mNumChildren; i++)
 		SearchNode(n->mChildren[i], scene);
 
-	//App->camera->AdaptToGeometry(obj);
 
 	return obj;
 }
@@ -273,8 +272,7 @@ bool ModuleFileSystem::LoadGeometry(const aiMesh* m, GameObject* obj)
 //Get the very first texture of the FBX (called once)
 int ModuleFileSystem::SearchForTexture(const aiScene* scene, const char* path)
 {
-	int text_id = 0;
-	
+	int text_id = 0;	
 	
 	if (scene->HasMaterials())
 		if (scene->mMaterials[0]->GetTextureCount(aiTextureType_DIFFUSE) > 0)

@@ -31,4 +31,6 @@ private:
 	GLuint LoadTexture(const char * path);
 
 
+	int texture_id = 0;
+
 };
