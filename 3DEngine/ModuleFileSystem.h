@@ -22,9 +22,9 @@ private:
 
 	
 	bool LoadFBX(const char* path);
-	GameObject* SearchNode(const aiNode* n, const aiScene* scene);
+	GameObject* SearchNode(const aiNode* n, const aiScene* scene, GameObject* parent = nullptr);
 
-	GameObject* LoadNewObject(const aiNode* n);
+	GameObject* LoadNewObject(const aiNode* n, GameObject* parent = nullptr);
 	bool LoadGeometry(const aiMesh*, GameObject*);
 
 	int SearchForTexture(const aiScene* scene, const char* path);

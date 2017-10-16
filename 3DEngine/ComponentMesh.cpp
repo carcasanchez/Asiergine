@@ -38,8 +38,6 @@ ComponentMesh::~ComponentMesh()
 	delete[] indices;
 	delete[] normals;
 
-
-
 	glDeleteBuffers(1, &text_coord_id);
 	glDeleteBuffers(1, &id_vertices);
 	glDeleteBuffers(1, &id_indices);

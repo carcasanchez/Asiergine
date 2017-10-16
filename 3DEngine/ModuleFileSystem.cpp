@@ -146,8 +146,25 @@ bool ModuleFileSystem::LoadFBX(const char * path)
 	{
 
 		texture_id = SearchForTexture(scene, path);
-
 		GameObject* obj = SearchNode(scene->mRootNode, scene);
+
+		//Extract name from fbx
+		std::string file_path = path ;
+		std::string obj_name;
+		while (file_path.back() != '\\')
+		{
+			obj_name.push_back(file_path.back());
+			file_path.pop_back();
+		}
+		std::reverse(obj_name.begin(), obj_name.end());
+		while (obj_name.back() != '.')
+		{
+			obj_name.pop_back();
+		}
+		obj_name.pop_back();
+		//-------------------------------------
+
+		obj->SetName(obj_name.c_str());
 		aiReleaseImport(scene);		
 	}
 	else
@@ -160,9 +177,9 @@ bool ModuleFileSystem::LoadFBX(const char * path)
 }
 
 //Searches every FBX node for data and loades one GameObject per node
-GameObject* ModuleFileSystem::SearchNode(const aiNode* n, const aiScene* scene)
+GameObject* ModuleFileSystem::SearchNode(const aiNode* n, const aiScene* scene, GameObject* parent)
 {
-	GameObject* obj = LoadNewObject(n);
+	GameObject* obj = LoadNewObject(n, parent);
 
 	//Loads all meshes of the node	
 	for (int i = 0; i < n->mNumMeshes; i++)
@@ -174,16 +191,16 @@ GameObject* ModuleFileSystem::SearchNode(const aiNode* n, const aiScene* scene)
 
 	//Searches for children nodes
 	for (int i = 0; i < n->mNumChildren; i++)
-		SearchNode(n->mChildren[i], scene);
+		SearchNode(n->mChildren[i], scene, obj);
 
 
 	return obj;
 }
 
 //Creates new object and loads transform
-GameObject * ModuleFileSystem::LoadNewObject(const aiNode * n)
+GameObject * ModuleFileSystem::LoadNewObject(const aiNode * n, GameObject* parent)
 {	
-	GameObject* new_obj = App->scene->CreateGameObject(n->mName.C_Str());
+	GameObject* new_obj = App->scene->CreateGameObject(n->mName.C_Str(), parent);
 	
 	aiVector3D location;
 	aiVector3D scale;

@@ -20,6 +20,7 @@ public:
 	Component* GetComponentByType(ComponentType type);
 	
 	const char* GetName() const { return name.c_str(); }
+	void SetName(const char* n) { name = n; }
 
 	const GameObject* GetParent() { return parent; }
 	std::vector<GameObject*> GetChildrens() { return children;}
