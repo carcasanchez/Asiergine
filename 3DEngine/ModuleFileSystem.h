@@ -27,8 +27,8 @@ private:
 	GameObject* LoadNewObject(const aiNode* n);
 	bool LoadGeometry(const aiMesh*, GameObject*);
 
-	//int SearchForTexture(const aiScene* scene, const char* path);
-	//GLuint LoadTexture(const char * path);
+	int SearchForTexture(const aiScene* scene, const char* path);
+	GLuint LoadTexture(const char * path);
 
 
 };

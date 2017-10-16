@@ -24,10 +24,10 @@ public:
 	ComponentType GetType() const { return type; }
 	GameObject* GetGameObject() const { return game_object; }
 
-private:
-	bool active = true;
+
 
 protected:
+	bool active = true;
 	GameObject* game_object = nullptr;
 	ComponentType type;
 };

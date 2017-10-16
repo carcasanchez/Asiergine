@@ -147,9 +147,9 @@ bool ModuleFileSystem::LoadFBX(const char * path)
 		//first_texture_id = SearchForTexture(scene, path);
 		GameObject* obj = SearchNode(scene->mRootNode, scene);
 
-		aiReleaseImport(scene);
+		obj->CreateComponent_Material(SearchForTexture(scene, path));
 
-		
+		aiReleaseImport(scene);		
 	}
 	else
 	{
@@ -270,7 +270,7 @@ bool ModuleFileSystem::LoadGeometry(const aiMesh* m, GameObject* obj)
 	return ret;
 }
 
-/*//Get the very first texture of the FBX (called once)
+//Get the very first texture of the FBX (called once)
 int ModuleFileSystem::SearchForTexture(const aiScene* scene, const char* path)
 {
 	int text_id = 0;
@@ -357,12 +357,9 @@ GLuint ModuleFileSystem::LoadTexture(const char * path)
 		LOG("Devil Error (ilInit: %s)", iluErrorString(devilError3));
 		return 0;
 	}
-
-	first_texture_dimensions.x = ilGetInteger(IL_IMAGE_WIDTH);
-	first_texture_dimensions.y = ilGetInteger(IL_IMAGE_HEIGHT);
 	
 
 	LOG("Loaded Texture Successfully");
 	return img_id;
-}*/
+}
 

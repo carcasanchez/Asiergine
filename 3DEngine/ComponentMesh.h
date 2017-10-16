@@ -28,6 +28,5 @@ private:
 
 	float* normals = nullptr;
 
-	uint texture_id = 0;
 	uint text_coord_id = 0;
 };

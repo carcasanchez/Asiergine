@@ -119,9 +119,15 @@ ComponentMesh * GameObject::CreateComponent_Mesh(float * ver, uint * ind, uint n
 	return new_mesh;
 }
 
-ComponentMaterial * GameObject::CreateComponent_Material()
+ComponentMaterial * GameObject::CreateComponent_Material(uint texture_id)
 {
-	ComponentMaterial* new_mat = new ComponentMaterial(this);
+	if (GetComponentByType(COMPONENT_MATERIAL) != nullptr)
+	{
+		LOG("ERROR: GameObject %s already has a transform component!", name.c_str());
+		return nullptr;
+	}
+
+	ComponentMaterial* new_mat = new ComponentMaterial(this, texture_id);
 
 	components.push_back(new_mat);
 	LOG("Creating new Material  in %s", name.c_str());

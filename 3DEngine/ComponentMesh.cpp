@@ -3,11 +3,13 @@
 #include "SDL/include/SDL_opengl.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
-#include ".\mmgr\mmgr.h"
+#include "mmgr\mmgr.h"
 #include "Application.h"
 #include "ModuleRenderer3D.h"
+#include "GameObject.h"
+#include "ComponentMaterial.h"
 
-ComponentMesh::ComponentMesh(GameObject* game_object, float* ver, uint* ind, uint num_vert, uint num_ind, uint tex_id, float* texture_coords): vertices(ver), indices(ind), num_vertices(num_vert), num_indices(num_ind), texture_id(tex_id), Component(game_object)
+ComponentMesh::ComponentMesh(GameObject* game_object, float* ver, uint* ind, uint num_vert, uint num_ind, uint tex_id, float* texture_coords): vertices(ver), indices(ind), num_vertices(num_vert), num_indices(num_ind), Component(game_object)
 {
 	type = COMPONENT_MESH;
 
@@ -36,7 +38,7 @@ ComponentMesh::~ComponentMesh()
 	delete[] indices;
 	delete[] normals;
 
-	glDeleteTextures(1, &texture_id);
+
 
 	glDeleteBuffers(1, &text_coord_id);
 	glDeleteBuffers(1, &id_vertices);
@@ -45,23 +47,27 @@ ComponentMesh::~ComponentMesh()
 
 void ComponentMesh::Draw()
 {
-	glBindTexture(GL_TEXTURE, texture_id);
 
 	//Bind vertices
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glBindBuffer(GL_ARRAY_BUFFER, id_vertices);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 
-	
-	if (text_coord_id != 0)
+	Component* mat = game_object->GetComponentByType(COMPONENT_MATERIAL);
+	if (mat != nullptr)
 	{
-		//Bind textures
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-		glBindTexture(GL_TEXTURE_2D, 0);
-		glBindTexture(GL_TEXTURE_2D, texture_id);
-		glBindBuffer(GL_ARRAY_BUFFER, text_coord_id);
-		glTexCoordPointer(2, GL_FLOAT, 0, NULL);		
+		glBindTexture(GL_TEXTURE, ((ComponentMaterial*)mat)->texture_id);
+		if (text_coord_id != 0)
+		{
+			//Bind textures
+			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+			glBindTexture(GL_TEXTURE_2D, 0);
+			glBindTexture(GL_TEXTURE_2D, ((ComponentMaterial*)mat)->texture_id);
+			glBindBuffer(GL_ARRAY_BUFFER, text_coord_id);
+			glTexCoordPointer(2, GL_FLOAT, 0, NULL);
+		}
 	}
+	
 
 	//Bind indices and draw
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);

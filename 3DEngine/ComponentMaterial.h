@@ -5,7 +5,9 @@
 class ComponentMaterial :public Component
 {
 public:
-	ComponentMaterial(GameObject*);
+	ComponentMaterial(GameObject*, uint id);
 	~ComponentMaterial();
+
+	uint texture_id = 0;
 };
 
