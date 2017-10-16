@@ -49,10 +49,14 @@ void CompTransform::SetRotation(float x, float y, float z, float w)
 
 void CompTransform::OnEditor()
 {
-	ImGui::TextWrapped("Translation: ");
-	ImGui::DragFloat("X: ", &translation.x);
-	
-	ImGui::DragFloat("Y: ", &translation.y);
+	float x = GetTranslation().x;
+	float y = GetTranslation().y;
+	float z = GetTranslation().z;
 
-	ImGui::DragFloat("Z: ", &translation.z);
+	ImGui::TextWrapped("Translation: ");
+	ImGui::DragFloat("X: ", &x);
+
+	ImGui::DragFloat("Y: ", &y);
+
+	ImGui::DragFloat("Z: ", &z);;
 }
