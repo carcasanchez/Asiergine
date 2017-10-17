@@ -22,14 +22,16 @@ public:
 	bool IsActive() { return active; }
 	void SetActive(bool val) { active = val; }
 
+	const char* GetComponentNameByType();
+
 	ComponentType GetType() const { return type; }
 	GameObject* GetGameObject() const { return game_object; }
 
 	virtual void OnEditor() {}
 
+	bool active = true;
 
 protected:
-	bool active = true;
 	GameObject* game_object = nullptr;
 	ComponentType type;
 };

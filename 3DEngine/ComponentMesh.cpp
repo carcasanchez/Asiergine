@@ -112,3 +112,8 @@ void ComponentMesh::Update()
 {
 	App->renderer3D->SetMeshToDraw(this);
 }
+
+void ComponentMesh::OnEditor()
+{
+	ImGui::TextWrapped("Number of vertices: %i", GetNumVertices());
+}

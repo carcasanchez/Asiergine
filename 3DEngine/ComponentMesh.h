@@ -11,6 +11,7 @@ public:
 	void Draw();
 	void DebugDraw();
 	void Update();
+	void OnEditor();
 
 	void SetNormals(float* n) { normals = n; }
 

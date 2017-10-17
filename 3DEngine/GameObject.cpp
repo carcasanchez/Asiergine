@@ -176,7 +176,18 @@ void GameObject::OnEditor()
 	
 	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); it++)
 	{
-		(*it)->OnEditor();
+		if (ImGui::CollapsingHeader((*it)->GetComponentNameByType()))
+		{
+			if (ImGui::Checkbox("Active", &(*it)->active))
+			{
+				if ((*it)->active == true)
+					(*it)->Enable();
+				if ((*it)->active == false)
+					(*it)->Disable();
+			}
+
+			(*it)->OnEditor();
+		}
 	}
 	
 }
