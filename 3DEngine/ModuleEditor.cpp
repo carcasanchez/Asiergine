@@ -121,13 +121,6 @@ update_status ModuleEditor::Update(float dt)
 		App->file_system->LoadFile(f_path);
 	}
 
-	//Check debug key
-	if (App->input->GetKey(DEBUG_KEY) == KEY_DOWN)
-	{
-		debug_draw = !debug_draw;
-	}
-
-	
 			
 	return ret;
 }

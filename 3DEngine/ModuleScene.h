@@ -24,6 +24,7 @@ public:
 
 	GameObject* root = nullptr;
 
+	bool debug_draw = false;
 
 private:
 	bool SaveConfig(JSON_Object* config_data);

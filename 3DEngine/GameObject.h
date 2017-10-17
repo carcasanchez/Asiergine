@@ -41,4 +41,6 @@ private:
 	std::vector<Component*> components;
 	std::vector<GameObject*> children;
 
+	math::AABB bounding_box;
+
 };

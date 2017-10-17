@@ -29,4 +29,6 @@ private:
 	float* normals = nullptr;
 
 	uint text_coord_id = 0;
+
+
 };

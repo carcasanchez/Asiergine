@@ -7,7 +7,9 @@
 #include "ComponentMaterial.h"
 
 GameObject::GameObject(const char* name): name(name)
-{}
+{
+	bounding_box.SetNegativeInfinity();
+}
 
 GameObject::~GameObject()
 {
@@ -32,6 +34,12 @@ void GameObject::Update()
 		}
 
 		children[i]->Update();
+	}
+
+	//Debug Bounding Box
+	if (App->scene->debug_draw)
+	{
+		App->renderer3D->SetBoxToDraw(&bounding_box);
 	}
 }
 
@@ -114,6 +122,17 @@ ComponentMesh * GameObject::CreateComponent_Mesh(float * ver, uint * ind, uint n
 {
 	ComponentMesh* new_mesh = new ComponentMesh(this, ver, ind, num_vert, num_ind, texture_id, texture_coords);
 	
+
+	//Adapt bounding box to geometry-----------------
+	std::vector <float3> vertex_array;
+
+	for (int i = 0; i < num_ind * 3; i += 3)
+		vertex_array.push_back(float3(new_mesh->GetVertices()[i], new_mesh->GetVertices()[i + 1], new_mesh->GetVertices()[i + 2]));
+
+	bounding_box.Enclose(&vertex_array[0], (int)num_vert);
+
+
+
 	components.push_back(new_mesh);
 	LOG("Creating new Mesh with %i vertices in %s", new_mesh->GetNumVertices(), name.c_str());
 	return new_mesh;

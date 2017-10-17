@@ -103,8 +103,6 @@ private:
 	
 	Plane_prim plane;
 
-	bool debug_draw = false;
-
 	bool selected = false;
 	GameObject* selected_object = nullptr;
 

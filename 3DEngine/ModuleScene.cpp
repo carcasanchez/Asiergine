@@ -1,7 +1,8 @@
 #include "ModuleScene.h"
+#include "Application.h"
 #include ".\mmgr\mmgr.h"
 #include "GameObject.h"
-
+#include "ModuleInput.h"
 
 ModuleScene::ModuleScene(bool start_enabled) : Module(start_enabled)
 {
@@ -25,6 +26,15 @@ update_status ModuleScene::Update(float dt)
 {
 
 	root->Update();
+
+
+	//Check debug key
+	if (App->input->GetKey(DEBUG_KEY) == KEY_DOWN)
+	{
+		debug_draw = !debug_draw;
+	}
+
+
 
 	return UPDATE_CONTINUE;
 }

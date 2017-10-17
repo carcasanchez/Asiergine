@@ -25,6 +25,7 @@ public:
 	bool SaveConfig(JSON_Object* config_data);
 
 	void SetMeshToDraw(ComponentMesh*);
+	void SetBoxToDraw(math::AABB*);
 
 public:
 
@@ -46,8 +47,10 @@ public:
 
 private:
 	std::queue<ComponentMesh*> meshes_to_draw;
+	std::queue<math::AABB*> boxes_to_draw;
 
 	void DrawGeometry();
+	void DrawAABBs();
 
 	Plane_prim plane;
 };

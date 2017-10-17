@@ -30,6 +30,8 @@ ComponentMesh::ComponentMesh(GameObject* game_object, float* ver, uint* ind, uin
 		glBindBuffer(GL_ARRAY_BUFFER, text_coord_id);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_vertices * 2, texture_coords, GL_STATIC_DRAW);
 	}
+
+	
 }
 
 ComponentMesh::~ComponentMesh()
@@ -75,6 +77,11 @@ void ComponentMesh::Draw()
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glDisableClientState(GL_VERTEX_ARRAY);	
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	if (App->scene->debug_draw && normals != nullptr)
+	{
+		//DebugDraw();
+	}
 
 }
 
