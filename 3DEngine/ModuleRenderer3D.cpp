@@ -202,17 +202,19 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	glVertex3f(0, 0, 3);
 
 	glLineWidth(1.0);
-	glColor3f(1.0f, 1.0f, 1.0f);
 	
+	
+	//Draw debug
+	
+	DrawCameraFrustums();
 
-
-	//Draw debug AABBs
 
 	if (App->scene->debug_draw)
 	{
-		DrawAABBs();
+		DrawDebugBoxes();
 	}
 
+	glColor3f(1.0f, 1.0f, 1.0f);
 	glEnd();
 
 	//Draw ImGui
@@ -295,7 +297,12 @@ void ModuleRenderer3D::SetBoxToDraw(math::AABB * b)
 	boxes_to_draw.push(b);
 }
 
-void ModuleRenderer3D::DrawAABBs()
+void ModuleRenderer3D::SetBoxToDraw(math::Frustum * b)
+{
+	frustums_to_draw.push(b);
+}
+
+void ModuleRenderer3D::DrawDebugBoxes()
 {
 	glLineWidth(0.1);
 	glColor3f(0.0f, 3.0f, 0.0f);
@@ -330,3 +337,41 @@ void ModuleRenderer3D::DrawAABBs()
 		boxes_to_draw.pop();
 	}
 }
+
+void ModuleRenderer3D::DrawCameraFrustums()
+{
+	glColor3f(0.0f, 1.0f, 1.0f);
+
+	while (frustums_to_draw.empty() == false)
+	{
+
+		float3 point = frustums_to_draw.front()->CornerPoint(1);
+
+		//Draw to main faces
+		for (int i = 0; i <= 4; i += 4)
+		{
+			glVertex3f(frustums_to_draw.front()->CornerPoint(i).x, frustums_to_draw.front()->CornerPoint(i).y, frustums_to_draw.front()->CornerPoint(i).z);
+			glVertex3f(frustums_to_draw.front()->CornerPoint(i + 1).x, frustums_to_draw.front()->CornerPoint(i + 1).y, frustums_to_draw.front()->CornerPoint(i + 1).z);
+
+
+			glVertex3f(frustums_to_draw.front()->CornerPoint(i + 2).x, frustums_to_draw.front()->CornerPoint(i + 2).y, frustums_to_draw.front()->CornerPoint(i + 2).z);
+			glVertex3f(frustums_to_draw.front()->CornerPoint(i + 3).x, frustums_to_draw.front()->CornerPoint(i + 3).y, frustums_to_draw.front()->CornerPoint(i + 3).z);
+
+			glVertex3f(frustums_to_draw.front()->CornerPoint(i).x, frustums_to_draw.front()->CornerPoint(i).y, frustums_to_draw.front()->CornerPoint(i).z);
+			glVertex3f(frustums_to_draw.front()->CornerPoint(i + 2).x, frustums_to_draw.front()->CornerPoint(i + 2).y, frustums_to_draw.front()->CornerPoint(i + 2).z);
+
+			glVertex3f(frustums_to_draw.front()->CornerPoint(i + 1).x, frustums_to_draw.front()->CornerPoint(i + 1).y, frustums_to_draw.front()->CornerPoint(i + 1).z);
+			glVertex3f(frustums_to_draw.front()->CornerPoint(i + 3).x, frustums_to_draw.front()->CornerPoint(i + 3).y, frustums_to_draw.front()->CornerPoint(i + 3).z);
+		}
+
+		//Draw restant lines
+		for (int i = 0; i < 4; i++)
+		{
+			glVertex3f(frustums_to_draw.front()->CornerPoint(i + 4).x, frustums_to_draw.front()->CornerPoint(i + 4).y, frustums_to_draw.front()->CornerPoint(i + 4).z);
+			glVertex3f(frustums_to_draw.front()->CornerPoint(i).x, frustums_to_draw.front()->CornerPoint(i).y, frustums_to_draw.front()->CornerPoint(i).z);
+		}
+
+		frustums_to_draw.pop();
+	}
+}
+

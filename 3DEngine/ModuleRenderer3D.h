@@ -26,6 +26,8 @@ public:
 
 	void SetMeshToDraw(ComponentMesh*);
 	void SetBoxToDraw(math::AABB*);
+	void SetBoxToDraw(math::Frustum*);
+
 
 public:
 
@@ -48,9 +50,11 @@ public:
 private:
 	std::queue<ComponentMesh*> meshes_to_draw;
 	std::queue<math::AABB*> boxes_to_draw;
+	std::queue<math::Frustum*> frustums_to_draw;
 
 	void DrawGeometry();
-	void DrawAABBs();
+	void DrawDebugBoxes();
+	void DrawCameraFrustums();
 
 	Plane_prim plane;
 };

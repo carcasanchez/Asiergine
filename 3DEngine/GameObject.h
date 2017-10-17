@@ -5,6 +5,7 @@ class Component;
 class CompTransform;
 class ComponentMesh;
 class ComponentMaterial;
+class ComponentCamera;
 
 enum ComponentType;
 

@@ -18,6 +18,9 @@ bool ModuleScene::Init(const JSON_Object * config_data)
 {
 
 	root = CreateGameObject("Root");
+	GameObject* camera = CreateGameObject("Camera1", root);
+	camera->CreateComponent_Camera(0.5, 5);
+	camera->CreateComponent_Transform();
 
 	return true;
 }
