@@ -12,7 +12,7 @@ class Component
 {
 public:
 	Component(GameObject* game_object);
-	~Component();
+	virtual ~Component();
 
 	virtual void Enable();
 	virtual void Update();

@@ -27,7 +27,7 @@ public:
 	void SetParent(GameObject* new_parent);
 
 	CompTransform* CreateComponent_Transform(float3 trans = float3(0, 0, 0), float3 scaling = float3(1, 1, 1), Quat rot = Quat::identity);
-	ComponentMesh* CreateComponent_Mesh(float* ver, uint* ind, uint num_vert, uint num_ind, uint texture_id = 0, float* texture_coords = nullptr);
+	ComponentMesh* CreateComponent_Mesh(float* ver, uint* ind, uint num_vert, uint num_ind, float* normals, uint texture_id = 0, float* texture_coords = nullptr);
 	ComponentMaterial* CreateComponent_Material(uint texture_id);
 
 	void OnEditor();

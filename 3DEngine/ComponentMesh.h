@@ -5,7 +5,7 @@
 class ComponentMesh : public Component
 {
 public:
-	ComponentMesh(GameObject* game_object, float* ver, uint* ind, uint num_vert, uint num_ind, uint texture_id = 0, float* texture_coords = nullptr);
+	ComponentMesh(GameObject* game_object, float* ver, uint* ind, uint num_vert, uint num_ind, float* normals, uint texture_id = 0, float* texture_coords = nullptr);
 	~ComponentMesh();
 
 	void Draw();

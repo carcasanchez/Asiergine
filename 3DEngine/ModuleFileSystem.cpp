@@ -90,6 +90,9 @@ void ModuleFileSystem::LoadFile(const char * path)
 	{
 		extension.push_back(tmp.back());
 		tmp.pop_back();
+
+		if (tmp.empty())
+			break;
 	}
 
 
@@ -275,12 +278,8 @@ bool ModuleFileSystem::LoadGeometry(const aiMesh* m, GameObject* obj)
 	//If everything goes OK, create a new Mesh
 	if (ret)
 	{
-		ComponentMesh* new_m = obj->CreateComponent_Mesh(vertices, indices, numVertx, numInd, 0, texture_coords);
-		new_m->SetNormals(normals);
-		delete[] texture_coords;		
-		delete[] vertices;
-		delete[] indices;
-		delete[] normals;
+		obj->CreateComponent_Mesh(vertices, indices, numVertx, numInd, normals, 0, texture_coords);
+		delete[] texture_coords;
 	}
 
 	return ret;

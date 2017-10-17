@@ -9,7 +9,7 @@
 #include "GameObject.h"
 #include "ComponentMaterial.h"
 
-ComponentMesh::ComponentMesh(GameObject* game_object, float* ver, uint* ind, uint num_vert, uint num_ind, uint tex_id, float* texture_coords): vertices(ver), indices(ind), num_vertices(num_vert), num_indices(num_ind), Component(game_object)
+ComponentMesh::ComponentMesh(GameObject* game_object, float* ver, uint* ind, uint num_vert, uint num_ind, float* normals, uint tex_id, float* texture_coords): vertices(ver), indices(ind), num_vertices(num_vert), num_indices(num_ind), Component(game_object), normals(normals)
 {
 	type = COMPONENT_MESH;
 
@@ -80,7 +80,7 @@ void ComponentMesh::Draw()
 
 	if (App->scene->debug_draw && normals != nullptr)
 	{
-		//DebugDraw();
+		DebugDraw();
 	}
 
 }
