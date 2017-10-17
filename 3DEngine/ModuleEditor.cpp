@@ -459,14 +459,14 @@ void ModuleEditor::ManageHierarchyWindow()
 
 void ModuleEditor::ManageHierarchyChildren(GameObject* object)
 {
-	if (ImGui::TreeNode(object->GetName()))
-	{
-		//Check selected object
-		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
-		{
-			selected_object = object;
-		}
 
+	bool open_element = ImGui::TreeNode(object->GetName());
+	
+	if (ImGui::IsItemClicked())
+		selected_object = object;
+
+	if (open_element)
+	{
 		std::vector<GameObject*> childrens = object->GetChildrens();
 		
 		for (std::vector<GameObject*>::iterator it = childrens.begin(); it != childrens.end(); it++)
@@ -474,9 +474,9 @@ void ModuleEditor::ManageHierarchyChildren(GameObject* object)
 			ManageHierarchyChildren(*(it));
 		}
 
-
 		ImGui::TreePop();
 	}
+	
 }
 
 //Inspector Window------------------------------------------------------------------------

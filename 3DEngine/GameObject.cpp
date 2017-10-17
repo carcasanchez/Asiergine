@@ -136,6 +136,8 @@ ComponentMaterial * GameObject::CreateComponent_Material(uint texture_id)
 
 void GameObject::OnEditor()
 {
+	ImGui::TextWrapped("%s", name.c_str());
+	ImGui::Separator();
 	
 	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); it++)
 	{
