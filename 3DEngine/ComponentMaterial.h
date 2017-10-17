@@ -8,6 +8,8 @@ public:
 	ComponentMaterial(GameObject*, uint id);
 	~ComponentMaterial();
 
+	void OnEditor();
+
 	uint texture_id = 0;
 };
 
