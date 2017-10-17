@@ -39,24 +39,46 @@ math::Quat CompTransform::GetRotation()
 	return rotation;
 }
 
-void CompTransform::SetRotation(float x, float y, float z, float w)
+void CompTransform::SetRotation(Quat rot)
 {
-	rotation.x = x;
-	rotation.y = y;
-	rotation.z = z;
-	rotation.w = w;
+	rotation = rot;
 }
 
 void CompTransform::OnEditor()
 {
+	//Translation
 	float x = GetTranslation().x;
 	float y = GetTranslation().y;
 	float z = GetTranslation().z;
+	float location[3] = { x, y, z };
 
 	ImGui::TextWrapped("Translation: ");
-	ImGui::DragFloat("X: ", &x);
+	ImGui::SameLine();
+	if (ImGui::DragFloat3("", location))
+		SetTranslation(location[0], location[1], location[2]);
 
-	ImGui::DragFloat("Y: ", &y);
+	//Scale
+	float s_x = GetScale().x;
+	float s_y = GetScale().y;
+	float s_z = GetScale().z;
+	float scale[3] = { s_x, s_y, s_z };
 
-	ImGui::DragFloat("Z: ", &z);;
+	ImGui::TextWrapped("Scale:       ");
+	ImGui::SameLine();
+	if (ImGui::DragFloat3(" ", scale))
+		SetScale(scale[0], scale[1], scale[2]);
+
+	//Rotation
+	float r_x = GetRotation().ToEulerXYZ().x;
+	float r_y = GetRotation().ToEulerXYZ().y;
+	float r_z = GetRotation().ToEulerXYZ().z;
+	float rotate[3] = { r_x, r_y, r_z };
+
+	ImGui::TextWrapped("Rotation:    ");
+	ImGui::SameLine();
+	if (ImGui::DragFloat3("  ", rotate))
+	{
+		Quat new_rot = Quat::FromEulerXYZ(rotate[0], rotate[1], rotate[2]);
+		SetRotation(new_rot);
+	}
 }

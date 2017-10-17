@@ -110,7 +110,7 @@ CompTransform * GameObject::CreateComponent_Transform(float3 trans , float3 scal
 
 	new_transform->SetTranslation(trans.x, trans.y, trans.z);
 	new_transform->SetScale(scale.x, scale.y, scale.z);
-	new_transform->SetRotation(rot.x, rot.y, rot.z, rot.w);
+	new_transform->SetRotation(rot);
 
 	components.push_back(new_transform);
 

@@ -15,7 +15,7 @@ public:
 	void SetScale(float x, float y, float z);
 
 	math::Quat GetRotation();
-	void SetRotation(float x, float y, float z, float w);
+	void SetRotation(Quat rot);
 
 	void OnEditor();
 

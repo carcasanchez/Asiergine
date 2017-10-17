@@ -830,6 +830,7 @@ bool ModuleEditor::SaveConfig(JSON_Object* config_data)
 	json_object_dotset_boolean(config_data, "configuration_open", configuration_open);
 	json_object_dotset_boolean(config_data, "inspector_open", inspector_open);
 	json_object_dotset_boolean(config_data, "camera_config_open", camera_config_open);
+	json_object_dotset_boolean(config_data, "hierarchy_open", hierarchy_open);
 
 	return true;
 }
