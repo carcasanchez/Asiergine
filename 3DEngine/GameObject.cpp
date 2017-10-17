@@ -5,6 +5,7 @@
 #include "CompTransform.h"
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
+#include "ComponentCamera.h"
 
 GameObject::GameObject(const char* name): name(name)
 {
@@ -132,7 +133,6 @@ ComponentMesh * GameObject::CreateComponent_Mesh(float * ver, uint * ind, uint n
 	bounding_box.Enclose(&vertex_array[0], (int)num_vert);
 
 
-
 	components.push_back(new_mesh);
 	LOG("Creating new Mesh with %i vertices in %s", new_mesh->GetNumVertices(), name.c_str());
 	return new_mesh;
@@ -142,15 +142,31 @@ ComponentMaterial * GameObject::CreateComponent_Material(uint texture_id)
 {
 	if (GetComponentByType(COMPONENT_MATERIAL) != nullptr)
 	{
-		LOG("ERROR: GameObject %s already has a transform component!", name.c_str());
+		LOG("ERROR: GameObject %s already has a material component!", name.c_str());
 		return nullptr;
 	}
 
 	ComponentMaterial* new_mat = new ComponentMaterial(this, texture_id);
 
 	components.push_back(new_mat);
-	LOG("Creating new Material  in %s", name.c_str());
+	LOG("Creating new Material in %s", name.c_str());
 	return new_mat;
+}
+
+ComponentCamera * GameObject::CreateComponent_Camera(float near_dist, float far_dist, bool active)
+{
+	if (GetComponentByType(COMPONENT_CAMERA) != nullptr)
+	{
+		LOG("ERROR: GameObject %s already has a camera component!", name.c_str());
+		return nullptr;
+	}
+
+	ComponentCamera* new_camera = new ComponentCamera(this, near_dist, far_dist, active);
+
+	components.push_back(new_camera);
+	LOG("Creating new Camera in %s", name.c_str());
+
+	return new_camera;
 }
 
 void GameObject::OnEditor()

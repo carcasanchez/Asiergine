@@ -181,6 +181,9 @@
     <ClCompile Include="3DEngine\ComponentMaterial.cpp">
       <Filter>Source\Containers\Components</Filter>
     </ClCompile>
+    <ClCompile Include="3DEngine\ComponentCamera.cpp">
+      <Filter>Source\Containers\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3DEngine\Application.h">
@@ -487,6 +490,9 @@
       <Filter>Source\Containers\Components</Filter>
     </ClInclude>
     <ClInclude Include="3DEngine\ComponentMaterial.h">
+      <Filter>Source\Containers\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\ComponentCamera.h">
       <Filter>Source\Containers\Components</Filter>
     </ClInclude>
   </ItemGroup>
