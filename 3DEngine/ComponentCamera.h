@@ -10,6 +10,28 @@ public:
 
 	void Update();
 
+	float GetNearDistance()
+	{
+		return frustum.nearPlaneDistance;
+	}
+
+	float GetFarDistance()
+	{
+		return frustum.farPlaneDistance;
+	}
+	
+	void SetNearDistance(float d)
+	{
+		frustum.nearPlaneDistance = d;
+	}
+
+	void SetFarDistance(float d)
+	{
+		frustum.farPlaneDistance = d;
+	}
+
+
+	void OnEditor();
 
 
 	bool active = false;
