@@ -19,8 +19,10 @@ ComponentCamera::ComponentCamera(GameObject* g, float near_distance, float far_d
 	frustum.up = float3(0, 1, 0);
 
 	frustum.pos = float3(0, 0, 0);
-	frustum.horizontalFov = 1.0;
 	frustum.verticalFov = 1.0;
+	aspect_ratio = App->window->GetAspectRatio();
+
+	frustum.horizontalFov = math::Atan(aspect_ratio*math::Tan(frustum.verticalFov/2))*2;
 
 }
 
@@ -53,6 +55,12 @@ void ComponentCamera::OnEditor()
 			frustum.type = PerspectiveFrustum;
 		else if (selected_option == 1)
 			frustum.type = OrthographicFrustum;
+	}
+
+
+	if (ImGui::DragFloat("Field of View", &frustum.verticalFov, 0.1, 0.1))
+	{
+		frustum.horizontalFov = math::Atan(aspect_ratio*math::Tan(frustum.verticalFov / 2)) * 2;
 	}
 }
 
