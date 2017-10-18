@@ -38,6 +38,6 @@ public:
 
 private:
 	math::Frustum frustum;
-
+	float aspect_ratio;
 };
 

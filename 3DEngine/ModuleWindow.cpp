@@ -42,6 +42,7 @@ bool ModuleWindow::Init(const JSON_Object* config_data)
 		//Create window
 		int width = window_width * screen_size;
 		int height = window_height * screen_size;
+		aspect_ratio = width / height;
 		Uint32 flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
 
 		//Use OpenGL 2.1

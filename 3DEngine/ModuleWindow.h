@@ -25,6 +25,10 @@ public:
 
 
 	bool SwitchVSync();
+	float GetAspectRatio()
+	{
+		return aspect_ratio;
+	}
 
 public:
 	//The window we'll be rendering to
@@ -43,6 +47,9 @@ public:
 	std::string window_state;
 
 	bool SaveConfig(JSON_Object* config_data);
+
+private:
+	float aspect_ratio = 0.0;
 };
 
 #endif // __ModuleWindow_H__
