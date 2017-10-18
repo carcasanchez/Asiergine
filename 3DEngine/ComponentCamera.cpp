@@ -4,7 +4,8 @@
 #include "ModuleScene.h"
 #include "ModuleWindow.h"
 #include "imgui\imgui.h"
-
+#include "GameObject.h"
+#include "CompTransform.h"
 
 
 ComponentCamera::ComponentCamera(GameObject* g, float near_distance, float far_distance, bool active) : Component(g), active(active)
@@ -33,7 +34,16 @@ ComponentCamera::~ComponentCamera(){}
 void ComponentCamera::Update()
 {
 	aspect_ratio = App->window->GetAspectRatio();
+	
+	Component* t = game_object->GetComponentByType(COMPONENT_TRANSFORM);
+	if(t)
+	{
+		frustum.pos = ((CompTransform*)t)->GetTranslation();
+	}
+
 	App->renderer3D->SetBoxToDraw(&frustum);
+
+	
 }
 
 void ComponentCamera::OnEditor()

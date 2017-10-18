@@ -19,8 +19,15 @@ public:
 
 	void OnEditor();
 
+	void Update();
+
+	const float* GetMatrix();
+
+
 private:
 	math::float3 translation;
 	math::float3 scale;
 	math::Quat rotation;
+
+	math::float4x4 matrix;
 };

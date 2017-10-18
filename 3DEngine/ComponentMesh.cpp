@@ -8,6 +8,7 @@
 #include "ModuleRenderer3D.h"
 #include "GameObject.h"
 #include "ComponentMaterial.h"
+#include "CompTransform.h"
 
 ComponentMesh::ComponentMesh(GameObject* game_object, float* ver, uint* ind, uint num_vert, uint num_ind, float* normals, uint tex_id, float* texture_coords): vertices(ver), indices(ind), num_vertices(num_vert), num_indices(num_ind), Component(game_object), normals(normals)
 {
@@ -48,6 +49,15 @@ ComponentMesh::~ComponentMesh()
 void ComponentMesh::Draw()
 {
 
+	Component* transform = game_object->GetComponentByType(COMPONENT_TRANSFORM);
+	if (transform != nullptr)
+	{
+		glLoadIdentity();
+		glPushMatrix();
+		glMultMatrixf(App->camera->GetViewMatrix());
+	//	glMultMatrixf(((CompTransform*)transform)->GetMatrix());
+	}
+
 	//Bind vertices
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glBindBuffer(GL_ARRAY_BUFFER, id_vertices);
@@ -81,6 +91,14 @@ void ComponentMesh::Draw()
 	if (App->scene->debug_draw && normals != nullptr)
 	{
 		DebugDraw();
+	}
+
+	if (transform != nullptr)
+	{
+		glPopMatrix();
+		glLoadIdentity();
+		glMultMatrixf(App->camera->GetViewMatrix());
+
 	}
 
 }

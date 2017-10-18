@@ -82,3 +82,29 @@ void CompTransform::OnEditor()
 		SetRotation(new_rot);
 	}
 }
+
+void CompTransform::Update()
+{
+
+	float4x4 rotation_matrix = float4x4::FromQuat(rotation);	
+	matrix = float4x4::FromTRS(translation, rotation_matrix, scale);
+}
+
+
+
+
+const float * CompTransform::GetMatrix()
+{
+	float planed_matrix[16];
+	int pos = 0;
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			planed_matrix[pos] = matrix[i][j];
+			pos++;
+		}
+	}
+
+	return planed_matrix;
+}
