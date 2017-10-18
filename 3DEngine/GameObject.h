@@ -34,6 +34,10 @@ public:
 
 	void OnEditor();
 
+	const AABB* GetBoundingBox()
+	{
+		return &bounding_box;
+	}
 
 private:
 

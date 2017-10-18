@@ -687,6 +687,9 @@ void ModuleEditor::ConfigRenderingMenu()
 	if (ImGui::Checkbox("GL Cull Face", &App->renderer3D->gl_cull_face_enabled))
 		(App->renderer3D->gl_cull_face_enabled) ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
 
+	//Enable/Disable frustum culling
+	ImGui::Checkbox("Frustum Culling", &App->renderer3D->frustum_culling);
+
 	//Enable/Disable Lighting
 	if (ImGui::Checkbox("GL Lighting", &App->renderer3D->gl_lighting_enabled))
 		(App->renderer3D->gl_lighting_enabled) ? glEnable(GL_LIGHTING) : glDisable(GL_LIGHTING);

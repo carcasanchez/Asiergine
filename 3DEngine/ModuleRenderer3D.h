@@ -6,6 +6,7 @@
 #include "Primitive.h"
 
 class ComponentMesh;
+class ComponentCamera;
 
 class ModuleRenderer3D : public Module
 {
@@ -28,6 +29,10 @@ public:
 	void SetBoxToDraw(math::AABB*);
 	void SetBoxToDraw(math::Frustum*);
 
+	void SetActiveCamera(ComponentCamera* c)
+	{
+		active_camera = c;
+	};
 
 public:
 
@@ -45,7 +50,7 @@ public:
 	bool gl_texture_2D_enabled;
 	bool gl_wireframe_enabled;
 	bool hard_poly_enabled;
-
+	bool frustum_culling = false;
 
 private:
 	std::queue<ComponentMesh*> meshes_to_draw;
@@ -56,5 +61,10 @@ private:
 	void DrawDebugBoxes();
 	void DrawCameraFrustums();
 
+	bool CheckFrustumCulling(const ComponentMesh*);
+
 	Plane_prim plane;
+
+
+	ComponentCamera* active_camera = nullptr;
 };

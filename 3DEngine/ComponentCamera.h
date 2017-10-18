@@ -36,8 +36,9 @@ public:
 
 	bool active = false;
 
-private:
 	math::Frustum frustum;
+
+private:
 	float aspect_ratio;
 };
 

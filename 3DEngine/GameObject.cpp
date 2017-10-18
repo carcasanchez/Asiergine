@@ -163,6 +163,9 @@ ComponentCamera * GameObject::CreateComponent_Camera(float near_dist, float far_
 
 	ComponentCamera* new_camera = new ComponentCamera(this, near_dist, far_dist, active);
 
+	if (active)
+		App->renderer3D->SetActiveCamera(new_camera);
+
 	components.push_back(new_camera);
 	LOG("Creating new Camera in %s", name.c_str());
 

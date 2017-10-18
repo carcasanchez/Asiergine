@@ -11,6 +11,8 @@
 
 #include "ModuleRenderer3D.h"
 #include "ComponentMesh.h"
+#include "ComponentCamera.h"
+#include "GameObject.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
@@ -285,7 +287,13 @@ void ModuleRenderer3D::DrawGeometry()
 	plane.Render();
 	while (meshes_to_draw.empty() == false)
 	{
-		meshes_to_draw.front()->Draw();
+		if (frustum_culling)
+		{
+			if (CheckFrustumCulling(meshes_to_draw.front()))
+				meshes_to_draw.front()->Draw();
+		}
+		else meshes_to_draw.front()->Draw();
+
 		meshes_to_draw.pop();		
 	}
 
@@ -373,5 +381,10 @@ void ModuleRenderer3D::DrawCameraFrustums()
 
 		frustums_to_draw.pop();
 	}
+}
+
+bool ModuleRenderer3D::CheckFrustumCulling(const ComponentMesh * m)
+{
+	return active_camera->frustum.Contains(*m->GetGameObject()->GetBoundingBox());	
 }
 
