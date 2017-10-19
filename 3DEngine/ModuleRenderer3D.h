@@ -26,7 +26,7 @@ public:
 	bool SaveConfig(JSON_Object* config_data);
 
 	void SetMeshToDraw(ComponentMesh*);
-	void SetBoxToDraw(math::AABB*);
+	void SetBoxToDraw(math::AABB);
 	void SetBoxToDraw(math::Frustum*);
 
 	void SetActiveCamera(ComponentCamera* c)
@@ -54,7 +54,7 @@ public:
 
 private:
 	std::queue<ComponentMesh*> meshes_to_draw;
-	std::queue<math::AABB*> boxes_to_draw;
+	std::queue<math::AABB> boxes_to_draw;
 	std::queue<math::Frustum*> frustums_to_draw;
 
 	void DrawGeometry();

@@ -36,7 +36,7 @@ public:
 
 	const AABB* GetBoundingBox()
 	{
-		return &bounding_box;
+		 return &bounding_box;
 	}
 
 

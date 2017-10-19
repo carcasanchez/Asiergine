@@ -101,6 +101,7 @@ void CompTransform::Update()
 	matrix.Transpose();
 	matrix = GetParentTransform();
 
+
 }
 
 

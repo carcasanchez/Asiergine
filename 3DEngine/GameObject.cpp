@@ -36,15 +36,30 @@ void GameObject::Update()
 
 		children[i]->Update();
 	}
-
-
 	
 
-	//Debug Bounding Box
-	if (App->scene->debug_draw)
+	Component* t = GetComponentByType(COMPONENT_TRANSFORM);
+	//Update bounding box -------------------------------------------------------------------------
+	if (t && bounding_box.IsFinite())
 	{
-		App->renderer3D->SetBoxToDraw(&bounding_box);
+		float4x4 matrix = ((CompTransform*)t)->GetMatrix();
+		matrix.Transpose();
+		float4 new_min_point = matrix * float4(bounding_box.minPoint, 1);
+		float4 new_max_point = matrix * float4(bounding_box.maxPoint, 1);
+		
+
+		math::AABB transformed_box = bounding_box;
+		transformed_box.minPoint = { new_min_point.x, new_min_point.y, new_min_point.z };
+		transformed_box.maxPoint = { new_max_point.x, new_max_point.y, new_max_point.z };
+	
+	
+		//Debug Bounding Box
+		if (App->scene->debug_draw)
+		{
+			App->renderer3D->SetBoxToDraw(transformed_box);
+		}
 	}
+
 }
 
 void GameObject::CleanUp()
