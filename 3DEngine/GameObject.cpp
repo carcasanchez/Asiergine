@@ -145,11 +145,11 @@ ComponentMesh * GameObject::CreateComponent_Mesh(float * ver, uint * ind, uint n
 	//Adapt bounding box to geometry-----------------
 	std::vector <float3> vertex_array;
 
-	for (int i = 0; i < num_ind * 3; i += 3)
-		vertex_array.push_back(float3(new_mesh->GetVertices()[i], new_mesh->GetVertices()[i + 1], new_mesh->GetVertices()[i + 2]));
 
-	bounding_box.Enclose(&vertex_array[0], (int)num_vert);
+	for (int i = 0; i < num_vert; i += 3)
+		vertex_array.push_back(float3(ver[i], ver[i + 1], ver[i + 2]));
 
+	bounding_box.Enclose(&vertex_array[0], vertex_array.size());
 
 	components.push_back(new_mesh);
 	LOG("Creating new Mesh with %i vertices in %s", new_mesh->GetNumVertices(), name.c_str());
