@@ -37,6 +37,9 @@ void GameObject::Update()
 		children[i]->Update();
 	}
 
+
+	
+
 	//Debug Bounding Box
 	if (App->scene->debug_draw)
 	{

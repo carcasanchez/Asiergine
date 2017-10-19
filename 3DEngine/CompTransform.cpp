@@ -1,6 +1,7 @@
 #include "CompTransform.h"
 #include "Application.h"
 #include "imgui\imgui.h"
+#include "GameObject.h"
 
 CompTransform::CompTransform(GameObject * game_object):Component(game_object)
 {
@@ -52,9 +53,18 @@ void CompTransform::OnEditor()
 	float z = GetTranslation().z;
 	float location[3] = { x, y, z };
 
+
+	float drag_speed = 0.1;
+
+	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT)
+	{
+		drag_speed = 1;
+	}
+
+
 	ImGui::TextWrapped("Translation: ");
 	ImGui::SameLine();
-	if (ImGui::DragFloat3("", location))
+	if (ImGui::DragFloat3("", location, drag_speed))
 		SetTranslation(location[0], location[1], location[2]);
 
 	//Scale
@@ -65,7 +75,7 @@ void CompTransform::OnEditor()
 
 	ImGui::TextWrapped("Scale:       ");
 	ImGui::SameLine();
-	if (ImGui::DragFloat3(" ", scale))
+	if (ImGui::DragFloat3(" ", scale, drag_speed))
 		SetScale(scale[0], scale[1], scale[2]);
 
 	//Rotation
@@ -76,7 +86,7 @@ void CompTransform::OnEditor()
 
 	ImGui::TextWrapped("Rotation:    ");
 	ImGui::SameLine();
-	if (ImGui::DragFloat3("  ", rotate))
+	if (ImGui::DragFloat3("  ", rotate, drag_speed))
 	{
 		Quat new_rot = Quat::FromEulerXYZ(rotate[0], rotate[1], rotate[2]);
 		SetRotation(new_rot);
@@ -89,23 +99,30 @@ void CompTransform::Update()
 	float4x4 rotation_matrix = float4x4::FromQuat(rotation);	
 	matrix = float4x4::FromTRS(translation, rotation_matrix, scale);
 	matrix.Transpose();
-}
+	matrix = GetParentTransform();
 
+}
 
 
 
 const float * CompTransform::GetMatrix()
 {
-	/*float planed_matrix[16];
-	int pos = 0;
-	for (int i = 0; i < 4; i++)
-	{
-		for (int j = 0; j < 4; j++)
-		{
-			planed_matrix[pos] = matrix[i][j];
-			pos++;
-		}
-	}*/
-
 	return matrix.ptr();
+}
+
+float4x4 CompTransform::GetParentTransform()
+{
+
+	 GameObject* g = game_object->GetParent();
+	 float4x4 parent_transform = float4x4::identity;
+	
+	if (g != nullptr)
+	{
+		 CompTransform* c_transform = ((CompTransform*)g->GetComponentByType(COMPONENT_TRANSFORM));
+		 if(c_transform)
+			 parent_transform = c_transform->GetParentTransform();
+	}
+
+
+	return matrix * parent_transform;
 }

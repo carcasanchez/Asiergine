@@ -23,6 +23,7 @@ public:
 
 	const float* GetMatrix();
 
+	float4x4 GetParentTransform();
 
 private:
 	math::float3 translation;
@@ -30,4 +31,6 @@ private:
 	math::Quat rotation;
 
 	math::float4x4 matrix;
+
+
 };

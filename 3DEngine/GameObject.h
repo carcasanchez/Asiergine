@@ -23,7 +23,7 @@ public:
 	const char* GetName() const { return name.c_str(); }
 	void SetName(const char* n) { name = n; }
 
-	const GameObject* GetParent() { return parent; }
+	GameObject* GetParent() { return parent; }
 	std::vector<GameObject*> GetChildrens() { return children;}
 	void SetParent(GameObject* new_parent);
 
@@ -39,6 +39,8 @@ public:
 		return &bounding_box;
 	}
 
+
+
 private:
 
 	GameObject* parent = nullptr;
@@ -46,7 +48,6 @@ private:
 
 	std::vector<Component*> components;
 	std::vector<GameObject*> children;
-
 	math::AABB bounding_box;
 
 };
