@@ -105,7 +105,7 @@ void CompTransform::Update()
 
 
 
-const float * CompTransform::GetMatrix()
+const float * CompTransform::GetMatrixPtr()
 {
 	return matrix.ptr();
 }

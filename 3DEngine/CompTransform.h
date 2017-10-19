@@ -21,7 +21,12 @@ public:
 
 	void Update();
 
-	const float* GetMatrix();
+	const float* GetMatrixPtr();
+	float4x4 GetMatrix()
+	{
+		return matrix;
+	}
+
 
 	float4x4 GetParentTransform();
 

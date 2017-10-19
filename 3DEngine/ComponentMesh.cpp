@@ -60,7 +60,7 @@ void ComponentMesh::Draw()
 	{
 		glMatrixMode(GL_MODELVIEW);
 		glPushMatrix();
-		glMultMatrixf(((CompTransform*)transform)->GetMatrix());
+		glMultMatrixf(((CompTransform*)transform)->GetMatrixPtr());
 	}
 
 
