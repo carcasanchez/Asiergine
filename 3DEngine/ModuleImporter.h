@@ -5,12 +5,12 @@ struct aiNode;
 struct aiMesh;
 struct aiScene;
 
-class ModuleFileSystem : public Module
+class ModuleImporter : public Module
 {
 public:
-	ModuleFileSystem();
-	ModuleFileSystem(bool start_enabled);
-	~ModuleFileSystem();
+	ModuleImporter();
+	ModuleImporter(bool start_enabled);
+	~ModuleImporter();
 
 	bool Init(const JSON_Object* config_data);
 	bool CleanUp();

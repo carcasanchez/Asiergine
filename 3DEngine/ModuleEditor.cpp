@@ -118,7 +118,7 @@ update_status ModuleEditor::Update(float dt)
 	const char* f_path = App->input->GetFileDropped();	
 	if (f_path != nullptr)
 	{
-		App->file_system->LoadFile(f_path);
+		App->importer->LoadFile(f_path);
 	}
 
 			

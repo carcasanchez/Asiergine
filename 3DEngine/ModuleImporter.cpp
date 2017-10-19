@@ -1,7 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include ".\mmgr\mmgr.h"
-#include "ModuleFileSystem.h"
+#include "ModuleImporter.h"
 #include "GameObject.h"
 #include "ComponentMesh.h"
 
@@ -20,21 +20,21 @@
 #pragma comment(lib, "3DEngine/Devil/libx86/ILU.lib")
 #pragma comment(lib, "3DEngine/Devil/libx86/ILUT.lib")
 
-ModuleFileSystem::ModuleFileSystem()
+ModuleImporter::ModuleImporter()
 {
 
 }
 
-ModuleFileSystem::ModuleFileSystem(bool start_enabled) : Module(start_enabled)
+ModuleImporter::ModuleImporter(bool start_enabled) : Module(start_enabled)
 {
 	name = "file_system";
 }
 
-ModuleFileSystem::~ModuleFileSystem()
+ModuleImporter::~ModuleImporter()
 {
 }
 
-bool ModuleFileSystem::Init(const JSON_Object* config_data)
+bool ModuleImporter::Init(const JSON_Object* config_data)
 {
 	bool ret = true;
 
@@ -67,7 +67,7 @@ bool ModuleFileSystem::Init(const JSON_Object* config_data)
 
 
 
-bool ModuleFileSystem::CleanUp()
+bool ModuleImporter::CleanUp()
 {
 
 	// detach log stream
@@ -78,7 +78,7 @@ bool ModuleFileSystem::CleanUp()
 
 
 //Load General file and identify the format
-void ModuleFileSystem::LoadFile(const char * path)
+void ModuleImporter::LoadFile(const char * path)
 {
 	std::string tmp = path;
 	std::string extension;
@@ -141,7 +141,7 @@ void ModuleFileSystem::LoadFile(const char * path)
 
 
 //Load FBX scene----------------------------------
-bool ModuleFileSystem::LoadFBX(const char * path)
+bool ModuleImporter::LoadFBX(const char * path)
 {
 	bool ret = true;
 	const aiScene* scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality);
@@ -180,7 +180,7 @@ bool ModuleFileSystem::LoadFBX(const char * path)
 }
 
 //Searches every FBX node for data and loades one GameObject per node
-GameObject* ModuleFileSystem::SearchNode(const aiNode* n, const aiScene* scene, GameObject* parent)
+GameObject* ModuleImporter::SearchNode(const aiNode* n, const aiScene* scene, GameObject* parent)
 {
 	GameObject* obj = LoadNewObject(n, parent);
 
@@ -201,7 +201,7 @@ GameObject* ModuleFileSystem::SearchNode(const aiNode* n, const aiScene* scene, 
 }
 
 //Creates new object and loads transform
-GameObject * ModuleFileSystem::LoadNewObject(const aiNode * n, GameObject* parent)
+GameObject * ModuleImporter::LoadNewObject(const aiNode * n, GameObject* parent)
 {	
 	GameObject* new_obj = App->scene->CreateGameObject(n->mName.C_Str(), parent);
 	
@@ -218,7 +218,7 @@ GameObject * ModuleFileSystem::LoadNewObject(const aiNode * n, GameObject* paren
 }
 
 //Loads meshes from FBX node
-bool ModuleFileSystem::LoadGeometry(const aiMesh* m, GameObject* obj)
+bool ModuleImporter::LoadGeometry(const aiMesh* m, GameObject* obj)
 {
 	bool ret = true;
 	
@@ -286,7 +286,7 @@ bool ModuleFileSystem::LoadGeometry(const aiMesh* m, GameObject* obj)
 }
 
 //Get the very first texture of the FBX (called once)
-int ModuleFileSystem::SearchForTexture(const aiScene* scene, const char* path)
+int ModuleImporter::SearchForTexture(const aiScene* scene, const char* path)
 {
 	int text_id = 0;	
 	
@@ -316,7 +316,7 @@ int ModuleFileSystem::SearchForTexture(const aiScene* scene, const char* path)
 
 
 //Load texture from image-----------------------------
-GLuint ModuleFileSystem::LoadTexture(const char * path)
+GLuint ModuleImporter::LoadTexture(const char * path)
 {
 	//Gen image
 	ILuint img_id = 0;

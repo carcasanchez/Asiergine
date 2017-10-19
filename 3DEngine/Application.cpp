@@ -12,7 +12,7 @@ Application::Application()
 	camera = new ModuleCamera3D();
 	//physics = new ModulePhysics3D(this);
 	editor = new ModuleEditor();
-	file_system = new ModuleFileSystem();
+	importer = new ModuleImporter();
 	scene = new ModuleScene();
 
 	// The order of calls is very important!
@@ -26,7 +26,7 @@ Application::Application()
 	AddModule(audio);
 	//AddModule(physics);
 	AddModule(editor);
-	AddModule(file_system);
+	AddModule(importer);
 	AddModule(scene);
 
 	// Renderer last!

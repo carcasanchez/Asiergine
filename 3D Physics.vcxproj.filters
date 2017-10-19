@@ -160,9 +160,6 @@
     <ClCompile Include="3DEngine\Primitive.cpp">
       <Filter>Source\Helpers</Filter>
     </ClCompile>
-    <ClCompile Include="3DEngine\ModuleFileSystem.cpp">
-      <Filter>Source\Modules</Filter>
-    </ClCompile>
     <ClCompile Include="3DEngine\GameObject.cpp">
       <Filter>Source\Containers</Filter>
     </ClCompile>
@@ -183,6 +180,9 @@
     </ClCompile>
     <ClCompile Include="3DEngine\ComponentCamera.cpp">
       <Filter>Source\Containers\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="3DEngine\ModuleImporter.cpp">
+      <Filter>Source\Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -447,9 +447,6 @@
     <ClInclude Include="3DEngine\Primitive.h">
       <Filter>Source\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="3DEngine\ModuleFileSystem.h">
-      <Filter>Source\Modules</Filter>
-    </ClInclude>
     <ClInclude Include="3DEngine\Devil\include\config.h">
       <Filter>Source\Tools\DevIL</Filter>
     </ClInclude>
@@ -494,6 +491,9 @@
     </ClInclude>
     <ClInclude Include="3DEngine\ComponentCamera.h">
       <Filter>Source\Containers\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\ModuleImporter.h">
+      <Filter>Source\Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
