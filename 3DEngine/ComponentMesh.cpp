@@ -49,17 +49,21 @@ ComponentMesh::~ComponentMesh()
 void ComponentMesh::Draw()
 {
 
-	Component* transform = game_object->GetComponentByType(COMPONENT_TRANSFORM);
-	if (transform != nullptr)
-	{
-		glLoadIdentity();
-		glPushMatrix();
-		glMultMatrixf(App->camera->GetViewMatrix());
-	//	glMultMatrixf(((CompTransform*)transform)->GetMatrix());
-	}
+	
 
 	//Bind vertices
 	glEnableClientState(GL_VERTEX_ARRAY);
+
+
+	Component* transform = game_object->GetComponentByType(COMPONENT_TRANSFORM);
+	if (transform != nullptr)
+	{
+		glMatrixMode(GL_MODELVIEW);
+		glPushMatrix();
+		glMultMatrixf(((CompTransform*)transform)->GetMatrix());
+	}
+
+
 	glBindBuffer(GL_ARRAY_BUFFER, id_vertices);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 
@@ -85,6 +89,9 @@ void ComponentMesh::Draw()
 
 	
 	glBindTexture(GL_TEXTURE_2D, 0);
+
+
+
 	glDisableClientState(GL_VERTEX_ARRAY);	
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
@@ -96,9 +103,6 @@ void ComponentMesh::Draw()
 	if (transform != nullptr)
 	{
 		glPopMatrix();
-		glLoadIdentity();
-		glMultMatrixf(App->camera->GetViewMatrix());
-
 	}
 
 }

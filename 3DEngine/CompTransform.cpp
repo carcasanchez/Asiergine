@@ -88,6 +88,7 @@ void CompTransform::Update()
 
 	float4x4 rotation_matrix = float4x4::FromQuat(rotation);	
 	matrix = float4x4::FromTRS(translation, rotation_matrix, scale);
+	matrix.Transpose();
 }
 
 
@@ -95,7 +96,7 @@ void CompTransform::Update()
 
 const float * CompTransform::GetMatrix()
 {
-	float planed_matrix[16];
+	/*float planed_matrix[16];
 	int pos = 0;
 	for (int i = 0; i < 4; i++)
 	{
@@ -104,7 +105,7 @@ const float * CompTransform::GetMatrix()
 			planed_matrix[pos] = matrix[i][j];
 			pos++;
 		}
-	}
+	}*/
 
-	return planed_matrix;
+	return matrix.ptr();
 }
