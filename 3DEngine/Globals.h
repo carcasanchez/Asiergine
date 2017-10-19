@@ -40,7 +40,10 @@ void log(const char file[], int line, const char* format, ...);
 
 #define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
 
-#define DEBUG_KEY SDL_SCANCODE_F1
+#define DEBUG_NORMALS_KEY SDL_SCANCODE_F1
+#define DEBUG_BOXES_KEY SDL_SCANCODE_F2
+
+
 
 typedef unsigned int uint;
 

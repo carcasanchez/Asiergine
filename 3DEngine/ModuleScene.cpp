@@ -32,10 +32,10 @@ update_status ModuleScene::Update(float dt)
 
 
 	//Check debug key
-	if (App->input->GetKey(DEBUG_KEY) == KEY_DOWN)
-	{
-		debug_draw = !debug_draw;
-	}
+	if (App->input->GetKey(DEBUG_NORMALS_KEY) == KEY_DOWN)
+		debug_normals = !debug_normals;
+	if (App->input->GetKey(DEBUG_BOXES_KEY) == KEY_DOWN)
+		debug_boxes = !debug_boxes;
 
 
 

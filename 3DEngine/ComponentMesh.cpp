@@ -95,7 +95,7 @@ void ComponentMesh::Draw()
 	glDisableClientState(GL_VERTEX_ARRAY);	
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
-	if (App->scene->debug_draw && normals != nullptr)
+	if (App->scene->debug_normals && normals != nullptr)
 	{
 		DebugDraw();
 	}

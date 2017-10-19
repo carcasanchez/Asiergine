@@ -211,7 +211,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	DrawCameraFrustums();
 
 
-	if (App->scene->debug_draw)
+	if (App->scene->debug_boxes)
 	{
 		DrawDebugBoxes();
 	}

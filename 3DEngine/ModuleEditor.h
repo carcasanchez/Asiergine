@@ -101,7 +101,6 @@ private:
 	void Window_option();
 	void ExitEditor_option();
 	
-	Plane_prim plane;
 
 	bool selected = false;
 	GameObject* selected_object = nullptr;

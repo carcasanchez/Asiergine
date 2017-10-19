@@ -54,7 +54,7 @@ void GameObject::Update()
 	
 	
 		//Debug Bounding Box
-		if (App->scene->debug_draw)
+		if (App->scene->debug_boxes)
 		{
 			App->renderer3D->SetBoxToDraw(transformed_box);
 		}
@@ -146,7 +146,7 @@ ComponentMesh * GameObject::CreateComponent_Mesh(float * ver, uint * ind, uint n
 	std::vector <float3> vertex_array;
 
 
-	for (int i = 0; i < num_vert; i += 3)
+	for (int i = 0; i < num_vert*3; i += 3)
 		vertex_array.push_back(float3(ver[i], ver[i + 1], ver[i + 2]));
 
 	bounding_box.Enclose(&vertex_array[0], vertex_array.size());

@@ -91,6 +91,14 @@ void CompTransform::OnEditor()
 		Quat new_rot = Quat::FromEulerXYZ(rotate[0], rotate[1], rotate[2]);
 		SetRotation(new_rot);
 	}
+
+
+	if (ImGui::Button("Reset Transform"))
+	{
+		SetTranslation(0, 0, 0);
+		SetRotation(Quat::identity);
+		SetScale(1, 1, 1);
+	}
 }
 
 void CompTransform::Update()
