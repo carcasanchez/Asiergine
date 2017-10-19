@@ -22,13 +22,16 @@ ComponentMaterial::~ComponentMaterial()
 
 void ComponentMaterial::OnEditor()
 {
-	if (texture_id != 0)
+	if (IsActive() == true)
 	{
-		ImVec2 size;
-		size.x = 200;
-		size.y = 200;
+		if (texture_id != 0)
+		{
+			ImVec2 size;
+			size.x = 200;
+			size.y = 200;
 
-		ImGui::Image((ImTextureID)texture_id, ImVec2(200, 200));
-		ImGui::TextColored(ImVec4(0, 255, 0, 255), "%i x %i", (int)size.x, (int)size.y);
+			ImGui::Image((ImTextureID)texture_id, ImVec2(200, 200));
+			ImGui::TextColored(ImVec4(0, 255, 0, 255), "%i x %i", (int)size.x, (int)size.y);
+		}
 	}
 }

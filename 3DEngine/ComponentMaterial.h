@@ -10,6 +10,8 @@ public:
 
 	void OnEditor();
 
+	bool IsActive() { return active; }
+
 	uint texture_id = 0;
 };
 

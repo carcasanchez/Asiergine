@@ -19,7 +19,7 @@ public:
 	virtual void Update();
 	virtual void Disable();
 
-	bool IsActive() { return active; }
+	virtual bool IsActive() { return active; }
 	void SetActive(bool val) { active = val; }
 
 	const char* GetComponentNameByType();

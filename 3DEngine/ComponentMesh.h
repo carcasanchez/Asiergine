@@ -18,6 +18,8 @@ public:
 	int GetNumVertices() { return num_vertices; }
 	const float* GetVertices() { return vertices; }
 
+	bool IsActive() { return active; }
+
 private:
 	uint id_vertices = 0;  //id in VRAM
 	uint num_vertices = 0;

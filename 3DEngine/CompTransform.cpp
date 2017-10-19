@@ -47,57 +47,60 @@ void CompTransform::SetRotation(Quat rot)
 
 void CompTransform::OnEditor()
 {
-	//Translation
-	float x = GetTranslation().x;
-	float y = GetTranslation().y;
-	float z = GetTranslation().z;
-	float location[3] = { x, y, z };
-
-
-	float drag_speed = 0.1;
-
-	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT)
+	if (IsActive() == true)
 	{
-		drag_speed = 1;
-	}
+		//Translation
+		float x = GetTranslation().x;
+		float y = GetTranslation().y;
+		float z = GetTranslation().z;
+		float location[3] = { x, y, z };
 
 
-	ImGui::TextWrapped("Translation: ");
-	ImGui::SameLine();
-	if (ImGui::DragFloat3("", location, drag_speed))
-		SetTranslation(location[0], location[1], location[2]);
+		float drag_speed = 0.1;
 
-	//Scale
-	float s_x = GetScale().x;
-	float s_y = GetScale().y;
-	float s_z = GetScale().z;
-	float scale[3] = { s_x, s_y, s_z };
-
-	ImGui::TextWrapped("Scale:       ");
-	ImGui::SameLine();
-	if (ImGui::DragFloat3(" ", scale, drag_speed))
-		SetScale(scale[0], scale[1], scale[2]);
-
-	//Rotation
-	float r_x = GetRotation().ToEulerXYZ().x * RADTODEG;
-	float r_y = GetRotation().ToEulerXYZ().y * RADTODEG;
-	float r_z = GetRotation().ToEulerXYZ().z * RADTODEG;
-	float rotate[3] = { r_x, r_y, r_z };
-
-	ImGui::TextWrapped("Rotation:    ");
-	ImGui::SameLine();
-	if (ImGui::DragFloat3("  ", rotate, drag_speed))
-	{
-		Quat new_rot = Quat::FromEulerXYZ(rotate[0] * DEGTORAD, rotate[1] * DEGTORAD, rotate[2] * DEGTORAD);
-		SetRotation(new_rot);
-	}
+		if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT)
+		{
+			drag_speed = 1;
+		}
 
 
-	if (ImGui::Button("Reset Transform"))
-	{
-		SetTranslation(0, 0, 0);
-		SetRotation(Quat::identity);
-		SetScale(1, 1, 1);
+		ImGui::TextWrapped("Translation: ");
+		ImGui::SameLine();
+		if (ImGui::DragFloat3("", location, drag_speed))
+			SetTranslation(location[0], location[1], location[2]);
+
+		//Scale
+		float s_x = GetScale().x;
+		float s_y = GetScale().y;
+		float s_z = GetScale().z;
+		float scale[3] = { s_x, s_y, s_z };
+
+		ImGui::TextWrapped("Scale:       ");
+		ImGui::SameLine();
+		if (ImGui::DragFloat3(" ", scale, drag_speed))
+			SetScale(scale[0], scale[1], scale[2]);
+
+		//Rotation
+		float r_x = GetRotation().ToEulerXYZ().x * RADTODEG;
+		float r_y = GetRotation().ToEulerXYZ().y * RADTODEG;
+		float r_z = GetRotation().ToEulerXYZ().z * RADTODEG;
+		float rotate[3] = { r_x, r_y, r_z };
+
+		ImGui::TextWrapped("Rotation:    ");
+		ImGui::SameLine();
+		if (ImGui::DragFloat3("  ", rotate, drag_speed))
+		{
+			Quat new_rot = Quat::FromEulerXYZ(rotate[0] * DEGTORAD, rotate[1] * DEGTORAD, rotate[2] * DEGTORAD);
+			SetRotation(new_rot);
+		}
+
+
+		if (ImGui::Button("Reset Transform"))
+		{
+			SetTranslation(0, 0, 0);
+			SetRotation(Quat::identity);
+			SetScale(1, 1, 1);
+		}
 	}
 }
 

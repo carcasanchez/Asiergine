@@ -30,11 +30,12 @@ public:
 		frustum.farPlaneDistance = d;
 	}
 
+	bool IsActive() { return active; }
 
 	void OnEditor();
 
 
-	bool active = false;
+	bool cam_active = false;
 
 	math::Frustum frustum;
 

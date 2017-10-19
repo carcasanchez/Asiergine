@@ -18,7 +18,7 @@ public:
 	void SetRotation(Quat rot);
 
 	void OnEditor();
-
+	bool IsActive() { return active; }
 	void Update();
 
 	const float* GetMatrixPtr();

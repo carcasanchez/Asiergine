@@ -52,29 +52,32 @@ void ComponentCamera::Update()
 
 void ComponentCamera::OnEditor()
 {
-	ImGui::TextWrapped("Aspect ratio:");
-	ImGui::SameLine();
-	ImGui::TextColored(ImVec4(1, 1, 0, 1), "%.3f", aspect_ratio);
-
-
-	ImGui::DragFloat("Near Distance", &frustum.nearPlaneDistance, 0.1, 0.0, frustum.farPlaneDistance);
-
-	ImGui::DragFloat("Far Distance", &frustum.farPlaneDistance, 0.1);
-
-
-	static int selected_option = 0;
-	if (ImGui::Combo("Perspective type", &selected_option, "Perspective\0Orthographic", 2))
+	if (IsActive() == true)
 	{
-		if(selected_option == 0)
-			frustum.type = PerspectiveFrustum;
-		else if (selected_option == 1)
-			frustum.type = OrthographicFrustum;
-	}
+		ImGui::TextWrapped("Aspect ratio:");
+		ImGui::SameLine();
+		ImGui::TextColored(ImVec4(1, 1, 0, 1), "%.3f", aspect_ratio);
 
 
-	if (ImGui::DragFloat("Field of View", &frustum.verticalFov, 0.1, 0.1))
-	{
-		frustum.horizontalFov = math::Atan(aspect_ratio*math::Tan(frustum.verticalFov / 2)) * 2;
+		ImGui::DragFloat("Near Distance", &frustum.nearPlaneDistance, 0.1, 0.0, frustum.farPlaneDistance);
+
+		ImGui::DragFloat("Far Distance", &frustum.farPlaneDistance, 0.1);
+
+
+		static int selected_option = 0;
+		if (ImGui::Combo("Perspective type", &selected_option, "Perspective\0Orthographic", 2))
+		{
+			if (selected_option == 0)
+				frustum.type = PerspectiveFrustum;
+			else if (selected_option == 1)
+				frustum.type = OrthographicFrustum;
+		}
+
+
+		if (ImGui::DragFloat("Field of View", &frustum.verticalFov, 0.1, 0.1))
+		{
+			frustum.horizontalFov = math::Atan(aspect_ratio*math::Tan(frustum.verticalFov / 2)) * 2;
+		}
 	}
 }
 

@@ -137,5 +137,8 @@ void ComponentMesh::Update()
 
 void ComponentMesh::OnEditor()
 {
-	ImGui::TextWrapped("Number of vertices: %i", GetNumVertices());
+	if (IsActive() == true)
+	{
+		ImGui::TextWrapped("Number of vertices: %i", GetNumVertices());
+	}
 }

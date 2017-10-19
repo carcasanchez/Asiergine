@@ -237,7 +237,7 @@ void ModuleEditor::ExitEditor_option()
 //Example window management------------------------------------------------------------------------
 void ModuleEditor::ManageExampleWindow()
 {
-	//if (test_window_open == true)
+	if (test_window_open == true)
 		ImGui::ShowTestWindow();
 }
 
