@@ -383,6 +383,6 @@ void ModuleRenderer3D::DrawCameraFrustums()
 
 bool ModuleRenderer3D::CheckFrustumCulling(const ComponentMesh * m)
 {
-	return active_camera->frustum.Contains(*m->GetGameObject()->GetBoundingBox());	
+	return active_camera->frustum.Contains(*m->GetGameObject()->GetTransformedBox());	
 }
 

@@ -48,15 +48,15 @@ void GameObject::Update()
 		float4 new_max_point = matrix * float4(bounding_box.maxPoint, 1);
 		
 
-		math::AABB transformed_box = bounding_box;
-		transformed_box.minPoint = { new_min_point.x, new_min_point.y, new_min_point.z };
-		transformed_box.maxPoint = { new_max_point.x, new_max_point.y, new_max_point.z };
+		transformed_bounding_box = bounding_box;
+		transformed_bounding_box.minPoint = { new_min_point.x, new_min_point.y, new_min_point.z };
+		transformed_bounding_box.maxPoint = { new_max_point.x, new_max_point.y, new_max_point.z };
 	
 	
 		//Debug Bounding Box
 		if (App->scene->debug_boxes)
 		{
-			App->renderer3D->SetBoxToDraw(transformed_box);
+			App->renderer3D->SetBoxToDraw(transformed_bounding_box);
 		}
 	}
 

@@ -400,7 +400,8 @@ bool Frustum::Contains(const AABB &refBox) const
 
 	//-------------------------------------
 
-	return true;
+	return true;
+
 }
 
 bool Frustum::Contains(const OBB &obb) const

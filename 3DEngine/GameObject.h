@@ -39,6 +39,10 @@ public:
 		 return &bounding_box;
 	}
 
+	const AABB* GetTransformedBox()
+	{
+		return &transformed_bounding_box;
+	}
 
 
 private:
@@ -48,6 +52,8 @@ private:
 
 	std::vector<Component*> components;
 	std::vector<GameObject*> children;
+	
 	math::AABB bounding_box;
+	math::AABB transformed_bounding_box;
 
 };
