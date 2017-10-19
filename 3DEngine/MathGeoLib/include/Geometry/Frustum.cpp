@@ -323,57 +323,83 @@ bool Frustum::Contains(const AABB &refBox) const
 								 // test all 8 corners against the 6 sides
 								 // if all points are behind 1 specific plane, we are out
 								 // if we are in with all points, then we are fully in
-	for (int p = 0; p < 6; ++p) {
-		int iInCount = 8;
-		int iPtIn = 1;
-		for (int i = 0; i < 8; ++i) {
-			// test this point against the planes
-			/*if (planes[p].IsOnPositiveSide(vCorner[i]) == false) {
-				iPtIn = 0;
-				--iInCount;
-			}*/
 
-			if (BottomPlane().IsOnPositiveSide(vCorner[i]))
-			{
-				iPtIn = 0;
-				--iInCount;
-			}
-			if (TopPlane().IsOnPositiveSide(vCorner[i]))
-			{
-				iPtIn = 0;
-				--iInCount;
-			}
-			if (FarPlane().IsOnPositiveSide(vCorner[i]))
-			{
-				iPtIn = 0;
-				--iInCount;
-			}
-			if(NearPlane().IsOnPositiveSide(vCorner[i]))
-			{
-				iPtIn = 0;
-				--iInCount;
-			}
-			if (RightPlane().IsOnPositiveSide(vCorner[i]))
-			{
-				iPtIn = 0;
-				--iInCount;
-			}
-			if (LeftPlane().IsOnPositiveSide(vCorner[i]))
-			{
-				iPtIn = 0;
-				--iInCount;
-			}
+
+	//-------------------------------------
+	int out = 0;
+	for (int i = 0; i < 8; ++i)
+	{
+		if (BottomPlane().IsOnPositiveSide(vCorner[i]))
+		{
+			out++;
 		}
-		// were all the points outside of plane p?
-		if(iInCount <= 0)
-			return false;
-		// check if they were all on the right side of the plane
-		iTotalIn += iPtIn;
 	}
-	// so if iTotalIn is 6, then all are inside the view
-	if (iTotalIn == 6)
-		return true;
-	// we must be partly in then otherwise
+	if (out == 8)
+		return false;
+	//-------------------------------------
+
+	out = 0;
+	for (int i = 0; i < 8; ++i)
+	{
+		if (TopPlane().IsOnPositiveSide(vCorner[i]))
+		{
+			out++;
+		}
+	}
+	if (out == 8)
+		return false;
+	//-------------------------------------
+
+	out = 0;
+	for (int i = 0; i < 8; ++i)
+	{
+		if (NearPlane().IsOnPositiveSide(vCorner[i]))
+		{
+			out++;
+		}
+	}
+	if (out == 8)
+		return false;
+	//-------------------------------------
+
+
+	out = 0;
+	for (int i = 0; i < 8; ++i)
+	{
+		if (FarPlane().IsOnPositiveSide(vCorner[i]))
+		{
+			out++;
+		}
+	}
+	if (out == 8)
+		return false;
+
+	//-------------------------------------
+	out = 0;
+	for (int i = 0; i < 8; ++i)
+	{
+		if (RightPlane().IsOnPositiveSide(vCorner[i]))
+		{
+			out++;
+		}
+	}
+	if (out == 8)
+		return false;
+
+	//-------------------------------------
+	out = 0;
+	for (int i = 0; i < 8; ++i)
+	{
+		if (LeftPlane().IsOnPositiveSide(vCorner[i]))
+		{
+			out++;
+		}
+	}
+	if (out == 8)
+		return false;
+
+	//-------------------------------------
+
 	return true;
 }
 
