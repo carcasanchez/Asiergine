@@ -194,6 +194,11 @@ void GameObject::OnEditor()
 {
 	ImGui::TextWrapped("%s", name.c_str());
 	ImGui::Separator();
+	if (ImGui::BeginMenu("Component order"))
+	{
+
+		ImGui::EndMenu();
+	}
 	
 	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); it++)
 	{

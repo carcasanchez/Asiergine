@@ -79,16 +79,16 @@ void CompTransform::OnEditor()
 		SetScale(scale[0], scale[1], scale[2]);
 
 	//Rotation
-	float r_x = GetRotation().ToEulerXYZ().x;
-	float r_y = GetRotation().ToEulerXYZ().y;
-	float r_z = GetRotation().ToEulerXYZ().z;
+	float r_x = GetRotation().ToEulerXYZ().x * RADTODEG;
+	float r_y = GetRotation().ToEulerXYZ().y * RADTODEG;
+	float r_z = GetRotation().ToEulerXYZ().z * RADTODEG;
 	float rotate[3] = { r_x, r_y, r_z };
 
 	ImGui::TextWrapped("Rotation:    ");
 	ImGui::SameLine();
 	if (ImGui::DragFloat3("  ", rotate, drag_speed))
 	{
-		Quat new_rot = Quat::FromEulerXYZ(rotate[0], rotate[1], rotate[2]);
+		Quat new_rot = Quat::FromEulerXYZ(rotate[0] * DEGTORAD, rotate[1] * DEGTORAD, rotate[2] * DEGTORAD);
 		SetRotation(new_rot);
 	}
 
