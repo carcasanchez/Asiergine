@@ -8,7 +8,7 @@
 #include "CompTransform.h"
 
 
-ComponentCamera::ComponentCamera(GameObject* g, float near_distance, float far_distance, bool active) : Component(g), active(active)
+ComponentCamera::ComponentCamera(GameObject* g, float near_distance, float far_distance, bool active) : Component(g), cam_active(active)
 {
 	type = COMPONENT_CAMERA;
 	
