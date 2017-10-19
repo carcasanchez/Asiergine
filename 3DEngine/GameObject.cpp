@@ -211,6 +211,18 @@ void GameObject::OnEditor()
 				if ((*it)->active == false)
 					(*it)->Disable();
 			}
+			ImGui::SameLine();
+			if (ImGui::Button("Up"))
+			{
+				if (it != components.begin())
+					std::iter_swap(it, it - 1);
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Down"))
+			{
+				if (it + 1 != components.end())
+					std::iter_swap(it, it + 1);
+			}
 
 			(*it)->OnEditor();
 		}
