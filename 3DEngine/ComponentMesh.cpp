@@ -10,7 +10,7 @@
 #include "ComponentMaterial.h"
 #include "CompTransform.h"
 
-ComponentMesh::ComponentMesh(GameObject* game_object, float* ver, uint* ind, uint num_vert, uint num_ind, float* normals, uint tex_id, float* texture_coords): vertices(ver), indices(ind), num_vertices(num_vert), num_indices(num_ind), Component(game_object), normals(normals)
+ComponentMesh::ComponentMesh(GameObject* game_object, float* ver, uint* ind, uint num_vert, uint num_ind, float* normals, float* texture_coords): vertices(ver), indices(ind), num_vertices(num_vert), num_indices(num_ind), Component(game_object), normals(normals), texture_coords(texture_coords)
 {
 	type = COMPONENT_MESH;
 
@@ -40,6 +40,7 @@ ComponentMesh::~ComponentMesh()
 	delete[] vertices;
 	delete[] indices;
 	delete[] normals;
+	delete[] texture_coords;
 
 	glDeleteBuffers(1, &text_coord_id);
 	glDeleteBuffers(1, &id_vertices);

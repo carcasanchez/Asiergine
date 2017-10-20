@@ -137,9 +137,9 @@ CompTransform * GameObject::CreateComponent_Transform(float3 trans , float3 scal
 	return new_transform;
 }
 
-ComponentMesh * GameObject::CreateComponent_Mesh(float * ver, uint * ind, uint num_vert, uint num_ind, float* normals, uint texture_id, float * texture_coords)
+ComponentMesh * GameObject::CreateComponent_Mesh(float * ver, uint * ind, uint num_vert, uint num_ind, float* normals, float * texture_coords)
 {
-	ComponentMesh* new_mesh = new ComponentMesh(this, ver, ind, num_vert, num_ind, normals, texture_id, texture_coords);
+	ComponentMesh* new_mesh = new ComponentMesh(this, ver, ind, num_vert, num_ind, normals, texture_coords);
 	
 
 	//Adapt bounding box to geometry-----------------

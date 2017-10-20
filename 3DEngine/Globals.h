@@ -44,7 +44,9 @@ void log(const char file[], int line, const char* format, ...);
 #define DEBUG_NORMALS_KEY SDL_SCANCODE_F1
 #define DEBUG_BOXES_KEY SDL_SCANCODE_F2
 
-
+#define SCENE_SAVETAG 00
+#define OBJECT_SAVETAG 01
+#define MESH_SAVETAG 02
 
 typedef unsigned int uint;
 

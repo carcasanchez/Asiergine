@@ -276,8 +276,7 @@ bool ModuleImporter::LoadGeometry(const aiMesh* m, GameObject* obj)
 	//If everything goes OK, create a new Mesh
 	if (ret)
 	{
-		obj->CreateComponent_Mesh(vertices, indices, numVertx, numInd, normals, 0, texture_coords);
-		delete[] texture_coords;
+		obj->CreateComponent_Mesh(vertices, indices, numVertx, numInd, normals, texture_coords);
 	}
 
 	return ret;
