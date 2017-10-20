@@ -3,6 +3,7 @@
 #include ".\mmgr\mmgr.h"
 #include "GameObject.h"
 #include "ModuleInput.h"
+#include "ModuleFileSystem.h"
 
 ModuleScene::ModuleScene(bool start_enabled) : Module(start_enabled)
 {
@@ -37,6 +38,7 @@ update_status ModuleScene::Update(float dt)
 	if (App->input->GetKey(DEBUG_BOXES_KEY) == KEY_DOWN)
 		debug_boxes = !debug_boxes;
 
+	
 
 
 	return UPDATE_CONTINUE;
@@ -44,6 +46,14 @@ update_status ModuleScene::Update(float dt)
 
 bool ModuleScene::SaveConfig(JSON_Object * config_data)
 {
+	return true;
+}
+
+bool ModuleScene::SaveScene()
+{
+	
+
+
 	return true;
 }
 

@@ -39,12 +39,40 @@ bool ModuleFileSystem::SaveMeshToOwnFormat(uint num_vert, uint num_ind, float* v
 
 
 	char* data = new char[size];
-	uint cursor = 0;
+	char* cursor = data;
 
-	//Copy num vert
-	data[cursor] = num_vert;
-	cursor += sizeof(uint);
+	uint ranges[2] = { num_vert, num_ind };
+	uint size_of = sizeof(ranges);
+
+	//Copy num vert & num ind
+	memcpy(cursor, ranges, size_of);
+	cursor += size_of;
 
 
+	//Copy vert
+	size_of = sizeof(float)*num_vert*3 ;
+	memcpy(cursor, vert, size_of);
+	cursor += size_of;
+
+	//Copy ind
+	size_of = sizeof(uint)*num_ind;
+	memcpy(cursor, ind, size_of);
+	cursor += size_of;
+
+	//Write all to new file
+	std::ofstream new_file("test.carca");
+	new_file.write(data, size);
+	new_file.close();
+
+
+	delete[] data;
 	return true;
+}
+
+ComponentMesh * ModuleFileSystem::LoadMeshFromOwnFormat(const char * path)
+{
+
+
+
+	return nullptr;
 }
