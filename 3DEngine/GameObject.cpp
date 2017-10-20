@@ -194,14 +194,12 @@ void GameObject::OnEditor()
 {
 	ImGui::TextWrapped("%s", name.c_str());
 	ImGui::Separator();
-	if (ImGui::BeginMenu("Component order"))
-	{
 
-		ImGui::EndMenu();
-	}
-	
+	int id = 0;
 	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); it++)
 	{
+
+		ImGui::PushID(id);
 		if (ImGui::CollapsingHeader((*it)->GetComponentNameByType()))
 		{
 			if (ImGui::Checkbox("Active", &(*it)->active))
@@ -226,6 +224,8 @@ void GameObject::OnEditor()
 
 			(*it)->OnEditor();
 		}
+		ImGui::PopID();
+		id++;
 	}
 	
 }
