@@ -27,7 +27,7 @@ ModuleImporter::ModuleImporter()
 
 ModuleImporter::ModuleImporter(bool start_enabled) : Module(start_enabled)
 {
-	name = "file_system";
+	name = "importer";
 }
 
 ModuleImporter::~ModuleImporter()
@@ -147,8 +147,6 @@ bool ModuleImporter::LoadFBX(const char * path)
 	const aiScene* scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality);
 	if (scene != nullptr && scene->HasMeshes())
 	{
-
-		texture_id = SearchForTexture(scene, path);
 		GameObject* obj = SearchNode(scene->mRootNode, scene);
 
 		//Extract name from fbx

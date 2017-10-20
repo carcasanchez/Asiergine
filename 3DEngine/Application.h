@@ -14,7 +14,7 @@
 #include "ModuleEditor.h"
 #include "ModuleImporter.h"
 #include "ModuleScene.h"
-
+#include "ModuleFileSystem.h"
 
 struct HardwareSpecs
 {
@@ -58,6 +58,7 @@ public:
 	ModuleEditor* editor;
 	ModuleImporter* importer;
 	ModuleScene* scene;
+	ModuleFileSystem* fs;
 
 	bool console_on = false;
 

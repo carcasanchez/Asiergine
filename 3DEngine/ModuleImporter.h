@@ -5,6 +5,7 @@ struct aiNode;
 struct aiMesh;
 struct aiScene;
 
+
 class ModuleImporter : public Module
 {
 public:

@@ -64,6 +64,7 @@
     <ClCompile Include="3DEngine\ModuleAudio.cpp" />
     <ClCompile Include="3DEngine\ModuleCamera3D.cpp" />
     <ClCompile Include="3DEngine\ModuleEditor.cpp" />
+    <ClCompile Include="3DEngine\ModuleFileSystem.cpp" />
     <ClCompile Include="3DEngine\ModuleImporter.cpp" />
     <ClCompile Include="3DEngine\ModuleInput.cpp" />
     <ClCompile Include="3DEngine\ModuleRenderer3D.cpp" />
@@ -169,6 +170,7 @@
     <ClInclude Include="3DEngine\ModuleAudio.h" />
     <ClInclude Include="3DEngine\ModuleCamera3D.h" />
     <ClInclude Include="3DEngine\ModuleEditor.h" />
+    <ClInclude Include="3DEngine\ModuleFileSystem.h" />
     <ClInclude Include="3DEngine\ModuleImporter.h" />
     <ClInclude Include="3DEngine\ModuleInput.h" />
     <ClInclude Include="3DEngine\ModuleRenderer3D.h" />

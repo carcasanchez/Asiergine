@@ -184,6 +184,9 @@
     <ClCompile Include="3DEngine\ModuleImporter.cpp">
       <Filter>Source\Modules</Filter>
     </ClCompile>
+    <ClCompile Include="3DEngine\ModuleFileSystem.cpp">
+      <Filter>Source\Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3DEngine\Application.h">
@@ -493,6 +496,9 @@
       <Filter>Source\Containers\Components</Filter>
     </ClInclude>
     <ClInclude Include="3DEngine\ModuleImporter.h">
+      <Filter>Source\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\ModuleFileSystem.h">
       <Filter>Source\Modules</Filter>
     </ClInclude>
   </ItemGroup>

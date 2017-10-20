@@ -14,6 +14,7 @@ Application::Application()
 	editor = new ModuleEditor();
 	importer = new ModuleImporter();
 	scene = new ModuleScene();
+	fs = new ModuleFileSystem();
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
@@ -27,6 +28,7 @@ Application::Application()
 	//AddModule(physics);
 	AddModule(editor);
 	AddModule(importer);
+	AddModule(fs);
 	AddModule(scene);
 
 	// Renderer last!
