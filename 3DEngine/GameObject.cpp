@@ -199,12 +199,6 @@ void GameObject::OnEditor()
 	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); it++)
 	{
 		ImGui::PushID(id);
-		if ((*it)->GetType() == COMPONENT_TRANSFORM && obj_static == true)
-		{
-			ImGui::PopID();
-			id--;
-		}
-		else {			
 			if (ImGui::CollapsingHeader((*it)->GetComponentNameByType()))
 			{
 				if (ImGui::Checkbox("Active", &(*it)->active))
@@ -231,7 +225,6 @@ void GameObject::OnEditor()
 			}
 			ImGui::PopID();
 			id++;
-		}
 	}
 	
 }

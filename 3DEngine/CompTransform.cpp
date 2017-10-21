@@ -66,7 +66,7 @@ void CompTransform::OnEditor()
 
 		ImGui::TextWrapped("Translation: ");
 		ImGui::SameLine();
-		if (ImGui::DragFloat3("", location, drag_speed))
+		if (ImGui::DragFloat3("", location, drag_speed) && GetGameObject()->IsStatic() == false)
 			SetTranslation(location[0], location[1], location[2]);
 
 		//Scale
@@ -77,7 +77,7 @@ void CompTransform::OnEditor()
 
 		ImGui::TextWrapped("Scale:       ");
 		ImGui::SameLine();
-		if (ImGui::DragFloat3(" ", scale, drag_speed))
+		if (ImGui::DragFloat3(" ", scale, drag_speed) && GetGameObject()->IsStatic() == false)
 			SetScale(scale[0], scale[1], scale[2]);
 
 		//Rotation
@@ -88,14 +88,14 @@ void CompTransform::OnEditor()
 
 		ImGui::TextWrapped("Rotation:    ");
 		ImGui::SameLine();
-		if (ImGui::DragFloat3("  ", rotate, drag_speed))
+		if (ImGui::DragFloat3("  ", rotate, drag_speed) && GetGameObject()->IsStatic() == false)
 		{
 			Quat new_rot = Quat::FromEulerXYZ(rotate[0] * DEGTORAD, rotate[1] * DEGTORAD, rotate[2] * DEGTORAD);
 			SetRotation(new_rot);
 		}
 
 
-		if (ImGui::Button("Reset Transform"))
+		if (ImGui::Button("Reset Transform") && GetGameObject()->IsStatic() == false)
 		{
 			SetTranslation(0, 0, 0);
 			SetRotation(Quat::identity);
