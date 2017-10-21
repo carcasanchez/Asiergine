@@ -149,8 +149,8 @@ bool ModuleImporter::LoadFBX(const char * path)
 	
 	if (scene != nullptr && scene->HasMeshes())
 	{
-		GameObject* obj = SearchNode(scene->mRootNode, scene);
-
+		SearchNode(scene->mRootNode, scene);
+		//////DEPRECATED------------------
 		//Extract name from fbx
 		std::string file_path = path ;
 		std::string obj_name;
@@ -166,8 +166,7 @@ bool ModuleImporter::LoadFBX(const char * path)
 		}
 		obj_name.pop_back();
 		//-------------------------------------
-
-		obj->SetName(obj_name.c_str());
+		//------------------------------------------
 		aiReleaseImport(scene);		
 	}
 	else
@@ -179,51 +178,68 @@ bool ModuleImporter::LoadFBX(const char * path)
 	return ret;
 }
 
-//Searches every FBX node for data and loades one GameObject per node
-GameObject* ModuleImporter::SearchNode(const aiNode* n, const aiScene* scene, GameObject* parent)
+//Searches every FBX node for data and imports one GameObject per node
+std::string ModuleImporter::SearchNode(const aiNode* n, const aiScene* scene)
 {
-	GameObject* obj = LoadNewObject(n, parent);
+	aiVector3D ai_location;
+	aiVector3D ai_scale;
+	aiQuaternion ai_rotation;
+
+	//Decompose transformation matrix
+	n->mTransformation.Decompose(ai_scale, ai_rotation, ai_location);
+
+	float3 location;
+	float3 scale;
+	math::Quat rot;
+
+	location.x = ai_location.x;
+	location.y = ai_location.y;
+	location.z = ai_location.z;
+	scale.x = ai_scale.x;
+	scale.y = ai_scale.y;
+	scale.z = ai_scale.z;
+	rot.x = ai_rotation.x;
+	rot.y = ai_rotation.y;
+	rot.z = ai_rotation.z;
+	rot.w = ai_rotation.w;
 
 	mesh_id = 0;
+
+	std::vector<std::string> meshes;
+	std::vector<std::string> children;
+	std::string material_name;
+
+	//Last mesh material
+	uint material_index = 0;
 
 	//Loads all meshes of the node	
 	for (int i = 0; i < n->mNumMeshes; i++)
 	{
 		aiMesh* m = scene->mMeshes[n->mMeshes[i]];
-		ImportGeometry(m, obj);
-	//	obj->CreateComponent_Material(texture_id);
+		meshes.push_back(ImportGeometry(m, n->mName.C_Str()));
+		material_index = m->mMaterialIndex;
 	}
 
 	//Searches for children nodes
 	for (int i = 0; i < n->mNumChildren; i++)
-		SearchNode(n->mChildren[i], scene, obj);
+		children.push_back(SearchNode(n->mChildren[i], scene));
 
-
-	return obj;
-}
-
-//Creates new object and loads transform
-GameObject * ModuleImporter::LoadNewObject(const aiNode * n, GameObject* parent)
-{	
-	GameObject* new_obj = App->scene->CreateGameObject(n->mName.C_Str(), parent);
 	
-	aiVector3D location;
-	aiVector3D scale;
-	aiQuaternion rotation;
+	if (scene->HasMaterials() && material_index != 0)
+	{
+		scene->mMaterials[material_index]->Get(AI_MATKEY_NAME, material_name);
+	}
 
-	//Decompose transformation matrix
-	n->mTransformation.Decompose(scale, rotation, location);
+	//Saves object to .carca
+	App->fs->SaveGameObjectToOwnFormat(n->mName.C_Str(), location, scale, rot, children, meshes, material_name.c_str());
 
-	new_obj->CreateComponent_Transform(float3(location.x, location.y, location.z), float3(scale.x, scale.y, scale.z), Quat(rotation.x, rotation.y, rotation.z, rotation.w));
-
-	return new_obj;
+	return n->mName.C_Str();
 }
+
 
 //Loads meshes from FBX node
-bool ModuleImporter::ImportGeometry(const aiMesh* m, GameObject* obj)
-{
-	bool ret = true;
-	
+std::string ModuleImporter::ImportGeometry(const aiMesh* m, const char* obj_name)
+{	
 	//Data to fill------------------------------
 	std::vector<float> vertices;
 	std::vector<uint> indices;
@@ -287,24 +303,25 @@ bool ModuleImporter::ImportGeometry(const aiMesh* m, GameObject* obj)
 	}
 	else LOG("WARNING: Importing mesh without texture coords");
 
-	//If everything goes OK, save mesh to .carca
-	if (ret)
-	{		
+	//save mesh to .carca
+	
 		std::string name = m->mName.C_Str();
 		//Put generic name if name is empty
 		if (name.empty())
 		{
-			name = obj->GetName();
+			name = obj_name;
 			name += "_mesh_";
 			name += std::to_string(mesh_id);
 			mesh_id++;
 		}
 		App->fs->SaveMeshToOwnFormat(name.c_str(), numVertx, numInd, vertices.data(), indices.data(), normals.data(), texture_coords.data());
-	}
+	
 
-	return ret;
+	return name;
 }
 
+
+//////////////////DEPRECATED----------------------------------------------
 //Get the very first texture of the FBX (called once)
 int ModuleImporter::SearchForTexture(const aiScene* scene, const char* path)
 {
@@ -332,8 +349,6 @@ int ModuleImporter::SearchForTexture(const aiScene* scene, const char* path)
 
 	return text_id;
 }
-
-
 
 //Load texture from image-----------------------------
 GLuint ModuleImporter::LoadTexture(const char * path)
@@ -396,4 +411,4 @@ GLuint ModuleImporter::LoadTexture(const char * path)
 	LOG("Loaded Texture Successfully");
 	return img_id;
 }
-
+//////////////////

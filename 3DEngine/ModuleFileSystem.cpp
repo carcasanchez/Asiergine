@@ -40,7 +40,125 @@ std::string ModuleFileSystem::CreateDirectoryInLibrary(const char * folder)
 	return path;
 }
 
+
 //Save methodology-------------------------------------------
+bool ModuleFileSystem::SaveSceneToOwnFormat()
+{
+	return false;
+}
+
+bool ModuleFileSystem::SaveGameObjectToOwnFormat(const char * name, float3 pos, float3 scale, math::Quat rot, std::vector<std::string> childs, std::vector<std::string> meshes, const char* material)
+{
+	//DATA ORDER: pos - scale - rot - num of childs- [size of child name - child name] - num of meshes - [size of mesh name - mesh name] - size of material name - material name
+
+	bool ret = false;
+
+	uint size_of_childs = sizeof(uint);
+	for (int i = 0; i < childs.size(); i++)
+	{
+		size_of_childs += sizeof(uint);
+		size_of_childs += sizeof(char) * childs[i].size();
+	}
+
+	uint size_of_meshes = sizeof(uint);
+	for (int i = 0; i < meshes.size(); i++)
+	{
+		size_of_meshes += sizeof(uint);
+		size_of_meshes += sizeof(char) * meshes[i].size();
+	}
+
+	uint size_of_mat = sizeof(uint) + strlen(material);
+
+	uint size = sizeof(float) * 10 + size_of_meshes + size_of_childs + size_of_mat;
+
+	char* data = new char[size];
+	char* cursor = data;
+	uint size_of = sizeof(float)*10;
+	
+	//Copy transform;
+	float transform[10] = {pos.x, pos.y, pos.z, scale.x, scale.y, scale.z, rot.x, rot.y, rot.z, rot.w};
+	memcpy(cursor, transform, size_of);
+	cursor += size_of;
+
+	//Copy childs
+
+	uint num_of_childs = childs.size();
+	size_of = sizeof(uint);
+	memcpy(cursor, &num_of_childs, size_of);
+	cursor += size_of;
+
+	for (int i = 0; i < num_of_childs; i++)
+	{
+		//copy child name size
+		uint size_of_name = childs[i].size();
+		size_of = sizeof(uint);
+		memcpy(cursor, &size_of_name, size_of);
+		cursor += size_of;
+
+		//copy child name
+		size_of = sizeof(char)*childs[i].size();
+		memcpy(cursor, childs[i].data(), size_of);
+		cursor += size_of;
+	}
+
+
+	//Copy meshes
+	uint num_of_meshes = meshes.size();
+	size_of = sizeof(uint);
+	memcpy(cursor, &num_of_meshes, size_of);
+	cursor += size_of;
+
+	for (int i = 0; i < num_of_meshes; i++)
+	{
+		//copy mesh name size
+		uint size_of_name = meshes[i].size();
+		size_of = sizeof(uint);
+		memcpy(cursor, &size_of_name, size_of);
+		cursor += size_of;
+
+		//copy mesh name
+		size_of = sizeof(char)*meshes[i].size();
+		memcpy(cursor, meshes[i].data(), size_of);
+		cursor += size_of;
+	}
+
+	//copy material
+	size_of_mat = strlen(material);
+	size_of = sizeof(uint);
+	memcpy(cursor, &size_of_mat, size_of);
+	cursor += size_of;
+	
+	if (size_of_mat > 0)
+	{
+		size_of = size_of_mat;
+		memcpy(cursor, material, size_of);
+		cursor += size_of;
+	}
+
+
+	std::string file_path = CreateDirectoryInLibrary("GameObjects");
+	file_path += name;
+	file_path += FORMAT_EXTENSION;
+
+	//Write all to new file
+	std::ofstream new_file(file_path.c_str(), std::ofstream::binary);
+
+	if (new_file.good())
+	{
+		new_file.write(data, size);
+		new_file.close();
+	}
+	else
+	{
+		LOG("ERROR: Could not save file to .carca");
+		ret = false;
+	}
+
+	delete[] data;
+	LOG("Saved GameObject %s to Library", name);
+
+	return ret;
+}
 bool ModuleFileSystem::SaveMeshToOwnFormat(const char* name, uint num_vert, uint num_ind, const float* vert, uint* ind, const float* normals, const float* texture_coords)
 {
 	bool ret = true;
