@@ -182,6 +182,8 @@ GameObject* ModuleImporter::SearchNode(const aiNode* n, const aiScene* scene, Ga
 {
 	GameObject* obj = LoadNewObject(n, parent);
 
+	mesh_id = 0;
+
 	//Loads all meshes of the node	
 	for (int i = 0; i < n->mNumMeshes; i++)
 	{
@@ -225,7 +227,6 @@ bool ModuleImporter::LoadGeometry(const aiMesh* m, GameObject* obj)
 	float* normals = nullptr;
 	uint* indices = nullptr;
 	float* texture_coords = nullptr;
-
 
 	int numVertx = m->mNumVertices; 
 	int numInd = m->mNumFaces * 3;
@@ -276,7 +277,17 @@ bool ModuleImporter::LoadGeometry(const aiMesh* m, GameObject* obj)
 	//If everything goes OK, create a new Mesh
 	if (ret)
 	{
-		obj->CreateComponent_Mesh(vertices, indices, numVertx, numInd, normals, texture_coords);
+		ComponentMesh* cm = obj->CreateComponent_Mesh(vertices, indices, numVertx, numInd, normals, texture_coords);
+		cm->name = m->mName.C_Str();
+
+		//Put generic name if name is empty
+		if (cm->name.empty())
+		{
+			cm->name = obj->GetName();
+			cm->name += "_mesh_";
+			cm->name += std::to_string(mesh_id);
+			mesh_id++;
+		}
 	}
 
 	return ret;

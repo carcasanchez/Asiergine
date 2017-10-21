@@ -37,7 +37,6 @@ update_status ModuleScene::Update(float dt)
 		debug_normals = !debug_normals;
 	if (App->input->GetKey(DEBUG_BOXES_KEY) == KEY_DOWN)
 		debug_boxes = !debug_boxes;
-
 	
 
 

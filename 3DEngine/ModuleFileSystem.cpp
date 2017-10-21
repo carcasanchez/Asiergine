@@ -116,7 +116,7 @@ bool ModuleFileSystem::SaveMeshToOwnFormat(const char* name, uint num_vert, uint
 
 	std::string file_path = CreateDirectoryInLibrary("Meshes");
 	file_path += name;
-	file_path += ".carca";
+	file_path += FORMAT_EXTENSION;
 
 	//Write all to new file
 	std::ofstream new_file(file_path.c_str(), std::ofstream::binary);
@@ -150,8 +150,8 @@ ComponentMesh * ModuleFileSystem::LoadMeshFromOwnFormat(const char * name)
 	#endif
 
 	path += "\\Meshes\\";
-
 	path += name;
+	path += FORMAT_EXTENSION;
 
 	//Search file
 	std::ifstream file(path, std::ifstream::binary);

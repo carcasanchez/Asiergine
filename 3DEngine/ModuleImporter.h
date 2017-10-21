@@ -34,4 +34,6 @@ private:
 
 	int texture_id = 0;
 
+	//For meshes without name
+	int mesh_id = 0;
 };

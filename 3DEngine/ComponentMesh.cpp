@@ -136,9 +136,9 @@ void ComponentMesh::Update()
 	App->renderer3D->SetMeshToDraw(this);
 
 	if (App->input->GetKey(SDL_SCANCODE_P) == KEY_DOWN)
-		App->fs->SaveMeshToOwnFormat("test", num_vertices, num_indices, vertices, indices, normals);
+		App->fs->SaveMeshToOwnFormat(name.c_str(), num_vertices, num_indices, vertices, indices, normals);
 	if (App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
-		App->fs->LoadMeshFromOwnFormat("test.carca");
+		App->fs->LoadMeshFromOwnFormat(name.c_str());
 }
 
 void ComponentMesh::OnEditor()

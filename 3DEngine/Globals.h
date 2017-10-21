@@ -48,7 +48,7 @@ void log(const char file[], int line, const char* format, ...);
 #define OBJECT_SAVETAG 01
 #define MESH_SAVETAG 02
 
-
+#define FORMAT_EXTENSION ".carca"
 
 
 typedef unsigned int uint;
