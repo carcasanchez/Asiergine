@@ -235,11 +235,11 @@ bool ModuleImporter::ImportGeometry(const aiMesh* m, GameObject* obj)
 	//------------------------------------------
 	
 	//Copy vertices
-	for (int i = 0; i < numVertx * 3; i += 3)
+	for (int i = 0; i < numVertx; i++)
 	{
 		vertices.push_back(m->mVertices[i].x);
-		vertices.push_back(m->mVertices[i+1].y);
-		vertices.push_back(m->mVertices[i+2].z);
+		vertices.push_back(m->mVertices[i].y);
+		vertices.push_back(m->mVertices[i].z);
 	}
 			
 			
@@ -266,11 +266,11 @@ bool ModuleImporter::ImportGeometry(const aiMesh* m, GameObject* obj)
 	//Copy normals
 	if (m->HasNormals())
 	{
-		for (int i = 0; i < numVertx * 3; i += 3)
+		for (int i = 0; i < numVertx ; i++)
 		{
 			normals.push_back(m->mNormals[i].x);
-			normals.push_back(m->mNormals[i + 1].y);
-			normals.push_back(m->mNormals[i + 2].z);
+			normals.push_back(m->mNormals[i].y);
+			normals.push_back(m->mNormals[i].z);
 		}
 	}	
 	else LOG("WARNING: Importing mesh without normals");
