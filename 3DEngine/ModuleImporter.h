@@ -23,7 +23,9 @@ private:
 
 	
 	bool LoadFBX(const char* path);
-	
+
+
+	std::string ImportScene(const aiScene* scene, const char* name);
 	std::string  SearchNode(const aiNode* n, const aiScene* scene);
 	std::string ImportGeometry(const aiMesh*, const char*);
 

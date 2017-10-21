@@ -149,24 +149,24 @@ bool ModuleImporter::LoadFBX(const char * path)
 	
 	if (scene != nullptr && scene->HasMeshes())
 	{
-		SearchNode(scene->mRootNode, scene);
-		//////DEPRECATED------------------
 		//Extract name from fbx
 		std::string file_path = path ;
-		std::string obj_name;
+		std::string scene_name;
 		while (file_path.back() != '\\')
 		{
-			obj_name.push_back(file_path.back());
+			scene_name.push_back(file_path.back());
 			file_path.pop_back();
 		}
-		std::reverse(obj_name.begin(), obj_name.end());
-		while (obj_name.back() != '.')
+		std::reverse(scene_name.begin(), scene_name.end());
+		while (scene_name.back() != '.')
 		{
-			obj_name.pop_back();
+			scene_name.pop_back();
 		}
-		obj_name.pop_back();
-		//-------------------------------------
-		//------------------------------------------
+		scene_name.pop_back();
+
+		ImportScene(scene, scene_name.c_str());
+
+
 		aiReleaseImport(scene);		
 	}
 	else
@@ -176,6 +176,18 @@ bool ModuleImporter::LoadFBX(const char * path)
 	}
 
 	return ret;
+}
+
+std::string ModuleImporter::ImportScene(const aiScene * scene, const char* name)
+{
+	std::vector<std::string> objects_in_scene;
+
+	for (int i = 0; i < scene->mRootNode->mNumChildren; i++)
+		objects_in_scene.push_back(SearchNode(scene->mRootNode->mChildren[i], scene));
+
+	App->fs->SaveSceneToOwnFormat(name, objects_in_scene);
+
+	return std::string();
 }
 
 //Searches every FBX node for data and imports one GameObject per node

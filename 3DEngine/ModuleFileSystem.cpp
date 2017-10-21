@@ -42,16 +42,75 @@ std::string ModuleFileSystem::CreateDirectoryInLibrary(const char * folder)
 
 
 //Save methodology-------------------------------------------
-bool ModuleFileSystem::SaveSceneToOwnFormat()
+bool ModuleFileSystem::SaveSceneToOwnFormat(const char* name, std::vector<std::string> objects)
 {
-	return false;
+	//DATA ORDER: tag - num objects - [size of object name - object name]
+
+	bool ret = true;
+
+	uint size = sizeof(uint);
+
+	for (int i = 0; i < objects.size(); i++)
+	{
+		size += sizeof(uint);
+		size += sizeof(char)*objects[i].size();
+	}
+
+
+	char* data = new char[size];
+	char* cursor = data;
+	uint size_of = sizeof(uint);
+	uint tag = SCENE_SAVETAG;
+
+	memcpy(cursor, &tag, size_of);
+	cursor += size_of;
+
+	
+
+	for (int i = 0; i < objects.size(); i++)
+	{
+		//copy child name size
+		uint size_of_name = objects[i].size();
+		size_of = sizeof(uint);
+		memcpy(cursor, &size_of_name, size_of);
+		cursor += size_of;
+
+		//copy child name
+		size_of = sizeof(char)*objects[i].size();
+		memcpy(cursor, objects[i].data(), size_of);
+		cursor += size_of;
+	}
+
+
+	std::string file_path = CreateDirectoryInLibrary("Scenes");
+	file_path += name;
+	file_path += FORMAT_EXTENSION;
+
+	//Write all to new file
+	std::ofstream new_file(file_path.c_str(), std::ofstream::binary);
+
+	if (new_file.good())
+	{
+		new_file.write(data, size);
+		new_file.close();
+	}
+	else
+	{
+		LOG("ERROR: Could not save scene to .carca");
+		ret = false;
+	}
+
+	delete[] data;
+	LOG("Saved Scene %s to Library", name);
+
+	return ret;
 }
 
 bool ModuleFileSystem::SaveGameObjectToOwnFormat(const char * name, float3 pos, float3 scale, math::Quat rot, std::vector<std::string> childs, std::vector<std::string> meshes, const char* material)
 {
 	//DATA ORDER: pos - scale - rot - num of childs- [size of child name - child name] - num of meshes - [size of mesh name - mesh name] - size of material name - material name
 
-	bool ret = false;
+	bool ret = true;
 
 	uint size_of_childs = sizeof(uint);
 	for (int i = 0; i < childs.size(); i++)
@@ -69,14 +128,23 @@ bool ModuleFileSystem::SaveGameObjectToOwnFormat(const char * name, float3 pos, 
 
 	uint size_of_mat = sizeof(uint) + strlen(material);
 
-	uint size = sizeof(float) * 10 + size_of_meshes + size_of_childs + size_of_mat;
+	uint size = sizeof(float) * 10 + size_of_meshes + size_of_childs + size_of_mat + sizeof(uint);
 
 	char* data = new char[size];
 	char* cursor = data;
-	uint size_of = sizeof(float)*10;
+	uint size_of = sizeof(uint);
+
+
+	//copy tag
+
+	uint tag = OBJECT_SAVETAG;
+	memcpy(cursor, &tag, size_of);
+	cursor += size_of;
+
 	
 	//Copy transform;
 	float transform[10] = {pos.x, pos.y, pos.z, scale.x, scale.y, scale.z, rot.x, rot.y, rot.z, rot.w};
+	size_of = sizeof(float) * 10;
 	memcpy(cursor, transform, size_of);
 	cursor += size_of;
 
@@ -163,7 +231,7 @@ bool ModuleFileSystem::SaveMeshToOwnFormat(const char* name, uint num_vert, uint
 {
 	bool ret = true;
 
-	//DATA ORDER: num vertex - num index - vertex - index - has normals - has text coords - normals - text coords
+	//DATA ORDER: tag - num vertex - num index - vertex - index - has normals - has text coords - normals - text coords
 
 	bool has_normals = false;
 	bool has_text_coords = false;
