@@ -41,7 +41,7 @@ std::string ModuleFileSystem::CreateDirectoryInLibrary(const char * folder)
 }
 
 //Save methodology-------------------------------------------
-bool ModuleFileSystem::SaveMeshToOwnFormat(const char* name, uint num_vert, uint num_ind, float* vert, uint* ind, float* normals, float* texture_coords)
+bool ModuleFileSystem::SaveMeshToOwnFormat(const char* name, uint num_vert, uint num_ind, const float* vert, uint* ind, const float* normals, const float* texture_coords)
 {
 	bool ret = true;
 
@@ -108,8 +108,8 @@ bool ModuleFileSystem::SaveMeshToOwnFormat(const char* name, uint num_vert, uint
 
 	if (has_text_coords)
 	{
-		size_of = sizeof(float)*num_vert * 3;
-		memcpy(cursor, normals, size_of);
+		size_of = sizeof(float)*num_vert * 2;
+		memcpy(cursor, texture_coords, size_of);
 		cursor += size_of;
 	}
 
@@ -132,8 +132,8 @@ bool ModuleFileSystem::SaveMeshToOwnFormat(const char* name, uint num_vert, uint
 		ret = false;
 	}
 
-	
 	delete[] data;
+	
 	return ret;
 }
 

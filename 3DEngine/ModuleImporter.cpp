@@ -145,6 +145,8 @@ bool ModuleImporter::LoadFBX(const char * path)
 {
 	bool ret = true;
 	const aiScene* scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality);
+
+	
 	if (scene != nullptr && scene->HasMeshes())
 	{
 		GameObject* obj = SearchNode(scene->mRootNode, scene);
@@ -188,8 +190,8 @@ GameObject* ModuleImporter::SearchNode(const aiNode* n, const aiScene* scene, Ga
 	for (int i = 0; i < n->mNumMeshes; i++)
 	{
 		aiMesh* m = scene->mMeshes[n->mMeshes[i]];
-		LoadGeometry(m, obj);
-		obj->CreateComponent_Material(texture_id);
+		ImportGeometry(m, obj);
+	//	obj->CreateComponent_Material(texture_id);
 	}
 
 	//Searches for children nodes
@@ -218,27 +220,30 @@ GameObject * ModuleImporter::LoadNewObject(const aiNode * n, GameObject* parent)
 }
 
 //Loads meshes from FBX node
-bool ModuleImporter::LoadGeometry(const aiMesh* m, GameObject* obj)
+bool ModuleImporter::ImportGeometry(const aiMesh* m, GameObject* obj)
 {
 	bool ret = true;
 	
 	//Data to fill------------------------------
-	float* vertices = nullptr;
-	float* normals = nullptr;
-	uint* indices = nullptr;
-	float* texture_coords = nullptr;
+	std::vector<float> vertices;
+	std::vector<uint> indices;
+	std::vector<float> normals;
+	std::vector<float> texture_coords;
 
 	int numVertx = m->mNumVertices; 
 	int numInd = m->mNumFaces * 3;
 	//------------------------------------------
 	
 	//Copy vertices
-	vertices = new float[numVertx * 3];
-	memcpy(vertices, m->mVertices, sizeof(float) * numVertx * 3);
+	for (int i = 0; i < numVertx * 3; i += 3)
+	{
+		vertices.push_back(m->mVertices[i].x);
+		vertices.push_back(m->mVertices[i+1].y);
+		vertices.push_back(m->mVertices[i+2].z);
+	}
 			
 			
 	//Copy indices
-	 indices = new uint[numInd * 3];	
 	if(m->HasFaces())
 	{
 		for (int k = 0; k < m->mNumFaces; k++)
@@ -248,7 +253,12 @@ bool ModuleImporter::LoadGeometry(const aiMesh* m, GameObject* obj)
 				LOG("WARNING, geometry face with != 3 indices!");
 			}
 			else
-				memcpy(&indices[k * 3], m->mFaces[k].mIndices, 3 * sizeof(uint));
+			{
+				for (int j = 0; j < m->mFaces[k].mNumIndices; j++)
+				{
+					indices.push_back(m->mFaces[k].mIndices[j]);
+				}
+			}
 		}
 	}
 			
@@ -256,38 +266,40 @@ bool ModuleImporter::LoadGeometry(const aiMesh* m, GameObject* obj)
 	//Copy normals
 	if (m->HasNormals())
 	{
-		normals = new float[numVertx * 3];
-		memcpy(normals, m->mNormals, sizeof(float) * numVertx * 3);
+		for (int i = 0; i < numVertx * 3; i += 3)
+		{
+			normals.push_back(m->mNormals[i].x);
+			normals.push_back(m->mNormals[i + 1].y);
+			normals.push_back(m->mNormals[i + 2].z);
+		}
 	}	
-	else LOG("WARNING: Loading Geometry without normals");
+	else LOG("WARNING: Importing mesh without normals");
 
 
 	//copy texture coords
 	if (m->HasTextureCoords(0))
-	{
-		texture_coords = new float[numVertx * 2];
-		for (int k = 0; k < numVertx; ++k) 
+	{		
+		for (int i = 0; i < numVertx; i++) 
 		{
-			texture_coords[k * 2] = m->mTextureCoords[0][k].x;
-			texture_coords[k * 2 + 1] = m->mTextureCoords[0][k].y;
+			texture_coords.push_back(m->mTextureCoords[0][i].x);
+			texture_coords.push_back(m->mTextureCoords[0][i].y);
 		}
 	}
-	else LOG("WARNING: Loading Geometry without texture coords");
+	else LOG("WARNING: Importing mesh without texture coords");
 
-	//If everything goes OK, create a new Mesh
+	//If everything goes OK, save mesh to .carca
 	if (ret)
-	{
-		ComponentMesh* cm = obj->CreateComponent_Mesh(vertices, indices, numVertx, numInd, normals, texture_coords);
-		cm->name = m->mName.C_Str();
-
+	{		
+		std::string name = m->mName.C_Str();
 		//Put generic name if name is empty
-		if (cm->name.empty())
+		if (name.empty())
 		{
-			cm->name = obj->GetName();
-			cm->name += "_mesh_";
-			cm->name += std::to_string(mesh_id);
+			name = obj->GetName();
+			name += "_mesh_";
+			name += std::to_string(mesh_id);
 			mesh_id++;
 		}
+		App->fs->SaveMeshToOwnFormat(name.c_str(), numVertx, numInd, vertices.data(), indices.data(), normals.data(), texture_coords.data());
 	}
 
 	return ret;

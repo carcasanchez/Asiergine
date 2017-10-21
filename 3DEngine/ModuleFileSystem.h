@@ -12,8 +12,9 @@ public:
 
 	std::string CreateDirectoryInLibrary(const char* folder);
 	
+	bool SaveSceneToOwnFormat();
 
-	bool SaveMeshToOwnFormat(const char* name, uint , uint , float* vert, uint* ind, float* normals = nullptr, float* texture_coords=nullptr);
+	bool SaveMeshToOwnFormat(const char* name, uint , uint , const float* vert, uint* ind, const float* normals = nullptr, const float* texture_coords=nullptr);
 	ComponentMesh* LoadMeshFromOwnFormat(const char* path);
 
 private:
