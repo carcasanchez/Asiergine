@@ -137,8 +137,22 @@ bool ModuleFileSystem::SaveMeshToOwnFormat(const char* name, uint num_vert, uint
 	return ret;
 }
 
-ComponentMesh * ModuleFileSystem::LoadMeshFromOwnFormat(const char * path)
+ComponentMesh * ModuleFileSystem::LoadMeshFromOwnFormat(const char * name)
 {
+
+	std::string path;
+	#if _DEBUG
+		path = "..\\Library";
+	#endif
+
+	#if _RELEASE
+		path = "Library";
+	#endif
+
+	path += "\\Meshes\\";
+
+	path += name;
+
 	//Search file
 	std::ifstream file(path, std::ifstream::binary);
 
@@ -147,11 +161,12 @@ ComponentMesh * ModuleFileSystem::LoadMeshFromOwnFormat(const char * path)
 	std::streamsize length = file.tellg();
 	file.seekg(0, file.beg);
 
-	char* data = new char[length];
+	char* data = nullptr;
 
 	//Load data to buffer-----------------------------------------
 	if(file.good() && file.is_open())
 	{
+		data = new char[length];
 		file.read(data, length);
 		file.close();
 	}
@@ -240,6 +255,7 @@ ComponentMesh * ModuleFileSystem::LoadMeshFromOwnFormat(const char * path)
 		memcpy(texture_coord, cursor, size_of);
 	}
 
+	LOG("Loaded %s successfully", name);
 
 	delete[] data;
 
