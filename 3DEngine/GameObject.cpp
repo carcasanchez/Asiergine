@@ -194,38 +194,44 @@ void GameObject::OnEditor()
 {
 	ImGui::TextWrapped("%s", name.c_str());
 	ImGui::Separator();
-
+	ImGui::Checkbox("Static", &obj_static);
 	int id = 0;
 	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); it++)
 	{
-
 		ImGui::PushID(id);
-		if (ImGui::CollapsingHeader((*it)->GetComponentNameByType()))
+		if ((*it)->GetType() == COMPONENT_TRANSFORM && obj_static == true)
 		{
-			if (ImGui::Checkbox("Active", &(*it)->active))
-			{
-				if ((*it)->active == true)
-					(*it)->Enable();
-				if ((*it)->active == false)
-					(*it)->Disable();
-			}
-			ImGui::SameLine();
-			if (ImGui::Button("Up"))
-			{
-				if (it != components.begin())
-					std::iter_swap(it, it - 1);
-			}
-			ImGui::SameLine();
-			if (ImGui::Button("Down"))
-			{
-				if (it + 1 != components.end())
-					std::iter_swap(it, it + 1);
-			}
-
-			(*it)->OnEditor();
+			ImGui::PopID();
+			id--;
 		}
-		ImGui::PopID();
-		id++;
+		else {			
+			if (ImGui::CollapsingHeader((*it)->GetComponentNameByType()))
+			{
+				if (ImGui::Checkbox("Active", &(*it)->active))
+				{
+					if ((*it)->active == true)
+						(*it)->Enable();
+					if ((*it)->active == false)
+						(*it)->Disable();
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("Up"))
+				{
+					if (it != components.begin())
+						std::iter_swap(it, it - 1);
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("Down"))
+				{
+					if (it + 1 != components.end())
+						std::iter_swap(it, it + 1);
+				}
+
+				(*it)->OnEditor();
+			}
+			ImGui::PopID();
+			id++;
+		}
 	}
 	
 }

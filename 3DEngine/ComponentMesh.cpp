@@ -49,61 +49,65 @@ ComponentMesh::~ComponentMesh()
 
 void ComponentMesh::Draw()
 {
-
-	
-
-	//Bind vertices
-	glEnableClientState(GL_VERTEX_ARRAY);
-
-
-	Component* transform = game_object->GetComponentByType(COMPONENT_TRANSFORM);
-	if (transform != nullptr)
+	if (IsActive() == true)
 	{
-		glMatrixMode(GL_MODELVIEW);
-		glPushMatrix();
-		glMultMatrixf(((CompTransform*)transform)->GetMatrixPtr());
-	}
+		//Bind vertices
+		glEnableClientState(GL_VERTEX_ARRAY);
 
 
-	glBindBuffer(GL_ARRAY_BUFFER, id_vertices);
-	glVertexPointer(3, GL_FLOAT, 0, NULL);
-
-	Component* mat = game_object->GetComponentByType(COMPONENT_MATERIAL);
-	if (mat != nullptr)
-	{
-		glBindTexture(GL_TEXTURE, ((ComponentMaterial*)mat)->texture_id);
-		if (text_coord_id != 0)
+		Component* transform = game_object->GetComponentByType(COMPONENT_TRANSFORM);
+		if (transform->IsActive() == true)
 		{
-			//Bind textures
-			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-			glBindTexture(GL_TEXTURE_2D, 0);
-			glBindTexture(GL_TEXTURE_2D, ((ComponentMaterial*)mat)->texture_id);
-			glBindBuffer(GL_ARRAY_BUFFER, text_coord_id);
-			glTexCoordPointer(2, GL_FLOAT, 0, NULL);
+			if (transform != nullptr)
+			{
+				glMatrixMode(GL_MODELVIEW);
+				glPushMatrix();
+				glMultMatrixf(((CompTransform*)transform)->GetMatrixPtr());
+			}
 		}
-	}
-	
 
-	//Bind indices and draw
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);
-	glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
+		glBindBuffer(GL_ARRAY_BUFFER, id_vertices);
+		glVertexPointer(3, GL_FLOAT, 0, NULL);
 
-	
-	glBindTexture(GL_TEXTURE_2D, 0);
+		Component* mat = game_object->GetComponentByType(COMPONENT_MATERIAL);
+		if (mat->IsActive() == true)
+		{
+			if (mat != nullptr)
+			{
+				glBindTexture(GL_TEXTURE, ((ComponentMaterial*)mat)->texture_id);
+				if (text_coord_id != 0)
+				{
+					//Bind textures
+					glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+					glBindTexture(GL_TEXTURE_2D, 0);
+					glBindTexture(GL_TEXTURE_2D, ((ComponentMaterial*)mat)->texture_id);
+					glBindBuffer(GL_ARRAY_BUFFER, text_coord_id);
+					glTexCoordPointer(2, GL_FLOAT, 0, NULL);
+				}
+			}
+		}
+
+		//Bind indices and draw
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);
+		glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
+
+
+		glBindTexture(GL_TEXTURE_2D, 0);
 
 
 
-	glDisableClientState(GL_VERTEX_ARRAY);	
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		glDisableClientState(GL_VERTEX_ARRAY);
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
-	if (App->scene->debug_normals && normals != nullptr)
-	{
-		DebugDraw();
-	}
+		if (App->scene->debug_normals && normals != nullptr)
+		{
+			DebugDraw();
+		}
 
-	if (transform != nullptr)
-	{
-		glPopMatrix();
+		if (transform != nullptr)
+		{
+			glPopMatrix();
+		}
 	}
 
 }

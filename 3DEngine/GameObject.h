@@ -26,6 +26,7 @@ public:
 	GameObject* GetParent() { return parent; }
 	std::vector<GameObject*> GetChildrens() { return children;}
 	void SetParent(GameObject* new_parent);
+	bool IsStatic() { return obj_static; }
 
 	CompTransform* CreateComponent_Transform(float3 trans = float3(0, 0, 0), float3 scaling = float3(1, 1, 1), Quat rot = Quat::identity);
 	ComponentMesh* CreateComponent_Mesh( float* ver, uint* ind, uint num_vert, uint num_ind, float* normals, float* texture_coords = nullptr);
@@ -46,7 +47,7 @@ public:
 
 
 private:
-
+	bool obj_static = false;
 	GameObject* parent = nullptr;
 	std::string name;
 

@@ -106,12 +106,12 @@ void CompTransform::OnEditor()
 
 void CompTransform::Update()
 {
-
-	float4x4 rotation_matrix = float4x4::FromQuat(rotation);	
-	matrix = float4x4::FromTRS(translation, rotation_matrix, scale);
-	matrix.Transpose();
-	matrix = GetParentTransform();
-
+	if (GetGameObject()->IsStatic() == false) {
+		float4x4 rotation_matrix = float4x4::FromQuat(rotation);
+		matrix = float4x4::FromTRS(translation, rotation_matrix, scale);
+		matrix.Transpose();
+		matrix = GetParentTransform();
+	}
 
 }
 

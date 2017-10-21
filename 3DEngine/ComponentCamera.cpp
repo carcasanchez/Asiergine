@@ -33,21 +33,22 @@ ComponentCamera::~ComponentCamera(){}
 
 void ComponentCamera::Update()
 {
-	aspect_ratio = App->window->GetAspectRatio();
-	
-	Component* t = game_object->GetComponentByType(COMPONENT_TRANSFORM);
-	if(t)
+	if (IsActive() == true)
 	{
-		frustum.pos = ((CompTransform*)t)->GetTranslation();
+		aspect_ratio = App->window->GetAspectRatio();
 
-		frustum.front = ((CompTransform*)t)->GetMatrix().Row3(2);
+		Component* t = game_object->GetComponentByType(COMPONENT_TRANSFORM);
+		if (t)
+		{
+			frustum.pos = ((CompTransform*)t)->GetTranslation();
 
-		frustum.up = ((CompTransform*)t)->GetMatrix().Row3(1);
-	}
+			frustum.front = ((CompTransform*)t)->GetMatrix().Row3(2);
 
-	App->renderer3D->SetBoxToDraw(&frustum);
+			frustum.up = ((CompTransform*)t)->GetMatrix().Row3(1);
+		}
 
-	
+		App->renderer3D->SetBoxToDraw(&frustum);
+	}	
 }
 
 void ComponentCamera::OnEditor()
