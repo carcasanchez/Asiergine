@@ -9,7 +9,14 @@ public:
 	ModuleFileSystem(bool start_enabled = true);
 	~ModuleFileSystem();
 
-	bool SaveMeshToOwnFormat(uint , uint , float* vert, uint* ind, float* normals = nullptr, float* texture_coords=nullptr);
+
+	std::string CreateDirectoryInLibrary(const char* folder);
+
+	bool SaveMeshToOwnFormat(const char* name, uint , uint , float* vert, uint* ind, float* normals = nullptr, float* texture_coords=nullptr);
 	ComponentMesh* LoadMeshFromOwnFormat(const char* path);
+
+private:
+	
+
 };
 

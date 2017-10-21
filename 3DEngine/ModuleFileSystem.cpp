@@ -14,9 +14,36 @@ ModuleFileSystem::~ModuleFileSystem()
 {
 }
 
-//Save methodology-------------------------------------------
-bool ModuleFileSystem::SaveMeshToOwnFormat(uint num_vert, uint num_ind, float* vert, uint* ind, float* normals, float* texture_coords)
+std::string ModuleFileSystem::CreateDirectoryInLibrary(const char * folder)
 {
+	std::string path;
+
+	#if _DEBUG
+	path = "..\\Library";
+	#endif
+
+	#if _RELEASE
+	path = ".\\Library";
+	#endif
+
+	CreateDirectory(path.c_str(), NULL);
+	SetFileAttributes(path.c_str(), FILE_ATTRIBUTE_HIDDEN);
+
+	path += "\\";
+	path += folder;
+
+	CreateDirectory(path.c_str(), NULL);
+	SetFileAttributes(path.c_str(), FILE_ATTRIBUTE_HIDDEN);
+
+	path += "\\";
+
+	return path;
+}
+
+//Save methodology-------------------------------------------
+bool ModuleFileSystem::SaveMeshToOwnFormat(const char* name, uint num_vert, uint num_ind, float* vert, uint* ind, float* normals, float* texture_coords)
+{
+	bool ret = true;
 
 	//DATA ORDER: num vertex - num index - vertex - index - has normals - has text coords - normals - text coords
 
@@ -87,20 +114,27 @@ bool ModuleFileSystem::SaveMeshToOwnFormat(uint num_vert, uint num_ind, float* v
 	}
 
 
+	std::string file_path = CreateDirectoryInLibrary("Meshes");
+	file_path += name;
+	file_path += ".carca";
 
 	//Write all to new file
-	std::ofstream new_file("test.carca", std::ofstream::binary);
+	std::ofstream new_file(file_path.c_str(), std::ofstream::binary);
 
 	if (new_file.good())
 	{
 		new_file.write(data, size);
 		new_file.close();
 	}
-	else LOG("ERROR: Could not save file to .carca");
+	else
+	{
+		LOG("ERROR: Could not save file to .carca");
+		ret = false;
+	}
 
-
+	
 	delete[] data;
-	return true;
+	return ret;
 }
 
 ComponentMesh * ModuleFileSystem::LoadMeshFromOwnFormat(const char * path)
