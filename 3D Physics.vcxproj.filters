@@ -187,6 +187,9 @@
     <ClCompile Include="3DEngine\ModuleFileSystem.cpp">
       <Filter>Source\Modules</Filter>
     </ClCompile>
+    <ClCompile Include="3DEngine\QuadTree.cpp">
+      <Filter>Source\Containers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3DEngine\Application.h">
@@ -500,6 +503,9 @@
     </ClInclude>
     <ClInclude Include="3DEngine\ModuleFileSystem.h">
       <Filter>Source\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\QuadTree.h">
+      <Filter>Source\Containers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

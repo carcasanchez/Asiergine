@@ -72,6 +72,7 @@
     <ClCompile Include="3DEngine\ModuleWindow.cpp" />
     <ClCompile Include="3DEngine\parson.c" />
     <ClCompile Include="3DEngine\Primitive.cpp" />
+    <ClCompile Include="3DEngine\QuadTree.cpp" />
     <ClCompile Include="3DEngine\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -178,6 +179,7 @@
     <ClInclude Include="3DEngine\ModuleWindow.h" />
     <ClInclude Include="3DEngine\parson.h" />
     <ClInclude Include="3DEngine\Primitive.h" />
+    <ClInclude Include="3DEngine\QuadTree.h" />
     <ClInclude Include="3DEngine\Timer.h" />
   </ItemGroup>
   <ItemGroup>
