@@ -3,8 +3,11 @@
 
 class GameObject;
 template <typename TYPE>
+class QuadTreeNodeObj
 {
 public:
+	QuadTreeNodeObj(float3 center, float3 half_width);
+	~QuadTreeNodeObj();
 	math::AABB Create(float3 center, float3 half_width);
 
 	void Insert(GameObject* game_object);
@@ -21,9 +24,13 @@ private:
 };
 
 template<typename TYPE>
+class QuadTreeObj
 {
 public:
+	QuadTreeObj();
+	~QuadTreeObj();
 
 private:
+	QuadTreeNodeObj root = nullptr;
 };
 
