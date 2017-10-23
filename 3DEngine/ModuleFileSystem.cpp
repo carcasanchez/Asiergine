@@ -330,6 +330,7 @@ bool ModuleFileSystem::SaveMeshToOwnFormat(const char* name, uint num_vert, uint
 
 GameObject * ModuleFileSystem::LoadSceneFromOwnFormat(const char * name)
 {
+	//DATA ORDER: tag - num objects - [size of object name - object name]
 
 	std::string path;
 	#if _DEBUG
@@ -403,12 +404,12 @@ GameObject * ModuleFileSystem::LoadSceneFromOwnFormat(const char * name)
 		memcpy(object_name_size, cursor, size_of);
 		cursor += size_of;
 
-		char* obj_name = new char[*object_name_size];
+		char* obj_name = new char[object_name_size[0]+1];
 
 		size_of = object_name_size[0];
 		memcpy(obj_name, cursor, size_of);
 		cursor += size_of;
-		
+		obj_name[object_name_size[0]] = '\0';
 		objects.push_back(obj_name);
 
 		delete[] obj_name;
@@ -423,7 +424,7 @@ GameObject * ModuleFileSystem::LoadSceneFromOwnFormat(const char * name)
 	{
 		LoadObjectFromOwnFormat(objects[i].c_str());
 	}
-	LoadObjectFromOwnFormat("Chimney.carca");
+	
 
 	return nullptr;
 }
@@ -439,7 +440,7 @@ GameObject * ModuleFileSystem::LoadObjectFromOwnFormat(const char * name)
 
 	path += "\\GameObjects\\";
 	path += name;
-	//path += FORMAT_EXTENSION;
+	path += FORMAT_EXTENSION;
 
 	//Search file
 	std::ifstream file(path, std::ifstream::binary);
@@ -460,7 +461,7 @@ GameObject * ModuleFileSystem::LoadObjectFromOwnFormat(const char * name)
 	}
 	else
 	{
-		LOG("ERROR: could not load object %s.carca", name);
+		LOG("ERROR: could not load object %s", name);
 		return nullptr;
 	}
 
@@ -500,17 +501,7 @@ GameObject * ModuleFileSystem::LoadObjectFromOwnFormat(const char * name)
 	memcpy(rot, cursor, size_of);
 	cursor += size_of;
 
-
-	//Trim extension from name
-	std::string tmp_name = name;
-	while (tmp_name.back()!='.')
-	{
-		tmp_name.pop_back();
-	}
-	tmp_name.pop_back();
-
-
-	GameObject* new_obj = App->scene->CreateGameObject(tmp_name.c_str(), App->scene->root);
+	GameObject* new_obj = App->scene->CreateGameObject(name, App->scene->root);
 	new_obj->CreateComponent_Transform(float3(position[0], position[1], position[2]), float3(scale[0], scale[1], scale[2]), Quat(rot[0], rot[1], rot[2], rot[3]));
 
 	delete[] data;
