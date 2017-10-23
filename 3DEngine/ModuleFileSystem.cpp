@@ -3,6 +3,7 @@
 #include "Globals.h"
 #include ".\mmgr\mmgr.h"
 #include "ModuleFileSystem.h"
+#include "GameObject.h"
 
 ModuleFileSystem::ModuleFileSystem(bool start_enabled) : Module(start_enabled)
 {
@@ -364,7 +365,7 @@ GameObject * ModuleFileSystem::LoadSceneFromOwnFormat(const char * name)
 	}
 	else
 	{
-		LOG("ERROR: could not load .carca");
+		LOG("ERROR: could not load scene  %s.carca", name);
 		return nullptr;
 	}
 
@@ -380,7 +381,7 @@ GameObject * ModuleFileSystem::LoadSceneFromOwnFormat(const char * name)
 
 	if (*tag != SCENE_SAVETAG)
 	{
-		LOG("ERROR: this is not a mesh");
+		LOG("ERROR: this is not a scene");
 		return nullptr;
 	}
 	cursor += size_of;
@@ -425,16 +426,90 @@ GameObject * ModuleFileSystem::LoadSceneFromOwnFormat(const char * name)
 	{
 		LoadObjectFromOwnFormat(objects[i].c_str());
 	}
-		
+	LoadObjectFromOwnFormat("Chimney.carca");
 
 	return nullptr;
 }
 
 GameObject * ModuleFileSystem::LoadObjectFromOwnFormat(const char * name)
 {
+	std::string path;
+	#if _DEBUG
+	path = "..\\Library";
+	#endif
+
+	#if _RELEASE
+	path = "Library";
+	#endif
+
+	path += "\\GameObjects\\";
+	path += name;
+	//path += FORMAT_EXTENSION;
+
+	//Search file
+	std::ifstream file(path, std::ifstream::binary);
+
+	//Get file length
+	file.seekg(0, file.end);
+	std::streamsize length = file.tellg();
+	file.seekg(0, file.beg);
+
+	char* data = nullptr;
+
+	//Load data to buffer-----------------------------------------
+	if (file.good() && file.is_open())
+	{
+		data = new char[length];
+		file.read(data, length);
+		file.close();
+	}
+	else
+	{
+		LOG("ERROR: could not load object %s.carca", name);
+		return nullptr;
+	}
 
 
+	//Get data from buffer---------------
+	//DATA ORDER: pos - scale - rot - num of childs- [size of child name - child name] - num of meshes - [size of mesh name - mesh name] - size of material name - material name
 
+
+	//Get tag and check that its a mesh
+	char* cursor = data;
+	uint tag[] = { -1 };
+	uint size_of = sizeof(uint);
+	memcpy(tag, cursor, size_of);
+
+	if (*tag != OBJECT_SAVETAG)
+	{
+		LOG("ERROR: this is not a object");
+		return nullptr;
+	}
+	cursor += size_of;
+
+	//Load position
+	float position[3] = { 0, 0, 0 };
+	size_of = sizeof(float)*3;
+	memcpy(position, cursor, size_of);
+	cursor += size_of;
+
+	//Load scale
+	float scale[3] = { 1, 1, 1 };
+	size_of = sizeof(float) * 3;
+	memcpy(scale, cursor, size_of);
+	cursor += size_of;
+
+	//Load rot
+	float rot[4] = { 0, 0, 0, 1 };
+	size_of = sizeof(float) * 4;
+	memcpy(rot, cursor, size_of);
+	cursor += size_of;
+
+
+	GameObject* new_obj = App->scene->CreateGameObject(name, App->scene->root);
+	new_obj->CreateComponent_Transform(float3(position[0], position[1], position[2]), float3(scale[0], scale[1], scale[2]), Quat(rot[0], rot[1], rot[2], rot[3]));
+
+	delete[] data;
 	return nullptr;
 }
 
@@ -472,7 +547,7 @@ ComponentMesh * ModuleFileSystem::LoadMeshFromOwnFormat(const char * name)
 	}
 	else
 	{
-		LOG("ERROR: could not load .carca");
+		LOG("ERROR: could not load mesh %s.carca", name);
 		return nullptr;
 	}
 
