@@ -1,33 +1,22 @@
-#Asiergine v0.7
+#Asiergine v0.7.5
 
----LINK TO REPOSITORY
-
-3D Game Engine made by Asier Iglesias and Carlos Cabreira, based on OpenGL.
-This game engine is being created for educational purposes. In this latest version, it allows you to load
-3D models from FBX files by dragging and dropping them into the editor window. Texture loading is also
-supported (directly from FBX and manually by drag and drop). Asiergine only supports one texture and one scene at once, 
-though multiple meshes could be loaded if the are in the same scene.
-
-The Inspector Window allows you to see different information about the loaded models (transform, polycount).
-You can change numerous options about rendering and the engine itself in the Configuration Window. 
-
-All libraries under usage are documented and linked in the About the Engine window.
-
-Feel free to report any error or asking us any question. 
-
-Camera Controls-----
--WASD + Right Mouse: first person control
--Alt Left + Left Mouse: orbit around reference
--Mouse Wheel: Zoom
--Alf Left + Right Mouse: move the camera in the view plane
--F key: adapt the camera to the loaded geometry
--R key: reset the camera to the 0, 0, 0 position
-
+3D Engine created by Carlos Cabreira and Asier Iglesias in OpenGL and C++ with educational purposes.
 
 Asiergine is under the MIT license. If you want to know more, please, see this link:
 https://github.com/carcasanchez/Asiergine/blob/master/LICENSE
 
+Code repository:
+https://github.com/carcasanchez/Asiergine
+
 #Changelog
+
+###v0.7.5
+-Big migration to component system
+-Added fake camera and frustum culling
+-Created importer from FBX to own format .carca
+-Created methods to load components and objects from own format .carca
+WARNING: drag and dropping fbx to the editor will create a library folder with .carca of the objects in the file.
+All of these features are still experimental. Trying to load some models could make the program crash.
 
 ###v0.7
 -Added Inspector Window to show all geometry transform, polycount and textures.
