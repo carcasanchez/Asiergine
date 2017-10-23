@@ -48,7 +48,7 @@ bool ModuleFileSystem::SaveSceneToOwnFormat(const char* name, std::vector<std::s
 
 	bool ret = true;
 
-	uint size = sizeof(uint);
+	uint size = sizeof(uint) * 2;
 
 	for (int i = 0; i < objects.size(); i++)
 	{
@@ -56,7 +56,7 @@ bool ModuleFileSystem::SaveSceneToOwnFormat(const char* name, std::vector<std::s
 		size += sizeof(char)*objects[i].size();
 	}
 
-
+	//Save tag
 	char* data = new char[size];
 	char* cursor = data;
 	uint size_of = sizeof(uint);
@@ -65,8 +65,13 @@ bool ModuleFileSystem::SaveSceneToOwnFormat(const char* name, std::vector<std::s
 	memcpy(cursor, &tag, size_of);
 	cursor += size_of;
 
-	
+	//Save num objs
+	uint num_objs = objects.size();
+	memcpy(cursor, &num_objs, size_of);
+	cursor += size_of;
 
+
+	//Save obj names
 	for (int i = 0; i < objects.size(); i++)
 	{
 		//copy child name size
@@ -323,7 +328,7 @@ bool ModuleFileSystem::SaveMeshToOwnFormat(const char* name, uint num_vert, uint
 	return ret;
 }
 
-ComponentMesh * ModuleFileSystem::LoadMeshFromOwnFormat(const char * name)
+GameObject * ModuleFileSystem::LoadSceneFromOwnFormat(const char * name)
 {
 
 	std::string path;
@@ -335,9 +340,118 @@ ComponentMesh * ModuleFileSystem::LoadMeshFromOwnFormat(const char * name)
 		path = "Library";
 	#endif
 
+	path += "\\Scenes\\";
+	path += name;
+	//path += FORMAT_EXTENSION;
+
+
+	//Search file
+	std::ifstream file(path, std::ifstream::binary);
+
+	//Get file length
+	file.seekg(0, file.end);
+	std::streamsize length = file.tellg();
+	file.seekg(0, file.beg);
+
+	char* data = nullptr;
+
+	//Load data to buffer-----------------------------------------
+	if (file.good() && file.is_open())
+	{
+		data = new char[length];
+		file.read(data, length);
+		file.close();
+	}
+	else
+	{
+		LOG("ERROR: could not load .carca");
+		return nullptr;
+	}
+
+
+	//Get data from buffer---------------
+	//DATA ORDER: tag - num objects - [size of object name - object name]
+
+	//Get tag and check that its a scene
+	char* cursor = data;
+	uint tag[] = { -1 };
+	uint size_of = sizeof(uint);
+	memcpy(tag, cursor, size_of);
+
+	if (*tag != SCENE_SAVETAG)
+	{
+		LOG("ERROR: this is not a mesh");
+		return nullptr;
+	}
+	cursor += size_of;
+	
+
+
+	std::vector<std::string> objects;
+
+
+	//Load Num of OBJ
+	uint num_objects[] = { -1 };
+	size_of = sizeof(uint);
+	memcpy(num_objects, cursor, size_of);
+	cursor += size_of;
+
+
+	//Load obj names
+	for (int i = 0; i < num_objects[0]; i++)
+	{
+		uint object_name_size[] = { -1 };
+		size_of = sizeof(uint);
+		memcpy(object_name_size, cursor, size_of);
+		cursor += size_of;
+
+		char* obj_name = new char[*object_name_size];
+
+		size_of = object_name_size[0];
+		memcpy(obj_name, cursor, size_of);
+		cursor += size_of;
+		
+		objects.push_back(obj_name);
+
+		delete[] obj_name;
+	}
+
+
+	delete[] data;
+	LOG("Loading scene %s", name);
+
+	//Load objs
+	for (int i = 0; i < objects.size();i++)
+	{
+		LoadObjectFromOwnFormat(objects[i].c_str());
+	}
+		
+
+	return nullptr;
+}
+
+GameObject * ModuleFileSystem::LoadObjectFromOwnFormat(const char * name)
+{
+
+
+
+	return nullptr;
+}
+
+ComponentMesh * ModuleFileSystem::LoadMeshFromOwnFormat(const char * name)
+{
+	std::string path;
+	#if _DEBUG
+		path = "..\\Library";
+	#endif
+
+	#if _RELEASE
+		path = "Library";
+	#endif
+
 	path += "\\Meshes\\";
 	path += name;
-	path += FORMAT_EXTENSION;
+	//path += FORMAT_EXTENSION;
 
 	//Search file
 	std::ifstream file(path, std::ifstream::binary);

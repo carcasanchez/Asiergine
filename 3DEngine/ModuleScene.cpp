@@ -38,7 +38,8 @@ update_status ModuleScene::Update(float dt)
 	if (App->input->GetKey(DEBUG_BOXES_KEY) == KEY_DOWN)
 		debug_boxes = !debug_boxes;
 	
-
+	if (App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
+		App->fs->LoadSceneFromOwnFormat("BakerHouse.carca");
 
 	return UPDATE_CONTINUE;
 }
