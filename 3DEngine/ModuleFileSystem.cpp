@@ -21,9 +21,8 @@ std::string ModuleFileSystem::CreateDirectoryInLibrary(const char * folder)
 
 	#if _DEBUG
 	path = "..\\Library";
-	#endif
 
-	#if _RELEASE
+	#else 
 	path = ".\\Library";
 	#endif
 
@@ -335,9 +334,7 @@ GameObject * ModuleFileSystem::LoadSceneFromOwnFormat(const char * name)
 	std::string path;
 	#if _DEBUG
 		path = "..\\Library";
-	#endif
-
-	#if _RELEASE
+	#else 
 		path = "Library";
 	#endif
 
@@ -436,9 +433,7 @@ GameObject * ModuleFileSystem::LoadObjectFromOwnFormat(const char * name)
 	std::string path;
 	#if _DEBUG
 	path = "..\\Library";
-	#endif
-
-	#if _RELEASE
+	#else 
 	path = "Library";
 	#endif
 
@@ -506,7 +501,16 @@ GameObject * ModuleFileSystem::LoadObjectFromOwnFormat(const char * name)
 	cursor += size_of;
 
 
-	GameObject* new_obj = App->scene->CreateGameObject(name, App->scene->root);
+	//Trim extension from name
+	std::string tmp_name = name;
+	while (tmp_name.back()!='.')
+	{
+		tmp_name.pop_back();
+	}
+	tmp_name.pop_back();
+
+
+	GameObject* new_obj = App->scene->CreateGameObject(tmp_name.c_str(), App->scene->root);
 	new_obj->CreateComponent_Transform(float3(position[0], position[1], position[2]), float3(scale[0], scale[1], scale[2]), Quat(rot[0], rot[1], rot[2], rot[3]));
 
 	delete[] data;
@@ -518,9 +522,7 @@ ComponentMesh * ModuleFileSystem::LoadMeshFromOwnFormat(const char * name)
 	std::string path;
 	#if _DEBUG
 		path = "..\\Library";
-	#endif
-
-	#if _RELEASE
+	#else
 		path = "Library";
 	#endif
 
