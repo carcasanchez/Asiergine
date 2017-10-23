@@ -243,7 +243,7 @@ bool ModuleFileSystem::SaveMeshToOwnFormat(const char* name, uint num_vert, uint
 
 
 	//calculate base size
-	uint size = sizeof(uint) * 3 + sizeof(float) * num_vert * 3 + sizeof(uint) * num_ind * 3 + sizeof(bool) * 2;
+	uint size = sizeof(uint) * 3 + sizeof(float) * num_vert * 3 + sizeof(uint) * num_ind + sizeof(bool) * 2;
 
 	if (normals)
 	{
@@ -275,7 +275,7 @@ bool ModuleFileSystem::SaveMeshToOwnFormat(const char* name, uint num_vert, uint
 	cursor += size_of;
 
 	//Copy ind
-	size_of = sizeof(uint)*num_ind * 3;
+	size_of = sizeof(uint)*num_ind;
 	memcpy(cursor, ind, size_of);
 	cursor += size_of;
 
@@ -586,8 +586,8 @@ ComponentMesh * ModuleFileSystem::LoadMeshFromOwnFormat(const char * name)
 	memcpy(vert, cursor, size_of);
 
 	//Load ind
-	unsigned int* ind = new unsigned int[num_ind*3];
-	size_of = sizeof(float)*num_ind*3;
+	unsigned int* ind = new unsigned int[num_ind];
+	size_of = sizeof(float)*num_ind;
 	cursor += size_of;
 	memcpy(ind, cursor, size_of);
 	
