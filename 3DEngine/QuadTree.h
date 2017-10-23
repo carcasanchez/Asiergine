@@ -2,24 +2,25 @@
 #include "Globals.h"
 
 class GameObject;
-template <typename TYPE>
+
 class QuadTreeNodeObj
 {
 public:
-	QuadTreeNodeObj(float3 size, std::vector<QuadTreeNodeObj*>* children, int max_game_objects) : size(size),children(children),max_game_objects(max_game_objects) {}
+	QuadTreeNodeObj(float3 min_point, float3 max_point, std::vector<QuadTreeNodeObj*> children, int max_game_objects){}
+	QuadTreeNodeObj() {}
 	~QuadTreeNodeObj();
-	math::AABB Create(float3 center, float3 half_width);
 
 	void Insert(GameObject* game_object);
-	void Remove(GameObject* game_object);
+	void Remove();
 	int GetMaxGameObjects() { return max_game_objects; }
 	void Clear();
-
-	bool Intersect(std::vector<GameObject*> &game_bjects, const TYPE &primitive);
+	void SetAABBToDraw();
+	void Partition();
+	//bool Intersect(std::vector<GameObject*> &game_bjects, primitive);
+	math::AABB box;
 	
 private:	
-	math::float3 size = float3::zero;
-	std::vector<QuadTreeNodeObj*> children = nullptr;
+	std::vector<QuadTreeNodeObj*> children;
 	int max_game_objects = 6;
 	std::vector<GameObject*> game_objects;
 };
@@ -28,11 +29,11 @@ private:
 class QuadTreeObj
 {
 public:
-	QuadTreeObj() {}
+	QuadTreeObj();
 	~QuadTreeObj();
-	void Draw();
+	//void Draw();
+	QuadTreeNodeObj root;
 private:
-	QuadTreeNodeObj<math::AABB>* root;
 	std::vector<GameObject*> game_objects;
 	
 };

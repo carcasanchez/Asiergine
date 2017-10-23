@@ -1,34 +1,59 @@
 #include "QuadTree.h"
+#include "Application.h"
+#include "ModuleRenderer3D.h"
 #include <vector>
 
 //Node functions--------------------------------
-template<typename TYPE>
-QuadTreeNodeObj<TYPE>::~QuadTreeNodeObj()
+
+QuadTreeNodeObj::~QuadTreeNodeObj()
 {
 }
 
-template<typename TYPE>
-math::AABB QuadTreeNodeObj<TYPE>::Create(float3 center, float3 half_width)
-{
-	return math::AABB(center, half_width);
-}
 
-template<typename TYPE>
-void QuadTreeNodeObj<TYPE>::Insert(GameObject* game_object)
+void QuadTreeNodeObj::Insert(GameObject* game_object)
 {
 	game_objects.push_back(game_object);
 }
 
-template<typename TYPE>
-void QuadTreeNodeObj<TYPE>::Remove(GameObject* game_object)
+
+void QuadTreeNodeObj::Remove()
 {
-	game_objects.pop_back(game_object);
+	game_objects.clear();
 }
 
-template<typename TYPE>
-void QuadTreeNodeObj<TYPE>::Clear()
+void QuadTreeNodeObj::SetAABBToDraw()
 {
-	std::vector<QuadTreeNodeObj*>::iterator it = children.end();
+	App->renderer3D->SetBoxToDraw(box);
+	for (int i = 0; i < children.size(); ++i)
+	{
+		App->renderer3D->SetBoxToDraw(children[i]->box);
+	}
+}
+void QuadTreeNodeObj::Partition()
+{
+	game_objects.push_back(App->scene->root);
+	if (game_objects.size() > max_game_objects)
+	{
+		/*while(game_objects.size() > 0)
+			game_objects.pop_back();*/
+		QuadTreeNodeObj child1, child2, child3, child4;
+		child1.box.minPoint = float3(-20, -20, 0);
+		child1.box.minPoint = float3(0, 20, 0);
+		children.push_back(&child1);
+		children.push_back(&child2);
+		children.push_back(&child3);
+		children.push_back(&child4);
+		for (int i = 0; i < children.size(); ++i)
+		{
+			children[i]->SetAABBToDraw();
+			children[i]->Partition();
+		}
+	}
+}
+
+void QuadTreeNodeObj::Clear()
+{
+	/*std::vector<QuadTreeNodeObj*>::iterator it = children.end();
 	while (it != children.begin())
 	{
 		children.pop_back((*it));
@@ -39,21 +64,26 @@ void QuadTreeNodeObj<TYPE>::Clear()
 	{
 		game_objects.pop_back((*it));
 		--it;
-	}
+	}*/
 }
 
-template<typename TYPE>
-bool QuadTreeNodeObj<TYPE>::Intersect(std::vector<GameObject*>& game_bjects, const TYPE & primitive)
+
+/*bool QuadTreeNodeObj::Intersect(std::vector<GameObject*>& game_bjects, const & primitive)
 {
 	return false;
-}
+}*/
 
 
 //QuadTree functions---------------------------------------
+QuadTreeObj::QuadTreeObj()
+{
+	root.box.minPoint = float3(-20, -20, -20);
+	root.box.maxPoint = float3(20, 20, 20);
+}
 QuadTreeObj::~QuadTreeObj()
 {}
 
-void QuadTreeObj::Draw()
+/*void QuadTreeObj::Draw()
 {
 	int i = 0;
 	root->Create(float3::zero, { 12,12,12 });
@@ -72,7 +102,7 @@ void QuadTreeObj::Draw()
 	}
 
 	
-}
+}*/
 
 
 

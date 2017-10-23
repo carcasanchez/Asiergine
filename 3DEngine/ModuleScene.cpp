@@ -19,10 +19,23 @@ bool ModuleScene::Init(const JSON_Object * config_data)
 {
 
 	root = CreateGameObject("Root");
-	GameObject* camera = CreateGameObject("Camera1", root);
+	box = CreateGameObject("Box1", root);
+	box1 = CreateGameObject("Box2", root);
+	box2 = CreateGameObject("Box3", root);
+	box3 = CreateGameObject("Box4", root);
+	box4 = CreateGameObject("Box5", root);
+	box5 = CreateGameObject("Box6", root);
+	camera = CreateGameObject("Camera1", root);
 	camera->CreateComponent_Camera(0.5, 5, true);
 	camera->CreateComponent_Transform();
-
+	scene_quadtree.root.Insert(box);
+	scene_quadtree.root.Insert(box1);
+	scene_quadtree.root.Insert(box2);
+	scene_quadtree.root.Insert(box3);
+	scene_quadtree.root.Insert(box4);
+	scene_quadtree.root.Insert(box5);
+	scene_quadtree.root.Insert(camera);
+	scene_quadtree.root.Partition();
 	return true;
 }
 
@@ -30,7 +43,16 @@ update_status ModuleScene::Update(float dt)
 {
 
 	root->Update();
-
+	/*if (root->GetChildrens().size() != NULL)
+	{
+		for (std::vector<GameObject*>::iterator it = root->GetChildrens().begin(); it != root->GetChildrens().end(); ++it)
+		{
+			if ((*it) != NULL)
+				scene_quadtree.root.Insert((*it));
+		}
+	}*/	
+	
+	scene_quadtree.root.SetAABBToDraw();
 
 	//Check debug key
 	if (App->input->GetKey(DEBUG_NORMALS_KEY) == KEY_DOWN)

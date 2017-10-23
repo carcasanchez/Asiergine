@@ -50,6 +50,12 @@ void log(const char file[], int line, const char* format, ...);
 
 #define FORMAT_EXTENSION ".carca"
 
+#define MIN_SCENE_POINT_X -20.f
+#define MIN_SCENE_POINT_Y -20.f
+#define MIN_SCENE_POINT_Z -20.f
+#define MAX_SCENE_POINT_X 20.f
+#define MAX_SCENE_POINT_Y 20.f
+#define MAX_SCENE_POINT_Z 20.f
 
 typedef unsigned int uint;
 

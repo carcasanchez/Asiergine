@@ -3,7 +3,7 @@
 
 #include "Globals.h"
 #include "Module.h"
-
+#include "QuadTree.h"
 
 class GameObject;
 
@@ -26,6 +26,16 @@ public:
 
 	bool debug_normals = false;
 	bool debug_boxes = false;
+
+	QuadTreeObj scene_quadtree;
+
+	GameObject* camera;
+	GameObject* box;
+	GameObject* box1;
+	GameObject* box2;
+	GameObject* box3;
+	GameObject* box4;
+	GameObject* box5;
 
 private:
 	bool SaveConfig(JSON_Object* config_data);
