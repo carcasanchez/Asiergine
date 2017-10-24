@@ -86,7 +86,6 @@ bool ModuleFileSystem::SaveSceneToOwnFormat(const char* name, std::vector<std::s
 		cursor += size_of;
 	}
 
-
 	std::string file_path = CreateDirectoryInLibrary("Scenes");
 	file_path += name;
 	file_path += FORMAT_EXTENSION;

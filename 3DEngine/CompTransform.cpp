@@ -9,6 +9,9 @@ CompTransform::CompTransform(GameObject * game_object):Component(game_object)
 	translation = float3(0, 0, 0);
 	scale = float3(1, 1, 1);
 	rotation = Quat::identity;
+
+
+	rot_in_euler = rotation.ToEulerXYZ()* RADTODEG;
 }
 
 math::float3 CompTransform::GetTranslation()
@@ -81,15 +84,17 @@ void CompTransform::OnEditor()
 			SetScale(scale[0], scale[1], scale[2]);
 
 		//Rotation
-		float r_x = GetRotation().ToEulerXYZ().x * RADTODEG;
-		float r_y = GetRotation().ToEulerXYZ().y * RADTODEG;
-		float r_z = GetRotation().ToEulerXYZ().z * RADTODEG;
-		float rotate[3] = { r_x, r_y, r_z };
+
+		float rotate[3] = { rot_in_euler.x,  rot_in_euler.y, rot_in_euler.z };
 
 		ImGui::TextWrapped("Rotation:    ");
 		ImGui::SameLine();
 		if (ImGui::DragFloat3("  ", rotate, drag_speed) && GetGameObject()->IsStatic() == false)
 		{
+			rot_in_euler.x = rotate[0];
+			rot_in_euler.y = rotate[1];
+			rot_in_euler.z = rotate[2];
+
 			Quat new_rot = Quat::FromEulerXYZ(rotate[0] * DEGTORAD, rotate[1] * DEGTORAD, rotate[2] * DEGTORAD);
 			SetRotation(new_rot);
 		}
@@ -100,6 +105,7 @@ void CompTransform::OnEditor()
 			SetTranslation(0, 0, 0);
 			SetRotation(Quat::identity);
 			SetScale(1, 1, 1);
+			rot_in_euler = math::float3::zero;
 		}
 	}
 }

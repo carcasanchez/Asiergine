@@ -35,6 +35,8 @@ private:
 	math::float3 scale;
 	math::Quat rotation;
 
+	math::float3 rot_in_euler;
+
 	math::float4x4 matrix;
 
 
