@@ -33,23 +33,27 @@ void QuadTreeNodeObj::SetAABBToDraw()
 }
 void QuadTreeNodeObj::Partition()
 {
-	float distance = (box.CornerPoint(0).x - box.CornerPoint(1).x) / 2;
+	float3 center_point = { (box.minPoint.x + box.maxPoint.x) / 2,0,(box.minPoint.z + box.maxPoint.z) / 2 };
 	float3 min_point1 = box.minPoint;
-	float3 max_point1 = { box.maxPoint.x - distance, box.maxPoint.y, box.maxPoint.z - distance };
+	float3 max_point1 = { center_point.x,box.maxPoint.y,center_point.z };
+	float3 min_point2 = { center_point.x,box.minPoint.y,center_point.z };
+	float3 max_point2 = box.maxPoint;
+	float3 min_point3 = { center_point.x,box.minPoint.y,box.minPoint.z };
+	float3 max_point3 = { box.maxPoint.x,box.maxPoint.y,center_point.z };
+	float3 min_point4 = { box.minPoint.x,box.minPoint.y,center_point.z };
+	float3 max_point4 = { center_point.x,box.maxPoint.y,box.maxPoint.z };
 	QuadTreeNodeObj* child1 = new QuadTreeNodeObj(min_point1,max_point1);
-	QuadTreeNodeObj* child2 = new QuadTreeNodeObj();
-	QuadTreeNodeObj* child3 = new QuadTreeNodeObj();
-	QuadTreeNodeObj* child4 = new QuadTreeNodeObj();
-		
-		children.push_back(child1);
-		children.push_back(child2);
-		children.push_back(child3);
-		children.push_back(child4);
-		for (int i = 0; i < children.size(); ++i)
-		{
-			children[i]->Fill();			
-		}
-
+	QuadTreeNodeObj* child2 = new QuadTreeNodeObj(min_point2, max_point2);
+	QuadTreeNodeObj* child3 = new QuadTreeNodeObj(min_point3, max_point3);
+	QuadTreeNodeObj* child4 = new QuadTreeNodeObj(min_point4, max_point4);
+	children.push_back(child1);
+	child1->Fill();
+	children.push_back(child2);
+	child2->Fill();
+	children.push_back(child3);
+	child3->Fill();
+	children.push_back(child4);
+	child4->Fill();
 }
 
 void QuadTreeNodeObj::Fill()
@@ -64,18 +68,7 @@ void QuadTreeNodeObj::Fill()
 
 void QuadTreeNodeObj::Clear()
 {
-	/*std::vector<QuadTreeNodeObj*>::iterator it = children.end();
-	while (it != children.begin())
-	{
-		children.pop_back((*it));
-		--it;
-	}
-	std::vector<GameObject*>::iterator it1 = game_objects.end();
-	while (it1 != game_objects.begin())
-	{
-		game_objects.pop_back((*it));
-		--it;
-	}*/
+	
 }
 
 

@@ -10,7 +10,7 @@
 
 GameObject::GameObject(const char* name): name(name)
 {
-	bounding_box.SetNegativeInfinity();
+	//bounding_box.SetNegativeInfinity();
 	LCG rand_gen;
 	UID = rand_gen.Int(1 , 4000000);
 }

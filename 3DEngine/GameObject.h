@@ -54,6 +54,7 @@ public:
 	}
 
 
+	math::AABB bounding_box = math::AABB(float3::zero, float3::zero);
 
 private:
 	bool obj_static = false;
@@ -63,7 +64,6 @@ private:
 	std::vector<Component*> components;
 	std::vector<GameObject*> children;
 	
-	math::AABB bounding_box;
 	math::AABB transformed_bounding_box;
 
 	uint UID = 0;

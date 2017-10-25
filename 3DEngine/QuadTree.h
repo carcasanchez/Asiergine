@@ -6,7 +6,7 @@ class GameObject;
 class QuadTreeNodeObj
 {
 public:
-	QuadTreeNodeObj(float3 min_point, float3 max_point){}
+	QuadTreeNodeObj(float3 min_point, float3 max_point) { box = math::AABB(min_point, max_point); }
 	QuadTreeNodeObj() {}
 	~QuadTreeNodeObj();
 
