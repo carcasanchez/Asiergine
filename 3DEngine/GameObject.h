@@ -1,5 +1,6 @@
 #pragma once
 #include "Globals.h"
+#include "QuadTree.h"
 
 class Component;
 class CompTransform;
@@ -34,6 +35,8 @@ public:
 	ComponentCamera* CreateComponent_Camera(float , float, bool active = false);
 
 	void OnEditor();
+
+	bool PutInQuadTree(QuadTreeNodeObj* node);
 
 	const AABB* GetBoundingBox()
 	{

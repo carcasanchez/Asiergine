@@ -193,6 +193,26 @@ ComponentCamera * GameObject::CreateComponent_Camera(float near_dist, float far_
 	return new_camera;
 }
 
+bool GameObject::PutInQuadTree(QuadTreeNodeObj* node)
+{
+	bool ret = true;
+	if (node->box.Intersects(bounding_box))
+	{
+		if (node->IsFull())
+			ret = false;
+		else {
+			node->Insert(this);
+			for (std::vector<GameObject*>::iterator it = children.begin(); it != children.end(); ++it)
+			{
+				ret = (*it)->PutInQuadTree(node);
+				if (ret == false)
+					break;
+			}
+		}
+	}
+	return ret;
+}
+
 void GameObject::OnEditor()
 {
 	ImGui::TextWrapped("%s", name.c_str());

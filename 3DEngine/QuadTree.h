@@ -6,7 +6,7 @@ class GameObject;
 class QuadTreeNodeObj
 {
 public:
-	QuadTreeNodeObj(float3 min_point, float3 max_point, std::vector<QuadTreeNodeObj*> children, int max_game_objects){}
+	QuadTreeNodeObj(float3 min_point, float3 max_point){}
 	QuadTreeNodeObj() {}
 	~QuadTreeNodeObj();
 
@@ -16,7 +16,9 @@ public:
 	void Clear();
 	void SetAABBToDraw();
 	void Partition();
-	//bool Intersect(std::vector<GameObject*> &game_bjects, primitive);
+	void Fill();
+	bool IsFull() { return game_objects.size() >= max_game_objects; }
+
 	math::AABB box;
 	
 private:	
@@ -32,6 +34,7 @@ public:
 	QuadTreeObj();
 	~QuadTreeObj();
 	//void Draw();
+	void Calcutale();
 	QuadTreeNodeObj root;
 private:
 	std::vector<GameObject*> game_objects;

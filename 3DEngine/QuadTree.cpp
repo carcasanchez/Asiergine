@@ -1,6 +1,8 @@
 #include "QuadTree.h"
 #include "Application.h"
 #include "ModuleRenderer3D.h"
+#include "ModuleScene.h"
+#include "GameObject.h"
 #include <vector>
 
 //Node functions--------------------------------
@@ -31,24 +33,33 @@ void QuadTreeNodeObj::SetAABBToDraw()
 }
 void QuadTreeNodeObj::Partition()
 {
-	game_objects.push_back(App->scene->root);
-	if (game_objects.size() > max_game_objects)
-	{
-		/*while(game_objects.size() > 0)
-			game_objects.pop_back();*/
-		QuadTreeNodeObj child1, child2, child3, child4;
-		child1.box.minPoint = float3(-20, -20, 0);
-		child1.box.minPoint = float3(0, 20, 0);
-		children.push_back(&child1);
-		children.push_back(&child2);
-		children.push_back(&child3);
-		children.push_back(&child4);
+	float distance = (box.CornerPoint(0).x - box.CornerPoint(1).x) / 2;
+	float3 min_point1 = box.minPoint;
+	float3 max_point1 = { box.maxPoint.x - distance, box.maxPoint.y, box.maxPoint.z - distance };
+	QuadTreeNodeObj* child1 = new QuadTreeNodeObj(min_point1,max_point1);
+	QuadTreeNodeObj* child2 = new QuadTreeNodeObj();
+	QuadTreeNodeObj* child3 = new QuadTreeNodeObj();
+	QuadTreeNodeObj* child4 = new QuadTreeNodeObj();
+		
+		children.push_back(child1);
+		children.push_back(child2);
+		children.push_back(child3);
+		children.push_back(child4);
 		for (int i = 0; i < children.size(); ++i)
 		{
-			children[i]->SetAABBToDraw();
-			children[i]->Partition();
+			children[i]->Fill();			
 		}
+
+}
+
+void QuadTreeNodeObj::Fill()
+{
+	if (App->scene->root->PutInQuadTree(this) == false)
+	{
+		game_objects.clear();
+		Partition();
 	}
+
 }
 
 void QuadTreeNodeObj::Clear()
@@ -77,11 +88,16 @@ void QuadTreeNodeObj::Clear()
 //QuadTree functions---------------------------------------
 QuadTreeObj::QuadTreeObj()
 {
-	root.box.minPoint = float3(-20, -20, -20);
-	root.box.maxPoint = float3(20, 20, 20);
+	root.box.minPoint = float3(MIN_SCENE_POINT_X, MIN_SCENE_POINT_Y, MIN_SCENE_POINT_Z);
+	root.box.maxPoint = float3(MAX_SCENE_POINT_X, MAX_SCENE_POINT_X, MAX_SCENE_POINT_X);
 }
 QuadTreeObj::~QuadTreeObj()
 {}
+
+void QuadTreeObj::Calcutale()
+{
+	root.Fill();
+}
 
 /*void QuadTreeObj::Draw()
 {

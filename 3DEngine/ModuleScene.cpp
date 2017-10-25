@@ -43,14 +43,7 @@ update_status ModuleScene::Update(float dt)
 {
 
 	root->Update();
-	/*if (root->GetChildrens().size() != NULL)
-	{
-		for (std::vector<GameObject*>::iterator it = root->GetChildrens().begin(); it != root->GetChildrens().end(); ++it)
-		{
-			if ((*it) != NULL)
-				scene_quadtree.root.Insert((*it));
-		}
-	}*/	
+	
 	
 	scene_quadtree.root.SetAABBToDraw();
 
