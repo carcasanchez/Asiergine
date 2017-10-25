@@ -1,6 +1,8 @@
 #pragma once
+#include "Globals.h"
 
 class GameObject;
+
 enum ComponentType
 {
 	COMPONENT_TRANSFORM,
