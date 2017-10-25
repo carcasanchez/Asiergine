@@ -45,6 +45,12 @@ public:
 		return &transformed_bounding_box;
 	}
 
+	uint GetID()
+	{
+		return UID;
+	}
+
+
 
 private:
 	bool obj_static = false;
@@ -56,5 +62,7 @@ private:
 	
 	math::AABB bounding_box;
 	math::AABB transformed_bounding_box;
+
+	uint UID = 0;
 
 };

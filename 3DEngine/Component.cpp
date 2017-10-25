@@ -5,6 +5,8 @@
 
 Component::Component(GameObject* game_object) : game_object(game_object)
 {
+	LCG rand_gen;
+	UID = rand_gen.Int(1, 4000000000);
 }
 
 Component::~Component()

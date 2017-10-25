@@ -6,10 +6,13 @@
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
 #include "ComponentCamera.h"
+#include "MathGeoLib\include\Algorithm\Random\LCG.h"
 
 GameObject::GameObject(const char* name): name(name)
 {
 	bounding_box.SetNegativeInfinity();
+	LCG rand_gen;
+	UID = rand_gen.Int(1 , 4000000000);
 }
 
 GameObject::~GameObject()

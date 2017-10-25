@@ -26,6 +26,11 @@ public:
 
 	ComponentType GetType() const { return type; }
 	GameObject* GetGameObject() const { return game_object; }
+	uint GetID()
+	{
+		return UID;
+	}
+
 
 	virtual void OnEditor() {}
 
@@ -34,4 +39,6 @@ public:
 protected:
 	GameObject* game_object = nullptr;
 	ComponentType type;
+
+	uint UID = 0;
 };

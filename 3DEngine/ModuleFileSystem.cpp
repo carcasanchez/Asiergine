@@ -628,3 +628,4 @@ ComponentMesh * ModuleFileSystem::LoadMeshFromOwnFormat(const char * name)
 
 	return new ComponentMesh(App->scene->root, vert, ind, num_vert, num_ind, normals, texture_coord);
 }
+
