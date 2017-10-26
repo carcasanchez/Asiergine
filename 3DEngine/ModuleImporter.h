@@ -25,15 +25,16 @@ private:
 	bool LoadFBX(const char* path);
 
 
-	void ImportScene(const aiScene* scene, const char* name);
+	void ImportScene(const aiScene* scene);
 	std::string  SearchNode(const aiNode* n, const aiScene* scene, GameObject* parent);
 	std::string ImportGeometry(const aiMesh*, const char*);
 
-	int SearchForTexture(const aiScene* scene, const char* path);
+	int SearchForTexture(const aiScene* scene, const char* path, int material_index);
 	GLuint LoadTexture(const char * path);
 
 
-	int texture_id = 0;
+	//Temporal storing of FBX file path
+	std::string fbx_path;	
 
 	//For meshes without name
 	int mesh_id = 0;

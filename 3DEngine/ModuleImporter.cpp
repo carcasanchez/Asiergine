@@ -147,25 +147,10 @@ bool ModuleImporter::LoadFBX(const char * path)
 	const aiScene* scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality);
 
 	
-	if (scene != nullptr && scene->HasMeshes())
+	if (scene != nullptr)
 	{
-		//Extract name from fbx
-		std::string file_path = path ;
-		std::string scene_name;
-		while (file_path.back() != '\\')
-		{
-			scene_name.push_back(file_path.back());
-			file_path.pop_back();
-		}
-		std::reverse(scene_name.begin(), scene_name.end());
-		while (scene_name.back() != '.')
-		{
-			scene_name.pop_back();
-		}
-		scene_name.pop_back();
-
-		ImportScene(scene, scene_name.c_str());
-
+		fbx_path = path;
+		ImportScene(scene);
 		aiReleaseImport(scene);		
 	}
 	else
@@ -179,11 +164,11 @@ bool ModuleImporter::LoadFBX(const char * path)
 
 
 //Iterates all nodes saving materials and meshes
-void ModuleImporter::ImportScene(const aiScene * scene, const char* name)
-{
+void ModuleImporter::ImportScene(const aiScene * scene)
+{	
+	if(scene->HasMeshes())
 	for (int i = 0; i < scene->mRootNode->mNumChildren; i++)
 		SearchNode(scene->mRootNode->mChildren[i], scene, App->scene->root);
-
 }
 
 //Searches every FBX node for data and creates one GameObject per node
@@ -221,29 +206,23 @@ std::string ModuleImporter::SearchNode(const aiNode* n, const aiScene* scene, Ga
 
 
 	//Saves all meshes to .carca
+	int last_material_index = 0;
 	for (int i = 0; i < n->mNumMeshes; i++)
 	{
 		aiMesh* m = scene->mMeshes[n->mMeshes[i]];
 		std::string mesh_name = ImportGeometry(m, n->mName.C_Str());
 		App->fs->LoadMeshFromOwnFormat(mesh_name.c_str(), new_obj);
-	
+		last_material_index = m->mMaterialIndex;
 	}
 
-	//TODO: Load materials
+	//Searches, loads texture
+	int text_id = SearchForTexture(scene, fbx_path.c_str(), last_material_index);
+	new_obj->CreateComponent_Material(text_id);
 
 
 	//Searches for children nodes
 	for (int i = 0; i < n->mNumChildren; i++)
 		SearchNode(n->mChildren[i], scene, new_obj);
-
-	
-
-
-	/*if (scene->HasMaterials() && material_index != 0)
-	{
-		scene->mMaterials[material_index]->Get(AI_MATKEY_NAME, material_name);
-	}*/
-
 	
 
 	return n->mName.C_Str();
@@ -334,17 +313,17 @@ std::string ModuleImporter::ImportGeometry(const aiMesh* m, const char* obj_name
 }
 
 
-//////////////////DEPRECATED----------------------------------------------
-//Get the very first texture of the FBX (called once)
-int ModuleImporter::SearchForTexture(const aiScene* scene, const char* path)
+
+//Loads all textures of the fbx in memory. Stores the ID 
+int ModuleImporter::SearchForTexture(const aiScene* scene, const char* path, int material_index)
 {
 	int text_id = 0;	
 	
 	if (scene->HasMaterials())
-		if (scene->mMaterials[0]->GetTextureCount(aiTextureType_DIFFUSE) > 0)
+		if (scene->mMaterials[material_index]->GetTextureCount(aiTextureType_DIFFUSE) > 0)
 		{
 			aiString s;
-			scene->mMaterials[0]->GetTexture(aiTextureType_DIFFUSE, 0, &s);
+			scene->mMaterials[material_index]->GetTexture(aiTextureType_DIFFUSE, 0, &s);
 			std::string  texture_name = s.C_Str();
 			std::string  geom_path = path;
 
@@ -356,12 +335,17 @@ int ModuleImporter::SearchForTexture(const aiScene* scene, const char* path)
 			geom_path += texture_name;
 			text_id = LoadTexture(geom_path.c_str());
 
-			if (text_id == 0)
-				LOG("Warning: --------Scene missing textures");
-		}
+			//TODO: save text to DDS
 
+			if (text_id == 0)
+			{
+				LOG("Warning: --------Scene missing textures");
+			}		
+		}
+	
 	return text_id;
 }
+
 
 //Load texture from image-----------------------------
 GLuint ModuleImporter::LoadTexture(const char * path)
@@ -373,7 +357,6 @@ GLuint ModuleImporter::LoadTexture(const char * path)
 
 	//load from path
 	ilLoadImage(path);
-
 
 
 	ILuint devilError1 = ilGetError();
@@ -392,7 +375,6 @@ GLuint ModuleImporter::LoadTexture(const char * path)
 	}
 
 	ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
-	
 	
 
 	ILuint devilError2 = ilGetError();
@@ -424,4 +406,4 @@ GLuint ModuleImporter::LoadTexture(const char * path)
 	LOG("Loaded Texture Successfully");
 	return img_id;
 }
-//////////////////
+
