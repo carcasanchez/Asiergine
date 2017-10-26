@@ -242,7 +242,7 @@ bool ModuleFileSystem::SaveMeshToOwnFormat(const char* name, uint num_vert, uint
 
 
 	//calculate base size
-	uint size = sizeof(uint) * 3 + sizeof(float) * num_vert * 3 + sizeof(uint) * num_ind + sizeof(bool) * 2;
+	uint size = sizeof(uint) * 3 + sizeof(float) * num_vert * 3 + sizeof(uint) * num_ind + sizeof(bool) * 2 + 1;
 
 	if (normals)
 	{
@@ -258,6 +258,9 @@ bool ModuleFileSystem::SaveMeshToOwnFormat(const char* name, uint num_vert, uint
 
 	char* data = new char[size];
 	char* cursor = data;
+
+	//Set end of data
+	data[size-1] = '\0';
 
 	uint ranges[3] = { MESH_SAVETAG, num_vert, num_ind };
 	uint size_of = sizeof(ranges);
@@ -621,6 +624,7 @@ void ModuleFileSystem::LoadMeshFromOwnFormat(const char * name, GameObject* obj)
 		memcpy(texture_coord, cursor, size_of);
 		cursor += size_of;
 	}
+
 
 	LOG("Loaded %s successfully", name);
 
