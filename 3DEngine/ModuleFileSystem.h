@@ -19,7 +19,7 @@ public:
 	
 	GameObject*  LoadSceneFromOwnFormat(const char* path);
 	GameObject* LoadObjectFromOwnFormat(const char* path);
-	ComponentMesh* LoadMeshFromOwnFormat(const char* path);
+	void LoadMeshFromOwnFormat(const char* path, GameObject* obj);
 
 private:
 	

@@ -507,7 +507,7 @@ GameObject * ModuleFileSystem::LoadObjectFromOwnFormat(const char * name)
 	return nullptr;
 }
 
-ComponentMesh * ModuleFileSystem::LoadMeshFromOwnFormat(const char * name)
+void ModuleFileSystem::LoadMeshFromOwnFormat(const char * name, GameObject* obj)
 {
 	std::string path;
 	#if _DEBUG
@@ -518,7 +518,7 @@ ComponentMesh * ModuleFileSystem::LoadMeshFromOwnFormat(const char * name)
 
 	path += "\\Meshes\\";
 	path += name;
-	//path += FORMAT_EXTENSION;
+	path += FORMAT_EXTENSION;
 
 	//Search file
 	std::ifstream file(path, std::ifstream::binary);
@@ -540,7 +540,7 @@ ComponentMesh * ModuleFileSystem::LoadMeshFromOwnFormat(const char * name)
 	else
 	{
 		LOG("ERROR: could not load mesh %s.carca", name);
-		return nullptr;
+		return;
 	}
 
 
@@ -565,7 +565,7 @@ ComponentMesh * ModuleFileSystem::LoadMeshFromOwnFormat(const char * name)
 	if (*tag != MESH_SAVETAG)
 	{
 		LOG("ERROR: this is not a mesh");
-		return nullptr;
+		return;
 	}
 	cursor += size_of;
 
@@ -581,14 +581,14 @@ ComponentMesh * ModuleFileSystem::LoadMeshFromOwnFormat(const char * name)
 	//Load vertx
 	float* vert = new float[num_vert*3];
 	size_of = sizeof(float)*num_vert * 3;
-	cursor += size_of;
 	memcpy(vert, cursor, size_of);
+	cursor += size_of;
 
 	//Load ind
 	unsigned int* ind = new unsigned int[num_ind];
 	size_of = sizeof(float)*num_ind;
-	cursor += size_of;
 	memcpy(ind, cursor, size_of);
+	cursor += size_of;
 	
 
 	//Load normals and text coords
@@ -600,32 +600,32 @@ ComponentMesh * ModuleFileSystem::LoadMeshFromOwnFormat(const char * name)
 
 	//has normals
 	size_of = sizeof(bool);
-	cursor += size_of;
 	memcpy(&hases[0], cursor, size_of);
+	cursor += size_of;
 	if (hases[0])
 	{
 		normals = new float[num_vert * 3];
 		size_of = sizeof(float) * num_vert*3;
-		cursor += size_of;
 		memcpy(normals, cursor, size_of);
+		cursor += size_of;
 	}
 
 	//has text coords
 	size_of = sizeof(bool);
-	cursor += size_of;
 	memcpy(&hases[1], cursor, size_of);
+	cursor += size_of;
 	if (hases[1])
 	{
 		texture_coord = new float[num_vert * 2];
 		size_of = sizeof(float) * num_vert * 2;
-		cursor += size_of;
 		memcpy(texture_coord, cursor, size_of);
+		cursor += size_of;
 	}
 
 	LOG("Loaded %s successfully", name);
 
 	delete[] data;
 
-	return new ComponentMesh(App->scene->root, vert, ind, num_vert, num_ind, normals, texture_coord);
+	obj->CreateComponent_Mesh(vert,ind, num_vert, num_ind, normals, texture_coord);
 }
 

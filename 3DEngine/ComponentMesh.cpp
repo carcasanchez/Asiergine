@@ -56,23 +56,20 @@ void ComponentMesh::Draw()
 
 
 		Component* transform = game_object->GetComponentByType(COMPONENT_TRANSFORM);
-		if (transform->IsActive() == true)
+		if (transform != nullptr && transform->IsActive())
 		{
-			if (transform != nullptr)
-			{
-				glMatrixMode(GL_MODELVIEW);
-				glPushMatrix();
-				glMultMatrixf(((CompTransform*)transform)->GetMatrixPtr());
-			}
+			glMatrixMode(GL_MODELVIEW);
+			glPushMatrix();
+			glMultMatrixf(((CompTransform*)transform)->GetMatrixPtr());
 		}
+		
 
 		glBindBuffer(GL_ARRAY_BUFFER, id_vertices);
 		glVertexPointer(3, GL_FLOAT, 0, NULL);
 
 		Component* mat = game_object->GetComponentByType(COMPONENT_MATERIAL);
-		if (mat->IsActive() == true)
-		{
-			if (mat != nullptr)
+		
+			if (mat != nullptr && mat->IsActive())
 			{
 				glBindTexture(GL_TEXTURE, ((ComponentMaterial*)mat)->texture_id);
 				if (text_coord_id != 0)
@@ -85,7 +82,7 @@ void ComponentMesh::Draw()
 					glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 				}
 			}
-		}
+		
 
 		//Bind indices and draw
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);

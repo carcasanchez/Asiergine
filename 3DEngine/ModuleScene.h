@@ -28,25 +28,7 @@ public:
 	bool debug_boxes = false;
 
 	QuadTreeObj scene_quadtree;
-
-	GameObject* camera;
-	GameObject* box;
-	GameObject* box1;
-	GameObject* box2;
-	GameObject* box3;
-	GameObject* box4;
-	GameObject* box5;
-	GameObject* box6;
-	GameObject* box7;
-	GameObject* box8;
-	GameObject* box9;
-	GameObject* box10;
-	GameObject* box11;
-	GameObject* box12;
-	GameObject* box13;
-	GameObject* box14;
-	GameObject* box15;
-
+	
 private:
 	bool SaveConfig(JSON_Object* config_data);
 

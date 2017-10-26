@@ -179,12 +179,11 @@ bool ModuleImporter::LoadFBX(const char * path)
 
 
 //Iterates all nodes saving materials and meshes
-std::string ModuleImporter::ImportScene(const aiScene * scene, const char* name)
+void ModuleImporter::ImportScene(const aiScene * scene, const char* name)
 {
 	for (int i = 0; i < scene->mRootNode->mNumChildren; i++)
 		SearchNode(scene->mRootNode->mChildren[i], scene, App->scene->root);
 
-	return std::string();
 }
 
 //Searches every FBX node for data and creates one GameObject per node
@@ -225,12 +224,12 @@ std::string ModuleImporter::SearchNode(const aiNode* n, const aiScene* scene, Ga
 	for (int i = 0; i < n->mNumMeshes; i++)
 	{
 		aiMesh* m = scene->mMeshes[n->mMeshes[i]];
-		ImportGeometry(m, n->mName.C_Str());
+		std::string mesh_name = ImportGeometry(m, n->mName.C_Str());
+		App->fs->LoadMeshFromOwnFormat(mesh_name.c_str(), new_obj);
+	
 	}
 
-	//TODO: Load meshes and materials
-
-
+	//TODO: Load materials
 
 
 	//Searches for children nodes
