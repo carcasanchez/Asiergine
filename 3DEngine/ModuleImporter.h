@@ -26,7 +26,7 @@ private:
 
 
 	std::string ImportScene(const aiScene* scene, const char* name);
-	std::string  SearchNode(const aiNode* n, const aiScene* scene);
+	std::string  SearchNode(const aiNode* n, const aiScene* scene, GameObject* parent);
 	std::string ImportGeometry(const aiMesh*, const char*);
 
 	int SearchForTexture(const aiScene* scene, const char* path);

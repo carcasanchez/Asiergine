@@ -166,7 +166,6 @@ bool ModuleImporter::LoadFBX(const char * path)
 
 		ImportScene(scene, scene_name.c_str());
 
-
 		aiReleaseImport(scene);		
 	}
 	else
@@ -178,20 +177,18 @@ bool ModuleImporter::LoadFBX(const char * path)
 	return ret;
 }
 
+
+//Iterates all nodes saving materials and meshes
 std::string ModuleImporter::ImportScene(const aiScene * scene, const char* name)
 {
-	std::vector<std::string> objects_in_scene;
-
 	for (int i = 0; i < scene->mRootNode->mNumChildren; i++)
-		objects_in_scene.push_back(SearchNode(scene->mRootNode->mChildren[i], scene));
-
-	App->fs->SaveSceneToOwnFormat(name, objects_in_scene);
+		SearchNode(scene->mRootNode->mChildren[i], scene, App->scene->root);
 
 	return std::string();
 }
 
-//Searches every FBX node for data and imports one GameObject per node
-std::string ModuleImporter::SearchNode(const aiNode* n, const aiScene* scene)
+//Searches every FBX node for data and creates one GameObject per node
+std::string ModuleImporter::SearchNode(const aiNode* n, const aiScene* scene, GameObject* parent)
 {
 	aiVector3D ai_location;
 	aiVector3D ai_scale;
@@ -215,35 +212,40 @@ std::string ModuleImporter::SearchNode(const aiNode* n, const aiScene* scene)
 	rot.z = ai_rotation.z;
 	rot.w = ai_rotation.w;
 
+	//For meshes without name
 	mesh_id = 0;
 
-	std::vector<std::string> meshes;
-	std::vector<std::string> children;
-	std::string material_name;
 
-	//Last mesh material
-	uint material_index = 0;
+	//Create the object
+	GameObject* new_obj = App->scene->CreateGameObject(n->mName.C_Str(), parent);
+	new_obj->CreateComponent_Transform(location, scale, rot);
 
-	//Loads all meshes of the node	
+
+	//Saves all meshes to .carca
 	for (int i = 0; i < n->mNumMeshes; i++)
 	{
 		aiMesh* m = scene->mMeshes[n->mMeshes[i]];
-		meshes.push_back(ImportGeometry(m, n->mName.C_Str()));
-		material_index = m->mMaterialIndex;
+		ImportGeometry(m, n->mName.C_Str());
 	}
+
+	//TODO: Load meshes and materials
+
+
+
 
 	//Searches for children nodes
 	for (int i = 0; i < n->mNumChildren; i++)
-		children.push_back(SearchNode(n->mChildren[i], scene));
+		SearchNode(n->mChildren[i], scene, new_obj);
 
 	
-	if (scene->HasMaterials() && material_index != 0)
+
+
+	/*if (scene->HasMaterials() && material_index != 0)
 	{
 		scene->mMaterials[material_index]->Get(AI_MATKEY_NAME, material_name);
-	}
+	}*/
 
-	//Saves object to .carca
-	App->fs->SaveGameObjectToOwnFormat(n->mName.C_Str(), location, scale, rot, children, meshes, material_name.c_str());
+	
 
 	return n->mName.C_Str();
 }
