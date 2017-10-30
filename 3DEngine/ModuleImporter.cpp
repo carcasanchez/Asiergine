@@ -107,34 +107,6 @@ void ModuleImporter::LoadFile(const char * path)
 	{
 		LoadFBX(path);
 	}
-/*	else if (extension.compare("png") == 0 || extension.compare("jpg") == 0 || extension.compare("dds") == 0)
-	{
-		if (geometries.empty())
-		{
-			LOG("WARNING: Scene has no geometries. Could not load texture.")
-		}
-		else
-		{	
-			//Loads texture and puts it in all geometry
-			int new_id = LoadTexture(path);
-
-			if (new_id != 0)			{
-				glDeleteTextures(1, &geometries[0]->texture_id);
-				for (int i = 0; i < geometries.size(); i++)
-				{
-					geometries[i]->texture_id = new_id;
-					if (geometries[i]->text_coord_id == 0)
-					{
-						LOG("WARNING: Geometry without texture coords");
-					}
-				}
-
-				first_texture_id = new_id;
-			}
-			
-		}
-		
-	}*/
 	else LOG("ERROR: File extension '.%s' not allowed", extension.c_str());
 
 }
@@ -166,9 +138,22 @@ bool ModuleImporter::LoadFBX(const char * path)
 //Iterates all nodes saving materials and meshes
 void ModuleImporter::ImportScene(const aiScene * scene)
 {	
+
+	//Store all materials in a vector and assign a id of -1
+	if (scene->HasMaterials())
+	{
+		for (int i = 0; i < scene->mNumMaterials; i++)
+		{
+			std::pair<aiMaterial*, int> pair;
+			pair.first = scene->mMaterials[i];
+			pair.second = -1;
+			materials.push_back(pair);
+		}
+	}
+	
 	if(scene->HasMeshes())
-	for (int i = 0; i < scene->mRootNode->mNumChildren; i++)
-		SearchNode(scene->mRootNode->mChildren[i], scene, App->scene->root);
+		for (int i = 0; i < scene->mRootNode->mNumChildren; i++)
+			SearchNode(scene->mRootNode->mChildren[i], scene, App->scene->root);
 }
 
 //Searches every FBX node for data and creates one GameObject per node
@@ -319,11 +304,12 @@ int ModuleImporter::SearchForTexture(const aiScene* scene, const char* path, int
 {
 	int text_id = 0;	
 	
-	if (scene->HasMaterials())
-		if (scene->mMaterials[material_index]->GetTextureCount(aiTextureType_DIFFUSE) > 0)
+	if (!materials.empty())
+		//If texture already loaded, don't load again
+		if (materials[material_index].second == -1)
 		{
 			aiString s;
-			scene->mMaterials[material_index]->GetTexture(aiTextureType_DIFFUSE, 0, &s);
+			materials[material_index].first->GetTexture(aiTextureType_DIFFUSE, 0, &s);
 			std::string  texture_name = s.C_Str();
 			std::string  geom_path = path;
 
@@ -333,7 +319,10 @@ int ModuleImporter::SearchForTexture(const aiScene* scene, const char* path, int
 				geom_path.pop_back();
 			}
 			geom_path += texture_name;
+
+			//Load texture and get ID
 			text_id = LoadTexture(geom_path.c_str());
+			materials[material_index].second = text_id;
 
 			//TODO: save text to DDS
 
@@ -342,6 +331,7 @@ int ModuleImporter::SearchForTexture(const aiScene* scene, const char* path, int
 				LOG("Warning: --------Scene missing textures");
 			}		
 		}
+		else text_id = materials[material_index].second;
 	
 	return text_id;
 }

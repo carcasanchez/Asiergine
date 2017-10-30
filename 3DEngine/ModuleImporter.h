@@ -4,7 +4,7 @@
 struct aiNode;
 struct aiMesh;
 struct aiScene;
-
+struct aiMaterial;
 
 class ModuleImporter : public Module
 {
@@ -35,6 +35,11 @@ private:
 
 	//Temporal storing of FBX file path
 	std::string fbx_path;	
+
+	//Temporal storing of materials to avoid double loading
+	std::vector <std::pair <aiMaterial*, int>> materials;
+	//if id == -1, still not loaded
+	//if id != -1, already loaded
 
 	//For meshes without name
 	int mesh_id = 0;
