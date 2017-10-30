@@ -28,7 +28,7 @@ public:
 
 	ComponentType GetType() const { return type; }
 	GameObject* GetGameObject() const { return game_object; }
-	uint GetID()
+	int16_t GetID()
 	{
 		return UID;
 	}
@@ -42,5 +42,5 @@ protected:
 	GameObject* game_object = nullptr;
 	ComponentType type;
 
-	uint UID = 0;
+	int16_t UID = 0;
 };

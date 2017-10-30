@@ -48,7 +48,7 @@ public:
 		return &transformed_bounding_box;
 	}
 
-	uint GetID()
+	int16_t GetID()
 	{
 		return UID;
 	}
@@ -66,6 +66,6 @@ private:
 	
 	math::AABB transformed_bounding_box;
 
-	uint UID = 0;
+	int16_t UID = 0;
 
 };

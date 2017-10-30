@@ -607,23 +607,26 @@ void ModuleImporter::LoadMeshFromOwnFormat(const char * name, GameObject* obj) c
 
 bool ModuleImporter::SaveSceneToOwnFormat(const char* name)
 {
-	//DATA ORDER: tag - num objects - [object]
+	//DATA ORDER: tag - num objects - [size of object - object]
 
 	bool ret = true;
 
-	/*uint size = sizeof(uint) * 2;
+	uint size = sizeof(uint) * 2;
 
-	std::vector<char*> object_buffers;
+	std::list<std::pair<char*, uint>> object_buffers;
 	std::vector<GameObject*> objects_to_save = App->scene->root->GetChildrens();
 
+
+	//Saves all object data to buffers
 	for (int i = 0; i < objects_to_save.size(); i++)
 	{
 		size += SaveGameObjectToOwnFormat(object_buffers, objects_to_save[i]);
+		size += sizeof(uint);
 	}
 	
 
 	//Save tag
-	std::vector<char*> data; 
+	char* data = new char[size + 1];
 	char* cursor = data;
 	uint size_of = sizeof(uint);
 	uint tag = SCENE_SAVETAG;
@@ -636,21 +639,39 @@ bool ModuleImporter::SaveSceneToOwnFormat(const char* name)
 	memcpy(cursor, &num_objs, size_of);
 	cursor += size_of;
 
-	for()
+
+	//Stores all object data
+	for (std::list<std::pair<char*, uint>>::iterator it = object_buffers.begin(); it != object_buffers.end(); it++)
+	{
+		//stores the size of the buffer
+		size_of = sizeof(uint);
+		memcpy(cursor, &(*it).second, size_of);
+		cursor += size_of;
+
+		//stores the buffer
+		size_of = (*it).second;
+		memcpy(cursor, &(*it).first, size_of);
+		cursor += size_of;
+	}
 	
+
+	//TODO: set end of array with /0
 
 	App->fs->SaveDataToLibrary(data, size, name, "Scenes", FORMAT_EXTENSION);
 
 	delete[] data;
-	LOG("Saved Scene %s to Library", name);*/
+	LOG("Saved Scene %s to Library", name);
 
 	return ret;
 }
 
 
-uint ModuleImporter::SaveGameObjectToOwnFormat(char** data, GameObject* to_save)
+uint ModuleImporter::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>> &buffer, GameObject* to_save)
 {
-	//DATA ORDER: pos - scale - rot - num of childs- [size of child name - child name] - num of meshes - [size of mesh name - mesh name] - size of material name - material name
+	//DATA ORDER: UID of obj - size of name - name -
+			    //  UID of transform - pos - scale - rot 
+				//  num of meshes - [UID of mesh - mesh name size - mesh name]
+				//  UID of material - size of texture name - texture name
 
 	uint ret = 0;
 
@@ -746,4 +767,142 @@ uint ModuleImporter::SaveGameObjectToOwnFormat(char** data, GameObject* to_save)
 	}
 	*/
 	return ret;
+}
+
+
+
+
+GameObject * ModuleImporter::LoadSceneFromOwnFormat(const char * name)
+{
+
+	char* data = nullptr;
+
+	if (App->fs->LoadDataFromLibrary(&data, name, "Scenes", FORMAT_EXTENSION) == false)
+	{
+		return nullptr;
+	}
+
+	//Get data from buffer---------------
+	//DATA ORDER: tag - num objects - [size of object - object]
+
+	//Get tag and check that its a scene
+	char* cursor = data;
+	uint tag[] = { -1 };
+	uint size_of = sizeof(uint);
+	memcpy(tag, cursor, size_of);
+
+	if (*tag != SCENE_SAVETAG)
+	{
+		LOG("ERROR: this is not a scene");
+		return nullptr;
+	}
+	cursor += size_of;
+
+	
+	//Load Num of OBJ
+	uint num_objects[] = { -1 };
+	size_of = sizeof(uint);
+	memcpy(num_objects, cursor, size_of);
+	cursor += size_of;
+
+
+	//Load all obj 
+	for (int i = 0; i < num_objects[0]; i++)
+	{
+		//Get how much the next object ocuppes
+		uint size_of_buffer[] = { -1 };
+		size_of = sizeof(uint);
+		memcpy(size_of_buffer, cursor, size_of);
+		cursor += size_of;
+
+		cursor += LoadObjectFromOwnFormat(cursor, size_of_buffer[0]);
+	}
+
+
+	delete[] data;
+	LOG("Loading scene %s", name);	
+
+	return nullptr;
+}
+
+uint ModuleImporter::LoadObjectFromOwnFormat(const char * data, uint pos)
+{
+	/*std::string path;
+#if _DEBUG
+	path = "..\\Library";
+#else 
+	path = "Library";
+#endif
+
+	path += "\\GameObjects\\";
+	path += name;
+	path += FORMAT_EXTENSION;
+
+	//Search file
+	std::ifstream file(path, std::ifstream::binary);
+
+	//Get file length
+	file.seekg(0, file.end);
+	std::streamsize length = file.tellg();
+	file.seekg(0, file.beg);
+
+	char* data = nullptr;
+
+	//Load data to buffer-----------------------------------------
+	if (file.good() && file.is_open())
+	{
+		data = new char[length];
+		file.read(data, length);
+		file.close();
+	}
+	else
+	{
+		LOG("ERROR: could not load object %s", name);
+		return nullptr;
+	}
+
+
+	//Get data from buffer---------------
+	//DATA ORDER: pos - scale - rot - num of childs- [size of child name - child name] - num of meshes - [size of mesh name - mesh name] - size of material name - material name
+
+
+	//Get tag and check that its a mesh
+	char* cursor = data;
+	uint tag[] = { -1 };
+	uint size_of = sizeof(uint);
+	memcpy(tag, cursor, size_of);
+
+	if (*tag != OBJECT_SAVETAG)
+	{
+		LOG("ERROR: this is not a object");
+		return nullptr;
+	}
+	cursor += size_of;
+
+	//Load position
+	float position[3] = { 0, 0, 0 };
+	size_of = sizeof(float) * 3;
+	memcpy(position, cursor, size_of);
+	cursor += size_of;
+
+	//Load scale
+	float scale[3] = { 1, 1, 1 };
+	size_of = sizeof(float) * 3;
+	memcpy(scale, cursor, size_of);
+	cursor += size_of;
+
+	//Load rot
+	float rot[4] = { 0, 0, 0, 1 };
+	size_of = sizeof(float) * 4;
+	memcpy(rot, cursor, size_of);
+	cursor += size_of;
+
+	GameObject* new_obj = App->scene->CreateGameObject(name, App->scene->root);
+	new_obj->CreateComponent_Transform(float3(position[0], position[1], position[2]), float3(scale[0], scale[1], scale[2]), Quat(rot[0], rot[1], rot[2], rot[3]));
+
+	delete[] data;*/
+
+
+
+	return 0;
 }

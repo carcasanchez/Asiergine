@@ -18,6 +18,8 @@ public:
 
 	void LoadFile(const char* path);
 
+	bool SaveSceneToOwnFormat(const char* name);
+	GameObject*  LoadSceneFromOwnFormat(const char* path);
 
 private:
 
@@ -37,8 +39,10 @@ private:
 	void SaveTextureToDDS(const char * name) const;
 	GLuint LoadTexture(const char * path, const char * name) const;
 
-	bool SaveSceneToOwnFormat(const char* name);
-	uint SaveGameObjectToOwnFormat(char** data, GameObject* to_save);
+
+
+	uint SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>>& buffer, GameObject* to_save);
+	uint LoadObjectFromOwnFormat(const char* data, uint pos);
 
 
 	//Temporal storing of FBX file path
