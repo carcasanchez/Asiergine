@@ -30,8 +30,8 @@ private:
 	std::string ImportGeometry(const aiMesh*, const char*);
 
 	int SearchForTexture(const aiScene* scene, const char* path, int material_index);
-	GLuint LoadTexture(const char * path);
-
+	GLuint LoadTextureFromFBX(const char * path, const char * name) const;
+	void ImportTextureToDDS(const char * name) const;
 
 	//Temporal storing of FBX file path
 	std::string fbx_path;	
@@ -39,8 +39,7 @@ private:
 	//Temporal storing of materials to avoid double loading
 	std::vector <std::pair <aiMaterial*, int>> materials;
 	//if id == -1, still not loaded
-	//if id != -1, already loaded
-
+	
 	//For meshes without name
 	int mesh_id = 0;
 };

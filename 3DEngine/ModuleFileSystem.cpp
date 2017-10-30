@@ -633,3 +633,25 @@ void ModuleFileSystem::LoadMeshFromOwnFormat(const char * name, GameObject* obj)
 	obj->CreateComponent_Mesh(vert,ind, num_vert, num_ind, normals, texture_coord);
 }
 
+void ModuleFileSystem::SaveTextureToDDS(const char * data, uint size, const char* name)
+{
+
+	std::string file_path = CreateDirectoryInLibrary("Textures");
+	file_path += (std::experimental::filesystem::path(name).stem().string());
+	file_path += TEXTURE_EXTENSION;
+
+	//Write all to new file
+	std::ofstream new_file(file_path.c_str(), std::ofstream::binary);
+
+	if (new_file.good())
+	{
+		new_file.write(data, size);
+		new_file.close();
+		LOG("Saved texture %s to Library", name);
+	}
+	else
+	{
+		LOG("ERROR: Could not save texture to .DDS");
+	}
+}
+

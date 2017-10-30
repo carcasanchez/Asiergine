@@ -13,6 +13,7 @@
 #include <fstream>
 #include <map>
 #include <utility>
+#include <experimental\filesystem>
 #include "Brofiler\Brofiler.h"
 #include "MathGeoLib\include\Math.h"
 
@@ -51,6 +52,7 @@ void log(const char file[], int line, const char* format, ...);
 #define MESH_SAVETAG 02
 
 #define FORMAT_EXTENSION ".carca"
+#define TEXTURE_EXTENSION ".dds"
 
 #define MIN_SCENE_POINT_X -20.f
 #define MIN_SCENE_POINT_Y -20.f

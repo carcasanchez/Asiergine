@@ -123,7 +123,9 @@ bool ModuleImporter::LoadFBX(const char * path)
 	{
 		fbx_path = path;
 		ImportScene(scene);
-		aiReleaseImport(scene);		
+		aiReleaseImport(scene);	
+
+		materials.clear();
 	}
 	else
 	{
@@ -321,10 +323,8 @@ int ModuleImporter::SearchForTexture(const aiScene* scene, const char* path, int
 			geom_path += texture_name;
 
 			//Load texture and get ID
-			text_id = LoadTexture(geom_path.c_str());
-			materials[material_index].second = text_id;
-
-			//TODO: save text to DDS
+			text_id = LoadTextureFromFBX(geom_path.c_str(), texture_name.c_str());
+			materials[material_index].second = text_id;	
 
 			if (text_id == 0)
 			{
@@ -338,7 +338,7 @@ int ModuleImporter::SearchForTexture(const aiScene* scene, const char* path, int
 
 
 //Load texture from image-----------------------------
-GLuint ModuleImporter::LoadTexture(const char * path)
+GLuint ModuleImporter::LoadTextureFromFBX(const char * path, const char * name) const
 {
 	//Gen image
 	ILuint img_id = 0;
@@ -394,6 +394,25 @@ GLuint ModuleImporter::LoadTexture(const char * path)
 	
 
 	LOG("Loaded Texture Successfully");
+
+	//Store texture Library in DDS format
+	ImportTextureToDDS(name);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
 	return img_id;
+}
+
+void ModuleImporter::ImportTextureToDDS(const char * name) const
+{
+	ILuint size;
+	ILubyte *data;
+	ilSetInteger(IL_DXTC_FORMAT, IL_DXT5);// To pick a specific DXT compression use
+	size = ilSaveL(IL_DDS, NULL, 0); // Get the size of the data buffer
+	if (size > 0) {
+		data = new ILubyte[size]; // allocate data buffer
+		if (ilSaveL(IL_DDS, data, size) > 0) // Save to buffer with the ilSaveIL function
+			App->fs->SaveTextureToDDS((char*)data, (uint)size, name);
+		delete[] data;
+	}
 }
 
