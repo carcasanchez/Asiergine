@@ -522,7 +522,7 @@ void ModuleImporter::LoadMeshFromOwnFormat(const char * name, GameObject* obj) c
 {
 	char* data = nullptr;
 
-	if (App->fs->LoadDataFromLibrary(data, name, "Meshes", FORMAT_EXTENSION) == false)
+	if (App->fs->LoadDataFromLibrary(&data, name, "Meshes", FORMAT_EXTENSION) == false)
 	{
 		return;
 	}	

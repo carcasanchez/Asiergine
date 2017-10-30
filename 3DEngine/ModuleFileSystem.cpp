@@ -22,8 +22,9 @@ bool ModuleFileSystem::SaveDataToLibrary(const char* data, uint size, const char
 	bool ret = true;
 
 	std::string file_path = CreateDirectoryInLibrary(directory);
-	file_path += name;
+	file_path += (std::experimental::filesystem::path(name).stem().string());
 	file_path += extension;
+
 
 	//Write all to new file
 	std::ofstream new_file(file_path.c_str(), std::ofstream::binary);
@@ -42,16 +43,17 @@ bool ModuleFileSystem::SaveDataToLibrary(const char* data, uint size, const char
 	return ret;
 }
 
-bool ModuleFileSystem::LoadDataFromLibrary(char * data, const char * name, const char * directory, const char * extension) const
+bool ModuleFileSystem::LoadDataFromLibrary(char ** data, const char * name, const char * directory, const char * extension) const
 {
 	std::string path;
 #if _DEBUG
-	path = "..\\Library";
+	path = "../Library/";
 #else
-	path = "Library";
+	path = "Library/";
 #endif
 
 	path += directory;
+	path += '/';
 	path += name;
 	path += extension;
 
@@ -66,8 +68,8 @@ bool ModuleFileSystem::LoadDataFromLibrary(char * data, const char * name, const
 	//Load data to buffer-----------------------------------------
 	if (file.good() && file.is_open())
 	{
-		data = new char[length];
-		file.read(data, length);
+		data[0] = new char[length];
+		file.read(data[0], length);
 		file.close();
 		return true;
 	}
@@ -83,22 +85,22 @@ std::string ModuleFileSystem::CreateDirectoryInLibrary(const char * folder) cons
 	std::string path;
 
 	#if _DEBUG
-	path = "..\\Library";
+	path = "../Library";
 
 	#else 
-	path = ".\\Library";
+	path = "./Library";
 	#endif
 
 	CreateDirectory(path.c_str(), NULL);
 	SetFileAttributes(path.c_str(), FILE_ATTRIBUTE_HIDDEN);
 
-	path += "\\";
+	path += "/";
 	path += folder;
 
 	CreateDirectory(path.c_str(), NULL);
 	SetFileAttributes(path.c_str(), FILE_ATTRIBUTE_HIDDEN);
 
-	path += "\\";
+	path += "/";
 
 	return path;
 }
