@@ -55,7 +55,7 @@ private:
 	bool hierarchy_open = false;
 
 	bool unlimitedFramerate = true;
-
+	bool bake_quadtree = false;
 
 
 

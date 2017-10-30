@@ -58,10 +58,15 @@ void QuadTreeNodeObj::Partition()
 
 void QuadTreeNodeObj::Fill()
 {
-	if (App->scene->root->PutInQuadTree(this) == false)
+	std::vector<GameObject*> root_children = App->scene->root->GetChildrens();
+	for (std::vector<GameObject*>::iterator it = root_children.begin(); it != root_children.end(); ++it)
 	{
-		game_objects.clear();
-		Partition();
+		if((*it)->PutInQuadTree(this) == false)
+		{
+			game_objects.clear();
+			Partition();
+			break;
+		}
 	}
 
 }

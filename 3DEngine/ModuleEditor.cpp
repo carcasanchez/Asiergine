@@ -724,6 +724,10 @@ void ModuleEditor::ConfigRenderingMenu()
 	//Enable/Disable hard poly
 	if (ImGui::Checkbox("Hard Poly", &App->renderer3D->hard_poly_enabled))
 		(App->renderer3D->hard_poly_enabled) ? glShadeModel(GL_FLAT) : glShadeModel(GL_SMOOTH);
+
+	//Bake Quadtree
+	if (ImGui::Checkbox("Bake Quadtree", &bake_quadtree))
+		App->scene->scene_quadtree.Calcutale();
 }
 
 //Audio submenu on Configuration window

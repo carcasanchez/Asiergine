@@ -24,7 +24,6 @@ bool ModuleScene::Init(const JSON_Object * config_data)
 	camera->CreateComponent_Camera(0.5, 5, true);
 	camera->CreateComponent_Transform();
 	
-	scene_quadtree.Calcutale();
 	return true;
 }
 
