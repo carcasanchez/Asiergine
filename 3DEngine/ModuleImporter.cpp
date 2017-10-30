@@ -198,11 +198,11 @@ std::string ModuleImporter::SearchNode(const aiNode* n, const aiScene* scene, Ga
 	{
 		aiMesh* m = scene->mMeshes[n->mMeshes[i]];
 		std::string mesh_name = ImportGeometry(m, n->mName.C_Str());
-		App->fs->LoadMeshFromOwnFormat(mesh_name.c_str(), new_obj);
+		LoadMeshFromOwnFormat(mesh_name.c_str(), new_obj);
 		last_material_index = m->mMaterialIndex;
 	}
 
-	//Searches, loads texture
+	//Searches and loads texture
 	int text_id = SearchForTexture(scene, fbx_path.c_str(), last_material_index);
 	new_obj->CreateComponent_Material(text_id);
 
@@ -219,6 +219,9 @@ std::string ModuleImporter::SearchNode(const aiNode* n, const aiScene* scene, Ga
 //Loads meshes from FBX node
 std::string ModuleImporter::ImportGeometry(const aiMesh* m, const char* obj_name)
 {	
+	bool ret = true;
+
+
 	//Data to fill------------------------------
 	std::vector<float> vertices;
 	std::vector<uint> indices;
@@ -235,8 +238,13 @@ std::string ModuleImporter::ImportGeometry(const aiMesh* m, const char* obj_name
 		vertices.push_back(m->mVertices[i].x);
 		vertices.push_back(m->mVertices[i].y);
 		vertices.push_back(m->mVertices[i].z);
+	}			
+
+	if (vertices.empty())
+	{
+		LOG("ERROR: Loading mesh without vertex data");
+		ret = false;
 	}
-			
 			
 	//Copy indices
 	if(m->HasFaces())
@@ -256,7 +264,13 @@ std::string ModuleImporter::ImportGeometry(const aiMesh* m, const char* obj_name
 			}
 		}
 	}
-			
+		
+
+	if (indices.empty())
+	{
+		LOG("ERROR: Loading mesh without vertex data");
+		ret = false;
+	}
 
 	//Copy normals
 	if (m->HasNormals())
@@ -284,16 +298,18 @@ std::string ModuleImporter::ImportGeometry(const aiMesh* m, const char* obj_name
 
 	//save mesh to .carca
 	
-		std::string name = m->mName.C_Str();
-		//Put generic name if name is empty
-		if (name.empty())
-		{
-			name = obj_name;
-			name += "_mesh_";
-			name += std::to_string(mesh_id);
-			mesh_id++;
-		}
-		App->fs->SaveMeshToOwnFormat(name.c_str(), numVertx, numInd, vertices.data(), indices.data(), normals.data(), texture_coords.data());
+	std::string name = m->mName.C_Str();
+	//Put generic name if name is empty
+	if (name.empty())
+	{
+		name = obj_name;
+		name += "_mesh_";
+		name += std::to_string(mesh_id);
+		mesh_id++;
+	}
+
+	if(ret)
+		SaveMeshToOwnFormat(name.c_str(), numVertx, numInd, vertices.data(), indices.data(), normals.data(), texture_coords.data());
 	
 
 	return name;
@@ -411,8 +427,182 @@ void ModuleImporter::ImportTextureToDDS(const char * name) const
 	if (size > 0) {
 		data = new ILubyte[size]; // allocate data buffer
 		if (ilSaveL(IL_DDS, data, size) > 0) // Save to buffer with the ilSaveIL function
-			App->fs->SaveTextureToDDS((char*)data, (uint)size, name);
+			App->fs->SaveDataToLibrary((char*)data, size, name, "Textures", TEXTURE_EXTENSION); 
+
 		delete[] data;
 	}
+}
+
+
+
+//Save and Load from own formats--------------------------------------------------
+bool ModuleImporter::SaveMeshToOwnFormat(const char* name, uint num_vert, uint num_ind, const float* vert, uint* ind, const float* normals, const float* texture_coords)const
+{
+	bool ret = true;
+
+	//DATA ORDER: tag - num vertex - num index - vertex - index - has normals - has text coords - normals - text coords
+
+	bool has_normals = false;
+	bool has_text_coords = false;
+
+
+	//calculate base size
+	uint size = sizeof(uint) * 3 + sizeof(float) * num_vert * 3 + sizeof(uint) * num_ind + sizeof(bool) * 2 + 1;
+
+	if (normals)
+	{
+		has_normals = true;
+		size += sizeof(float)*num_vert * 3;
+	}
+	if (texture_coords)
+	{
+		has_text_coords = true;
+		size += sizeof(float)*num_vert * 2;
+	}
+
+
+	char* data = new char[size];
+	char* cursor = data;
+
+	//Set end of data
+	data[size - 1] = '\0';
+
+	uint ranges[3] = { MESH_SAVETAG, num_vert, num_ind };
+	uint size_of = sizeof(ranges);
+
+
+	//Copy num vert & num ind
+	memcpy(cursor, ranges, size_of);
+	cursor += size_of;
+
+
+	//Copy vert
+	size_of = sizeof(float)*num_vert * 3;
+	memcpy(cursor, vert, size_of);
+	cursor += size_of;
+
+	//Copy ind
+	size_of = sizeof(uint)*num_ind;
+	memcpy(cursor, ind, size_of);
+	cursor += size_of;
+
+	//Copy normals and text coords
+	bool has[2] = { has_normals, has_text_coords };
+
+	size_of = sizeof(bool);
+	memcpy(cursor, &has[0], size_of);
+	cursor += size_of;
+
+	if (has_normals)
+	{
+		size_of = sizeof(float)*num_vert * 3;
+		memcpy(cursor, normals, size_of);
+		cursor += size_of;
+	}
+
+	size_of = sizeof(bool);
+	memcpy(cursor, &has[1], size_of);
+	cursor += size_of;
+
+	if (has_text_coords)
+	{
+		size_of = sizeof(float)*num_vert * 2;
+		memcpy(cursor, texture_coords, size_of);
+		cursor += size_of;
+	}
+
+	App->fs->SaveDataToLibrary(data,size, name, "Meshes", FORMAT_EXTENSION);
+
+	delete[] data;
+
+	return ret;
+}
+
+void ModuleImporter::LoadMeshFromOwnFormat(const char * name, GameObject* obj) const
+{
+	char* data = nullptr;
+
+	if (App->fs->LoadDataFromLibrary(data, name, "Meshes", FORMAT_EXTENSION) == false)
+	{
+		return;
+	}	
+
+	//Get data from buffer---------------
+	//DATA ORDER: num vertex - num index - vertex - index - has normals - has text coords - normals - text coords
+
+	//Data to load
+	uint num_vert = 0;
+	uint num_ind = 0;
+
+	bool has_normals = false;
+	bool has_text_coords = false;
+	
+	//Get tag and check that its a mesh
+	char* cursor = data;
+	uint tag[] = { -1 };
+	uint size_of = sizeof(uint);
+	memcpy(tag, cursor, size_of);
+
+	if (*tag != MESH_SAVETAG)
+	{
+		LOG("ERROR: this is not a mesh");
+		return;
+	}
+	cursor += size_of;
+
+	//If OK, load num vertx and indx
+	uint ranges[2];
+	size_of = sizeof(ranges);
+	memcpy(ranges, cursor, size_of);
+	num_vert = ranges[0];
+	num_ind = ranges[1];
+	cursor += size_of;
+
+	//Load vertx
+	float* vert = new float[num_vert * 3];
+	size_of = sizeof(float)*num_vert * 3;
+	memcpy(vert, cursor, size_of);
+	cursor += size_of;
+
+	//Load ind
+	unsigned int* ind = new unsigned int[num_ind];
+	size_of = sizeof(float)*num_ind;
+	memcpy(ind, cursor, size_of);
+	cursor += size_of;
+
+	//Load normals and text coords
+	bool hases[2];
+
+	float* normals = nullptr;
+	float* texture_coord = nullptr;
+
+	//has normals
+	size_of = sizeof(bool);
+	memcpy(&hases[0], cursor, size_of);
+	cursor += size_of;
+	if (hases[0])
+	{
+		normals = new float[num_vert * 3];
+		size_of = sizeof(float) * num_vert * 3;
+		memcpy(normals, cursor, size_of);
+		cursor += size_of;
+	}
+
+	//has text coords
+	size_of = sizeof(bool);
+	memcpy(&hases[1], cursor, size_of);
+	cursor += size_of;
+	if (hases[1])
+	{
+		texture_coord = new float[num_vert * 2];
+		size_of = sizeof(float) * num_vert * 2;
+		memcpy(texture_coord, cursor, size_of);
+		cursor += size_of;
+	}
+
+
+	LOG("Loaded %s successfully", name);
+	delete[] data;
+	obj->CreateComponent_Mesh(vert, ind, num_vert, num_ind, normals, texture_coord);
 }
 

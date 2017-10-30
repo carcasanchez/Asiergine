@@ -33,6 +33,11 @@ private:
 	GLuint LoadTextureFromFBX(const char * path, const char * name) const;
 	void ImportTextureToDDS(const char * name) const;
 
+	//Save methodology
+	bool SaveMeshToOwnFormat(const char* name, uint, uint, const float* vert, uint* ind, const float* normals = nullptr, const float* texture_coords = nullptr) const;
+	void LoadMeshFromOwnFormat(const char* path, GameObject* obj)const;
+
+
 	//Temporal storing of FBX file path
 	std::string fbx_path;	
 

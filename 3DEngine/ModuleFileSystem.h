@@ -10,13 +10,13 @@ public:
 	~ModuleFileSystem();
 
 
+	bool SaveDataToLibrary(const char* data, uint size ,const char* name, const char* directory, const char* extension) const ;
+	bool LoadDataFromLibrary(char * data, const char * name, const char * directory, const char * extension) const;
 	std::string CreateDirectoryInLibrary(const char* folder) const;
 	
 
 
-	bool SaveMeshToOwnFormat(const char* name, uint , uint , const float* vert, uint* ind, const float* normals = nullptr, const float* texture_coords=nullptr) const;
-	void LoadMeshFromOwnFormat(const char* path, GameObject* obj)const;
-	void SaveTextureToDDS(const char* data, uint size, const char* name)const;
+
 
 
 	//DEPRECATED-----------------------------------------------------------------------------------------------

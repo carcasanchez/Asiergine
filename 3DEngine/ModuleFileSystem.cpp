@@ -15,6 +15,69 @@ ModuleFileSystem::~ModuleFileSystem()
 {
 }
 
+
+
+bool ModuleFileSystem::SaveDataToLibrary(const char* data, uint size, const char* name, const char* directory, const char* extension) const
+{
+	bool ret = true;
+
+	std::string file_path = CreateDirectoryInLibrary(directory);
+	file_path += name;
+	file_path += extension;
+
+	//Write all to new file
+	std::ofstream new_file(file_path.c_str(), std::ofstream::binary);
+
+	if (new_file.good())
+	{
+		new_file.write(data, size);
+		new_file.close();
+	}
+	else
+	{
+		LOG("ERROR: Could not save file to %s", extension);
+		ret = false;
+	}
+
+	return ret;
+}
+
+bool ModuleFileSystem::LoadDataFromLibrary(char * data, const char * name, const char * directory, const char * extension) const
+{
+	std::string path;
+#if _DEBUG
+	path = "..\\Library";
+#else
+	path = "Library";
+#endif
+
+	path += directory;
+	path += name;
+	path += extension;
+
+	//Search file
+	std::ifstream file(path, std::ifstream::binary);
+
+	//Get file length
+	file.seekg(0, file.end);
+	std::streamsize length = file.tellg();
+	file.seekg(0, file.beg);
+	
+	//Load data to buffer-----------------------------------------
+	if (file.good() && file.is_open())
+	{
+		data = new char[length];
+		file.read(data, length);
+		file.close();
+		return true;
+	}
+	else
+	{
+		LOG("ERROR: could not load mesh %s.carca", name);
+		return false;
+	}
+}
+
 std::string ModuleFileSystem::CreateDirectoryInLibrary(const char * folder) const
 {
 	std::string path;
@@ -42,250 +105,6 @@ std::string ModuleFileSystem::CreateDirectoryInLibrary(const char * folder) cons
 
 
 //Save methodology-------------------------------------------
-
-bool ModuleFileSystem::SaveMeshToOwnFormat(const char* name, uint num_vert, uint num_ind, const float* vert, uint* ind, const float* normals, const float* texture_coords)const
-{
-	bool ret = true;
-
-	//DATA ORDER: tag - num vertex - num index - vertex - index - has normals - has text coords - normals - text coords
-
-	bool has_normals = false;
-	bool has_text_coords = false;
-
-
-	//calculate base size
-	uint size = sizeof(uint) * 3 + sizeof(float) * num_vert * 3 + sizeof(uint) * num_ind + sizeof(bool) * 2 + 1;
-
-	if (normals)
-	{
-		has_normals = true;
-		size += sizeof(float)*num_vert * 3;
-	}
-	if (texture_coords)
-	{
-		has_text_coords = true;
-		size += sizeof(float)*num_vert * 2;
-	}
-
-
-	char* data = new char[size];
-	char* cursor = data;
-
-	//Set end of data
-	data[size-1] = '\0';
-
-	uint ranges[3] = { MESH_SAVETAG, num_vert, num_ind };
-	uint size_of = sizeof(ranges);
-
-
-	//Copy num vert & num ind
-	memcpy(cursor, ranges, size_of);
-	cursor += size_of;
-
-
-	//Copy vert
-	size_of = sizeof(float)*num_vert * 3;
-	memcpy(cursor, vert, size_of);
-	cursor += size_of;
-
-	//Copy ind
-	size_of = sizeof(uint)*num_ind;
-	memcpy(cursor, ind, size_of);
-	cursor += size_of;
-
-	//Copy normals and text coords
-	bool has[2] = { has_normals, has_text_coords };
-
-	size_of = sizeof(bool);	
-	memcpy(cursor, &has[0], size_of);
-	cursor += size_of;	
-	
-	if (has_normals)
-	{
-		size_of = sizeof(float)*num_vert * 3;
-		memcpy(cursor, normals, size_of);
-		cursor += size_of;
-	}
-
-	size_of = sizeof(bool);
-	memcpy(cursor, &has[1], size_of);
-	cursor += size_of;
-
-	if (has_text_coords)
-	{
-		size_of = sizeof(float)*num_vert * 2;
-		memcpy(cursor, texture_coords, size_of);
-		cursor += size_of;
-	}
-
-
-	std::string file_path = CreateDirectoryInLibrary("Meshes");
-	file_path += name;
-	file_path += FORMAT_EXTENSION;
-
-	//Write all to new file
-	std::ofstream new_file(file_path.c_str(), std::ofstream::binary);
-
-	if (new_file.good())
-	{
-		new_file.write(data, size);
-		new_file.close();
-	}
-	else
-	{
-		LOG("ERROR: Could not save file to .carca");
-		ret = false;
-	}
-
-	delete[] data;
-	
-	return ret;
-}
-
-void ModuleFileSystem::LoadMeshFromOwnFormat(const char * name, GameObject* obj)const
-{
-	std::string path;
-	#if _DEBUG
-		path = "..\\Library";
-	#else
-		path = "Library";
-	#endif
-
-	path += "\\Meshes\\";
-	path += name;
-	path += FORMAT_EXTENSION;
-
-	//Search file
-	std::ifstream file(path, std::ifstream::binary);
-
-	//Get file length
-	file.seekg(0, file.end);
-	std::streamsize length = file.tellg();
-	file.seekg(0, file.beg);
-
-	char* data = nullptr;
-
-	//Load data to buffer-----------------------------------------
-	if(file.good() && file.is_open())
-	{
-		data = new char[length];
-		file.read(data, length);
-		file.close();
-	}
-	else
-	{
-		LOG("ERROR: could not load mesh %s.carca", name);
-		return;
-	}
-
-
-	//Get data from buffer---------------
-	//DATA ORDER: num vertex - num index - vertex - index - has normals - has text coords - normals - text coords
-
-	//Data to load
-	uint num_vert = 0;
-	uint num_ind = 0;
-
-	bool has_normals = false;
-	bool has_text_coords = false;
-
-	
-	
-	//Get tag and check that its a mesh
-	char* cursor = data;
-	uint tag[] = {-1};
-	uint size_of = sizeof(uint);
-	memcpy(tag, cursor, size_of);
-
-	if (*tag != MESH_SAVETAG)
-	{
-		LOG("ERROR: this is not a mesh");
-		return;
-	}
-	cursor += size_of;
-
-	//If OK, load num vertx and indx
-	uint ranges[2];
-	size_of = sizeof(ranges);
-	memcpy(ranges, cursor, size_of);
-	num_vert = ranges[0];
-	num_ind = ranges[1];
-	cursor += size_of;
-
-
-	//Load vertx
-	float* vert = new float[num_vert*3];
-	size_of = sizeof(float)*num_vert * 3;
-	memcpy(vert, cursor, size_of);
-	cursor += size_of;
-
-	//Load ind
-	unsigned int* ind = new unsigned int[num_ind];
-	size_of = sizeof(float)*num_ind;
-	memcpy(ind, cursor, size_of);
-	cursor += size_of;
-	
-
-	//Load normals and text coords
-
-	bool hases[2];
-
-	float* normals = nullptr;
-	float* texture_coord = nullptr;
-
-	//has normals
-	size_of = sizeof(bool);
-	memcpy(&hases[0], cursor, size_of);
-	cursor += size_of;
-	if (hases[0])
-	{
-		normals = new float[num_vert * 3];
-		size_of = sizeof(float) * num_vert*3;
-		memcpy(normals, cursor, size_of);
-		cursor += size_of;
-	}
-
-	//has text coords
-	size_of = sizeof(bool);
-	memcpy(&hases[1], cursor, size_of);
-	cursor += size_of;
-	if (hases[1])
-	{
-		texture_coord = new float[num_vert * 2];
-		size_of = sizeof(float) * num_vert * 2;
-		memcpy(texture_coord, cursor, size_of);
-		cursor += size_of;
-	}
-
-
-	LOG("Loaded %s successfully", name);
-
-	delete[] data;
-
-	obj->CreateComponent_Mesh(vert,ind, num_vert, num_ind, normals, texture_coord);
-}
-
-void ModuleFileSystem::SaveTextureToDDS(const char * data, uint size, const char* name)const
-{
-
-	std::string file_path = CreateDirectoryInLibrary("Textures");
-	file_path += (std::experimental::filesystem::path(name).stem().string());
-	file_path += TEXTURE_EXTENSION;
-
-	//Write all to new file
-	std::ofstream new_file(file_path.c_str(), std::ofstream::binary);
-
-	if (new_file.good())
-	{
-		new_file.write(data, size);
-		new_file.close();
-		LOG("Saved texture %s to Library", name);
-	}
-	else
-	{
-		LOG("ERROR: Could not save texture to .DDS");
-	}
-}
 
 
 
