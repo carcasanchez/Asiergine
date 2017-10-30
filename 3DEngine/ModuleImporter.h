@@ -30,12 +30,15 @@ private:
 	std::string ImportGeometry(const aiMesh*, const char*);
 
 	int SearchForTexture(const aiScene* scene, const char* path, int material_index);
-	GLuint LoadTextureFromFBX(const char * path, const char * name) const;
-	void ImportTextureToDDS(const char * name) const;
 
 	//Save methodology
 	bool SaveMeshToOwnFormat(const char* name, uint, uint, const float* vert, uint* ind, const float* normals = nullptr, const float* texture_coords = nullptr) const;
 	void LoadMeshFromOwnFormat(const char* path, GameObject* obj)const;
+	void SaveTextureToDDS(const char * name) const;
+	GLuint LoadTexture(const char * path, const char * name) const;
+
+	bool SaveSceneToOwnFormat(const char* name);
+	uint SaveGameObjectToOwnFormat(char** data, GameObject* to_save);
 
 
 	//Temporal storing of FBX file path

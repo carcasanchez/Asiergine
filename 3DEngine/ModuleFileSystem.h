@@ -14,15 +14,13 @@ public:
 	bool LoadDataFromLibrary(char ** data, const char * name, const char * directory, const char * extension) const;
 	std::string CreateDirectoryInLibrary(const char* folder) const;
 	
-
-
-
+	
 
 
 	//DEPRECATED-----------------------------------------------------------------------------------------------
-	bool SaveSceneToOwnFormat(const char* name, std::vector<std::string> objects);
+
+	
 	GameObject*  LoadSceneFromOwnFormat(const char* path);
-	bool SaveGameObjectToOwnFormat(const char* name, float3 pos, float3 scale, math::Quat rot, std::vector<std::string> childs, std::vector<std::string> meshes, const char* material);
 	GameObject* LoadObjectFromOwnFormat(const char* path);
 
 private:

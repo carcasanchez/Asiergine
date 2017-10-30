@@ -4,6 +4,7 @@
 #include "ModuleImporter.h"
 #include "GameObject.h"
 #include "ComponentMesh.h"
+#include "ModuleScene.h"
 
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"
@@ -339,7 +340,10 @@ int ModuleImporter::SearchForTexture(const aiScene* scene, const char* path, int
 			geom_path += texture_name;
 
 			//Load texture and get ID
-			text_id = LoadTextureFromFBX(geom_path.c_str(), texture_name.c_str());
+			text_id = LoadTexture(geom_path.c_str(), texture_name.c_str());
+			//Store texture Library in DDS format
+			SaveTextureToDDS(texture_name.c_str());
+
 			materials[material_index].second = text_id;	
 
 			if (text_id == 0)
@@ -354,7 +358,7 @@ int ModuleImporter::SearchForTexture(const aiScene* scene, const char* path, int
 
 
 //Load texture from image-----------------------------
-GLuint ModuleImporter::LoadTextureFromFBX(const char * path, const char * name) const
+GLuint ModuleImporter::LoadTexture(const char * path, const char * name) const
 {
 	//Gen image
 	ILuint img_id = 0;
@@ -410,15 +414,10 @@ GLuint ModuleImporter::LoadTextureFromFBX(const char * path, const char * name) 
 	
 
 	LOG("Loaded Texture Successfully");
-
-	//Store texture Library in DDS format
-	ImportTextureToDDS(name);
-	glBindTexture(GL_TEXTURE_2D, 0);
-
 	return img_id;
 }
 
-void ModuleImporter::ImportTextureToDDS(const char * name) const
+void ModuleImporter::SaveTextureToDDS(const char * name) const
 {
 	ILuint size;
 	ILubyte *data;
@@ -606,3 +605,145 @@ void ModuleImporter::LoadMeshFromOwnFormat(const char * name, GameObject* obj) c
 	obj->CreateComponent_Mesh(vert, ind, num_vert, num_ind, normals, texture_coord);
 }
 
+bool ModuleImporter::SaveSceneToOwnFormat(const char* name)
+{
+	//DATA ORDER: tag - num objects - [object]
+
+	bool ret = true;
+
+	/*uint size = sizeof(uint) * 2;
+
+	std::vector<char*> object_buffers;
+	std::vector<GameObject*> objects_to_save = App->scene->root->GetChildrens();
+
+	for (int i = 0; i < objects_to_save.size(); i++)
+	{
+		size += SaveGameObjectToOwnFormat(object_buffers, objects_to_save[i]);
+	}
+	
+
+	//Save tag
+	std::vector<char*> data; 
+	char* cursor = data;
+	uint size_of = sizeof(uint);
+	uint tag = SCENE_SAVETAG;
+
+	memcpy(cursor, &tag, size_of);
+	cursor += size_of;
+
+	//Save num objs
+	uint num_objs = object_buffers.size();
+	memcpy(cursor, &num_objs, size_of);
+	cursor += size_of;
+
+	for()
+	
+
+	App->fs->SaveDataToLibrary(data, size, name, "Scenes", FORMAT_EXTENSION);
+
+	delete[] data;
+	LOG("Saved Scene %s to Library", name);*/
+
+	return ret;
+}
+
+
+uint ModuleImporter::SaveGameObjectToOwnFormat(char** data, GameObject* to_save)
+{
+	//DATA ORDER: pos - scale - rot - num of childs- [size of child name - child name] - num of meshes - [size of mesh name - mesh name] - size of material name - material name
+
+	uint ret = 0;
+
+/*	uint size_of_childs = sizeof(uint);
+	for (int i = 0; i < childs.size(); i++)
+	{
+		size_of_childs += sizeof(uint);
+		size_of_childs += sizeof(char) * childs[i].size();
+	}
+
+	uint size_of_meshes = sizeof(uint);
+	for (int i = 0; i < meshes.size(); i++)
+	{
+		size_of_meshes += sizeof(uint);
+		size_of_meshes += sizeof(char) * meshes[i].size();
+	}
+
+	uint size_of_mat = sizeof(uint) + strlen(material);
+
+	uint size = sizeof(float) * 10 + size_of_meshes + size_of_childs + size_of_mat + sizeof(uint);
+
+	char* data = new char[size];
+	char* cursor = data;
+	uint size_of = sizeof(uint);
+
+
+	//copy tag
+
+	uint tag = OBJECT_SAVETAG;
+	memcpy(cursor, &tag, size_of);
+	cursor += size_of;
+
+
+	//Copy transform;
+	float transform[10] = { pos.x, pos.y, pos.z, scale.x, scale.y, scale.z, rot.x, rot.y, rot.z, rot.w };
+	size_of = sizeof(float) * 10;
+	memcpy(cursor, transform, size_of);
+	cursor += size_of;
+
+	//Copy childs
+
+	uint num_of_childs = childs.size();
+	size_of = sizeof(uint);
+	memcpy(cursor, &num_of_childs, size_of);
+	cursor += size_of;
+
+	for (int i = 0; i < num_of_childs; i++)
+	{
+		//copy child name size
+		uint size_of_name = childs[i].size();
+		size_of = sizeof(uint);
+		memcpy(cursor, &size_of_name, size_of);
+		cursor += size_of;
+
+		//copy child name
+		size_of = sizeof(char)*childs[i].size();
+		memcpy(cursor, childs[i].data(), size_of);
+		cursor += size_of;
+	}
+
+
+	//Copy meshes
+	uint num_of_meshes = meshes.size();
+	size_of = sizeof(uint);
+	memcpy(cursor, &num_of_meshes, size_of);
+	cursor += size_of;
+
+	for (int i = 0; i < num_of_meshes; i++)
+	{
+		//copy mesh name size
+		uint size_of_name = meshes[i].size();
+		size_of = sizeof(uint);
+		memcpy(cursor, &size_of_name, size_of);
+		cursor += size_of;
+
+		//copy mesh name
+		size_of = sizeof(char)*meshes[i].size();
+		memcpy(cursor, meshes[i].data(), size_of);
+		cursor += size_of;
+	}
+
+	//copy material
+	size_of_mat = strlen(material);
+	size_of = sizeof(uint);
+	memcpy(cursor, &size_of_mat, size_of);
+	cursor += size_of;
+
+	if (size_of_mat > 0)
+	{
+		size_of = size_of_mat;
+		memcpy(cursor, material, size_of);
+		cursor += size_of;
+	}
+	*/
+	return ret;
+}
