@@ -42,7 +42,7 @@ private:
 
 
 	uint SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>>& buffer, GameObject* to_save);
-	uint LoadObjectFromOwnFormat(const char* data, uint pos);
+	uint LoadObjectFromOwnFormat(char* &data, char* &cursor);
 
 
 	//Temporal storing of FBX file path

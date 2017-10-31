@@ -4,6 +4,8 @@
 #include "ModuleImporter.h"
 #include "GameObject.h"
 #include "ComponentMesh.h"
+#include "ComponentMaterial.h"
+#include "CompTransform.h"
 #include "ModuleScene.h"
 
 #include "Assimp/include/cimport.h"
@@ -671,71 +673,123 @@ bool ModuleImporter::SaveSceneToOwnFormat(const char* name)
 uint ModuleImporter::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>> &buffer, GameObject* to_save)
 {
 	//DATA ORDER: UID of obj - size of name - name -
+				// UID of parent
 			    //  UID of transform - pos - scale - rot 
 				//  num of meshes - [UID of mesh - mesh name size - mesh name]
 				//  UID of material - size of texture name - texture name
 
-	uint size = 0;
+
+	//STORE SIZE-------------------------------------------------------------------
+	uint size = 1;
 
 	std::vector<Component*> meshes = to_save->GetAllComponentOfType(COMPONENT_MESH);
+
 
 	size += sizeof(int16_t);
 	std::string name = to_save->GetName();
 	size += sizeof(uint);
 	size += name.size();
 
-	//store all meshes
+	//UID parent
+	size += sizeof(int16_t);
+
+	//Transform
+	size += sizeof(int16_t);
+	size += sizeof(float) * 10;
+
+	//Meshes
 	size += sizeof(uint); //num of meshes
 	for (int i = 0; i < meshes.size(); i++)
 	{
+		size += sizeof(int16_t); //UID
 		size += sizeof(uint); //size of mesh name
 		size += sizeof(char) * ((ComponentMesh*)(meshes[i]))->name.length(); //mesh name
 	}
 
-
-
-
-
-
+	//Material
+	size += sizeof(int16_t);
+	ComponentMaterial* mat = (ComponentMaterial*)to_save->GetComponentByType(COMPONENT_MATERIAL);
+	size += sizeof(uint);
+	size += mat->texture_name.length();
 	
-	/*char* data = new char[size];
+	
+	//COPY DATA------------------------------------------------------
+	char* data = new char[size];
 	char* cursor = data;
-	uint size_of = sizeof(uint);
+	uint size_of = 0;
 
 
-	//copy tag
-
-	uint tag = OBJECT_SAVETAG;
-	memcpy(cursor, &tag, size_of);
+	//Copy UID
+	size_of = sizeof(int16_t);
+	int16_t objID = to_save->GetID();
+	memcpy(cursor, &objID , size_of);
 	cursor += size_of;
 
-
-	//Copy transform;
-	float transform[10] = { pos.x, pos.y, pos.z, scale.x, scale.y, scale.z, rot.x, rot.y, rot.z, rot.w };
-	size_of = sizeof(float) * 10;
-	memcpy(cursor, transform, size_of);
-	cursor += size_of;
-
-	//Copy childs
-
-	uint num_of_childs = childs.size();
+	//Copy name size
 	size_of = sizeof(uint);
-	memcpy(cursor, &num_of_childs, size_of);
+	std::string name = to_save->GetName();
+	uint size = name.size();
+	memcpy(cursor, &size, size_of);
 	cursor += size_of;
 
-	for (int i = 0; i < num_of_childs; i++)
-	{
-		//copy child name size
-		uint size_of_name = childs[i].size();
-		size_of = sizeof(uint);
-		memcpy(cursor, &size_of_name, size_of);
-		cursor += size_of;
+	//Copy name
+	size_of = size;
+	memcpy(cursor, name.data(), size_of);
+	cursor += size_of;
 
-		//copy child name
-		size_of = sizeof(char)*childs[i].size();
-		memcpy(cursor, childs[i].data(), size_of);
-		cursor += size_of;
-	}
+	//Copy UID of parent
+	int16_t parentID = to_save->GetParent()->GetID();
+	size_of = sizeof(int16_t);
+	memcpy(cursor, &parentID, size_of);
+	cursor += size_of;
+
+	//Copy UID of transform
+	CompTransform* transform = ((CompTransform*)to_save->GetComponentByType(COMPONENT_TRANSFORM));
+	int16_t transformID = transform->GetID();
+	size_of = sizeof(int16_t);
+	memcpy(cursor, &transformID, size_of);
+	cursor += size_of;
+
+	//Copy pos
+	math::float3 pos = transform->GetTranslation();
+	size_of = sizeof(float);
+	memcpy(cursor, &pos.x, size_of);
+	cursor += size_of;
+	size_of = sizeof(float);
+	memcpy(cursor, &pos.y, size_of);
+	cursor += size_of;
+	size_of = sizeof(float);
+	memcpy(cursor, &pos.z, size_of);
+	cursor += size_of;
+
+
+	//Copy scale
+	math::float3 scale = transform->GetScale();
+	size_of = sizeof(float);
+	memcpy(cursor, &scale.x, size_of);
+	cursor += size_of;
+	size_of = sizeof(float);
+	memcpy(cursor, &scale.y, size_of);
+	cursor += size_of;
+	size_of = sizeof(float);
+	memcpy(cursor, &scale.z, size_of);
+	cursor += size_of;
+
+
+	//Copy rot
+	math::Quat rot = transform->GetRotation();
+	size_of = sizeof(float);
+	memcpy(cursor, &rot.x, size_of);
+	cursor += size_of;
+	size_of = sizeof(float);
+	memcpy(cursor, &rot.y, size_of);
+	cursor += size_of;
+	size_of = sizeof(float);
+	memcpy(cursor, &rot.z, size_of);
+	cursor += size_of;
+	size_of = sizeof(float);
+	memcpy(cursor, &rot.w, size_of);
+	cursor += size_of;
 
 
 	//Copy meshes
@@ -746,31 +800,41 @@ uint ModuleImporter::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>>
 
 	for (int i = 0; i < num_of_meshes; i++)
 	{
+		//copy mesh UID
+		int16_t meshID = ((ComponentMesh*)(meshes[i]))->GetID();
+		size_of = sizeof(int16_t);
+		memcpy(cursor, &meshID, size_of);
+		cursor += size_of;
+
 		//copy mesh name size
-		uint size_of_name = meshes[i].size();
+		uint size_of_name = ((ComponentMesh*)(meshes[i]))->name.length();
 		size_of = sizeof(uint);
 		memcpy(cursor, &size_of_name, size_of);
 		cursor += size_of;
 
 		//copy mesh name
-		size_of = sizeof(char)*meshes[i].size();
-		memcpy(cursor, meshes[i].data(), size_of);
+		size_of = sizeof(char)*size_of_name;
+		memcpy(cursor, meshes[i], size_of);
 		cursor += size_of;
 	}
 
-	//copy material
-	size_of_mat = strlen(material);
-	size_of = sizeof(uint);
-	memcpy(cursor, &size_of_mat, size_of);
+	
+	//copy material & texture
+	int16_t matID = mat->GetID();
+	size_of = sizeof(int16_t);
+	memcpy(cursor, &matID, size_of);
 	cursor += size_of;
 
-	if (size_of_mat > 0)
-	{
-		size_of = size_of_mat;
-		memcpy(cursor, material, size_of);
-		cursor += size_of;
-	}
-	*/
+	uint texture_name_size = mat->texture_name.length();
+	size_of = sizeof(uint);
+	memcpy(cursor, &texture_name_size, size_of);
+	cursor += size_of;
+
+	size_of = texture_name_size;
+	memcpy(cursor, mat->texture_name.data(), size_of);
+	cursor += size_of;
+	
+
 	return size;
 }
 
@@ -820,7 +884,7 @@ GameObject * ModuleImporter::LoadSceneFromOwnFormat(const char * name)
 		memcpy(size_of_buffer, cursor, size_of);
 		cursor += size_of;
 
-		cursor += LoadObjectFromOwnFormat(cursor, size_of_buffer[0]);
+		LoadObjectFromOwnFormat(data, cursor);
 	}
 
 
@@ -830,8 +894,17 @@ GameObject * ModuleImporter::LoadSceneFromOwnFormat(const char * name)
 	return nullptr;
 }
 
-uint ModuleImporter::LoadObjectFromOwnFormat(const char * data, uint pos)
+uint ModuleImporter::LoadObjectFromOwnFormat(char * &data, char * &cursor)
 {
+	//DATA ORDER: UID of obj - size of name - name -
+	// UID of parent
+	//  UID of transform - pos - scale - rot 
+	//  num of meshes - [UID of mesh - mesh name size - mesh name]
+	//  UID of material - size of texture name - texture name
+
+
+
+
 	/*std::string path;
 #if _DEBUG
 	path = "..\\Library";
