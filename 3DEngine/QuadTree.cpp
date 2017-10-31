@@ -76,11 +76,16 @@ void QuadTreeNodeObj::Fill()
 	std::vector<GameObject*> root_children = App->scene->root->GetChildrens();
 	for (std::vector<GameObject*>::iterator it = root_children.begin(); it != root_children.end(); ++it)
 	{
-		if((*it)->PutInQuadTree(this) == false)
+		if ((*it)->PutInQuadTree(this) == false)
 		{
-			game_objects.clear();
-			Partition();		
-			break;
+			if (this->box.Size().x > minimum_aabb.Size().x)
+			{
+				game_objects.clear();
+				Partition();
+				break;
+			}
+			else
+				break;
 		}
 	}
 
@@ -91,13 +96,6 @@ void QuadTreeNodeObj::Clear()
 	game_objects.clear();
 	children.clear();
 }
-
-
-/*bool QuadTreeNodeObj::Intersect(std::vector<GameObject*>& game_bjects, const & primitive)
-{
-	return false;
-}*/
-
 
 //QuadTree functions---------------------------------------
 QuadTreeObj::QuadTreeObj()
@@ -117,26 +115,6 @@ void QuadTreeObj::DeleteAll()
 {
 	root.Clear();
 }
-/*void QuadTreeObj::Draw()
-{
-	int i = 0;
-	root->Create(float3::zero, { 12,12,12 });
-	std::vector<GameObject*>::iterator it = game_objects.begin();
-	while (it != game_objects.end())
-	{
-		++i;
-		++it;
-	}
-	if (i > root->GetMaxGameObjects())
-	{
-		root->Create({ 1.5,6,1.5 }, { 3,12,3 });
-		root->Create({ -1.5,6,-1.5 }, { 3,12,3 });
-		root->Create({ 1.5,6,-1.5 }, { 3,12,3 });
-		root->Create({ -1.5,6,1.5 }, { 3,12,3 });
-	}
-
-	
-}*/
 
 
 
