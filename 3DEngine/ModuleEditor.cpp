@@ -727,7 +727,10 @@ void ModuleEditor::ConfigRenderingMenu()
 
 	//Bake Quadtree
 	if (ImGui::Checkbox("Bake Quadtree", &bake_quadtree))
+	{
+		App->scene->scene_quadtree.DeleteAll();
 		App->scene->scene_quadtree.Calcutale();
+	}
 }
 
 //Audio submenu on Configuration window

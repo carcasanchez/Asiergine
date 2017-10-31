@@ -23,8 +23,11 @@ public:
 	
 private:	
 	std::vector<QuadTreeNodeObj*> children;
-	int max_game_objects = 6;
+	int max_game_objects = 2;
 	std::vector<GameObject*> game_objects;
+	float3 minaabb = { 0, MIN_SCENE_POINT_Y, 0 };
+	float3 maxaabb = { 1,MAX_SCENE_POINT_X,1 };
+	math::AABB minimum_aabb = math::AABB(minaabb, maxaabb);
 };
 
 
@@ -35,6 +38,7 @@ public:
 	~QuadTreeObj();
 	//void Draw();
 	void Calcutale();
+	void DeleteAll();
 	QuadTreeNodeObj root;
 private:
 	std::vector<GameObject*> game_objects;

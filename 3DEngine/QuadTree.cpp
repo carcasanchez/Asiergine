@@ -28,8 +28,11 @@ void QuadTreeNodeObj::SetAABBToDraw()
 	App->renderer3D->SetBoxToDraw(box);
 	for (int i = 0; i < children.size(); ++i)
 	{
-		App->renderer3D->SetBoxToDraw(children[i]->box);
+		children[i]->SetAABBToDraw();
 	}
+
+
+
 }
 void QuadTreeNodeObj::Partition()
 {
@@ -46,14 +49,26 @@ void QuadTreeNodeObj::Partition()
 	QuadTreeNodeObj* child2 = new QuadTreeNodeObj(min_point2, max_point2);
 	QuadTreeNodeObj* child3 = new QuadTreeNodeObj(min_point3, max_point3);
 	QuadTreeNodeObj* child4 = new QuadTreeNodeObj(min_point4, max_point4);
-	children.push_back(child1);
-	child1->Fill();
-	children.push_back(child2);
-	child2->Fill();
-	children.push_back(child3);
-	child3->Fill();
-	children.push_back(child4);
-	child4->Fill();
+	if (child1->box.Size().x > minimum_aabb.Size().x)
+	{
+		children.push_back(child1);
+		child1->Fill();
+	}
+	if (child2->box.Size().x > minimum_aabb.Size().x)
+	{
+		children.push_back(child2);
+		child2->Fill();
+	}
+	if (child3->box.Size().x > minimum_aabb.Size().x)
+	{
+		children.push_back(child3);
+		child3->Fill();
+	}
+	if (child4->box.Size().x > minimum_aabb.Size().x)
+	{
+		children.push_back(child4);
+		child4->Fill();
+	}
 }
 
 void QuadTreeNodeObj::Fill()
@@ -64,7 +79,7 @@ void QuadTreeNodeObj::Fill()
 		if((*it)->PutInQuadTree(this) == false)
 		{
 			game_objects.clear();
-			Partition();
+			Partition();		
 			break;
 		}
 	}
@@ -73,7 +88,8 @@ void QuadTreeNodeObj::Fill()
 
 void QuadTreeNodeObj::Clear()
 {
-	
+	game_objects.clear();
+	children.clear();
 }
 
 
@@ -97,6 +113,10 @@ void QuadTreeObj::Calcutale()
 	root.Fill();
 }
 
+void QuadTreeObj::DeleteAll()
+{
+	root.Clear();
+}
 /*void QuadTreeObj::Draw()
 {
 	int i = 0;
