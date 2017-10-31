@@ -47,8 +47,8 @@ void log(const char file[], int line, const char* format, ...);
 #define DEBUG_NORMALS_KEY SDL_SCANCODE_F1
 #define DEBUG_BOXES_KEY SDL_SCANCODE_F2
 
-#define SCENE_SAVETAG 00
-#define MESH_SAVETAG 01
+#define SCENE_SAVETAG 1
+#define MESH_SAVETAG 2
 
 #define FORMAT_EXTENSION ".carca"
 #define TEXTURE_EXTENSION ".dds"
