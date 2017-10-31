@@ -21,7 +21,7 @@ bool ModuleFileSystem::SaveDataToLibrary(const char* data, uint size, const char
 	bool ret = true;
 
 	std::string file_path = CreateDirectoryInLibrary(directory);
-	file_path += (std::experimental::filesystem::path(name).stem().string());
+	file_path += name;
 	file_path += extension;
 
 

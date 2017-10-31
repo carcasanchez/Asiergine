@@ -99,6 +99,27 @@ Component* GameObject::GetComponentByType(ComponentType type)
 	return nullptr;
 }
 
+std::vector<Component*> GameObject::GetAllComponentOfType(ComponentType type)
+{
+
+	std::vector<Component*> objects;
+
+	if (components.empty() == false)
+	{
+		std::vector<Component*>::iterator it = components.begin();
+		while (it != components.end())
+		{
+			if ((*it)->GetType() == type)
+			{
+				objects.push_back((*it));
+			}
+			++it;
+		}
+	}
+
+	return objects;
+}
+
 void GameObject::SetParent(GameObject* new_parent)
 {
 
@@ -159,7 +180,7 @@ ComponentMesh * GameObject::CreateComponent_Mesh(float * ver, uint * ind, uint n
 	return new_mesh;
 }
 
-ComponentMaterial * GameObject::CreateComponent_Material(uint texture_id)
+ComponentMaterial * GameObject::CreateComponent_Material(uint texture_id, const char* txt_name)
 {
 	if (GetComponentByType(COMPONENT_MATERIAL) != nullptr)
 	{
@@ -168,7 +189,7 @@ ComponentMaterial * GameObject::CreateComponent_Material(uint texture_id)
 	}
 
 	ComponentMaterial* new_mat = new ComponentMaterial(this, texture_id);
-
+	new_mat->texture_name = txt_name;
 	components.push_back(new_mat);
 	LOG("Creating new Material in %s", name.c_str());
 	return new_mat;

@@ -43,6 +43,8 @@ update_status ModuleScene::Update(float dt)
 	
 	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
 		App->importer->SaveSceneToOwnFormat("BakerHouse");
+	if (App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
+		App->importer->LoadSceneFromOwnFormat("BakerHouse");
 	
 
 	return UPDATE_CONTINUE;

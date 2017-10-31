@@ -204,15 +204,15 @@ std::string ModuleImporter::SearchNode(const aiNode* n, const aiScene* scene, Ga
 	}
 
 	//Searches and loads texture
-	int text_id = SearchForTexture(scene, fbx_path.c_str(), last_material_index);
-	new_obj->CreateComponent_Material(text_id);
+	std::string texture_name;
+	int text_id = SearchForTexture(scene, fbx_path.c_str(), last_material_index, texture_name);
+	new_obj->CreateComponent_Material(text_id, std::experimental::filesystem::path(texture_name).stem().string().c_str());
 
 
 	//Searches for children nodes
 	for (int i = 0; i < n->mNumChildren; i++)
 		SearchNode(n->mChildren[i], scene, new_obj);
 	
-
 	return n->mName.C_Str();
 }
 
@@ -319,7 +319,7 @@ std::string ModuleImporter::ImportGeometry(const aiMesh* m, const char* obj_name
 
 
 //Loads all textures of the fbx in memory. Stores the ID 
-int ModuleImporter::SearchForTexture(const aiScene* scene, const char* path, int material_index)
+int ModuleImporter::SearchForTexture(const aiScene* scene, const char* path, int material_index, std::string &texture_name)
 {
 	int text_id = 0;	
 	
@@ -329,7 +329,7 @@ int ModuleImporter::SearchForTexture(const aiScene* scene, const char* path, int
 		{
 			aiString s;
 			materials[material_index].first->GetTexture(aiTextureType_DIFFUSE, 0, &s);
-			std::string  texture_name = s.C_Str();
+			texture_name = s.C_Str();
 			std::string  geom_path = path;
 
 			//Construc the general path for the texture
@@ -340,7 +340,7 @@ int ModuleImporter::SearchForTexture(const aiScene* scene, const char* path, int
 			geom_path += texture_name;
 
 			//Load texture and get ID
-			text_id = LoadTexture(geom_path.c_str(), texture_name.c_str());
+			text_id = LoadTexture(geom_path.c_str());
 			//Store texture Library in DDS format
 			SaveTextureToDDS(texture_name.c_str());
 
@@ -358,7 +358,7 @@ int ModuleImporter::SearchForTexture(const aiScene* scene, const char* path, int
 
 
 //Load texture from image-----------------------------
-GLuint ModuleImporter::LoadTexture(const char * path, const char * name) const
+GLuint ModuleImporter::LoadTexture(const char * path) const
 {
 	//Gen image
 	ILuint img_id = 0;
@@ -426,7 +426,10 @@ void ModuleImporter::SaveTextureToDDS(const char * name) const
 	if (size > 0) {
 		data = new ILubyte[size]; // allocate data buffer
 		if (ilSaveL(IL_DDS, data, size) > 0) // Save to buffer with the ilSaveIL function
-			App->fs->SaveDataToLibrary((char*)data, size, name, "Textures", TEXTURE_EXTENSION); 
+		{
+			
+			App->fs->SaveDataToLibrary((char*)data, size, std::experimental::filesystem::path(name).stem().string().c_str(), "Textures", TEXTURE_EXTENSION);
+		}
 
 		delete[] data;
 	}
@@ -600,7 +603,7 @@ void ModuleImporter::LoadMeshFromOwnFormat(const char * name, GameObject* obj) c
 	}
 
 
-	LOG("Loaded %s successfully", name);
+	LOG("Loaded %s mesh successfully", name);
 	delete[] data;
 	obj->CreateComponent_Mesh(vert, ind, num_vert, num_ind, normals, texture_coord);
 }
@@ -623,10 +626,10 @@ bool ModuleImporter::SaveSceneToOwnFormat(const char* name)
 		size += SaveGameObjectToOwnFormat(object_buffers, objects_to_save[i]);
 		size += sizeof(uint);
 	}
-	
+	size++;
 
 	//Save tag
-	char* data = new char[size + 1];
+	char* data = new char[size];
 	char* cursor = data;
 	uint size_of = sizeof(uint);
 	uint tag = SCENE_SAVETAG;
@@ -654,8 +657,7 @@ bool ModuleImporter::SaveSceneToOwnFormat(const char* name)
 		cursor += size_of;
 	}
 	
-
-	//TODO: set end of array with /0
+	data[size - 1] = '/0';
 
 	App->fs->SaveDataToLibrary(data, size, name, "Scenes", FORMAT_EXTENSION);
 
@@ -673,27 +675,30 @@ uint ModuleImporter::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>>
 				//  num of meshes - [UID of mesh - mesh name size - mesh name]
 				//  UID of material - size of texture name - texture name
 
-	uint ret = 0;
+	uint size = 0;
 
-/*	uint size_of_childs = sizeof(uint);
-	for (int i = 0; i < childs.size(); i++)
-	{
-		size_of_childs += sizeof(uint);
-		size_of_childs += sizeof(char) * childs[i].size();
-	}
+	std::vector<Component*> meshes = to_save->GetAllComponentOfType(COMPONENT_MESH);
 
-	uint size_of_meshes = sizeof(uint);
+	size += sizeof(int16_t);
+	std::string name = to_save->GetName();
+	size += sizeof(uint);
+	size += name.size();
+
+	//store all meshes
+	size += sizeof(uint); //num of meshes
 	for (int i = 0; i < meshes.size(); i++)
 	{
-		size_of_meshes += sizeof(uint);
-		size_of_meshes += sizeof(char) * meshes[i].size();
+		size += sizeof(uint); //size of mesh name
+		size += sizeof(char) * ((ComponentMesh*)(meshes[i]))->name.length(); //mesh name
 	}
 
-	uint size_of_mat = sizeof(uint) + strlen(material);
 
-	uint size = sizeof(float) * 10 + size_of_meshes + size_of_childs + size_of_mat + sizeof(uint);
 
-	char* data = new char[size];
+
+
+
+	
+	/*char* data = new char[size];
 	char* cursor = data;
 	uint size_of = sizeof(uint);
 
@@ -766,7 +771,7 @@ uint ModuleImporter::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>>
 		cursor += size_of;
 	}
 	*/
-	return ret;
+	return size;
 }
 
 

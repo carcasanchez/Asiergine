@@ -13,5 +13,6 @@ public:
 	bool IsActive() { return active; }
 
 	uint texture_id = 0;
+	std::string texture_name;
 };
 

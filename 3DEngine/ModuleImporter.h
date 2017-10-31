@@ -31,13 +31,13 @@ private:
 	std::string  SearchNode(const aiNode* n, const aiScene* scene, GameObject* parent);
 	std::string ImportGeometry(const aiMesh*, const char*);
 
-	int SearchForTexture(const aiScene* scene, const char* path, int material_index);
+	int SearchForTexture(const aiScene* scene, const char* path, int material_index, std::string &texture_name);
 
 	//Save methodology
 	bool SaveMeshToOwnFormat(const char* name, uint, uint, const float* vert, uint* ind, const float* normals = nullptr, const float* texture_coords = nullptr) const;
 	void LoadMeshFromOwnFormat(const char* path, GameObject* obj)const;
 	void SaveTextureToDDS(const char * name) const;
-	GLuint LoadTexture(const char * path, const char * name) const;
+	GLuint LoadTexture(const char * path) const;
 
 
 
