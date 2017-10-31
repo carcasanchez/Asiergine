@@ -1,5 +1,6 @@
-#include "QuadTree.h"
 #include "Application.h"
+#include "QuadTree.h"
+#include ".\mmgr\mmgr.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleScene.h"
 #include "GameObject.h"
@@ -9,6 +10,11 @@
 
 QuadTreeNodeObj::~QuadTreeNodeObj()
 {
+	for (std::vector<QuadTreeNodeObj*>::iterator it = children.begin(); it != children.end(); ++it)
+	{
+		RELEASE(*it);
+	}
+	Clear();
 }
 
 
@@ -93,8 +99,8 @@ void QuadTreeNodeObj::Fill()
 
 void QuadTreeNodeObj::Clear()
 {
-	game_objects.clear();
 	children.clear();
+	game_objects.clear();
 }
 
 //QuadTree functions---------------------------------------
@@ -104,7 +110,13 @@ QuadTreeObj::QuadTreeObj()
 	root.box.maxPoint = float3(MAX_SCENE_POINT_X, MAX_SCENE_POINT_X, MAX_SCENE_POINT_X);
 }
 QuadTreeObj::~QuadTreeObj()
-{}
+{
+	for (std::vector<QuadTreeNodeObj*>::iterator it = root.children.begin(); it != root.children.end(); ++it)
+	{
+		RELEASE(*it);
+	}
+	root.Clear();
+}
 
 void QuadTreeObj::Calcutale()
 {

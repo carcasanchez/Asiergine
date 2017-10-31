@@ -13,6 +13,7 @@ public:
 	void Insert(GameObject* game_object);
 	void Remove();
 	int GetMaxGameObjects() { return max_game_objects; }
+	std::vector<QuadTreeNodeObj*> GetChildren() { return children; }
 	void Clear();
 	void SetAABBToDraw();
 	void Partition();
@@ -20,9 +21,9 @@ public:
 	bool IsFull() { return game_objects.size() >= max_game_objects; }
 
 	math::AABB box;
+	std::vector<QuadTreeNodeObj*> children;
 	
 private:	
-	std::vector<QuadTreeNodeObj*> children;
 	int max_game_objects = 2;
 	std::vector<GameObject*> game_objects;
 	float3 minaabb = { 0, MIN_SCENE_POINT_Y, 0 };
