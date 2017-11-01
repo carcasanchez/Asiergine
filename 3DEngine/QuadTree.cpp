@@ -51,30 +51,19 @@ void QuadTreeNodeObj::Partition()
 	float3 max_point3 = { box.maxPoint.x,box.maxPoint.y,center_point.z };
 	float3 min_point4 = { box.minPoint.x,box.minPoint.y,center_point.z };
 	float3 max_point4 = { center_point.x,box.maxPoint.y,box.maxPoint.z };
-	QuadTreeNodeObj* child1 = new QuadTreeNodeObj(min_point1,max_point1);
+	QuadTreeNodeObj* child1 = new QuadTreeNodeObj(min_point1, max_point1);
 	QuadTreeNodeObj* child2 = new QuadTreeNodeObj(min_point2, max_point2);
 	QuadTreeNodeObj* child3 = new QuadTreeNodeObj(min_point3, max_point3);
 	QuadTreeNodeObj* child4 = new QuadTreeNodeObj(min_point4, max_point4);
-	if (child1->box.Size().x > minimum_aabb.Size().x)
-	{
-		children.push_back(child1);
-		child1->Fill();
-	}
-	if (child2->box.Size().x > minimum_aabb.Size().x)
-	{
-		children.push_back(child2);
-		child2->Fill();
-	}
-	if (child3->box.Size().x > minimum_aabb.Size().x)
-	{
-		children.push_back(child3);
-		child3->Fill();
-	}
-	if (child4->box.Size().x > minimum_aabb.Size().x)
-	{
-		children.push_back(child4);
-		child4->Fill();
-	}
+
+	children.push_back(child1);
+	child1->Fill();
+	children.push_back(child2);
+	child2->Fill();
+	children.push_back(child3);
+	child3->Fill();
+	children.push_back(child4);
+	child4->Fill();
 }
 
 void QuadTreeNodeObj::Fill()
