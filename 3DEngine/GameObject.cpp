@@ -140,7 +140,7 @@ void GameObject::SetParent(GameObject* new_parent)
 }
 
 //CREATE COMPONENT METHODS----------------------------------------------------
-CompTransform * GameObject::CreateComponent_Transform(float3 trans , float3 scale, Quat rot)
+CompTransform * GameObject::CreateComponent_Transform(float3 trans , float3 scale, Quat rot, int16_t UID)
 {
 	if (GetComponentByType(COMPONENT_TRANSFORM) != nullptr)
 	{
@@ -154,6 +154,9 @@ CompTransform * GameObject::CreateComponent_Transform(float3 trans , float3 scal
 	new_transform->SetScale(scale.x, scale.y, scale.z);
 	new_transform->SetRotation(rot);
 
+	if (UID >= 0)
+		new_transform->SetID(UID);
+
 	components.push_back(new_transform);
 
 	LOG("Creating new Transform Component in %s", name.c_str());
@@ -161,10 +164,10 @@ CompTransform * GameObject::CreateComponent_Transform(float3 trans , float3 scal
 	return new_transform;
 }
 
-ComponentMesh * GameObject::CreateComponent_Mesh(float * ver, uint * ind, uint num_vert, uint num_ind, float* normals, float * texture_coords)
+ComponentMesh * GameObject::CreateComponent_Mesh(const char* m_name, float * ver, uint * ind, uint num_vert, uint num_ind, float* normals, float * texture_coords, int16_t UID)
 {
 	ComponentMesh* new_mesh = new ComponentMesh(this, ver, ind, num_vert, num_ind, normals, texture_coords);
-	
+	new_mesh->name = m_name;
 
 	//Adapt bounding box to geometry-----------------
 	std::vector <float3> vertex_array;
@@ -175,12 +178,16 @@ ComponentMesh * GameObject::CreateComponent_Mesh(float * ver, uint * ind, uint n
 
 	bounding_box.Enclose(&vertex_array[0], vertex_array.size());
 
+
+	if (UID >= 0)
+		new_mesh->SetID(UID);
+
 	components.push_back(new_mesh);
 	LOG("Creating new Mesh with %i vertices in %s", new_mesh->GetNumVertices(), name.c_str());
 	return new_mesh;
 }
 
-ComponentMaterial * GameObject::CreateComponent_Material(uint texture_id, const char* txt_name)
+ComponentMaterial * GameObject::CreateComponent_Material(uint texture_id, const char* txt_name, int16_t UID)
 {
 	if (GetComponentByType(COMPONENT_MATERIAL) != nullptr)
 	{
@@ -190,12 +197,16 @@ ComponentMaterial * GameObject::CreateComponent_Material(uint texture_id, const 
 
 	ComponentMaterial* new_mat = new ComponentMaterial(this, texture_id);
 	new_mat->texture_name = txt_name;
+
+	if (UID >= 0)
+		new_mat->SetID(UID);
+
 	components.push_back(new_mat);
 	LOG("Creating new Material in %s", name.c_str());
 	return new_mat;
 }
 
-ComponentCamera * GameObject::CreateComponent_Camera(float near_dist, float far_dist, bool active)
+ComponentCamera * GameObject::CreateComponent_Camera(float near_dist, float far_dist, bool active, int16_t UID)
 {
 	if (GetComponentByType(COMPONENT_CAMERA) != nullptr)
 	{
@@ -207,6 +218,9 @@ ComponentCamera * GameObject::CreateComponent_Camera(float near_dist, float far_
 
 	if (active)
 		App->renderer3D->SetActiveCamera(new_camera);
+
+	if (UID >= 0)
+		new_camera->SetID(UID);
 
 	components.push_back(new_camera);
 	LOG("Creating new Camera in %s", name.c_str());

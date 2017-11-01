@@ -325,36 +325,45 @@ int ModuleImporter::SearchForTexture(const aiScene* scene, const char* path, int
 {
 	int text_id = 0;	
 	
-	if (!materials.empty())
+	if (!materials.empty())		
+	{	
+		aiString s;
+		materials[material_index].first->GetTexture(aiTextureType_DIFFUSE, 0, &s);
+		texture_name = s.C_Str();
+		std::string  geom_path = path;
+
+		//Construc the general path for the texture
+		while (geom_path.back() != '\\')
+		{
+			geom_path.pop_back();
+		}
+		geom_path += texture_name;
+
+		//Extract the extension to texture name
+		texture_name = std::experimental::filesystem::path(texture_name).stem().string().c_str();
+
 		//If texture already loaded, don't load again
 		if (materials[material_index].second == -1)
 		{
-			aiString s;
-			materials[material_index].first->GetTexture(aiTextureType_DIFFUSE, 0, &s);
-			texture_name = s.C_Str();
-			std::string  geom_path = path;
-
-			//Construc the general path for the texture
-			while (geom_path.back() != '\\')
-			{
-				geom_path.pop_back();
-			}
-			geom_path += texture_name;
+			
 
 			//Load texture and get ID
 			text_id = LoadTexture(geom_path.c_str());
 			//Store texture Library in DDS format
 			SaveTextureToDDS(texture_name.c_str());
 
-			materials[material_index].second = text_id;	
+			materials[material_index].second = text_id;
 
 			if (text_id == 0)
 			{
 				LOG("Warning: --------Scene missing textures");
-			}		
+			}
 		}
-		else text_id = materials[material_index].second;
-	
+		else
+		{
+			text_id = materials[material_index].second;
+		};
+	}
 	return text_id;
 }
 
@@ -428,9 +437,8 @@ void ModuleImporter::SaveTextureToDDS(const char * name) const
 	if (size > 0) {
 		data = new ILubyte[size]; // allocate data buffer
 		if (ilSaveL(IL_DDS, data, size) > 0) // Save to buffer with the ilSaveIL function
-		{
-			
-			App->fs->SaveDataToLibrary((char*)data, size, std::experimental::filesystem::path(name).stem().string().c_str(), "Textures", TEXTURE_EXTENSION);
+		{			
+			App->fs->SaveDataToLibrary((char*)data, size, name, "Textures", TEXTURE_EXTENSION);
 		}
 
 		delete[] data;
@@ -607,12 +615,12 @@ void ModuleImporter::LoadMeshFromOwnFormat(const char * name, GameObject* obj) c
 
 	LOG("Loaded %s mesh successfully", name);
 	delete[] data;
-	obj->CreateComponent_Mesh(vert, ind, num_vert, num_ind, normals, texture_coord);
+	obj->CreateComponent_Mesh(name, vert, ind, num_vert, num_ind, normals, texture_coord);
 }
 
 bool ModuleImporter::SaveSceneToOwnFormat(const char* name)
 {
-	//DATA ORDER: tag - num objects - [size of object - object]
+	//DATA ORDER: tag - num objects - [object]
 
 	bool ret = true;
 
@@ -626,9 +634,8 @@ bool ModuleImporter::SaveSceneToOwnFormat(const char* name)
 	for (int i = 0; i < objects_to_save.size(); i++)
 	{
 		size += SaveGameObjectToOwnFormat(object_buffers, objects_to_save[i]);
-		size += sizeof(uint);
 	}
-	size++;
+	
 
 	//Save tag
 	char* data = new char[size];
@@ -647,21 +654,16 @@ bool ModuleImporter::SaveSceneToOwnFormat(const char* name)
 
 	//Stores all object data
 	for (std::list<std::pair<char*, uint>>::iterator it = object_buffers.begin(); it != object_buffers.end(); it++)
-	{
-		//stores the size of the buffer
-		size_of = sizeof(uint);
-		memcpy(cursor, (*it).first, size_of);
-		cursor += size_of;
-
-		//stores the buffer
+	{	
 		size_of = (*it).second;
 		memcpy(cursor, (*it).first, size_of);
 		cursor += size_of;
 	}
 	
-	data[size - 1] = '\0';
 
 	App->fs->SaveDataToLibrary(data, size, name, "Scenes", FORMAT_EXTENSION);
+
+
 
 	delete[] data;
 	LOG("Saved Scene %s to Library", name);
@@ -690,7 +692,7 @@ uint ModuleImporter::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>>
 	size += sizeof(uint);
 	size += name.size();
 
-	/*//UID parent
+	//UID parent
 	size += sizeof(int16_t);
 
 	//Transform
@@ -717,7 +719,7 @@ uint ModuleImporter::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>>
 	{
 		size += sizeof(uint);
 		size += mat->texture_name.length();
-	}*/
+	}
 	
 	//COPY DATA------------------------------------------------------
 	char* data = new char[size];
@@ -743,19 +745,17 @@ uint ModuleImporter::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>>
 	memcpy(cursor, name.data(), size_of);
 	cursor += size_of;
 
-	/*//Copy UID of parent
-	int16_t parentID[] = { -1 };
-	parentID[0] = to_save->GetParent()->GetID();
+	//Copy UID of parent
+	int16_t parentID = to_save->GetParent()->GetID();
 	size_of = sizeof(int16_t);
 	memcpy(cursor, &parentID, size_of);
 	cursor += size_of;
 
 	//Copy UID of transform
 	
-	
 	int16_t transformID = 0;
 	if (transform != nullptr)
-		transform->GetID();
+		transformID = transform->GetID();
 	size_of = sizeof(int16_t);
 	memcpy(cursor, &transformID, size_of);
 	cursor += size_of;
@@ -822,8 +822,8 @@ uint ModuleImporter::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>>
 		cursor += size_of;
 
 		//copy mesh name
-		size_of = sizeof(char)*size_of_name;
-		memcpy(cursor, meshes[i], size_of);
+		size_of = size_of_name;
+		memcpy(cursor, ((ComponentMesh*)(meshes[i]))->name.data(), size_of);
 		cursor += size_of;
 	}
 
@@ -831,7 +831,7 @@ uint ModuleImporter::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>>
 	//copy material & texture
 	int16_t matID = 0;	
 	if(mat != nullptr)
-		mat->GetID();
+		matID = mat->GetID();
 
 	size_of = sizeof(int16_t);
 	memcpy(cursor, &matID, size_of);
@@ -847,10 +847,10 @@ uint ModuleImporter::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>>
 		size_of = texture_name_size;
 		memcpy(cursor, mat->texture_name.data(), size_of);
 		cursor += size_of;
-	}*/
+	}
 	
 
-	data[size - 1] = '\0';
+	data[size] = '\0';
 	std::pair<char*, uint> pair_of_data;
 	buffer.push_back(pair_of_data);
 	buffer.back().first = data;
@@ -872,8 +872,12 @@ GameObject * ModuleImporter::LoadSceneFromOwnFormat(const char * name)
 		return nullptr;
 	}
 
+	//Clean Current Scene
+	App->scene->ResetScene();
+
+
 	//Get data from buffer---------------
-	//DATA ORDER: tag - num objects - [size of object - object]
+	//DATA ORDER: tag - num objects - [object]
 
 	//Get tag and check that its a scene
 	char* cursor = data;
@@ -897,29 +901,7 @@ GameObject * ModuleImporter::LoadSceneFromOwnFormat(const char * name)
 	//Load all obj 
 	for (int i = 0; i < num_objects[0]; i++)
 	{
-		//Get how much the next object ocuppes
-		uint size_of_buffer[] = { -1 };
-		size_of = sizeof(uint);
-		memcpy(size_of_buffer, cursor, size_of);
-		cursor += size_of;
-
-		int16_t object_id[] = { 0 };
-
-		uint size_of = sizeof(int16_t);
-		memcpy(object_id, cursor, size_of);
-		cursor += size_of;
-
-		uint size_of_name;
-		size_of = sizeof(uint);
-		memcpy(&size_of_name, cursor, size_of);
-		cursor += size_of;
-
-		char* obj_name = new char[size_of_name + 1];
-
-		size_of = size_of_name;
-		memcpy(obj_name, cursor, size_of);
-		obj_name[size_of_name] = '\0';
-		cursor += size_of;
+		LoadObjectFromOwnFormat(cursor);
 	}
 
 	delete[] data;
@@ -928,19 +910,18 @@ GameObject * ModuleImporter::LoadSceneFromOwnFormat(const char * name)
 	return nullptr;
 }
 
-uint ModuleImporter::LoadObjectFromOwnFormat(char ** data, char ** cursor)
+uint ModuleImporter::LoadObjectFromOwnFormat(char*& cursor)
 {
 	//DATA ORDER: UID of obj - size of name - name -
 	// UID of parent
 	//  UID of transform - pos - scale - rot 
 	//  num of meshes - [UID of mesh - mesh name size - mesh name]
 	//  UID of material - size of texture name - texture name
-
-
-	int16_t object_id[] = { 0 };
+	
+	int16_t object_id = 0 ;
 
 	uint size_of = sizeof(int16_t);
-	memcpy(object_id, cursor, size_of);
+	memcpy(&object_id, cursor, size_of);
 	cursor += size_of;
 
 	uint size_of_name;
@@ -952,39 +933,98 @@ uint ModuleImporter::LoadObjectFromOwnFormat(char ** data, char ** cursor)
 
 	size_of = size_of_name;
 	memcpy(obj_name, cursor, size_of);
-	obj_name[size_of_name] = '/0';
+	cursor += size_of;
+	obj_name[size_of_name] = '\0';
+
+
+	GameObject* new_obj = App->scene->CreateGameObject(obj_name, nullptr, object_id);
+
+	int16_t parent_id = 0 ;
+	size_of = sizeof(int16_t);
+	memcpy(&parent_id, cursor, size_of);
 	cursor += size_of;
 
-	/*std::string path;
+	int16_t transform_id =  0 ;
+	size_of = sizeof(int16_t);
+	memcpy(&transform_id, cursor, size_of);
+	cursor += size_of;
 
+
+	if (transform_id != 0)
+	{
+		float pos[] = { 0, 0, 0 };
+		size_of = sizeof(float) * 3;
+		memcpy(pos, cursor, size_of);
+		cursor += size_of;
+
+		float scale[] = { 1, 1, 1 };
+		size_of = sizeof(float) * 3;
+		memcpy(scale, cursor, size_of);
+		cursor += size_of;
+
+		float rot[] = { 0, 0, 0 , 1 };
+		size_of = sizeof(float) * 4;
+		memcpy(rot, cursor, size_of);
+		cursor += size_of;
+
+		new_obj->CreateComponent_Transform(float3(pos[0], pos[1], pos[2]), float3(scale[0], scale[1], scale[2]), Quat(rot[0], rot[1], rot[2], rot[3]), transform_id);
+	}
 	
-	//Get tag and check that its a mesh
 
+	uint num_meshes = 0;
+	size_of = sizeof(uint);
+	memcpy(&num_meshes, cursor, size_of);
+	cursor += size_of;
+
+	//[UID of mesh - mesh name size - mesh name]
+	for(int i=0;i<num_meshes;i++)
+	{
+		int16_t mesh_id = 0;
+		size_of = sizeof(int16_t);
+		memcpy(&mesh_id, cursor, size_of);
+		cursor += size_of;
+
+		uint mesh_name_size = 0;
+		size_of = sizeof(uint);
+		memcpy(&mesh_name_size, cursor, size_of);
+		cursor += size_of;
+
+		char* mesh_name = new char[mesh_name_size + 1];
+
+		size_of = mesh_name_size;
+		memcpy(mesh_name, cursor, size_of);
+		cursor += size_of;
+
+		mesh_name[mesh_name_size] = '\0';
+
+		LoadMeshFromOwnFormat(mesh_name, new_obj);
+		delete[] mesh_name;
+	}
 	
-	//Load position
-	float position[3] = { 0, 0, 0 };
-	size_of = sizeof(float) * 3;
-	memcpy(position, cursor, size_of);
+	//UID of material - size of texture name - texture name
+	int16_t mat_id = 0;
+	size_of = sizeof(int16_t);
+	memcpy(&mat_id, cursor, size_of);
 	cursor += size_of;
 
-	//Load scale
-	float scale[3] = { 1, 1, 1 };
-	size_of = sizeof(float) * 3;
-	memcpy(scale, cursor, size_of);
-	cursor += size_of;
+	if (mat_id != 0)
+	{
+		uint text_name_size = 0;
+		size_of = sizeof(uint);
+		memcpy(&text_name_size, cursor, size_of);
+		cursor += size_of;
 
-	//Load rot
-	float rot[4] = { 0, 0, 0, 1 };
-	size_of = sizeof(float) * 4;
-	memcpy(rot, cursor, size_of);
-	cursor += size_of;
+		char* text_name = new char[text_name_size + 1];
 
-	GameObject* new_obj = App->scene->CreateGameObject(name, App->scene->root);
-	new_obj->CreateComponent_Transform(float3(position[0], position[1], position[2]), float3(scale[0], scale[1], scale[2]), Quat(rot[0], rot[1], rot[2], rot[3]));
+		size_of = text_name_size;
+		memcpy(text_name, cursor, size_of);
+		cursor += size_of;
 
-	delete[] data;*/
-
+		text_name[text_name_size] = '\0';
+		delete[] text_name;
+	}
 
 
+	cursor++;
 	return 0;
 }

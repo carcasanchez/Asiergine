@@ -32,7 +32,10 @@ public:
 	{
 		return UID;
 	}
-
+	void SetID(int16_t newID)
+	{
+		UID = newID;
+	}
 
 	virtual void OnEditor() {}
 

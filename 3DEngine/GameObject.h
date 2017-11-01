@@ -30,10 +30,10 @@ public:
 	void SetParent(GameObject* new_parent);
 	bool IsStatic() { return obj_static; }
 
-	CompTransform* CreateComponent_Transform(float3 trans = float3(0, 0, 0), float3 scaling = float3(1, 1, 1), Quat rot = Quat::identity);
-	ComponentMesh* CreateComponent_Mesh( float* ver, uint* ind, uint num_vert, uint num_ind, float* normals, float* texture_coords = nullptr);
-	ComponentMaterial* CreateComponent_Material(uint texture_id, const char* name);
-	ComponentCamera* CreateComponent_Camera(float , float, bool active = false);
+	CompTransform* CreateComponent_Transform(float3 trans = float3(0, 0, 0), float3 scaling = float3(1, 1, 1), Quat rot = Quat::identity, int16_t UID = -1);
+	ComponentMesh* CreateComponent_Mesh(const char* name, float* ver, uint* ind, uint num_vert, uint num_ind, float* normals, float* texture_coords = nullptr, int16_t UID = -1);
+	ComponentMaterial* CreateComponent_Material(uint texture_id, const char* name, int16_t UID = -1);
+	ComponentCamera* CreateComponent_Camera(float , float, bool active = false, int16_t UID = -1);
 
 	void OnEditor();
 
@@ -54,6 +54,10 @@ public:
 		return UID;
 	}
 
+	void SetID(int16_t new_ID)
+	{
+		UID = new_ID;
+	}
 
 	math::AABB bounding_box = math::AABB(float3::zero, float3::zero);
 

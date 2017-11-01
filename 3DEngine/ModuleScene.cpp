@@ -29,6 +29,10 @@ bool ModuleScene::Init(const JSON_Object * config_data)
 
 update_status ModuleScene::Update(float dt)
 {
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
+		App->importer->SaveSceneToOwnFormat("BakerHouse");
+	if (App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
+		App->importer->LoadSceneFromOwnFormat("BakerHouse");
 
 	root->Update();
 	
@@ -40,11 +44,6 @@ update_status ModuleScene::Update(float dt)
 		debug_normals = !debug_normals;
 	if (App->input->GetKey(DEBUG_BOXES_KEY) == KEY_DOWN)
 		debug_boxes = !debug_boxes;
-	
-	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
-		App->importer->SaveSceneToOwnFormat("BakerHouse");
-	if (App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
-		App->importer->LoadSceneFromOwnFormat("BakerHouse");
 	
 
 	return UPDATE_CONTINUE;
@@ -74,7 +73,7 @@ bool ModuleScene::CleanUp()
 
 
 //Game Object related Utility-----------------------------
-GameObject * ModuleScene::CreateGameObject(const char* object_name, GameObject* parent)
+GameObject * ModuleScene::CreateGameObject(const char* object_name, GameObject* parent, int16_t UID)
 {
 	GameObject* new_object = new GameObject(object_name);
 
@@ -88,6 +87,22 @@ GameObject * ModuleScene::CreateGameObject(const char* object_name, GameObject* 
 		new_object->SetParent(parent);
 	}
 
+	if (UID >= 0)
+	{
+		new_object->SetID(UID);
+	}
+
 	return new_object;
+}
+
+void ModuleScene::ResetScene()
+{
+	
+		CleanUp();
+		root = CreateGameObject("Root");
+		GameObject* camera = CreateGameObject("Camera1", root);
+		camera->CreateComponent_Camera(0.5, 5, true);
+		camera->CreateComponent_Transform();
+	
 }
 
