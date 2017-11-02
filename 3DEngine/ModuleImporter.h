@@ -37,7 +37,7 @@ private:
 	bool SaveMeshToOwnFormat(const char* name, uint, uint, const float* vert, uint* ind, const float* normals = nullptr, const float* texture_coords = nullptr) const;
 	void LoadMeshFromOwnFormat(const char* path, GameObject* obj)const;
 	void SaveTextureToDDS(const char * name) const;
-	GLuint LoadTexture(const char * path) const;
+	GLuint LoadTexture(const char * path, bool from_scene = false) const;
 
 
 
@@ -51,6 +51,9 @@ private:
 	//Temporal storing of materials to avoid double loading
 	std::vector <std::pair <aiMaterial*, int>> materials;
 	//if id == -1, still not loaded
+
+	//Temporal storing of textures when loaded scene
+	std::vector<std::pair <std::string, int>> loaded_textures;
 	
 	//For meshes without name
 	int mesh_id = 0;

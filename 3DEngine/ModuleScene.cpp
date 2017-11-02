@@ -29,10 +29,22 @@ bool ModuleScene::Init(const JSON_Object * config_data)
 
 update_status ModuleScene::Update(float dt)
 {
-	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
+
+	if (wants_to_reset)
+	{
+		wants_to_reset = false;
+		ResetScene();
+	}
+	else if (wants_to_save)
+	{
+		wants_to_save = false;
 		App->importer->SaveSceneToOwnFormat("BakerHouse");
-	if (App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
+	}
+	else if (wants_to_load)
+	{
+		wants_to_load = false;
 		App->importer->LoadSceneFromOwnFormat("BakerHouse");
+	}
 
 	root->Update();
 	
@@ -91,7 +103,6 @@ GameObject * ModuleScene::CreateGameObject(const char* object_name, GameObject* 
 
 void ModuleScene::ResetScene()
 {
-	
 		CleanUp();
 		root = CreateGameObject("Root");
 		GameObject* camera = CreateGameObject("Camera1", root);

@@ -22,7 +22,7 @@ public:
 
 	GameObject* CreateGameObject(const char* name, GameObject* parent = nullptr, int16_t UID = -1);
 
-	void ResetScene();
+
 	
 
 	GameObject* root = nullptr;
@@ -31,10 +31,15 @@ public:
 	bool debug_boxes = false;
 
 	QuadTreeObj scene_quadtree;
-	
+
+	bool wants_to_reset = false;
+	bool wants_to_save = false;
+	bool wants_to_load = false;
+
+	void ResetScene();
+
 private:
 	bool SaveConfig(JSON_Object* config_data);
-
 
 
 };

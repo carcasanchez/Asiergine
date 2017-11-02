@@ -171,6 +171,7 @@ void ModuleEditor::ManageMainMenuBar()
 
 		if (ImGui::BeginMenu("File"))
 		{			
+			File_option();
 			ImGui::EndMenu();
 		}
 
@@ -179,12 +180,13 @@ void ModuleEditor::ManageMainMenuBar()
 			Window_option();
 			ImGui::EndMenu();
 		}
-				
-		if (ImGui::BeginMenu("Exit Editor"))
+
+		if (ImGui::MenuItem("About"))
 		{
-			ExitEditor_option();
-			ImGui::EndMenu();
+			about_engine_open = true;
 		}
+				
+	
 		ImGui::EndMainMenuBar();
 	}
 }
@@ -214,15 +216,23 @@ void ModuleEditor::Window_option()
 		hierarchy_open = true;
 
 	if (ImGui::MenuItem("Inspector"))
-		inspector_open = true;
-
-	if (ImGui::MenuItem("About the engine"))
-		about_engine_open = true;
-	
+		inspector_open = true;	
 }
 
-void ModuleEditor::ExitEditor_option()
+void ModuleEditor::File_option()
 {
+	if (ImGui::MenuItem("New scene"))
+	{
+		App->scene->wants_to_reset = true;
+		App->camera->ResetCamera();
+	}
+
+	if (ImGui::MenuItem("Save scene"))
+		App->scene->wants_to_save = true;
+
+	if (ImGui::MenuItem("Load scene"))
+		App->scene->wants_to_load = true;
+
 	if (ImGui::MenuItem("Exit"))
 	{
 		quit_editor = true;

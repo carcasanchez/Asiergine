@@ -101,10 +101,11 @@ private:
 	void ConfigInputMenu();
 	void ConfigVramUsageMenu();
 
-
+	//Main menu bar options
 	void ShowExampleWindow_option();
+	void File_option();
 	void Window_option();
-	void ExitEditor_option();
+
 	
 
 	bool selected = false;

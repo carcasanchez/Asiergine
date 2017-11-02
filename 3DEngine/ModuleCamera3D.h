@@ -25,11 +25,11 @@ public:
 	bool SaveConfig(JSON_Object* config_data);
 	void AdaptToGeometry(GameObject*);
 
+	void ResetCamera();
 private:
 
 	void CalculateViewMatrix();
 	void ControlCamera(float dt);
-	void ResetCamera();
 
 
 public:

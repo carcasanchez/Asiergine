@@ -369,7 +369,7 @@ int ModuleImporter::SearchForTexture(const aiScene* scene, const char* path, int
 
 
 //Load texture from image-----------------------------
-GLuint ModuleImporter::LoadTexture(const char * path) const
+GLuint ModuleImporter::LoadTexture(const char * path, bool from_scene) const
 {
 	//Gen image
 	ILuint img_id = 0;
@@ -387,12 +387,16 @@ GLuint ModuleImporter::LoadTexture(const char * path) const
 		return 0;
 	}
 
-	// If the image is flipped
-	ILinfo ImageInfo;
-	iluGetImageInfo(&ImageInfo);
-	if (ImageInfo.Origin == IL_ORIGIN_UPPER_LEFT)
-	{
-		iluFlipImage();
+	if(!from_scene)
+	{ 
+		// If the image is flipped
+		ILinfo ImageInfo;
+		iluGetImageInfo(&ImageInfo);
+		if (ImageInfo.Origin == IL_ORIGIN_UPPER_LEFT)
+		{
+			iluFlipImage();
+		}
+
 	}
 
 	ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
@@ -857,8 +861,7 @@ uint ModuleImporter::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>>
 	buffer.push_back(pair_of_data);
 	buffer.back().first = data;
 	buffer.back().second = size;
-
-
+	
 	return size;
 }
 
@@ -1026,7 +1029,46 @@ uint ModuleImporter::LoadObjectFromOwnFormat(char*& cursor)
 		cursor += size_of;
 
 		text_name[text_name_size] = '\0';
-		delete[] text_name;
+
+		bool loaded = false;
+		uint texture_ID = -1;
+		//Check if texture already loaded and, if not, load it
+		for (std::vector<std::pair<std::string, int>>::iterator it = loaded_textures.begin(); it != loaded_textures.end(); it++)
+		{
+			if ((*it).first.compare(text_name))
+			{
+				loaded = true;
+				texture_ID = (*it).second;
+				break;
+			}
+		}
+
+		if (loaded == false)
+		{
+			//Construct path to texture
+			std::string path;
+			#if _DEBUG
+			path = "../Library/";
+			#else
+			path = "Library/";
+			#endif
+
+			path += "Textures/";
+			path += text_name;
+			path += ".dds";
+
+			texture_ID = LoadTexture(path.c_str(), true);
+
+			//Save the texture in the already-loaded vector
+			std::pair<std::string, int> text;
+			text.first = text_name;
+			text.second = texture_ID;
+			loaded_textures.push_back(text);
+		}
+
+
+		new_obj->CreateComponent_Material(texture_ID, text_name, mat_id);
+
 	}
 
 
