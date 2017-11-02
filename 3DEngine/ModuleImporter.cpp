@@ -6,6 +6,7 @@
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
 #include "CompTransform.h"
+#include "ComponentCamera.h"
 #include "ModuleScene.h"
 
 #include "Assimp/include/cimport.h"
@@ -685,7 +686,7 @@ uint ModuleImporter::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>>
 			    //  UID of transform - pos - scale - rot 
 				//  num of meshes - [UID of mesh - mesh name size - mesh name]
 				//  UID of material - size of texture name - texture name
-
+				//UID of camera - near dist - far dist
 
 	//STORE SIZE-------------------------------------------------------------------
 	uint size = 1;
@@ -693,17 +694,17 @@ uint ModuleImporter::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>>
 	std::vector<Component*> meshes = to_save->GetAllComponentOfType(COMPONENT_MESH);
 
 
-	size += sizeof(int16_t);
+	size += sizeof(uint);
 	std::string name = to_save->GetName();
 	size += sizeof(uint);
 	size += name.size();
 
 	//UID parent
-	size += sizeof(int16_t);
+	size += sizeof(uint);
 
 	//Transform
 	CompTransform* transform = ((CompTransform*)to_save->GetComponentByType(COMPONENT_TRANSFORM));	
-	size += sizeof(int16_t);
+	size += sizeof(uint);
 	if (transform != nullptr)
 	{		
 		size += sizeof(float) * 10;
@@ -713,18 +714,26 @@ uint ModuleImporter::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>>
 	size += sizeof(uint); //num of meshes
 	for (int i = 0; i < meshes.size(); i++)
 	{
-		size += sizeof(int16_t); //UID
+		size += sizeof(uint); //UID
 		size += sizeof(uint); //size of mesh name
 		size += sizeof(char) * ((ComponentMesh*)(meshes[i]))->name.length(); //mesh name
 	}
 
 	//Material
-	size += sizeof(int16_t);
+	size += sizeof(uint);
 	ComponentMaterial* mat = (ComponentMaterial*)to_save->GetComponentByType(COMPONENT_MATERIAL);	
 	if (mat != nullptr)
 	{
 		size += sizeof(uint);
 		size += mat->texture_name.length();
+	}
+
+	//Camera
+	size += sizeof(uint);
+	ComponentCamera* cam = (ComponentCamera*)to_save->GetComponentByType(COMPONENT_CAMERA);
+	if (cam != nullptr)
+	{
+		size += sizeof(float) *2;
 	}
 	
 	//COPY DATA------------------------------------------------------
@@ -734,8 +743,8 @@ uint ModuleImporter::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>>
 
 
 	//Copy UID
-	size_of = sizeof(int16_t);
-	int16_t objID = to_save->GetID();
+	size_of = sizeof(uint);
+	uint objID = to_save->GetID();
 	memcpy(cursor, &objID , size_of);
 	cursor += size_of;
 
@@ -752,17 +761,17 @@ uint ModuleImporter::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>>
 	cursor += size_of;
 
 	//Copy UID of parent
-	int16_t parentID = to_save->GetParent()->GetID();
-	size_of = sizeof(int16_t);
+	uint parentID = to_save->GetParent()->GetID();
+	size_of = sizeof(uint);
 	memcpy(cursor, &parentID, size_of);
 	cursor += size_of;
 
 	//Copy UID of transform
 	
-	int16_t transformID = 0;
+	uint transformID = 0;
 	if (transform != nullptr)
 		transformID = transform->GetID();
-	size_of = sizeof(int16_t);
+	size_of = sizeof(uint);
 	memcpy(cursor, &transformID, size_of);
 	cursor += size_of;
 	
@@ -816,8 +825,8 @@ uint ModuleImporter::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>>
 	for (int i = 0; i < num_of_meshes; i++)
 	{
 		//copy mesh UID
-		int16_t meshID = ((ComponentMesh*)(meshes[i]))->GetID();
-		size_of = sizeof(int16_t);
+		uint meshID = ((ComponentMesh*)(meshes[i]))->GetID();
+		size_of = sizeof(uint);
 		memcpy(cursor, &meshID, size_of);
 		cursor += size_of;
 
@@ -835,11 +844,11 @@ uint ModuleImporter::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>>
 
 	
 	//copy material & texture
-	int16_t matID = 0;	
+	uint matID = 0;	
 	if(mat != nullptr)
 		matID = mat->GetID();
 
-	size_of = sizeof(int16_t);
+	size_of = sizeof(uint);
 	memcpy(cursor, &matID, size_of);
 	cursor += size_of;
 
@@ -854,6 +863,29 @@ uint ModuleImporter::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>>
 		memcpy(cursor, mat->texture_name.data(), size_of);
 		cursor += size_of;
 	}
+
+	//copy cam settings
+	uint camID = 0;
+	if (cam != nullptr)
+		camID = cam->GetID();
+
+	size_of = sizeof(uint);
+	memcpy(cursor, &camID, size_of);
+	cursor += size_of;
+
+	if (cam != nullptr)
+	{
+		float n_distance = cam->GetNearDistance();
+		float f_distance = cam->GetFarDistance();
+
+		size_of = sizeof(float);
+		memcpy(cursor, &n_distance, size_of);
+		cursor += size_of;
+
+		memcpy(cursor, &f_distance, size_of);
+		cursor += size_of;
+	}
+
 	
 
 	data[size-1] = '\0';
@@ -864,7 +896,6 @@ uint ModuleImporter::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>>
 	
 	return size;
 }
-
 
 
 
@@ -923,10 +954,10 @@ uint ModuleImporter::LoadObjectFromOwnFormat(char*& cursor)
 	//  UID of transform - pos - scale - rot 
 	//  num of meshes - [UID of mesh - mesh name size - mesh name]
 	//  UID of material - size of texture name - texture name
-	
-	int16_t object_id = 0 ;
+	// UID of camera - near distance - far distance
+	uint object_id = 0 ;
 
-	uint size_of = sizeof(int16_t);
+	uint size_of = sizeof(uint);
 	memcpy(&object_id, cursor, size_of);
 	cursor += size_of;
 
@@ -947,13 +978,13 @@ uint ModuleImporter::LoadObjectFromOwnFormat(char*& cursor)
 
 	delete[] obj_name;
 
-	int16_t parent_id = 0 ;
-	size_of = sizeof(int16_t);
+	uint parent_id = 0 ;
+	size_of = sizeof(uint);
 	memcpy(&parent_id, cursor, size_of);
 	cursor += size_of;
 
-	int16_t transform_id =  0 ;
-	size_of = sizeof(int16_t);
+	uint transform_id =  0 ;
+	size_of = sizeof(uint);
 	memcpy(&transform_id, cursor, size_of);
 	cursor += size_of;
 
@@ -987,8 +1018,8 @@ uint ModuleImporter::LoadObjectFromOwnFormat(char*& cursor)
 	//[UID of mesh - mesh name size - mesh name]
 	for(int i=0;i<num_meshes;i++)
 	{
-		int16_t mesh_id = 0;
-		size_of = sizeof(int16_t);
+		uint mesh_id = 0;
+		size_of = sizeof(uint);
 		memcpy(&mesh_id, cursor, size_of);
 		cursor += size_of;
 
@@ -1010,8 +1041,8 @@ uint ModuleImporter::LoadObjectFromOwnFormat(char*& cursor)
 	}
 	
 	//UID of material - size of texture name - texture name
-	int16_t mat_id = 0;
-	size_of = sizeof(int16_t);
+	uint mat_id = 0;
+	size_of = sizeof(uint);
 	memcpy(&mat_id, cursor, size_of);
 	cursor += size_of;
 
@@ -1071,6 +1102,25 @@ uint ModuleImporter::LoadObjectFromOwnFormat(char*& cursor)
 
 	}
 
+	//UID of camera - near dist - far dist
+	uint cam_id = 0;
+	size_of = sizeof(uint);
+	memcpy(&cam_id, cursor, size_of);
+	cursor += size_of;
+
+	if (cam_id != 0)
+	{
+		float n_dist = 0, f_dist = 0;
+
+		size_of = sizeof(float);
+
+		memcpy(&n_dist, cursor, size_of);
+		cursor += size_of;
+		memcpy(&f_dist, cursor, size_of);
+		cursor += size_of;
+
+		new_obj->CreateComponent_Camera(n_dist, f_dist, false ,cam_id);
+	}
 
 	cursor++;
 	return 0;

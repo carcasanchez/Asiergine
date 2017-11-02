@@ -79,7 +79,7 @@ bool ModuleScene::CleanUp()
 
 
 //Game Object related Utility-----------------------------
-GameObject * ModuleScene::CreateGameObject(const char* object_name, GameObject* parent, int16_t UID)
+GameObject * ModuleScene::CreateGameObject(const char* object_name, GameObject* parent, uint UID)
 {
 	GameObject* new_object = new GameObject(object_name);
 
