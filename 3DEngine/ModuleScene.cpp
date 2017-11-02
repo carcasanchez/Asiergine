@@ -54,13 +54,7 @@ bool ModuleScene::SaveConfig(JSON_Object * config_data)
 	return true;
 }
 
-bool ModuleScene::SaveScene()
-{
-	
 
-
-	return true;
-}
 
 bool ModuleScene::CleanUp()
 {
@@ -103,6 +97,6 @@ void ModuleScene::ResetScene()
 		GameObject* camera = CreateGameObject("Camera1", root);
 		camera->CreateComponent_Camera(0.5, 5, true);
 		camera->CreateComponent_Transform();
-	
+		App->editor->UnselectAll();
 }
 

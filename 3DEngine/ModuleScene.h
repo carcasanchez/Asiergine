@@ -36,7 +36,6 @@ private:
 	bool SaveConfig(JSON_Object* config_data);
 
 
-	bool SaveScene();
 
 };
 

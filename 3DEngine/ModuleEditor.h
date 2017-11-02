@@ -39,6 +39,11 @@ public:
 
 	GameObject* GetSelectedGameObject() { return selected_object; }
 
+	void UnselectAll()
+	{
+		selected_object = nullptr;
+	}
+
 	
 private:
 
