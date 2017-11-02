@@ -32,6 +32,7 @@ void ComponentMaterial::OnEditor()
 
 			ImGui::Image((ImTextureID)texture_id, ImVec2(200, 200));
 			ImGui::TextColored(ImVec4(0, 255, 0, 255), "%i x %i", (int)size.x, (int)size.y);
+			ImGui::TextWrapped("%s", texture_name.c_str());
 		}
 	}
 }

@@ -275,7 +275,7 @@ void GameObject::OnEditor()
 	ImGui::TextWrapped("%s", name.c_str());
 	ImGui::Separator();
 	ImGui::Checkbox("Static", &obj_static);
-	ImGui::TextWrapped("UID: %i", UID);
+
 	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); it++)
 	{
 		ImGui::PushID((*it)->GetID());

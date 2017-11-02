@@ -46,33 +46,36 @@ bool ModuleEditor::Start()
 
 	//Imgui style change
 	ImGuiStyle& style = ImGui::GetStyle();
+	style.FrameRounding = 0.0f;
+	style.WindowRounding = 0.0f;
+	style.ScrollbarRounding = 0.0f;
 	style.Colors[ImGuiCol_Text] = ImVec4(0.98f, 0.98f, 0.98f, 1.00f);
 	style.Colors[ImGuiCol_TextDisabled] = ImVec4(0.60f, 0.82f, 0.55f, 1.00f);
-	style.Colors[ImGuiCol_WindowBg] = ImVec4(0.00f, 0.08f, 0.38f, 0.45f);
-	style.Colors[ImGuiCol_ChildWindowBg] = ImVec4(0.14f, 0.35f, 0.86f, 0.22f);
+	style.Colors[ImGuiCol_WindowBg] = ImVec4(0.08f, 0.10f, 0.43f, 1.00f);
+	style.Colors[ImGuiCol_ChildWindowBg] = ImVec4(0.03f, 0.06f, 0.26f, 0.31f);
 	style.Colors[ImGuiCol_PopupBg] = ImVec4(0.17f, 0.14f, 0.52f, 0.90f);
-	style.Colors[ImGuiCol_Border] = ImVec4(1.00f, 0.00f, 0.00f, 0.40f);
-	style.Colors[ImGuiCol_BorderShadow] = ImVec4(1.00f, 0.00f, 0.00f, 0.45f);
-	style.Colors[ImGuiCol_FrameBg] = ImVec4(1.00f, 0.28f, 0.28f, 0.30f);
-	style.Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.96f, 0.16f, 0.16f, 0.40f);
-	style.Colors[ImGuiCol_FrameBgActive] = ImVec4(0.59f, 0.06f, 0.06f, 0.45f);
-	style.Colors[ImGuiCol_TitleBg] = ImVec4(0.01f, 0.01f, 1.00f, 0.83f);
-	style.Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.31f, 0.31f, 0.81f, 0.20f);
-	style.Colors[ImGuiCol_TitleBgActive] = ImVec4(0.12f, 0.69f, 0.73f, 0.87f);
-	style.Colors[ImGuiCol_MenuBarBg] = ImVec4(0.23f, 0.62f, 0.76f, 0.80f);
+	style.Colors[ImGuiCol_Border] = ImVec4(0.50f, 0.83f, 0.43f, 0.43f);
+	style.Colors[ImGuiCol_BorderShadow] = ImVec4(0.99f, 0.99f, 0.99f, 0.00f);
+	style.Colors[ImGuiCol_FrameBg] = ImVec4(0.49f, 0.22f, 0.78f, 1.00f);
+	style.Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.36f, 0.06f, 0.06f, 0.40f);
+	style.Colors[ImGuiCol_FrameBgActive] = ImVec4(0.35f, 0.09f, 0.09f, 0.45f);
+	style.Colors[ImGuiCol_TitleBg] = ImVec4(0.51f, 0.51f, 0.98f, 1.00f);
+	style.Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.00f, 0.00f, 1.00f, 1.00f);
+	style.Colors[ImGuiCol_TitleBgActive] = ImVec4(0.00f, 0.00f, 1.00f, 0.87f);
+	style.Colors[ImGuiCol_MenuBarBg] = ImVec4(0.00f, 0.40f, 0.55f, 0.80f);
 	style.Colors[ImGuiCol_ScrollbarBg] = ImVec4(0.36f, 0.49f, 0.60f, 0.60f);
 	style.Colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.95f, 0.18f, 0.18f, 0.30f);
-	style.Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.82f, 0.51f, 0.37f, 0.40f);
+	style.Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.90f, 0.56f, 0.40f, 0.40f);
 	style.Colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.00f, 0.00f, 0.00f, 0.40f);
-	style.Colors[ImGuiCol_ComboBg] = ImVec4(0.71f, 0.42f, 0.42f, 0.99f);
+	style.Colors[ImGuiCol_ComboBg] = ImVec4(0.20f, 0.20f, 0.20f, 0.99f);
 	style.Colors[ImGuiCol_CheckMark] = ImVec4(0.42f, 0.66f, 0.33f, 0.50f);
 	style.Colors[ImGuiCol_SliderGrab] = ImVec4(0.00f, 0.72f, 0.53f, 0.71f);
 	style.Colors[ImGuiCol_SliderGrabActive] = ImVec4(0.31f, 0.83f, 0.27f, 1.00f);
 	style.Colors[ImGuiCol_Button] = ImVec4(0.80f, 0.14f, 0.14f, 0.72f);
-	style.Colors[ImGuiCol_ButtonHovered] = ImVec4(0.87f, 0.24f, 0.85f, 1.00f);
+	style.Colors[ImGuiCol_ButtonHovered] = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
 	style.Colors[ImGuiCol_ButtonActive] = ImVec4(0.64f, 0.00f, 1.00f, 1.00f);
-	style.Colors[ImGuiCol_Header] = ImVec4(0.26f, 0.84f, 0.72f, 0.45f);
-	style.Colors[ImGuiCol_HeaderHovered] = ImVec4(0.21f, 0.48f, 0.60f, 0.80f);
+	style.Colors[ImGuiCol_Header] = ImVec4(0.73f, 0.06f, 0.06f, 0.94f);
+	style.Colors[ImGuiCol_HeaderHovered] = ImVec4(0.97f, 0.41f, 0.41f, 1.00f);
 	style.Colors[ImGuiCol_HeaderActive] = ImVec4(0.09f, 0.09f, 0.60f, 0.80f);
 	style.Colors[ImGuiCol_Separator] = ImVec4(0.60f, 0.06f, 0.06f, 1.00f);
 	style.Colors[ImGuiCol_SeparatorHovered] = ImVec4(0.88f, 0.14f, 0.14f, 1.00f);
@@ -80,15 +83,24 @@ bool ModuleEditor::Start()
 	style.Colors[ImGuiCol_ResizeGrip] = ImVec4(0.09f, 0.93f, 0.92f, 0.36f);
 	style.Colors[ImGuiCol_ResizeGripHovered] = ImVec4(0.12f, 0.20f, 0.98f, 0.60f);
 	style.Colors[ImGuiCol_ResizeGripActive] = ImVec4(1.00f, 0.04f, 0.90f, 0.90f);
-	style.Colors[ImGuiCol_CloseButton] = ImVec4(0.97f, 0.02f, 0.90f, 0.61f);
+	style.Colors[ImGuiCol_CloseButton] = ImVec4(1.00f, 0.00f, 0.00f, 0.61f);
 	style.Colors[ImGuiCol_CloseButtonHovered] = ImVec4(0.19f, 0.19f, 0.47f, 0.60f);
 	style.Colors[ImGuiCol_CloseButtonActive] = ImVec4(0.97f, 0.33f, 0.33f, 1.00f);
 	style.Colors[ImGuiCol_PlotLines] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
 	style.Colors[ImGuiCol_PlotLinesHovered] = ImVec4(0.08f, 0.73f, 0.39f, 0.79f);
-	style.Colors[ImGuiCol_PlotHistogram] = ImVec4(0.37f, 0.90f, 0.00f, 1.00f);
-	style.Colors[ImGuiCol_PlotHistogramHovered] = ImVec4(1.00f, 0.60f, 0.00f, 1.00f);
+	style.Colors[ImGuiCol_PlotHistogram] = ImVec4(0.08f, 0.89f, 0.04f, 1.00f);
+	style.Colors[ImGuiCol_PlotHistogramHovered] = ImVec4(0.96f, 0.92f, 0.87f, 1.00f);
 	style.Colors[ImGuiCol_TextSelectedBg] = ImVec4(0.00f, 0.00f, 1.00f, 0.35f);
-	style.Colors[ImGuiCol_ModalWindowDarkening] = ImVec4(0.20f, 0.20f, 0.20f, 0.35f);
+	style.Colors[ImGuiCol_ModalWindowDarkening] = ImVec4(0.66f, 0.56f, 0.56f, 0.35f);
+
+
+
+
+
+
+
+
+
 
 
 
@@ -150,6 +162,7 @@ bool ModuleEditor::CleanUp()
 //Draw functions------------------------------------------------------------------------
 void ModuleEditor::DrawUI()
 {
+	ManageSaveWindow();
 	ManageMainMenuBar();
 	ManageAboutWindow();
 	ManageConsole();
@@ -227,7 +240,10 @@ void ModuleEditor::File_option()
 	}
 
 	if (ImGui::MenuItem("Save scene"))
-		App->scene->wants_to_save = true;
+	{
+		save_window_open = true;
+	}
+	//	App->scene->wants_to_save = true;
 
 	if (ImGui::MenuItem("Load scene"))
 		App->scene->wants_to_load = true;
@@ -255,7 +271,7 @@ void ModuleEditor::ManageAboutWindow()
 {
 	if (about_engine_open)
 	{
-		ImGui::Begin("About", &about_engine_open);
+		ImGui::Begin("About", &about_engine_open, ImGuiWindowFlags_ShowBorders);
 		ImGui::TextWrapped("ASIERGINE");
 		ImGui::Separator();
 		ImGui::TextWrapped("Made by");
@@ -329,7 +345,7 @@ void ModuleEditor::ManageConfigurationWindow()
 {
 	if (configuration_open)
 	{
-		ImGui::Begin("Configuration", &configuration_open);
+		ImGui::Begin("Configuration", &configuration_open, ImGuiWindowFlags_ShowBorders);
 		
 		//Application submenu
 		if (ImGui::CollapsingHeader("Application"))
@@ -384,13 +400,43 @@ void ModuleEditor::ManageConfigurationWindow()
 }
 
 
+//Save and load window--------------------------------------------------------------
+void ModuleEditor::ManageSaveWindow()
+{
+	if (save_window_open)
+	{
+		ImGui::SetNextWindowSize(ImVec2(200, 200));
+		ImGui::SetNextWindowPosCenter();
+		ImGui::Begin("Save current scene", &save_window_open, ImGuiWindowFlags_NoResize || ImGuiWindowFlags_NoMove || ImGuiWindowFlags_ShowBorders);
+		ImGui::TextWrapped("Save current scene");
+
+		static char scene_name[200];
+
+		ImGui::InputText("Scene name", scene_name, IM_ARRAYSIZE(scene_name));
+
+		if (ImGui::Button("Save") && strlen(scene_name) > 0)
+		{
+			App->scene->wants_to_save = true;
+			save_window_open = false;
+			App->scene->scene_name = scene_name;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Cancel"))
+		{
+			save_window_open = false;
+		}
+
+		ImGui::End();
+	}
+}
+
 
 //Hierarchy Window------------------------------------------------------------------------
 void ModuleEditor::ManageHierarchyWindow()
 {
 	if (hierarchy_open)
 	{
-		ImGui::Begin("Hierarchy", &hierarchy_open);
+		ImGui::Begin("Hierarchy", &hierarchy_open, ImGuiWindowFlags_ShowBorders);
 
 		if (ImGui::TreeNode("Scene"))
 		{
@@ -486,7 +532,7 @@ void ModuleEditor::ManageInspectorWindow()
 {
 	if (inspector_open)
 	{
-		ImGui::Begin("Inspector", &inspector_open);
+		ImGui::Begin("Inspector", &inspector_open, ImGuiWindowFlags_ShowBorders);
 		if(selected_object != nullptr)
 			selected_object->OnEditor();
 		ImGui::End();

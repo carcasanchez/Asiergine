@@ -62,7 +62,7 @@ private:
 	bool unlimitedFramerate = true;
 	bool bake_quadtree = false;
 
-
+	bool save_window_open = false;
 
 //	UINT nDevices;
 //	PRAWINPUTDEVICELIST pRawInputDeviceList;
@@ -90,6 +90,7 @@ private:
 	void ManageHierarchyWindow();
 	void ManageHierarchyChildren(GameObject*);
 	void ManageInspectorWindow();
+	void ManageSaveWindow();
 
 	//Configuration Window
 	void ConfigAppMenu();

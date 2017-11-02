@@ -955,7 +955,6 @@ GameObject * ModuleImporter::LoadSceneFromOwnFormat(const char * name)
 	}
 
 	//Set all parents properly
-
 	std::vector<GameObject*> objects_in_scene = App->scene->root->GetChildrens();
 	for (int i = 0; i < objects_in_scene.size(); i++)
 	{

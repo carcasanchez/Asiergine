@@ -39,12 +39,12 @@ update_status ModuleScene::Update(float dt)
 	else if (wants_to_save)
 	{
 		wants_to_save = false;
-		App->importer->SaveSceneToOwnFormat("BakerHouse");
+		App->importer->SaveSceneToOwnFormat(scene_name.c_str());
 	}
 	else if (wants_to_load)
 	{
 		wants_to_load = false;
-		App->importer->LoadSceneFromOwnFormat("BakerHouse");
+		App->importer->LoadSceneFromOwnFormat(scene_name.c_str());
 	}
 
 	root->Update();
