@@ -36,6 +36,10 @@ public:
 	bool wants_to_save = false;
 	bool wants_to_load = false;
 
+	//Cleans Scene
+	void CleanScene();
+
+	//Cleans and adds a camera to scene
 	void ResetScene();
 
 private:

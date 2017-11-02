@@ -101,13 +101,21 @@ GameObject * ModuleScene::CreateGameObject(const char* object_name, GameObject* 
 	return new_object;
 }
 
+
+
+void ModuleScene::CleanScene()
+{
+	CleanUp();
+	root = CreateGameObject("Root");	
+	App->editor->UnselectAll();
+}
+
 void ModuleScene::ResetScene()
 {
-		CleanUp();
-		root = CreateGameObject("Root");
+		CleanScene();
 		GameObject* camera = CreateGameObject("Camera1", root);
 		camera->CreateComponent_Camera(0.5, 5, true);
 		camera->CreateComponent_Transform();
-		App->editor->UnselectAll();
+		App->camera->ResetCamera();
 }
 

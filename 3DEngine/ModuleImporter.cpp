@@ -910,7 +910,7 @@ GameObject * ModuleImporter::LoadSceneFromOwnFormat(const char * name)
 	}
 
 	//Clean Current Scene
-	App->scene->ResetScene();
+	App->scene->CleanScene();
 
 
 	//Get data from buffer---------------
@@ -1066,7 +1066,7 @@ uint ModuleImporter::LoadObjectFromOwnFormat(char*& cursor)
 		//Check if texture already loaded and, if not, load it
 		for (std::vector<std::pair<std::string, int>>::iterator it = loaded_textures.begin(); it != loaded_textures.end(); it++)
 		{
-			if ((*it).first.compare(text_name))
+			if ((*it).first.compare(text_name) == 0)
 			{
 				loaded = true;
 				texture_ID = (*it).second;

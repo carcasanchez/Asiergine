@@ -224,7 +224,6 @@ void ModuleEditor::File_option()
 	if (ImGui::MenuItem("New scene"))
 	{
 		App->scene->wants_to_reset = true;
-		App->camera->ResetCamera();
 	}
 
 	if (ImGui::MenuItem("Save scene"))
