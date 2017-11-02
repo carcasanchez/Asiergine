@@ -46,15 +46,9 @@ void GameObject::Update()
 	if (t && bounding_box.IsFinite())
 	{
 		float4x4 matrix = ((CompTransform*)t)->GetMatrix();
-		matrix.Transpose();
-		float4 new_min_point = matrix * float4(bounding_box.minPoint, 1);
-		float4 new_max_point = matrix * float4(bounding_box.maxPoint, 1);
-		
-
+		matrix.Transpose();	
 		transformed_bounding_box = bounding_box;
-		transformed_bounding_box.minPoint = { new_min_point.x, new_min_point.y, new_min_point.z };
-		transformed_bounding_box.maxPoint = { new_max_point.x, new_max_point.y, new_max_point.z };
-	
+		transformed_bounding_box.TransformAsAABB(matrix);
 	
 		//Debug Bounding Box
 		if (App->scene->debug_boxes)
@@ -120,7 +114,7 @@ std::vector<Component*> GameObject::GetAllComponentOfType(ComponentType type)
 	return objects;
 }
 
-void GameObject::SetParent(GameObject* new_parent)
+void GameObject::SetParent(GameObject* new_parent) 
 {
 
 	if (parent)
@@ -130,6 +124,7 @@ void GameObject::SetParent(GameObject* new_parent)
 			if ((*it) == this)
 			{
 				parent->children.erase(it);
+				break;
 			}
 		}
 	}
@@ -255,17 +250,39 @@ bool GameObject::PutInQuadTree(QuadTreeNodeObj* node)
 	return ret;
 }
 
+GameObject* GameObject::FindChildByID(uint other_uid) const
+{
+	GameObject* ret = nullptr;
+	
+	if (UID == other_uid)
+	{
+		ret = (GameObject*)this;
+	}
+
+	else for (int i = 0; i < children.size(); i++)
+	{
+		ret = children[i]->FindChildByID(other_uid);
+		if (ret != nullptr)
+			break;
+	}
+
+
+	return ret;
+}
+
 void GameObject::OnEditor()
 {
 	ImGui::TextWrapped("%s", name.c_str());
 	ImGui::Separator();
 	ImGui::Checkbox("Static", &obj_static);
-	int id = 0;
+	ImGui::TextWrapped("UID: %i", UID);
 	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); it++)
 	{
-		ImGui::PushID(id);
+		ImGui::PushID((*it)->GetID());
 			if (ImGui::CollapsingHeader((*it)->GetComponentNameByType()))
 			{
+
+			
 				if (ImGui::Checkbox("Active", &(*it)->active))
 				{
 					if ((*it)->active == true)
@@ -288,8 +305,7 @@ void GameObject::OnEditor()
 
 				(*it)->OnEditor();
 			}
-			ImGui::PopID();
-			id++;
+		ImGui::PopID();
 	}
 	
 }

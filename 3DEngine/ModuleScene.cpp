@@ -19,6 +19,7 @@ bool ModuleScene::Init(const JSON_Object * config_data)
 {
 
 	root = CreateGameObject("Root");
+	root->SetID(0);
 
 	GameObject* camera = CreateGameObject("Camera1", root);
 	camera->CreateComponent_Camera(0.5, 5, true);
@@ -93,7 +94,7 @@ GameObject * ModuleScene::CreateGameObject(const char* object_name, GameObject* 
 		new_object->SetParent(parent);
 	}
 
-	if (UID >= 0)
+	if (UID > 0)
 	{
 		new_object->SetID(UID);
 	}
@@ -107,6 +108,7 @@ void ModuleScene::CleanScene()
 {
 	CleanUp();
 	root = CreateGameObject("Root");	
+	root->SetID(0);
 	App->editor->UnselectAll();
 }
 

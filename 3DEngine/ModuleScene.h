@@ -20,7 +20,7 @@ public:
 	update_status Update(float dt);
 	bool CleanUp();
 
-	GameObject* CreateGameObject(const char* name, GameObject* parent = nullptr, uint UID = -1);
+	GameObject* CreateGameObject(const char* name, GameObject* parent = nullptr, uint UID = 0);
 
 
 	

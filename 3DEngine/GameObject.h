@@ -25,8 +25,8 @@ public:
 	const char* GetName() const { return name.c_str(); }
 	void SetName(const char* n) { name = n; }
 
-	GameObject* GetParent() { return parent; }
-	std::vector<GameObject*> GetChildrens() { return children;}
+	GameObject* GetParent() const { return parent; }
+	std::vector<GameObject*> GetChildrens() const { return children;}
 	void SetParent(GameObject* new_parent);
 	bool IsStatic() { return obj_static; }
 
@@ -54,10 +54,21 @@ public:
 		return UID;
 	}
 
+	uint GetParentID()
+	{
+		if (parent == nullptr)
+			return 0;
+
+		return parent->GetID();
+	}
+
 	void SetID(uint new_ID)
 	{
 		UID = new_ID;
 	}
+
+	GameObject* FindChildByID(uint uid) const;
+	
 
 	math::AABB bounding_box = math::AABB(float3::zero, float3::zero);
 

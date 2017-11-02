@@ -159,12 +159,18 @@ void ModuleImporter::ImportScene(const aiScene * scene)
 	
 	if(scene->HasMeshes())
 		for (int i = 0; i < scene->mRootNode->mNumChildren; i++)
+		{
 			SearchNode(scene->mRootNode->mChildren[i], scene, App->scene->root);
+		}
 }
 
 //Searches every FBX node for data and creates one GameObject per node
 std::string ModuleImporter::SearchNode(const aiNode* n, const aiScene* scene, GameObject* parent)
 {
+
+
+
+
 	aiVector3D ai_location;
 	aiVector3D ai_scale;
 	aiQuaternion ai_rotation;
@@ -893,6 +899,13 @@ uint ModuleImporter::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>>
 	buffer.push_back(pair_of_data);
 	buffer.back().first = data;
 	buffer.back().second = size;
+
+	//Load children 
+	std::vector<GameObject*> children = to_save->GetChildrens();
+	for (int i = 0; i < children.size(); i++)
+	{
+		size += SaveGameObjectToOwnFormat(buffer, children[i]);
+	}
 	
 	return size;
 }
@@ -941,6 +954,31 @@ GameObject * ModuleImporter::LoadSceneFromOwnFormat(const char * name)
 		LoadObjectFromOwnFormat(cursor);
 	}
 
+	//Set all parents properly
+
+	std::vector<GameObject*> objects_in_scene = App->scene->root->GetChildrens();
+	for (int i = 0; i < objects_in_scene.size(); i++)
+	{
+		if (tmp_parent_ids[i] == 0)
+			continue;
+
+
+		for (int j = 0; j < objects_in_scene.size(); j++)
+		{
+			if (objects_in_scene[j] == objects_in_scene[i])
+				continue;
+
+			GameObject* parent = objects_in_scene[j]->FindChildByID(tmp_parent_ids[i]);
+
+			if (parent != nullptr)
+			{
+				objects_in_scene[i]->SetParent(parent);
+				break;
+			}
+		}
+	}
+
+
 	delete[] data;
 	LOG("Loading scene %s", name);	
 
@@ -974,7 +1012,7 @@ uint ModuleImporter::LoadObjectFromOwnFormat(char*& cursor)
 	obj_name[size_of_name] = '\0';
 
 
-	GameObject* new_obj = App->scene->CreateGameObject(obj_name, nullptr, object_id);
+	GameObject* new_obj = App->scene->CreateGameObject(obj_name, App->scene->root, object_id);
 
 	delete[] obj_name;
 
@@ -982,6 +1020,8 @@ uint ModuleImporter::LoadObjectFromOwnFormat(char*& cursor)
 	size_of = sizeof(uint);
 	memcpy(&parent_id, cursor, size_of);
 	cursor += size_of;
+	tmp_parent_ids.push_back(parent_id);
+
 
 	uint transform_id =  0 ;
 	size_of = sizeof(uint);
@@ -1099,7 +1139,7 @@ uint ModuleImporter::LoadObjectFromOwnFormat(char*& cursor)
 
 
 		new_obj->CreateComponent_Material(texture_ID, text_name, mat_id);
-
+		delete[] text_name;
 	}
 
 	//UID of camera - near dist - far dist
@@ -1125,3 +1165,7 @@ uint ModuleImporter::LoadObjectFromOwnFormat(char*& cursor)
 	cursor++;
 	return 0;
 }
+
+
+
+

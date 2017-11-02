@@ -54,7 +54,10 @@ private:
 
 	//Temporal storing of textures when loaded scene
 	std::vector<std::pair <std::string, int>> loaded_textures;
-	
+
+	//Temporal storing of parent id's
+	std::vector<uint> tmp_parent_ids;
+
 	//For meshes without name
 	int mesh_id = 0;
 };
