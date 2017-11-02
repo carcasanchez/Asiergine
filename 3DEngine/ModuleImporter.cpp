@@ -658,6 +658,8 @@ bool ModuleImporter::SaveSceneToOwnFormat(const char* name)
 		size_of = (*it).second;
 		memcpy(cursor, (*it).first, size_of);
 		cursor += size_of;
+
+		delete[] (*it).first;
 	}
 	
 
@@ -850,11 +852,12 @@ uint ModuleImporter::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>>
 	}
 	
 
-	data[size] = '\0';
+	data[size-1] = '\0';
 	std::pair<char*, uint> pair_of_data;
 	buffer.push_back(pair_of_data);
 	buffer.back().first = data;
 	buffer.back().second = size;
+
 
 	return size;
 }
@@ -938,6 +941,8 @@ uint ModuleImporter::LoadObjectFromOwnFormat(char*& cursor)
 
 
 	GameObject* new_obj = App->scene->CreateGameObject(obj_name, nullptr, object_id);
+
+	delete[] obj_name;
 
 	int16_t parent_id = 0 ;
 	size_of = sizeof(int16_t);
