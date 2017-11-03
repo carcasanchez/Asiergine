@@ -111,6 +111,12 @@ void ModuleImporter::LoadFile(const char * path)
 	{
 		LoadFBX(path);
 	}
+	else if (extension.compare("png") || extension.compare("jpg") || extension.compare("dds") || extension.compare("tga"))
+	{
+		GLuint text_id = LoadTexture(path);
+		SaveTextureToDDS(std::experimental::filesystem::path(path).stem().string().c_str());
+		glDeleteTextures(1, &text_id);
+	}
 	else LOG("ERROR: File extension '.%s' not allowed", extension.c_str());
 
 }
@@ -926,8 +932,7 @@ GameObject * ModuleImporter::LoadSceneFromOwnFormat(const char * name)
 
 	//Clean Current Scene
 	App->scene->CleanScene();
-
-
+	
 	//Get data from buffer---------------
 	//DATA ORDER: tag - num objects - [object]
 

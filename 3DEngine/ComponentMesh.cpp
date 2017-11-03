@@ -71,13 +71,13 @@ void ComponentMesh::Draw()
 		
 			if (mat != nullptr && mat->IsActive())
 			{
-				glBindTexture(GL_TEXTURE, ((ComponentMaterial*)mat)->texture_id);
+				glBindTexture(GL_TEXTURE, ((ComponentMaterial*)mat)->GetTextureID());
 				if (text_coord_id != 0)
 				{
 					//Bind textures
 					glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 					glBindTexture(GL_TEXTURE_2D, 0);
-					glBindTexture(GL_TEXTURE_2D, ((ComponentMaterial*)mat)->texture_id);
+					glBindTexture(GL_TEXTURE_2D, ((ComponentMaterial*)mat)->GetTextureID());
 					glBindBuffer(GL_ARRAY_BUFFER, text_coord_id);
 					glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 				}

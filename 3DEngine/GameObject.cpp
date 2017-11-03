@@ -226,27 +226,22 @@ ComponentCamera * GameObject::CreateComponent_Camera(float near_dist, float far_
 bool GameObject::PutInQuadTree(QuadTreeNodeObj* node)
 {
 	bool ret = true;
-	if (node->box.Intersects(transformed_bounding_box))
-	{
-		if (node->IsFull())
-			ret = false;
-		else {
+	
+	if (node->IsFull() && !node->IsOfMinSize())
+		ret = false;
+	else {
+		if (node->box.Intersects(transformed_bounding_box))
 			node->Insert(this);
-			for (std::vector<GameObject*>::iterator it = children.begin(); it != children.end(); ++it)
+		for (std::vector<GameObject*>::iterator it = children.begin(); it != children.end(); ++it)
+		{
+			ret = (*it)->PutInQuadTree(node);
+			if (ret == false || !node->IsOfMinSize())
 			{
-				ret = (*it)->PutInQuadTree(node);
-				if (ret == false)
-				{
-					node->Insert(this);
-					for (std::vector<GameObject*>::iterator it1 = children.begin(); it1 != children.end(); ++it1)
-					{
-						node->Insert((*it));
-					}
-					break;
-				}
+				break;
 			}
 		}
 	}
+	
 	return ret;
 }
 

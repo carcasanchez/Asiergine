@@ -68,7 +68,6 @@ bool ModuleScene::SaveConfig(JSON_Object * config_data)
 }
 
 
-
 bool ModuleScene::CleanUp()
 {
 	//Delete root and all its children
@@ -107,7 +106,7 @@ GameObject * ModuleScene::CreateGameObject(const char* object_name, GameObject* 
 void ModuleScene::CleanScene()
 {
 	CleanUp();
-	scene_quadtree.DeleteAll();
+	scene_quadtree.Clear();
 	root = CreateGameObject("Root");	
 	root->SetID(0);
 	App->editor->UnselectAll();

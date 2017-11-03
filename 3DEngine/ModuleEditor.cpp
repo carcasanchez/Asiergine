@@ -887,13 +887,12 @@ void ModuleEditor::ConfigBakeMenu()
 		App->scene->scene_quadtree.ResizeRoot(float3(X[0], Y[0], Z[0]), float3(X[1], Y[1], Z[1]));
 
 
+	ImGui::DragInt("Max objects per node", &App->scene->scene_quadtree.max_game_objects, 1.0f, 1, 30);
 
 	//Bake Quadtree
 	if (ImGui::Button("Bake!"))
-	{
-		App->scene->scene_quadtree.DeleteAll();
-		App->scene->scene_quadtree.Calcutale();
-	}
+		App->scene->scene_quadtree.Calculate();
+	
 }
 
 //VRAM Usage submenu on Configuration window

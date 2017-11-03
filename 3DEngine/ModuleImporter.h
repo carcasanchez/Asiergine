@@ -19,7 +19,7 @@ public:
 	void LoadFile(const char* path);
 
 	bool SaveSceneToOwnFormat(const char* name);
-	GameObject*  LoadSceneFromOwnFormat(const char* path);
+	GameObject* LoadSceneFromOwnFormat(const char* path);
 
 	void CleanTemps()
 	{
@@ -27,6 +27,9 @@ public:
 		tmp_parent_ids.clear();
 		loaded_textures.clear();
 	}
+
+	GLuint LoadTexture(const char * path, bool from_scene = false) const;
+
 
 private:
 
@@ -44,9 +47,7 @@ private:
 	bool SaveMeshToOwnFormat(const char* name, uint, uint, const float* vert, uint* ind, const float* normals = nullptr, const float* texture_coords = nullptr) const;
 	void LoadMeshFromOwnFormat(const char* path, GameObject* obj)const;
 	void SaveTextureToDDS(const char * name) const;
-	GLuint LoadTexture(const char * path, bool from_scene = false) const;
-
-
+	
 
 	uint SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>>& buffer, GameObject* to_save);
 	uint LoadObjectFromOwnFormat(char*& cursor);

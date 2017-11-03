@@ -46,10 +46,10 @@ void QuadTreeNodeObj::Partition()
 	float3 max_point3 = { box.maxPoint.x,box.maxPoint.y,center_point.z };
 	float3 min_point4 = { box.minPoint.x,box.minPoint.y,center_point.z };
 	float3 max_point4 = { center_point.x,box.maxPoint.y,box.maxPoint.z };
-	QuadTreeNodeObj* child1 = new QuadTreeNodeObj(min_point1, max_point1);
-	QuadTreeNodeObj* child2 = new QuadTreeNodeObj(min_point2, max_point2);
-	QuadTreeNodeObj* child3 = new QuadTreeNodeObj(min_point3, max_point3);
-	QuadTreeNodeObj* child4 = new QuadTreeNodeObj(min_point4, max_point4);
+	QuadTreeNodeObj* child1 = new QuadTreeNodeObj(min_point1, max_point1, max_game_objects);
+	QuadTreeNodeObj* child2 = new QuadTreeNodeObj(min_point2, max_point2, max_game_objects);
+	QuadTreeNodeObj* child3 = new QuadTreeNodeObj(min_point3, max_point3, max_game_objects);
+	QuadTreeNodeObj* child4 = new QuadTreeNodeObj(min_point4, max_point4, max_game_objects);
 
 	children.push_back(child1);
 	child1->Fill();
@@ -63,12 +63,15 @@ void QuadTreeNodeObj::Partition()
 
 void QuadTreeNodeObj::Fill()
 {
+	if (this->box.Size().x <= minimum_aabb.Size().x)
+		min_size_posible = true;
+
 	std::vector<GameObject*> root_children = App->scene->root->GetChildrens();
 	for (std::vector<GameObject*>::iterator it = root_children.begin(); it != root_children.end(); ++it)
 	{
 		if ((*it)->PutInQuadTree(this) == false)
 		{
-			if (this->box.Size().x > minimum_aabb.Size().x)
+			if (!min_size_posible)
 			{
 				game_objects.clear();
 				Partition();
@@ -96,25 +99,21 @@ QuadTreeObj::QuadTreeObj()
 {
 	root.box.minPoint = min_scene_point;
 	root.box.maxPoint = max_scene_point;
+	
 }
 QuadTreeObj::~QuadTreeObj()
 {
-	for (std::vector<QuadTreeNodeObj*>::iterator it = root.children.begin(); it != root.children.end(); ++it)
-	{
-		RELEASE(*it);
-	}
 	root.Clear();
 }
 
-void QuadTreeObj::Calcutale()
+void QuadTreeObj::Calculate()
 {
+	root.Clear();
+	root.SetMaxNumObj(max_game_objects);
 	root.Fill();
 }
 
-void QuadTreeObj::DeleteAll()
-{
-	root.Clear();
-}
+
 
 void QuadTreeObj::ResizeRoot(float3 min, float3 max)
 {
