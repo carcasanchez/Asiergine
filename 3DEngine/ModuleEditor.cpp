@@ -236,7 +236,7 @@ void ModuleEditor::Window_option()
 		inspector_open = true;	
 }
 
-void ModuleEditor::File_option()
+void ModuleEditor::File_option() 
 {
 	if (ImGui::MenuItem("New scene"))
 		App->scene->wants_to_reset = true;
@@ -375,8 +375,10 @@ void ModuleEditor::ManageConfigurationWindow()
 		//Bake quadtree options
 		if (ImGui::CollapsingHeader("Bake Quadtree"))
 		{
+			bake_menu_open = true;
 			ConfigBakeMenu();
 		}
+		else bake_menu_open = false;
 
 		//Audio Options
 
@@ -822,12 +824,7 @@ void ModuleEditor::ConfigRenderingMenu()
 	if (ImGui::Checkbox("Hard Poly", &App->renderer3D->hard_poly_enabled))
 		(App->renderer3D->hard_poly_enabled) ? glShadeModel(GL_FLAT) : glShadeModel(GL_SMOOTH);
 
-	//Bake Quadtree
-	if (ImGui::Checkbox("Bake Quadtree", &bake_quadtree))
-	{
-		App->scene->scene_quadtree.DeleteAll();
-		App->scene->scene_quadtree.Calcutale();
-	}
+	
 }
 
 //Audio submenu on Configuration window
@@ -862,31 +859,40 @@ void ModuleEditor::ConfigInputMenu()
 	ImGui::TextColored({ 255, 0, 100, 255 }, "Y: %i", App->input->GetMouseY());
 }
 
+//Quadtree options
 void ModuleEditor::ConfigBakeMenu()
 {
-	float min_point[3];
-	float max_point[3];
+	float X[2];
+	float Y[2];
+	float Z[2];
 
-	min_point[0] = App->scene->scene_quadtree.root.box.minPoint.x;
-	min_point[1] = App->scene->scene_quadtree.root.box.minPoint.y;
-	min_point[2] = App->scene->scene_quadtree.root.box.minPoint.z;
+	X[0] = App->scene->scene_quadtree.root.box.minPoint.x;
+	Y[0] = App->scene->scene_quadtree.root.box.minPoint.y;
+	Z[0] = App->scene->scene_quadtree.root.box.minPoint.z;
 
-	max_point[0] = App->scene->scene_quadtree.root.box.maxPoint.x;
-	max_point[1] = App->scene->scene_quadtree.root.box.maxPoint.y;
-	max_point[2] = App->scene->scene_quadtree.root.box.maxPoint.z;
+	X[1] = App->scene->scene_quadtree.root.box.maxPoint.x;
+	Y[1] = App->scene->scene_quadtree.root.box.maxPoint.y;
+	Z[1] = App->scene->scene_quadtree.root.box.maxPoint.z;
 
 
 	static float drag_speed = 0.1;
-	if (ImGui::DragFloat3("Minim point", min_point, drag_speed))
+	if (ImGui::DragFloat2("X", X, drag_speed))
+		App->scene->scene_quadtree.ResizeRoot(float3(X[0], Y[0], Z[0]), float3(X[1], Y[1], Z[1]));
+	
+
+	if (ImGui::DragFloat2("Y", Y, drag_speed))
+		App->scene->scene_quadtree.ResizeRoot(float3(X[0], Y[0], Z[0]), float3(X[1], Y[1], Z[1]));
+
+	if (ImGui::DragFloat2("Z", Z, drag_speed))
+		App->scene->scene_quadtree.ResizeRoot(float3(X[0], Y[0], Z[0]), float3(X[1], Y[1], Z[1]));
+
+
+
+	//Bake Quadtree
+	if (ImGui::Button("Bake!"))
 	{
-		App->scene->scene_quadtree.ResizeRoot(float3(min_point[0], min_point[1], min_point[2]), float3(max_point[0], max_point[1], max_point[2]));
-
-	}
-
-	if (ImGui::DragFloat3("Maximum point", max_point, drag_speed))
-	{
-		App->scene->scene_quadtree.ResizeRoot(float3(min_point[0], min_point[1], min_point[2]), float3(max_point[0], max_point[1], max_point[2]));
-
+		App->scene->scene_quadtree.DeleteAll();
+		App->scene->scene_quadtree.Calcutale();
 	}
 }
 

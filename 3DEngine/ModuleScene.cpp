@@ -49,8 +49,8 @@ update_status ModuleScene::Update(float dt)
 
 	root->Update();
 	
-	
-	scene_quadtree.root.SetAABBToDraw();
+	if(App->editor->BakeQuadtreeOpen())
+		scene_quadtree.root.SetAABBToDraw();
 
 	//Check debug key
 	if (App->input->GetKey(DEBUG_NORMALS_KEY) == KEY_DOWN)

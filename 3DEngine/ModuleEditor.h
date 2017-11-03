@@ -37,16 +37,21 @@ public:
 	bool SaveConfig(JSON_Object* config_data);
 	bool calculate_fps_graph = false;
 
-	GameObject* GetSelectedGameObject() { return selected_object; }
+	GameObject* GetSelectedGameObject() const { return selected_object; }
 
 	void UnselectAll()
 	{
 		selected_object = nullptr;
 	}
 
-	bool IsInputLocked()
+	bool IsInputLocked() const
 	{
 		return input_locked;
+	}
+
+	bool BakeQuadtreeOpen() const
+	{
+		return bake_menu_open;
 	}
 
 	
@@ -114,7 +119,7 @@ private:
 	void File_option();
 	void Window_option();
 
-	
+	bool bake_menu_open = false;
 	bool input_locked = false;
 	bool selected = false;
 	GameObject* selected_object = nullptr;

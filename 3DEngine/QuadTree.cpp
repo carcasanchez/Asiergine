@@ -10,10 +10,6 @@
 
 QuadTreeNodeObj::~QuadTreeNodeObj()
 {
-	for (std::vector<QuadTreeNodeObj*>::iterator it = children.begin(); it != children.end(); ++it)
-	{
-		RELEASE(*it);
-	}
 	Clear();
 }
 
@@ -87,6 +83,10 @@ void QuadTreeNodeObj::Fill()
 
 void QuadTreeNodeObj::Clear()
 {
+	for (std::vector<QuadTreeNodeObj*>::iterator it = children.begin(); it != children.end(); ++it)
+	{
+		RELEASE(*it);
+	}
 	children.clear();
 	game_objects.clear();
 }

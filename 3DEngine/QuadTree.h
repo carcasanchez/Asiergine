@@ -50,8 +50,8 @@ public:
 	void ResizeRoot(float3 min, float3 max);
 	QuadTreeNodeObj root;
 
-	float3 min_scene_point = { -100, -100, -100 };
-	float3 max_scene_point = { 100, 100, 100 };
+	float3 min_scene_point = { -200, -20, -200 };
+	float3 max_scene_point = { 200, 100, 200 };
 
 private:
 	std::vector<GameObject*> game_objects;

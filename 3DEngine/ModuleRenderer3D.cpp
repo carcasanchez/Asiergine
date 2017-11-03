@@ -209,12 +209,8 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	//Draw debug
 	
 	DrawCameraFrustums();
+	DrawDebugBoxes();
 
-
-	if (App->scene->debug_boxes)
-	{
-		DrawDebugBoxes();
-	}
 
 	glColor3f(1.0f, 1.0f, 1.0f);
 	glEnd();
