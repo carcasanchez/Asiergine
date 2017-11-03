@@ -84,7 +84,6 @@ void CompTransform::OnEditor()
 			SetScale(scale[0], scale[1], scale[2]);
 
 		//Rotation
-
 		float rotate[3] = { rot_in_euler.x,  rot_in_euler.y, rot_in_euler.z };
 
 		ImGui::TextWrapped("Rotation:    ");

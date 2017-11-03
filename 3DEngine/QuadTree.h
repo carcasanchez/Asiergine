@@ -22,6 +22,13 @@ public:
 
 	math::AABB box;
 	std::vector<QuadTreeNodeObj*> children;
+
+
+	void Resize(float3 min, float3 max)
+	{
+		box.minPoint = min;
+		box.maxPoint = max;
+	}
 	
 private:	
 	int max_game_objects = 2;
@@ -40,7 +47,12 @@ public:
 	//void Draw();
 	void Calcutale();
 	void DeleteAll();
+	void ResizeRoot(float3 min, float3 max);
 	QuadTreeNodeObj root;
+
+	float3 min_scene_point = { -100, -100, -100 };
+	float3 max_scene_point = { 100, 100, 100 };
+
 private:
 	std::vector<GameObject*> game_objects;
 	

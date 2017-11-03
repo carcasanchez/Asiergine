@@ -21,9 +21,7 @@ public:
 	bool CleanUp();
 
 	GameObject* CreateGameObject(const char* name, GameObject* parent = nullptr, uint UID = 0);
-
-
-	
+		
 
 	GameObject* root = nullptr;
 
@@ -42,11 +40,7 @@ public:
 	//Cleans and adds a camera to scene
 	void ResetScene();
 
-	
-
-
 	std::string scene_name;
-
 	
 
 private:

@@ -252,8 +252,6 @@ void ModuleEditor::File_option()
 }
 
 
-
-
 //EMERGENT WINDOWS management
 
 //Example window management------------------------------------------------------------------------
@@ -372,6 +370,12 @@ void ModuleEditor::ManageConfigurationWindow()
 		if (ImGui::CollapsingHeader("Rendering"))
 		{
 			ConfigRenderingMenu();
+		}
+
+		//Bake quadtree options
+		if (ImGui::CollapsingHeader("Bake Quadtree"))
+		{
+			ConfigBakeMenu();
 		}
 
 		//Audio Options
@@ -856,6 +860,34 @@ void ModuleEditor::ConfigInputMenu()
 	ImGui::TextColored({ 255, 0, 100, 255 }, "X: %i ", App->input->GetMouseX());
 	ImGui::SameLine();
 	ImGui::TextColored({ 255, 0, 100, 255 }, "Y: %i", App->input->GetMouseY());
+}
+
+void ModuleEditor::ConfigBakeMenu()
+{
+	float min_point[3];
+	float max_point[3];
+
+	min_point[0] = App->scene->scene_quadtree.root.box.minPoint.x;
+	min_point[1] = App->scene->scene_quadtree.root.box.minPoint.y;
+	min_point[2] = App->scene->scene_quadtree.root.box.minPoint.z;
+
+	max_point[0] = App->scene->scene_quadtree.root.box.maxPoint.x;
+	max_point[1] = App->scene->scene_quadtree.root.box.maxPoint.y;
+	max_point[2] = App->scene->scene_quadtree.root.box.maxPoint.z;
+
+
+	static float drag_speed = 0.1;
+	if (ImGui::DragFloat3("Minim point", min_point, drag_speed))
+	{
+		App->scene->scene_quadtree.ResizeRoot(float3(min_point[0], min_point[1], min_point[2]), float3(max_point[0], max_point[1], max_point[2]));
+
+	}
+
+	if (ImGui::DragFloat3("Maximum point", max_point, drag_speed))
+	{
+		App->scene->scene_quadtree.ResizeRoot(float3(min_point[0], min_point[1], min_point[2]), float3(max_point[0], max_point[1], max_point[2]));
+
+	}
 }
 
 //VRAM Usage submenu on Configuration window

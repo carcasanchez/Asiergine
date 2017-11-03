@@ -106,6 +106,7 @@ private:
 	void ConfigRenderingMenu();
 	void ConfigAudioMenu();
 	void ConfigInputMenu();
+	void ConfigBakeMenu();
 	void ConfigVramUsageMenu();
 
 	//Main menu bar options

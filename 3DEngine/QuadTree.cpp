@@ -37,9 +37,8 @@ void QuadTreeNodeObj::SetAABBToDraw()
 		children[i]->SetAABBToDraw();
 	}
 
-
-
 }
+
 void QuadTreeNodeObj::Partition()
 {
 	float3 center_point = { (box.minPoint.x + box.maxPoint.x) / 2,0,(box.minPoint.z + box.maxPoint.z) / 2 };
@@ -95,8 +94,8 @@ void QuadTreeNodeObj::Clear()
 //QuadTree functions---------------------------------------
 QuadTreeObj::QuadTreeObj()
 {
-	root.box.minPoint = float3(MIN_SCENE_POINT_X, MIN_SCENE_POINT_Y, MIN_SCENE_POINT_Z);
-	root.box.maxPoint = float3(MAX_SCENE_POINT_X, MAX_SCENE_POINT_X, MAX_SCENE_POINT_X);
+	root.box.minPoint = min_scene_point;
+	root.box.maxPoint = max_scene_point;
 }
 QuadTreeObj::~QuadTreeObj()
 {
@@ -115,6 +114,11 @@ void QuadTreeObj::Calcutale()
 void QuadTreeObj::DeleteAll()
 {
 	root.Clear();
+}
+
+void QuadTreeObj::ResizeRoot(float3 min, float3 max)
+{
+	root.Resize(min, max);
 }
 
 
