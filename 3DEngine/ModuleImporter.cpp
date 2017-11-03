@@ -922,6 +922,8 @@ GameObject * ModuleImporter::LoadSceneFromOwnFormat(const char * name)
 		return nullptr;
 	}
 
+	CleanTemps();
+
 	//Clean Current Scene
 	App->scene->CleanScene();
 

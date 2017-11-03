@@ -21,6 +21,13 @@ public:
 	bool SaveSceneToOwnFormat(const char* name);
 	GameObject*  LoadSceneFromOwnFormat(const char* path);
 
+	void CleanTemps()
+	{
+		materials.clear();
+		tmp_parent_ids.clear();
+		loaded_textures.clear();
+	}
+
 private:
 
 	
