@@ -63,6 +63,7 @@ private:
 	bool bake_quadtree = false;
 
 	bool save_window_open = false;
+	bool load_window_open = false;
 
 //	UINT nDevices;
 //	PRAWINPUTDEVICELIST pRawInputDeviceList;

@@ -15,6 +15,18 @@ ModuleFileSystem::~ModuleFileSystem()
 {
 }
 
+std::string ModuleFileSystem::GetLibraryDirectory()
+{
+	std::string path;
+#if _DEBUG
+	path = "../Library/";
+#else
+	path = "Library/";
+#endif
+
+	return path;
+}
+
 
 bool ModuleFileSystem::SaveDataToLibrary(const char* data, uint size, const char* name, const char* directory, const char* extension) const
 {

@@ -1,5 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
+#include <filesystem>
+#include <experimental\filesystem>
 #include ".\mmgr\mmgr.h"
 #include "ModuleEditor.h"
 #include "GameObject.h"
@@ -235,23 +237,16 @@ void ModuleEditor::Window_option()
 void ModuleEditor::File_option()
 {
 	if (ImGui::MenuItem("New scene"))
-	{
 		App->scene->wants_to_reset = true;
-	}
 
 	if (ImGui::MenuItem("Save scene"))
-	{
 		save_window_open = true;
-	}
-	//	App->scene->wants_to_save = true;
 
 	if (ImGui::MenuItem("Load scene"))
-		App->scene->wants_to_load = true;
+		load_window_open = true;
 
 	if (ImGui::MenuItem("Exit"))
-	{
 		quit_editor = true;
-	}
 }
 
 
@@ -405,28 +400,71 @@ void ModuleEditor::ManageSaveWindow()
 {
 	if (save_window_open)
 	{
-		ImGui::SetNextWindowSize(ImVec2(200, 200));
+	
+		ImGui::OpenPopup("Save current scene");
+		ImGui::SetNextWindowSize(ImVec2(300, 100));
 		ImGui::SetNextWindowPosCenter();
-		ImGui::Begin("Save current scene", &save_window_open, ImGuiWindowFlags_NoResize || ImGuiWindowFlags_NoMove || ImGuiWindowFlags_ShowBorders);
-		ImGui::TextWrapped("Save current scene");
 
-		static char scene_name[200];
-
-		ImGui::InputText("Scene name", scene_name, IM_ARRAYSIZE(scene_name));
-
-		if (ImGui::Button("Save") && strlen(scene_name) > 0)
+		if (ImGui::BeginPopupModal("Save current scene", nullptr))
 		{
-			App->scene->wants_to_save = true;
-			save_window_open = false;
-			App->scene->scene_name = scene_name;
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("Cancel"))
-		{
-			save_window_open = false;
-		}
+			static char scene_name[200];
 
-		ImGui::End();
+			ImGui::InputText("Scene name", scene_name, IM_ARRAYSIZE(scene_name));
+
+			if (ImGui::Button("Save") && strlen(scene_name) > 0)
+			{
+				App->scene->wants_to_save = true;
+				save_window_open = false;
+				App->scene->scene_name = scene_name;
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Cancel"))
+			{
+				save_window_open = false;
+			}
+
+		ImGui::EndPopup();
+		}
+	
+		
+
+	}
+
+	else if (load_window_open)
+	{
+
+		ImGui::OpenPopup("Load scene");
+		ImGui::SetNextWindowSize(ImVec2(200, 500));
+		ImGui::SetNextWindowPosCenter();
+
+		if(ImGui::BeginPopupModal("Load scene", nullptr))
+		{
+			ImGui::BeginChildFrame(0, ImVec2(150, 420));
+
+			std::string path = App->fs->GetLibraryDirectory();
+			path += "Scenes/";
+
+			for (std::experimental::filesystem::recursive_directory_iterator::value_type it : std::experimental::filesystem::recursive_directory_iterator(path.c_str()))
+			{
+				std::string filename = std::experimental::filesystem::path(it.path().string().c_str()).stem().string().c_str();
+				if (ImGui::Selectable(filename.c_str()))
+				{
+					App->scene->wants_to_load = true;
+					App->scene->scene_name = filename;
+					load_window_open = false;
+				}
+			}
+
+			ImGui::EndChildFrame();
+
+			if (ImGui::Button("Cancel"))
+			{
+				load_window_open = false;
+			}
+		}
+		
+
+		ImGui::EndPopup();
 	}
 }
 
