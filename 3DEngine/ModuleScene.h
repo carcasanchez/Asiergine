@@ -42,12 +42,15 @@ public:
 	//Cleans and adds a camera to scene
 	void ResetScene();
 
+	
+
 
 	std::string scene_name;
 
+	
+
 private:
 	bool SaveConfig(JSON_Object* config_data);
-
 
 };
 

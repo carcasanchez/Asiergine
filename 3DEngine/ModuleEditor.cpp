@@ -164,6 +164,8 @@ bool ModuleEditor::CleanUp()
 //Draw functions------------------------------------------------------------------------
 void ModuleEditor::DrawUI()
 {
+	input_locked = ImGui::IsMouseHoveringAnyWindow();
+
 	ManageSaveWindow();
 	ManageMainMenuBar();
 	ManageAboutWindow();
@@ -400,7 +402,7 @@ void ModuleEditor::ManageSaveWindow()
 {
 	if (save_window_open)
 	{
-	
+		input_locked = true;
 		ImGui::OpenPopup("Save current scene");
 		ImGui::SetNextWindowSize(ImVec2(300, 100));
 		ImGui::SetNextWindowPosCenter();
@@ -424,15 +426,13 @@ void ModuleEditor::ManageSaveWindow()
 			}
 
 		ImGui::EndPopup();
-		}
-	
-		
+		}		
 
 	}
 
 	else if (load_window_open)
 	{
-
+		input_locked = true;
 		ImGui::OpenPopup("Load scene");
 		ImGui::SetNextWindowSize(ImVec2(200, 500));
 		ImGui::SetNextWindowPosCenter();

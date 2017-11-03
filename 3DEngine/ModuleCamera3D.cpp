@@ -127,6 +127,10 @@ void ModuleCamera3D::CalculateViewMatrix()
 
 void ModuleCamera3D::ControlCamera(float dt)
 {
+
+	if (App->editor->IsInputLocked())
+		return;
+		
 	//Displacement
 	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
 		Move(Z*-camera_speed*dt);

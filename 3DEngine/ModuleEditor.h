@@ -44,6 +44,11 @@ public:
 		selected_object = nullptr;
 	}
 
+	bool IsInputLocked()
+	{
+		return input_locked;
+	}
+
 	
 private:
 
@@ -109,7 +114,7 @@ private:
 	void Window_option();
 
 	
-
+	bool input_locked = false;
 	bool selected = false;
 	GameObject* selected_object = nullptr;
 

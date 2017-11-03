@@ -107,6 +107,7 @@ GameObject * ModuleScene::CreateGameObject(const char* object_name, GameObject* 
 void ModuleScene::CleanScene()
 {
 	CleanUp();
+	scene_quadtree.DeleteAll();
 	root = CreateGameObject("Root");	
 	root->SetID(0);
 	App->editor->UnselectAll();
