@@ -1,4 +1,5 @@
 #include "ComponentCamera.h"
+#include "QuadTree.h"
 #include "mmgr\mmgr.h"
 #include "Application.h"
 #include "ModuleScene.h"
@@ -46,9 +47,24 @@ void ComponentCamera::Update()
 
 			frustum.up = ((CompTransform*)t)->GetMatrix().Row3(1);
 		}
-
+		
 		App->renderer3D->SetBoxToDraw(&frustum);
 	}	
+}
+
+std::vector<GameObject*> ComponentCamera::GetQuadTreeGameObjects(QuadTreeNodeObj* node)
+{
+	std::vector<QuadTreeNodeObj*>::iterator it = node->children.begin();
+	for (it; it != App->scene->scene_quadtree.root.children.end(); ++it)
+	{
+		GetQuadTreeGameObjects((*it));
+		for (std::vector<GameObject*>::iterator it1 = (*it)->GetGameObjects().begin(); it1 != (*it)->GetGameObjects().end(); it1++)
+		{
+			game_objects.push_back((*it1));
+		}
+	}
+	return game_objects;
+
 }
 
 void ComponentCamera::OnEditor()

@@ -1,7 +1,9 @@
 #pragma once
 #include "Component.h"
 #include "Globals.h"
+#include <vector>
 
+class QuadTreeNodeObj;
 class ComponentCamera :	public Component
 {
 public:
@@ -9,6 +11,7 @@ public:
 	~ComponentCamera();
 
 	void Update();
+	std::vector<GameObject*> GetQuadTreeGameObjects(QuadTreeNodeObj* node);
 
 	float GetNearDistance()
 	{
@@ -41,5 +44,6 @@ public:
 
 private:
 	float aspect_ratio;
+	std::vector<GameObject*> game_objects;
 };
 

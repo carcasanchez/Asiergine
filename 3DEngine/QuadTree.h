@@ -13,7 +13,13 @@ public:
 	void Insert(GameObject* game_object);
 	void Remove();
 
+
 	std::vector<QuadTreeNodeObj*> GetChildren() { return children; }
+
+	int GetMaxGameObjects() { return max_game_objects; }
+	std::vector<GameObject*> GetGameObjects() const { return game_objects; }
+	std::vector<QuadTreeNodeObj*> GetChildren() const { return children; }
+
 	void Clear();
 	void SetAABBToDraw();
 	void Partition();
