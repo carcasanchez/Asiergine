@@ -49,22 +49,25 @@ void ComponentCamera::Update(float real_dt, float game_dt)
 		}
 		
 		App->renderer3D->SetBoxToDraw(&frustum);
+		if(App->renderer3D->frustum_culling)
+			SendQuadTreeGameObjectsToPaint(&App->scene->scene_quadtree.root);
 	}	
 }
 
-std::vector<GameObject*> ComponentCamera::GetQuadTreeGameObjects(QuadTreeNodeObj* node)
-{
-	std::vector<QuadTreeNodeObj*>::iterator it = node->children.begin();
-	for (it; it != App->scene->scene_quadtree.root.children.end(); ++it)
+void ComponentCamera::SendQuadTreeGameObjectsToPaint(QuadTreeNodeObj* node)
+{	
+	for (std::vector<QuadTreeNodeObj*>::iterator it = node->children.begin(); it != node->children.end(); ++it)
 	{
-		GetQuadTreeGameObjects((*it));
-		for (std::vector<GameObject*>::iterator it1 = (*it)->GetGameObjects().begin(); it1 != (*it)->GetGameObjects().end(); it1++)
+		if (frustum.Contains((*it)->box))
 		{
-			game_objects.push_back((*it1));
+			SendQuadTreeGameObjectsToPaint((*it));
+			for (std::vector<GameObject*>::iterator obj_it = (*it)->game_objects.begin(); obj_it != (*it)->game_objects.end(); obj_it++)
+			{
+				if(frustum.Contains(*(*obj_it)->GetTransformedBox()))
+					(*obj_it)->SendAllMeshesToDraw();
+			}
 		}
 	}
-	return game_objects;
-
 }
 
 void ComponentCamera::OnEditor()

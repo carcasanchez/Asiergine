@@ -28,6 +28,7 @@ public:
 
 	math::AABB box;
 	std::vector<QuadTreeNodeObj*> children;
+	std::vector<GameObject*> game_objects;
 
 	void Resize(float3 min, float3 max)
 	{
@@ -47,7 +48,7 @@ public:
 
 private:
 
-	std::vector<GameObject*> game_objects;
+	
 	float3 minaabb = { 0, MIN_SCENE_POINT_Y, 0 };
 	float3 maxaabb = { 1,MAX_SCENE_POINT_X,1 };
 	math::AABB minimum_aabb = math::AABB(minaabb, maxaabb);

@@ -11,7 +11,7 @@ public:
 	~ComponentCamera();
 
 	void Update(float real_dt, float game_dt);
-	std::vector<GameObject*> GetQuadTreeGameObjects(QuadTreeNodeObj* node);
+	void SendQuadTreeGameObjectsToPaint(QuadTreeNodeObj* node);
 
 	float GetNearDistance()
 	{
@@ -44,6 +44,5 @@ public:
 
 private:
 	float aspect_ratio;
-	std::vector<GameObject*> game_objects;
 };
 

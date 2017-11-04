@@ -36,8 +36,10 @@ void GameObject::Update(float real_dt, float game_dt)
 			LOG("YOU ARE ADOPTED");
 			assert(1 == 0);
 		}
-
-		children[i]->Update(real_dt, game_dt);
+		if(!App->renderer3D->frustum_culling)
+			children[i]->Update(real_dt, game_dt);
+		else if (!children[i]->IsStatic())
+			children[i]->Update(real_dt, game_dt);
 	}
 	
 
@@ -226,7 +228,8 @@ ComponentCamera * GameObject::CreateComponent_Camera(float near_dist, float far_
 bool GameObject::PutInQuadTree(QuadTreeNodeObj* node)
 {
 	bool ret = true;
-	
+	if (!IsStatic())
+		return ret;
 	if (node->IsFull() && !node->IsOfMinSize())
 		ret = false;
 	else {
@@ -263,6 +266,15 @@ GameObject* GameObject::FindChildByID(uint other_uid) const
 
 
 	return ret;
+}
+
+void GameObject::SendAllMeshesToDraw()
+{
+	for(std::vector<Component*>::iterator it = components.begin(); it != components.end(); ++it)
+	{
+		if ((*it)->GetType() == COMPONENT_MESH)
+			App->renderer3D->SetMeshToDraw((ComponentMesh*)(*it));
+	}
 }
 
 void GameObject::OnEditor()

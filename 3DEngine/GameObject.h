@@ -28,7 +28,8 @@ public:
 	GameObject* GetParent() const { return parent; }
 	std::vector<GameObject*> GetChildrens() const { return children;}
 	void SetParent(GameObject* new_parent);
-	bool IsStatic() { return obj_static; }
+	bool IsStatic() const { return obj_static; }
+	void SendAllMeshesToDraw();
 
 	CompTransform* CreateComponent_Transform(float3 trans = float3(0, 0, 0), float3 scaling = float3(1, 1, 1), Quat rot = Quat::identity, uint UID = 0);
 	ComponentMesh* CreateComponent_Mesh(const char* name, float* ver, uint* ind, uint num_vert, uint num_ind, float* normals, float* texture_coords = nullptr, uint UID = 0);
@@ -39,22 +40,22 @@ public:
 
 	bool PutInQuadTree(QuadTreeNodeObj* node);
 
-	const AABB* GetBoundingBox()
+	const AABB* GetBoundingBox() const
 	{
 		 return &bounding_box;
 	}
 
-	const AABB* GetTransformedBox()
+	const AABB* GetTransformedBox() const
 	{
 		return &transformed_bounding_box;
 	}
 
-	uint GetID()
+	uint GetID() const
 	{
 		return UID;
 	}
 
-	uint GetParentID()
+	uint GetParentID() const
 	{
 		if (parent == nullptr)
 			return 0;

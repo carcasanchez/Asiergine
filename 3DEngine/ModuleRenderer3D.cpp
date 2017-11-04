@@ -281,13 +281,7 @@ void ModuleRenderer3D::DrawGeometry()
 	plane.Render();
 	while (meshes_to_draw.empty() == false)
 	{
-		if (frustum_culling)
-		{
-			if (CheckFrustumCulling(meshes_to_draw.front()))
-				meshes_to_draw.front()->Draw();
-		}
-		else meshes_to_draw.front()->Draw();
-
+		meshes_to_draw.front()->Draw();
 		meshes_to_draw.pop();		
 	}
 
