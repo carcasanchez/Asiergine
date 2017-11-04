@@ -403,6 +403,12 @@ void ModuleEditor::ManageConfigurationWindow()
 			ConfigAppMenu();
 		}
 
+		//Time submenu
+		if (ImGui::CollapsingHeader("Time"))
+		{
+			ConfigTimeMenu();
+		}
+
 		//Window submenu
 		if (ImGui::CollapsingHeader("Window"))
 		{
@@ -1004,6 +1010,24 @@ void ModuleEditor::ConfigVramUsageMenu()
 
 	}
 	else (ImGui::TextWrapped("VRam Usage only available for NVIDIA devices"));
+}
+
+//App time configuration
+void ModuleEditor::ConfigTimeMenu()
+{
+	if (!App->IsAppRunning())
+	{
+		ImGui::TextWrapped("Game is stopped");
+		return;
+	}
+
+	ImGui::TextWrapped("Game frame count: %i", App->FramesSinceStartUp());
+	ImGui::TextWrapped("Time since game start: %.2f", App->RealTime()/1000);
+	ImGui::TextWrapped("Time scale: %f", App->GetGameSpeed());
+	ImGui::TextWrapped("Game dt: %.1f", App->GameDeltaTime());
+	ImGui::TextWrapped("Real dt: %.1f", App->RealDeltaTime());
+	ImGui::TextWrapped("Internal Game Seconds: %.2f", App->GameTime());
+	
 }
 
 

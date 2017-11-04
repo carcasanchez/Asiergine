@@ -115,6 +115,7 @@ private:
 	void ConfigInputMenu();
 	void ConfigBakeMenu();
 	void ConfigVramUsageMenu();
+	void ConfigTimeMenu();
 
 	//Main menu bar options
 	void ShowExampleWindow_option();

@@ -65,8 +65,10 @@ public:
 	std::list<Module*> list_modules;
 
 	float GetGameSpeed()const { return game_time_modifier; };
+	
 	void SetGameSpeed(float game_speed);
 
+	//Play - Pause Utility------------------------
 	bool IsAppRunning() const
 	{
 		return running;
@@ -82,6 +84,9 @@ public:
 		running = true;
 		scene->wants_to_save = true;
 		game_time_modifier = last_game_time_modifier;
+		game_seconds = 0.0;
+		game_frames = 0;
+		app_timer.Start();
 		return true;
 	}
 
@@ -114,20 +119,23 @@ public:
 		want_to_update_once = true;
 	}
 
-
 private:
 
-	Timer game_clock;
+	
 
+	//Engine Ms and framerate
 	Timer	ms_timer;
 	Timer   second_timer;
 	int		frame_count = 0;
-	int last_second_frames;
-	float last_frame_miliseconds;
+	int		last_second_frames;
+	float	last_frame_miliseconds;
 
 	int fps_cap = 0;
 	int ms_cap = 0;
 
+
+	//Game framerate and time
+	Timer app_timer;
 	float real_dt;
 	float game_dt;
 
@@ -140,6 +148,9 @@ private:
 	bool want_to_update_once = false;
 	bool do_next_update = false;
 
+	double game_seconds = 0.0;
+	int game_frames = 0;
+
 public:
 
 	Application();
@@ -149,7 +160,36 @@ public:
 	update_status Update();
 	bool CleanUp();
 
-	
+	//Returns frame count since game starts
+	int FramesSinceStartUp() const
+	{
+		return game_frames;
+	}
+
+	//Returns game internal time since its start (in ms)
+	double GameTime() const
+	{
+		return game_seconds;
+	}
+
+	float GameDeltaTime() const
+	{
+		return game_dt;
+	}
+
+	//Returns game real time since its start (in ms)
+	double RealTime()
+	{
+		if (paused)
+			return 0;
+		else return app_timer.ReadMS();
+	}
+
+	float RealDeltaTime() const
+	{
+		return real_dt;
+	}
+
 
 	void GetFrames(int& frames, float& miliseconds);
 	void SetMaxFrames(int max_frames)
@@ -167,7 +207,6 @@ private:
 	void FinishUpdate();
 	bool SaveConfig();
 
-		
 };
 
 

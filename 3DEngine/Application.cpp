@@ -130,20 +130,27 @@ void Application::PrepareUpdate()
 	
 	game_dt *= game_time_modifier;
 	
-	//Check if user wants to update only once
-	if (paused || do_next_update)
+	game_seconds += game_dt/1000;
+
+	if (running)
 	{
-		if (want_to_update_once && !do_next_update)
+		//Check if user wants to update only once
+		if (paused || do_next_update)
 		{
-			do_next_update = true;
-			UnPauseApp();
+			if (want_to_update_once && !do_next_update)
+			{
+				do_next_update = true;
+				UnPauseApp();
+			}
+			else if (want_to_update_once && do_next_update)
+			{
+				want_to_update_once = do_next_update = false;
+				PauseApp();
+			}
 		}
 
-		else if (want_to_update_once && do_next_update)
-		{
-			want_to_update_once = do_next_update = false;
-			PauseApp();
-		}
+		//Increase game frame account
+		game_frames++;
 	}
 }
 
