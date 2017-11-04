@@ -9,8 +9,6 @@
 
 
 
-
-
 ModuleEditor::ModuleEditor( bool start_enabled) : Module( start_enabled)
 {
 	name = "editor";
@@ -183,13 +181,39 @@ void ModuleEditor::DrawUI()
 
 void ModuleEditor::ManagePlayAppOptions()
 {
+	ImGui::SetNextWindowSize(ImVec2(300, 80));
+	ImGui::SetNextWindowPos(ImVec2(400, 20));
+
 	ImGui::Begin("Play Game");
 
 	if (App->IsAppRunning())
 	{
+	
 		if (ImGui::Button("Stop"))
 		{
 			App->StopApp();
+		}
+
+		ImGui::SameLine();
+		if (!App->IsAppPaused())
+		{
+			static float speed = App->GetGameSpeed();
+			
+			if (ImGui::Button("Pause"))
+			{
+				App->PauseApp();
+			}
+
+			if (ImGui::DragFloat("Game Speed", &speed, 0.01, 0.0, 1.0))
+			{
+				App->SetGameSpeed(speed);
+			}			
+				
+		}	
+
+		if (App->IsAppPaused() && ImGui::Button("Restart"))
+		{
+			App->UnPauseApp();
 		}
 	}
 	else
@@ -263,7 +287,7 @@ void ModuleEditor::Window_option()
 void ModuleEditor::File_option() 
 {
 
-	if(!App->IsAppRunning())
+	if(!App->IsAppRunning() && !App->IsAppPaused())
 	{ 
 		if (ImGui::MenuItem("New scene"))
 			App->scene->wants_to_reset = true;

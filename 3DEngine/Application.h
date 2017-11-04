@@ -64,15 +64,22 @@ public:
 
 	std::list<Module*> list_modules;
 
+	float GetGameSpeed()const { return game_time_modifier; };
 	void SetGameSpeed(float game_speed);
 
 	bool IsAppRunning() const
 	{
-		return game_time_modifier != 0;
+		return running;
+	}
+	
+	bool IsAppPaused() const
+	{
+		return paused;
 	}
 
 	bool PlayApp()
 	{
+		running = true;
 		scene->wants_to_save = true;
 		game_time_modifier = last_game_time_modifier;
 		return true;
@@ -80,19 +87,24 @@ public:
 
 	bool StopApp()
 	{
-		PauseGame();
+		running = false;
+		paused = false;
+		last_game_time_modifier = 1;
+		game_time_modifier = 0;
 		scene->wants_to_load = true;
 		return true;
 	}
 
-	void PauseGame()
+	void PauseApp()
 	{
+		paused = true;
 		last_game_time_modifier = game_time_modifier;
 		game_time_modifier = 0;
 	}
 	
-	void UnPauseGame()
+	void UnPauseApp()
 	{
+		paused = false;
 		game_time_modifier = last_game_time_modifier;
 	}
 
@@ -115,6 +127,9 @@ private:
 
 	float game_time_modifier = 0.0f;
 	float last_game_time_modifier = 1.0f;
+
+	bool running = false;
+	bool paused = false;
 
 public:
 
