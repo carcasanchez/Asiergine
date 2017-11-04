@@ -113,8 +113,8 @@ void CompTransform::Update()
 {
 	if (GetGameObject()->IsStatic() == false) {
 		float4x4 rotation_matrix = float4x4::FromQuat(rotation);
-		matrix = float4x4::FromTRS(translation, rotation_matrix, scale);
-		matrix.Transpose();
+		local_matrix = float4x4::FromTRS(translation, rotation_matrix, scale);
+		local_matrix.Transpose();
 		matrix = GetParentTransform();
 	}
 
@@ -141,5 +141,5 @@ float4x4 CompTransform::GetParentTransform()
 	}
 
 
-	return matrix * parent_transform;
+	return local_matrix * parent_transform;
 }

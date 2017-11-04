@@ -38,6 +38,6 @@ private:
 	math::float3 rot_in_euler;
 
 	math::float4x4 matrix;
-
+	math::float4x4 local_matrix;
 
 };
