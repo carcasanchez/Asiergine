@@ -116,14 +116,14 @@ bool ModuleEditor::Start()
 
 
 
-update_status ModuleEditor::PreUpdate(float dt)
+update_status ModuleEditor::PreUpdate(float real_dt, float game_dt)
 {
 	update_status ret = UPDATE_CONTINUE;
 	ImGui_ImplSdlGL3_NewFrame(App->window->window);
 	return ret;
 }
 
-update_status ModuleEditor::Update(float dt)
+update_status ModuleEditor::Update(float real_dt, float game_dt)
 {	
 
 	update_status ret = UPDATE_CONTINUE;
@@ -139,7 +139,7 @@ update_status ModuleEditor::Update(float dt)
 	return ret;
 }
 
-update_status ModuleEditor::PostUpdate(float dt)
+update_status ModuleEditor::PostUpdate(float real_dt, float game_dt)
 {
 	update_status ret = UPDATE_CONTINUE;	
 
@@ -166,6 +166,7 @@ void ModuleEditor::DrawUI()
 {
 	input_locked = ImGui::IsMouseHoveringAnyWindow();
 
+	ManagePlayAppOptions();
 	ManageSaveWindow();
 	ManageMainMenuBar();
 	ManageAboutWindow();
@@ -179,6 +180,29 @@ void ModuleEditor::DrawUI()
 }
 
 
+
+void ModuleEditor::ManagePlayAppOptions()
+{
+	ImGui::Begin("Play Game");
+
+	if (App->IsAppRunning())
+	{
+		if (ImGui::Button("Stop"))
+		{
+			App->StopApp();
+		}
+	}
+	else
+	{
+		if (ImGui::Button("Play"))
+		{
+			App->PlayApp();
+		}
+	}
+
+
+	ImGui::End();
+}
 
 //MAIN MENU BAR management------------------------------------------------------------------------
 void ModuleEditor::ManageMainMenuBar()
@@ -238,14 +262,18 @@ void ModuleEditor::Window_option()
 
 void ModuleEditor::File_option() 
 {
-	if (ImGui::MenuItem("New scene"))
-		App->scene->wants_to_reset = true;
 
-	if (ImGui::MenuItem("Save scene"))
-		save_window_open = true;
+	if(!App->IsAppRunning())
+	{ 
+		if (ImGui::MenuItem("New scene"))
+			App->scene->wants_to_reset = true;
 
-	if (ImGui::MenuItem("Load scene"))
-		load_window_open = true;
+		if (ImGui::MenuItem("Save scene"))
+			save_window_open = true;
+
+		if (ImGui::MenuItem("Load scene"))
+			load_window_open = true;
+	}
 
 	if (ImGui::MenuItem("Exit"))
 		quit_editor = true;
@@ -319,7 +347,6 @@ void ModuleEditor::ManageAboutWindow()
 		ImGui::End();
 	}
 }
-
 
 
 //Console management------------------------------------------------------------------------

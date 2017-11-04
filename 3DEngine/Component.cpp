@@ -18,7 +18,7 @@ void Component::Enable()
 	active = true;
 }
 
-void Component::Update()
+void Component::Update(float real_dt, float game_dt)
 {
 }
 

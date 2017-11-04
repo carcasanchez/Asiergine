@@ -3,6 +3,8 @@
 
 #include ".\mmgr\mmgr.h"
 
+
+
 Application::Application()
 {
 	window = new ModuleWindow();
@@ -122,10 +124,11 @@ bool Application::Init()
 // ---------------------------------------------
 void Application::PrepareUpdate()
 {
-	dt = (float)ms_timer.ReadMS();
+	game_dt = real_dt = (float)ms_timer.ReadMS();
 	ms_timer.Start();
 	frame_count++;
 	
+	game_dt *= game_time_modifier;
 }
 
 // ---------------------------------------------
@@ -161,7 +164,7 @@ update_status Application::Update()
 	
 	while(item != list_modules.end() && ret == UPDATE_CONTINUE)
 	{
-		ret = (*item)->PreUpdate(dt);
+		ret = (*item)->PreUpdate(real_dt, game_dt);
 		item++;
 	}
 
@@ -169,7 +172,7 @@ update_status Application::Update()
 
 	while(item != list_modules.end() && ret == UPDATE_CONTINUE)
 	{
-		ret = (*item)->Update(dt);
+		ret = (*item)->Update(real_dt, game_dt);
 		item++;
 	}
 
@@ -177,7 +180,7 @@ update_status Application::Update()
 
 	while(item != list_modules.end() && ret == UPDATE_CONTINUE)
 	{
-		ret = (*item)->PostUpdate(dt);
+		ret = (*item)->PostUpdate(real_dt, game_dt);
 		item++;
 	}
 
@@ -214,6 +217,17 @@ void Application::GetFrames(int & frames, float & miliseconds)
 void Application::AddModule(Module* mod)
 {
 	list_modules.push_back(mod);
+}
+
+
+void Application::SetGameSpeed(float game_speed)
+{
+	if (game_speed < 0)
+		game_speed = 0;
+	else if(game_speed >1)
+		game_speed = 1;
+
+	game_time_modifier = game_speed;
 }
 
 //---------------------------------------------

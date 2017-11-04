@@ -16,7 +16,7 @@ public:
 	GameObject(const char* name);
 	~GameObject();
 
-	void Update();
+	void Update(float real_dt, float game_dt);
 	void CleanUp();
 
 	Component* GetComponentByType(ComponentType type);

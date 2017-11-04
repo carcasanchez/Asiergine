@@ -64,7 +64,42 @@ public:
 
 	std::list<Module*> list_modules;
 
+	void SetGameSpeed(float game_speed);
+
+	bool IsAppRunning() const
+	{
+		return game_time_modifier != 0;
+	}
+
+	bool PlayApp()
+	{
+		scene->wants_to_save = true;
+		game_time_modifier = last_game_time_modifier;
+		return true;
+	}
+
+	bool StopApp()
+	{
+		PauseGame();
+		scene->wants_to_load = true;
+		return true;
+	}
+
+	void PauseGame()
+	{
+		last_game_time_modifier = game_time_modifier;
+		game_time_modifier = 0;
+	}
+	
+	void UnPauseGame()
+	{
+		game_time_modifier = last_game_time_modifier;
+	}
+
+
 private:
+
+	Timer game_clock;
 
 	Timer	ms_timer;
 	Timer   second_timer;
@@ -75,8 +110,11 @@ private:
 	int fps_cap = 0;
 	int ms_cap = 0;
 
-	float	dt;
+	float real_dt;
+	float game_dt;
 
+	float game_time_modifier = 0.0f;
+	float last_game_time_modifier = 1.0f;
 
 public:
 
@@ -104,7 +142,8 @@ private:
 	void PrepareUpdate();
 	void FinishUpdate();
 	bool SaveConfig();
-	
+
+		
 };
 
 

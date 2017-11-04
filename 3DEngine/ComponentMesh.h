@@ -12,7 +12,7 @@ public:
 
 	void Draw();
 	void DebugDraw();
-	void Update();
+	void Update(float real_dt, float game_dt);
 	void OnEditor();
 
 	void SetNormals(float* n) { normals = n; }

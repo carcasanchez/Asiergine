@@ -14,7 +14,7 @@ public:
 
 	bool Init(const JSON_Object* config_data);
 	bool Start();
-	update_status Update(float dt);
+	update_status Update(float real_dt, float game_dt);
 	bool CleanUp();
 
 	void Look(const vec3 &Position, const vec3 &Reference, bool RotateAroundReference = false);

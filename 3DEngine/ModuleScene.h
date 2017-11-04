@@ -17,7 +17,7 @@ public:
 	virtual ~ModuleScene();
 
 	bool Init(const JSON_Object* config_data);
-	update_status Update(float dt);
+	update_status Update(float real_dt, float game_dt);
 	bool CleanUp();
 
 	GameObject* CreateGameObject(const char* name, GameObject* parent = nullptr, uint UID = 0);
@@ -40,7 +40,7 @@ public:
 	//Cleans and adds a camera to scene
 	void ResetScene();
 
-	std::string scene_name;
+	std::string scene_name = "AsiergineScene";
 	
 
 private:

@@ -24,9 +24,9 @@ public:
 
 	bool Init(const JSON_Object* config_data);
 	bool Start();
-	update_status PreUpdate(float dt);
-	update_status Update(float dt);
-	update_status PostUpdate(float dt);
+	update_status PreUpdate(float real_dt, float game_dt);
+	update_status Update(float real_dt, float game_dt);
+	update_status PostUpdate(float real_dt, float game_dt);
 	bool CleanUp();
 
 	void DrawUI();
@@ -92,6 +92,8 @@ private:
 	bool fulldesktop = false;
 	int max_fps = 0;
 
+
+	void ManagePlayAppOptions();
 
 	void ManageMainMenuBar();
 	void ManageExampleWindow();

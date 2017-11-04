@@ -15,8 +15,8 @@ public:
 	~ModuleRenderer3D();
 
 	bool Init(const JSON_Object* config_data);
-	update_status PreUpdate(float dt);
-	update_status PostUpdate(float dt);
+	update_status PreUpdate(float real_dt, float game_dt);
+	update_status PostUpdate(float real_dt, float game_dt);
 	bool CleanUp();
 
 	void OnResize(int width, int height);

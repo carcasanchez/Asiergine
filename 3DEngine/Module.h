@@ -35,17 +35,17 @@ public:
 		return true;
 	}
 
-	virtual update_status PreUpdate(float dt)
+	virtual update_status PreUpdate(float real_dt, float game_dt)
 	{
 		return UPDATE_CONTINUE;
 	}
 
-	virtual update_status Update(float dt)
+	virtual update_status Update(float real_dt, float game_dt)
 	{
 		return UPDATE_CONTINUE;
 	}
 
-	virtual update_status PostUpdate(float dt)
+	virtual update_status PostUpdate(float real_dt, float game_dt)
 	{
 		return UPDATE_CONTINUE;
 	}

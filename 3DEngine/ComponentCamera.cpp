@@ -32,7 +32,7 @@ ComponentCamera::ComponentCamera(GameObject* g, float near_distance, float far_d
 ComponentCamera::~ComponentCamera(){}
 
 
-void ComponentCamera::Update()
+void ComponentCamera::Update(float real_dt, float game_dt)
 {
 	if (IsActive() == true)
 	{

@@ -19,7 +19,7 @@ public:
 
 	void OnEditor();
 	bool IsActive() { return active; }
-	void Update();
+	void Update(float real_dt, float game_dt);
 
 	const float* GetMatrixPtr();
 	float4x4 GetMatrix()

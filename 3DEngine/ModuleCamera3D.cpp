@@ -60,9 +60,9 @@ bool ModuleCamera3D::CleanUp()
 }
 
 // -----------------------------------------------------------------
-update_status ModuleCamera3D::Update(float dt)
+update_status ModuleCamera3D::Update(float real_dt, float game_dt)
 {	
-	ControlCamera(dt);
+	ControlCamera(real_dt);
 
 	// Recalculate matrix -------------
 	CalculateViewMatrix();		

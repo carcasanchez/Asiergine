@@ -28,7 +28,7 @@ bool ModuleScene::Init(const JSON_Object * config_data)
 	return true;
 }
 
-update_status ModuleScene::Update(float dt)
+update_status ModuleScene::Update(float real_dt, float game_dt)
 {
 
 	if (wants_to_reset)
@@ -47,7 +47,7 @@ update_status ModuleScene::Update(float dt)
 		App->importer->LoadSceneFromOwnFormat(scene_name.c_str());
 	}
 
-	root->Update();
+	root->Update(real_dt, game_dt);
 	
 	if(App->editor->BakeQuadtreeOpen())
 		scene_quadtree.root.SetAABBToDraw();

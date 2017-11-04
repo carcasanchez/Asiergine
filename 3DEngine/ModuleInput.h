@@ -20,7 +20,7 @@ public:
 	~ModuleInput();
 
 	bool Init(const JSON_Object* config_data);
-	update_status PreUpdate(float dt);
+	update_status PreUpdate(float real_dt, float game_dt);
 	bool CleanUp();
 
 	KEY_STATE GetKey(int id) const

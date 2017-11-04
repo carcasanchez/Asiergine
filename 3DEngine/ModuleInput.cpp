@@ -36,7 +36,7 @@ bool ModuleInput::Init(const JSON_Object* config_data)
 }
 
 // Called every draw update
-update_status ModuleInput::PreUpdate(float dt)
+update_status ModuleInput::PreUpdate(float real_dt, float game_dt)
 {
 	SDL_PumpEvents();
 

@@ -19,12 +19,12 @@ GameObject::~GameObject()
 {
 }
 
-void GameObject::Update()
+void GameObject::Update(float real_dt, float game_dt)
 {
 	std::vector<Component*>::iterator it = components.begin();
 	while (it != components.end())
 	{
-		(*it)->Update();
+		(*it)->Update(real_dt, game_dt);
 		++it;
 	}
 
@@ -37,7 +37,7 @@ void GameObject::Update()
 			assert(1 == 0);
 		}
 
-		children[i]->Update();
+		children[i]->Update(real_dt, game_dt);
 	}
 	
 

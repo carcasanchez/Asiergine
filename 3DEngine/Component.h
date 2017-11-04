@@ -18,7 +18,7 @@ public:
 	virtual ~Component();
 
 	virtual void Enable();
-	virtual void Update();
+	virtual void Update(float real_dt, float game_dt);
 	virtual void Disable();
 
 	virtual bool IsActive() { return active; }

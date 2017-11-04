@@ -132,7 +132,7 @@ void ComponentMesh::DebugDraw()
 }
 
 
-void ComponentMesh::Update()
+void ComponentMesh::Update(float real_dt, float game_dt)
 {
 	App->renderer3D->SetMeshToDraw(this);
 }
