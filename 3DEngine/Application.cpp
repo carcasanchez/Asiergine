@@ -129,6 +129,22 @@ void Application::PrepareUpdate()
 	frame_count++;
 	
 	game_dt *= game_time_modifier;
+	
+	//Check if user wants to update only once
+	if (paused || do_next_update)
+	{
+		if (want_to_update_once && !do_next_update)
+		{
+			do_next_update = true;
+			UnPauseApp();
+		}
+
+		else if (want_to_update_once && do_next_update)
+		{
+			want_to_update_once = do_next_update = false;
+			PauseApp();
+		}
+	}
 }
 
 // ---------------------------------------------
@@ -159,6 +175,7 @@ update_status Application::Update()
 {
 	update_status ret = UPDATE_CONTINUE;
 	PrepareUpdate();
+
 	
 	std::list<Module*>::iterator item = list_modules.begin();
 	

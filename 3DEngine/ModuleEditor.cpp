@@ -203,7 +203,7 @@ void ModuleEditor::ManagePlayAppOptions()
 			{
 				App->PauseApp();
 			}
-
+			
 			if (ImGui::DragFloat("Game Speed", &speed, 0.01, 0.0, 1.0))
 			{
 				App->SetGameSpeed(speed);
@@ -211,9 +211,13 @@ void ModuleEditor::ManagePlayAppOptions()
 				
 		}	
 
-		if (App->IsAppPaused() && ImGui::Button("Restart"))
+		if (App->IsAppPaused())
 		{
-			App->UnPauseApp();
+			if(ImGui::Button("Restart"))
+				App->UnPauseApp();
+			ImGui::SameLine();
+			if (ImGui::Button("Update Once"))
+				App->UpdateOnce();
 		}
 	}
 	else

@@ -108,6 +108,12 @@ public:
 		game_time_modifier = last_game_time_modifier;
 	}
 
+	//Updates the game once and stops again
+	void UpdateOnce()
+	{
+		want_to_update_once = true;
+	}
+
 
 private:
 
@@ -130,6 +136,9 @@ private:
 
 	bool running = false;
 	bool paused = false;
+
+	bool want_to_update_once = false;
+	bool do_next_update = false;
 
 public:
 
