@@ -74,7 +74,7 @@ bool ModuleCamera3D::CleanUp()
 update_status ModuleCamera3D::Update(float real_dt, float game_dt)
 {	
 	ControlCamera(real_dt);
-
+	CalculateRay();
 	return UPDATE_CONTINUE;
 }
 
@@ -328,4 +328,25 @@ void ModuleCamera3D::AdaptToGeometry(GameObject* game_object)
 	LookAt(pivot_point);
 }
 
-
+//Mouse Picking---------------------------------------------
+void ModuleCamera3D::CalculateRay()
+{
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN&& App->input->GetKey(SDL_SCANCODE_LALT) != KEY_REPEAT)
+	{
+		objects_picked.clear();
+		math::float3 click_pos;
+		click_pos.x = App->input->GetMouseX();
+		click_pos.y = App->input->GetMouseY();
+		click_pos.z = App->input->GetMouseZ();
+		click_pos.Normalize();
+		picking = frustum.UnProjectLineSegment(click_pos.x, click_pos.y);
+		std::vector<GameObject*>::iterator it = App->scene->root->children.begin();
+		for (; it != App->scene->root->children.end(); ++it)
+		{
+			if (picking.Intersects(*(*it)->GetTransformedBox()))
+			{
+				objects_picked.push_back((*it));
+			}
+		}
+	}
+}

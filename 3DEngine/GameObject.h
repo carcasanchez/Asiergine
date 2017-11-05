@@ -72,6 +72,8 @@ public:
 	
 
 	math::AABB bounding_box = math::AABB(float3::zero, float3::zero);
+public:
+	std::vector<GameObject*> children;
 
 private:
 	bool obj_static = false;
@@ -79,7 +81,7 @@ private:
 	std::string name;
 
 	std::vector<Component*> components;
-	std::vector<GameObject*> children;
+	
 	
 	math::AABB transformed_bounding_box;
 
