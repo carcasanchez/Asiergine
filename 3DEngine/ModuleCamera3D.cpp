@@ -177,8 +177,8 @@ void ModuleCamera3D::ControlCamera(float dt)
 			}
 
 			//Adjust reference
-			//float3 distance = pivot_point - frustum.pos;
-			//pivot_point = frustum.pos - (frustum.front * distance.Length());
+			float3 distance = pivot_point - frustum.pos;
+			pivot_point = frustum.pos + (frustum.front.Normalized() * distance.Length());
 		}
 		
 	
