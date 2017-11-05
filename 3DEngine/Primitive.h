@@ -26,14 +26,14 @@ public:
 	virtual void	Render() const;
 	virtual void	InnerRender() const;
 	void			SetPos(float x, float y, float z);
-	void			SetRotation(float angle, const vec3 &u);
+	void			SetRotation(float angle, const float3 &u);
 	void			Scale(float x, float y, float z);
 	PrimitiveTypes	GetType() const;
 
 public:
 	
 	Color color;
-	mat4x4 transform;
+	float4x4 transform;
 	bool axis,wire;
 
 protected:
@@ -41,7 +41,7 @@ protected:
 };
 
 // ============================================
-class Cube_prim : public Primitive
+/*class Cube_prim : public Primitive
 {
 public :
 	Cube_prim();
@@ -50,7 +50,7 @@ public :
 	void Size(float x, float y, float z);
 
 public:
-	vec3 size;
+	float3 size;
 };
 
 // ============================================
@@ -82,7 +82,7 @@ public:
 	float height;
 };
 
-/*// ============================================
+// ============================================
 class Line : public Primitive
 {
 public:
@@ -102,6 +102,6 @@ public:
 	Plane_prim(float x, float y, float z, float d);
 	void InnerRender() const;
 public:
-	vec3 normal;
+	float3 normal;
 	float constant;
 };

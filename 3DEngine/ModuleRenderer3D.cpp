@@ -180,8 +180,10 @@ update_status ModuleRenderer3D::PostUpdate(float real_dt, float game_dt)
 {
 	//Call all draw operative
 
+	plane.Render();
+
 	//Draw Geometries
-//	DrawGeometry();
+	DrawGeometry();
 
 
 	//Draw Debug Axis

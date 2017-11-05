@@ -20,7 +20,6 @@ public:
 
 	void Move(const float3 &Movement);
 	const float* GetViewMatrixTransposed() const;
-	const float* GetWorldMatrix() const;
 	const float* GetProjectionMatrixTransposed() const;
 
 	void SetAspectRatio(float);

@@ -184,6 +184,9 @@
     <ClCompile Include="3DEngine\QuadTree.cpp">
       <Filter>Source\Containers</Filter>
     </ClCompile>
+    <ClCompile Include="3DEngine\Primitive.cpp">
+      <Filter>Source\Containers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3DEngine\Application.h">
@@ -493,6 +496,9 @@
       <Filter>Source\Modules</Filter>
     </ClInclude>
     <ClInclude Include="3DEngine\QuadTree.h">
+      <Filter>Source\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\Primitive.h">
       <Filter>Source\Containers</Filter>
     </ClInclude>
   </ItemGroup>

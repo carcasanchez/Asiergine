@@ -147,71 +147,58 @@ void ModuleCamera3D::ControlCamera(float dt)
 		{
 			//Pan the Camera			
 			if (y != 0)
-				Move((frustum.up*camera_sensitivity*dt*y)/10);
+				Move((frustum.up*camera_speed*dt*y));
 
 			if (x != 0)
-				Move((math::Cross(frustum.front, frustum.up)*-camera_sensitivity*dt*x)/10);
+				Move((math::Cross(frustum.front, frustum.up)*-camera_speed*dt*x));
 		}
 		else
 		{
 			//FP control
 			if (x != 0)
 			{
-				Quat rotation_quat = math::Quat::RotateAxisAngle(float3(0.0f, 1.0f, 0.0f), -camera_sensitivity*x*dt*DEGTORAD);
-				frustum.Transform(rotation_quat);
+				Quat rotation_quat = Quat::RotateY(-camera_sensitivity*dt*x);
+				frustum.front = rotation_quat.Transform(frustum.front).Normalized();				
+				frustum.up = rotation_quat.Transform(frustum.up).Normalized();
 			}
 
 			if (y != 0)
 			{
-				Quat rotation_quat = math::Quat::RotateAxisAngle(math::Cross(frustum.front, frustum.up), -camera_sensitivity*y*dt*DEGTORAD);
-				frustum.Transform(rotation_quat);
-				rotation_quat = math::Quat::RotateAxisAngle(math::Cross(frustum.front, frustum.up), -camera_sensitivity*y*dt*DEGTORAD);
-				frustum.Transform(rotation_quat);
+				Quat rotation_quat = Quat::RotateAxisAngle(frustum.WorldRight(), -camera_sensitivity*dt*y);
 
-				//Cap Camera Y axis
-				if (frustum.up.y < 0.0f)
+				float3 new_Y_axis = rotation_quat.Transform(frustum.up).Normalized();
+
+				if (new_Y_axis.y > 0.0f)
 				{
-					rotation_quat = math::Quat::RotateAxisAngle(math::Cross(frustum.front, frustum.up), camera_sensitivity*y*dt*DEGTORAD);
-
-					frustum.Transform(rotation_quat);
+					frustum.up = new_Y_axis;
+					frustum.front = rotation_quat.Transform(frustum.front).Normalized();
 				}
 
 			}
 
 			//Adjust reference
-			float3 distance = pivot_point - frustum.pos;
-			pivot_point = frustum.pos - (frustum.front * distance.Length());
+			//float3 distance = pivot_point - frustum.pos;
+			//pivot_point = frustum.pos - (frustum.front * distance.Length());
 		}
 		
 	
 }
 	else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)
 	{
-		//Orbital Control
-		frustum.pos -= pivot_point;
+		float3 distance = frustum.pos - pivot_point;
 
-		if (x != 0)
-		{
-			Quat rotation_quat = math::Quat::RotateAxisAngle(float3(0.0f, 1.0f, 0.0f), -camera_sensitivity*x*dt*DEGTORAD);
-			frustum.Transform(rotation_quat);
-		}
+		Quat rot_y(frustum.up, -x*camera_sensitivity*dt);
+		Quat rot_x(frustum.WorldRight(), -y*camera_sensitivity*dt);
 
-		if (y != 0)
-		{
-			Quat rotation_quat = math::Quat::RotateAxisAngle(math::Cross(frustum.front, frustum.up), -camera_sensitivity*y*dt*DEGTORAD);
-			frustum.Transform(rotation_quat);
-		}		
+		//Calculate point around pivot
+		distance = rot_x.Transform(distance);
+		distance = rot_y.Transform(distance);
 
-		//Cap Camera Y axis
-		if (frustum.up.y < 0.0f)
-		{
-			Quat rotation_quat = math::Quat::RotateAxisAngle(math::Cross(frustum.front, frustum.up), camera_sensitivity*y*dt*DEGTORAD);
-			frustum.Transform(rotation_quat);
-		}
-		
-		//Locate camera around reference
-		if (frustum.up.y > 0.0f)
-			frustum.pos = pivot_point - frustum.up * (pivot_point.Length());
+		//Place camera in point
+		frustum.pos = distance + pivot_point;
+
+		//Reorient camera to pivot
+		LookAt(pivot_point);
 	}
 
 	//Move camera in the local Z axis

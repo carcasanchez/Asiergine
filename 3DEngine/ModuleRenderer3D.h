@@ -2,6 +2,7 @@
 #include "Module.h"
 #include "Globals.h"
 #include "Light.h"
+#include "Primitive.h"
 
 
 class ComponentMesh;
@@ -62,7 +63,7 @@ private:
 
 	bool CheckFrustumCulling(const ComponentMesh*);
 
-//	Plane_prim plane;
+	Plane_prim plane;
 
 
 	ComponentCamera* active_camera = nullptr;
