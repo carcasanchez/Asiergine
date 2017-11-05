@@ -21,7 +21,7 @@ public:
 
 	void SetTitle(const char* title);
 
-	vec2 GetWindowPixels();
+	float2 GetWindowPixels();
 
 
 	bool SwitchVSync();

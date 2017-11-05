@@ -5,7 +5,7 @@
 #include "MathGeoLib\include\Math.h"
 
 #include "Imgui/imgui_impl_sdl_gl3.h"
-#include "Primitive.h"
+
 
 #define MAX_FPS_LOG 100
 

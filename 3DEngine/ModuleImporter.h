@@ -6,6 +6,7 @@ struct aiMesh;
 struct aiScene;
 struct aiMaterial;
 
+
 class ModuleImporter : public Module
 {
 public:
@@ -28,7 +29,7 @@ public:
 		loaded_textures.clear();
 	}
 
-	GLuint LoadTexture(const char * path, bool from_scene = false) const;
+	uint LoadTexture(const char * path, bool from_scene = false) const;
 
 
 private:

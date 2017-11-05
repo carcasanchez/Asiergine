@@ -1,7 +1,6 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
-#include "glmath.h"
 
 
 class GameObject;
@@ -17,32 +16,43 @@ public:
 	update_status Update(float real_dt, float game_dt);
 	bool CleanUp();
 
-	void Look(const vec3 &Position, const vec3 &Reference, bool RotateAroundReference = false);
-	void LookAt(const vec3 &Spot);
-	void Move(const vec3 &Movement);
-	float* GetViewMatrix();
+	void LookAt(const float3 &Spot);
+
+	void Move(const float3 &Movement);
+	const float* GetViewMatrixTransposed() const;
+	const float* GetWorldMatrix() const;
+	const float* GetProjectionMatrixTransposed() const;
+
+	void SetAspectRatio(float);
+
+	float GetAspectRatio() const
+	{
+		return aspect_ratio;
+	};
 
 	bool SaveConfig(JSON_Object* config_data);
 	void AdaptToGeometry(GameObject*);
 
 	void ResetCamera();
+
+
+	//float4x4 CalculateProjectionMatrix(float vertical_fov, float aspect_ratio) const;
+
 private:
 
-	void CalculateViewMatrix();
 	void ControlCamera(float dt);
 
 
-public:
-	
-	vec3 X, Y, Z, Position, Reference;
+public:	
 
-	vec3 ViewVector;
+	math::Frustum frustum;
+
+	float3 pivot_point;
 
 	float camera_speed = 0.01;
 	float camera_sensitivity = 0.01;
 
-private:
-
-	mat4x4 ViewMatrix, ViewMatrixInverse;
 	
+private:
+	float aspect_ratio = 1;
 };

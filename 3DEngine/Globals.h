@@ -37,7 +37,7 @@ void log(const char file[], int line, const char* format, ...);
 #define RADTODEG 57.295779513082320876f
 #define HAVE_M_PI
 #define M_PI_2 1.57079632679
-#define M_PI 3.14159265359
+#define PI 3.14159265359
 
 #define GL_GPU_MEM_INFO_TOTAL_AVAILABLE_MEM_NVX 0x9048
 #define GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX 0x9049

@@ -1,9 +1,8 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
-#include "glmath.h"
 #include "Light.h"
-#include "Primitive.h"
+
 
 class ComponentMesh;
 class ComponentCamera;
@@ -38,8 +37,8 @@ public:
 
 	std::vector<Light> lights;
 	SDL_GLContext context;
-	mat3x3 NormalMatrix;
-	mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
+	float3x3 NormalMatrix;
+	float4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
 
 
 	//Rendering options--------
@@ -63,7 +62,7 @@ private:
 
 	bool CheckFrustumCulling(const ComponentMesh*);
 
-	Plane_prim plane;
+//	Plane_prim plane;
 
 
 	ComponentCamera* active_camera = nullptr;

@@ -2,6 +2,12 @@
 #include "Application.h"
 #include <filesystem>
 #include <experimental\filesystem>
+
+#include "Glew\include\glew.h"
+#include "SDL\include\SDL_opengl.h"
+#include <gl/GL.h>
+#include <gl/GLU.h>
+
 #include ".\mmgr\mmgr.h"
 #include "ModuleEditor.h"
 #include "GameObject.h"
@@ -788,11 +794,11 @@ void ModuleEditor::ConfigCameraMenu()
 
 	//Camera position info
 	ImGui::TextColored(ImVec4(255, 100, 0, 255), "Camera Position");
-	ImGui::TextColored(ImVec4(100, 0, 255, 255), "X: %.3f   ", App->camera->Position.x);
+	ImGui::TextColored(ImVec4(100, 0, 255, 255), "X: %.3f   ", App->camera->frustum.pos.x);
 	ImGui::SameLine();
-	ImGui::TextColored(ImVec4(100, 0, 255, 255), "Y: %.3f   ", App->camera->Position.y);
+	ImGui::TextColored(ImVec4(100, 0, 255, 255), "Y: %.3f   ", App->camera->frustum.pos.y);
 	ImGui::SameLine();
-	ImGui::TextColored(ImVec4(100, 0, 255, 255), "Z: %.3f", App->camera->Position.z);
+	ImGui::TextColored(ImVec4(100, 0, 255, 255), "Z: %.3f", App->camera->frustum.pos.z);
 }
 
 //Hardware Specs submenu on Configuration window

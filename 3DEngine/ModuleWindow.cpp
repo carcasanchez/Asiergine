@@ -101,9 +101,9 @@ void ModuleWindow::SetTitle(const char* title)
 	SDL_SetWindowTitle(window, title);
 }
 
-vec2 ModuleWindow::GetWindowPixels()
+float2 ModuleWindow::GetWindowPixels()
 {
-	vec2 size;
+	float2 size;
 	size.x = window_width * screen_size;
 	size.x = window_height * screen_size;
 	return size;

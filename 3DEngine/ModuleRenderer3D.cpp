@@ -164,10 +164,10 @@ update_status ModuleRenderer3D::PreUpdate(float real_dt, float game_dt)
 	glLoadIdentity();
 
 	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(App->camera->GetViewMatrix());
+	glLoadMatrixf(App->camera->GetViewMatrixTransposed());
 
 	// light 0 on cam pos
-	lights[0].SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
+	lights[0].SetPos(App->camera->frustum.pos.x, App->camera->frustum.pos.y, App->camera->frustum.pos.z);
 
 	for(std::vector<Light>::iterator it = lights.begin(); it!= lights.end(); it++)
 		(*it).Render();
@@ -181,7 +181,7 @@ update_status ModuleRenderer3D::PostUpdate(float real_dt, float game_dt)
 	//Call all draw operative
 
 	//Draw Geometries
-	DrawGeometry();
+//	DrawGeometry();
 
 
 	//Draw Debug Axis
@@ -238,10 +238,11 @@ void ModuleRenderer3D::OnResize(int width, int height)
 {
 	glViewport(0, 0, width, height);
 
+	App->camera->SetAspectRatio((float)width / (float)height);
+
 	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	ProjectionMatrix = perspective(60.0f, (float)width / (float)height, 0.125f, 512.0f);
-	glLoadMatrixf(&ProjectionMatrix);
+	glLoadIdentity();		
+	glLoadMatrixf(App->camera->GetProjectionMatrixTransposed());
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -278,7 +279,7 @@ void ModuleRenderer3D::SetMeshToDraw(ComponentMesh * m)
 
 void ModuleRenderer3D::DrawGeometry()
 {
-	plane.Render();
+	//plane.Render();
 	while (meshes_to_draw.empty() == false)
 	{
 		meshes_to_draw.front()->Draw();

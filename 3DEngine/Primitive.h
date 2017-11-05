@@ -1,6 +1,6 @@
 
 #pragma once
-#include "glmath.h"
+
 #include "Color.h"
 #include "Glew/include/glew.h"
 #include "SDL/include/SDL_opengl.h"

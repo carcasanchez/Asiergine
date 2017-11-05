@@ -37,9 +37,6 @@
     <ClCompile Include="3DEngine\Color.cpp">
       <Filter>Source\Helpers</Filter>
     </ClCompile>
-    <ClCompile Include="3DEngine\glmath.cpp">
-      <Filter>Source\Helpers</Filter>
-    </ClCompile>
     <ClCompile Include="3DEngine\imgui\imgui.cpp">
       <Filter>Source\Tools\imGui</Filter>
     </ClCompile>
@@ -157,9 +154,6 @@
     <ClCompile Include="3DEngine\mmgr\mmgr.cpp">
       <Filter>Source\Tools\mmgr</Filter>
     </ClCompile>
-    <ClCompile Include="3DEngine\Primitive.cpp">
-      <Filter>Source\Helpers</Filter>
-    </ClCompile>
     <ClCompile Include="3DEngine\GameObject.cpp">
       <Filter>Source\Containers</Filter>
     </ClCompile>
@@ -226,9 +220,6 @@
       <Filter>Source\Containers</Filter>
     </ClInclude>
     <ClInclude Include="3DEngine\Color.h">
-      <Filter>Source\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="3DEngine\glmath.h">
       <Filter>Source\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="3DEngine\imgui\imgui.h">
@@ -449,9 +440,6 @@
     </ClInclude>
     <ClInclude Include="3DEngine\Brofiler\Brofiler.h">
       <Filter>Source\Tools</Filter>
-    </ClInclude>
-    <ClInclude Include="3DEngine\Primitive.h">
-      <Filter>Source\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="3DEngine\Devil\include\config.h">
       <Filter>Source\Tools\DevIL</Filter>

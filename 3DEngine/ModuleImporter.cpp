@@ -150,7 +150,6 @@ bool ModuleImporter::LoadFBX(const char * path)
 //Iterates all nodes saving materials and meshes
 void ModuleImporter::ImportScene(const aiScene * scene)
 {	
-
 	//Store all materials in a vector and assign a id of -1
 	if (scene->HasMaterials())
 	{
@@ -382,7 +381,7 @@ int ModuleImporter::SearchForTexture(const aiScene* scene, const char* path, int
 
 
 //Load texture from image-----------------------------
-GLuint ModuleImporter::LoadTexture(const char * path, bool from_scene) const
+uint ModuleImporter::LoadTexture(const char * path, bool from_scene) const
 {
 	//Gen image
 	ILuint img_id = 0;
@@ -391,8 +390,7 @@ GLuint ModuleImporter::LoadTexture(const char * path, bool from_scene) const
 
 	//load from path
 	ilLoadImage(path);
-
-
+	
 	ILuint devilError1 = ilGetError();
 	if (devilError1 != IL_NO_ERROR)
 	{
@@ -400,17 +398,15 @@ GLuint ModuleImporter::LoadTexture(const char * path, bool from_scene) const
 		return 0;
 	}
 
-	if(!from_scene)
-	{ 
-		// If the image is flipped
-		ILinfo ImageInfo;
-		iluGetImageInfo(&ImageInfo);
-		if (ImageInfo.Origin == IL_ORIGIN_UPPER_LEFT)
-		{
-			iluFlipImage();
-		}
-
+	
+	// If the image is flipped
+	ILinfo ImageInfo;
+	iluGetImageInfo(&ImageInfo);
+	if (ImageInfo.Origin == IL_ORIGIN_UPPER_LEFT)
+	{
+		iluFlipImage();		
 	}
+
 
 	ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
 	

@@ -28,12 +28,23 @@ bool ModuleCamera3D::Init(const JSON_Object* config_data)
 	//LoadData from Config
 	assert(config_data != nullptr);
 
-	Position.x = json_object_dotget_number(config_data, "x");
-	Position.y = json_object_dotget_number(config_data, "y");
-	Position.z = json_object_dotget_number(config_data, "z");
-	Reference.x = json_object_dotget_number(config_data, "reference_x");
-	Reference.y = json_object_dotget_number(config_data, "reference_y");
-	Reference.z = json_object_dotget_number(config_data, "reference_z");
+	frustum.pos.x = json_object_dotget_number(config_data, "x");
+	frustum.pos.y = json_object_dotget_number(config_data, "y");
+	frustum.pos.z = json_object_dotget_number(config_data, "z");
+	pivot_point.x = json_object_dotget_number(config_data, "reference_x");
+	pivot_point.y = json_object_dotget_number(config_data, "reference_y");
+	pivot_point.z = json_object_dotget_number(config_data, "reference_z");
+
+	frustum.type = PerspectiveFrustum;
+	frustum.front = float3(0, 0, 1);
+	frustum.up = float3(0, 1, 0);
+	aspect_ratio = App->window->GetAspectRatio();
+
+	frustum.nearPlaneDistance = 1;
+	frustum.farPlaneDistance = 200;
+
+	frustum.verticalFov = 1;
+	frustum.horizontalFov = math::Atan(aspect_ratio*math::Tan(frustum.verticalFov / 2)) * 2;
 
 	camera_speed = json_object_dotget_number(config_data, "speed");
 	camera_sensitivity = json_object_dotget_number(config_data, "sensitivity");
@@ -46,7 +57,7 @@ bool ModuleCamera3D::Start()
 {
 	LOG("Setting up the camera");
 	bool ret = true;
-	Look(Position, Reference, true);
+	LookAt(pivot_point);
 
 	return ret;
 }
@@ -64,65 +75,48 @@ update_status ModuleCamera3D::Update(float real_dt, float game_dt)
 {	
 	ControlCamera(real_dt);
 
-	// Recalculate matrix -------------
-	CalculateViewMatrix();		
-
 	return UPDATE_CONTINUE;
 }
 
-// -----------------------------------------------------------------
-void ModuleCamera3D::Look(const vec3 &Position, const vec3 &Reference, bool RotateAroundReference)
-{
-	this->Position = Position;
-	this->Reference = Reference;
-
-	Z = normalize(Position - Reference);
-	X = normalize(cross(vec3(0.0f, 1.0f, 0.0f), Z));
-	Y = cross(Z, X);
-
-	if(!RotateAroundReference)
-	{
-		this->Reference = this->Position;
-		this->Position += Z * 0.05f;
-	}
-
-	CalculateViewMatrix();
-}
 
 // -----------------------------------------------------------------
-void ModuleCamera3D::LookAt( const vec3 &Spot)
+void ModuleCamera3D::LookAt(const float3 &Spot)
 {
-	Reference = Spot;
-
-	Z = normalize(Position - Reference);
-	X = normalize(cross(vec3(0.0f, 1.0f, 0.0f), Z));
-	Y = cross(Z, X);
-
-	CalculateViewMatrix();
+	pivot_point = Spot;
+	frustum.front = (pivot_point - frustum.pos).Normalized();
+	
+	float3 crossYZ = math::Cross(float3(0,1,0), frustum.front).Normalized();
+	frustum.up = math::Cross(frustum.front, crossYZ);
 }
 
 
 // -----------------------------------------------------------------
-void ModuleCamera3D::Move(const vec3 &Movement)
+void ModuleCamera3D::Move(const float3 &Movement)
 {
-	Position += Movement;
-	Reference += Movement;
-
-	CalculateViewMatrix();
+	frustum.pos += Movement;
+	pivot_point += Movement;
 }
 
-// -----------------------------------------------------------------
-float* ModuleCamera3D::GetViewMatrix()
+const float * ModuleCamera3D::GetViewMatrixTransposed() const
 {
-	return &ViewMatrix;
+	float4x4 view_m = frustum.ViewMatrix();
+	view_m.Transpose();
+
+	return view_m.ptr();
 }
 
-// -----------------------------------------------------------------
-void ModuleCamera3D::CalculateViewMatrix()
+
+const float * ModuleCamera3D::GetProjectionMatrixTransposed() const
 {
-	ViewMatrix = mat4x4(X.x, Y.x, Z.x, 0.0f, X.y, Y.y, Z.y, 0.0f, X.z, Y.z, Z.z, 0.0f, -dot(X, Position), -dot(Y, Position), -dot(Z, Position), 1.0f);
-	ViewMatrixInverse = inverse(ViewMatrix);
+	return frustum.ProjectionMatrix().Transposed().ptr();
 }
+
+void ModuleCamera3D::SetAspectRatio(float new_aspect_ratio)
+{
+	aspect_ratio = new_aspect_ratio;
+	frustum.horizontalFov = math::Atan(new_aspect_ratio*math::Tan(frustum.verticalFov / 2)) * 2;
+}
+
 
 
 void ModuleCamera3D::ControlCamera(float dt)
@@ -133,16 +127,16 @@ void ModuleCamera3D::ControlCamera(float dt)
 		
 	//Displacement
 	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
-		Move(Z*-camera_speed*dt);
+		Move(frustum.front*camera_speed*dt);
 
 	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
-		Move(Z*camera_speed*dt);
+		Move(frustum.front*-camera_speed*dt);
 
 	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
-		Move(X*-camera_speed*dt);
+		Move(math::Cross(frustum.front, frustum.up)*-camera_speed*dt);
 
 	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
-		Move(X*camera_speed*dt);
+		Move(math::Cross(frustum.front, frustum.up)*camera_speed*dt);
 
 	int x = App->input->GetMouseXMotion();
 	int y = App->input->GetMouseYMotion();
@@ -153,38 +147,40 @@ void ModuleCamera3D::ControlCamera(float dt)
 		{
 			//Pan the Camera			
 			if (y != 0)
-				Move(Y*camera_sensitivity*dt*y);
+				Move((frustum.up*camera_sensitivity*dt*y)/10);
 
 			if (x != 0)
-				Move(X*-camera_sensitivity*dt*x);
+				Move((math::Cross(frustum.front, frustum.up)*-camera_sensitivity*dt*x)/10);
 		}
 		else
 		{
 			//FP control
 			if (x != 0)
 			{
-				X = rotate(X, -camera_sensitivity*x*dt, vec3(0.0f, 1.0f, 0.0f));
-				Y = rotate(Y, -camera_sensitivity*x*dt, vec3(0.0f, 1.0f, 0.0f));
-				Z = rotate(Z, -camera_sensitivity*x*dt, vec3(0.0f, 1.0f, 0.0f));
+				Quat rotation_quat = math::Quat::RotateAxisAngle(float3(0.0f, 1.0f, 0.0f), -camera_sensitivity*x*dt*DEGTORAD);
+				frustum.Transform(rotation_quat);
 			}
 
 			if (y != 0)
 			{
-				Y = rotate(Y, -camera_sensitivity*y*dt, X);
-				Z = rotate(Z, -camera_sensitivity*y*dt, X);
+				Quat rotation_quat = math::Quat::RotateAxisAngle(math::Cross(frustum.front, frustum.up), -camera_sensitivity*y*dt*DEGTORAD);
+				frustum.Transform(rotation_quat);
+				rotation_quat = math::Quat::RotateAxisAngle(math::Cross(frustum.front, frustum.up), -camera_sensitivity*y*dt*DEGTORAD);
+				frustum.Transform(rotation_quat);
 
 				//Cap Camera Y axis
-				if (Y.y < 0.0f)
+				if (frustum.up.y < 0.0f)
 				{
-					Y = rotate(Y, (float)y * camera_sensitivity*dt, X);
-					Z = rotate(Z, (float)y * camera_sensitivity*dt, X);
+					rotation_quat = math::Quat::RotateAxisAngle(math::Cross(frustum.front, frustum.up), camera_sensitivity*y*dt*DEGTORAD);
+
+					frustum.Transform(rotation_quat);
 				}
 
 			}
 
 			//Adjust reference
-			vec3 distance = Reference - Position;
-			Reference = Position - (Z * length(distance));
+			float3 distance = pivot_point - frustum.pos;
+			pivot_point = frustum.pos - (frustum.front * distance.Length());
 		}
 		
 	
@@ -192,38 +188,37 @@ void ModuleCamera3D::ControlCamera(float dt)
 	else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)
 	{
 		//Orbital Control
-		Position -= Reference;
+		frustum.pos -= pivot_point;
 
 		if (x != 0)
 		{
-			X = rotate(X, -(float)x * camera_sensitivity*dt , vec3(0.0f, 1.0f, 0.0f));
-			Y = rotate(Y, -(float)x * camera_sensitivity*dt , vec3(0.0f, 1.0f, 0.0f));
-			Z = rotate(Z, -(float)x * camera_sensitivity*dt , vec3(0.0f, 1.0f, 0.0f));
+			Quat rotation_quat = math::Quat::RotateAxisAngle(float3(0.0f, 1.0f, 0.0f), -camera_sensitivity*x*dt*DEGTORAD);
+			frustum.Transform(rotation_quat);
 		}
 
 		if (y != 0)
 		{
-			Y = rotate(Y, -(float)y * camera_sensitivity*dt, X);
-			Z = rotate(Z, -(float)y * camera_sensitivity*dt, X);
+			Quat rotation_quat = math::Quat::RotateAxisAngle(math::Cross(frustum.front, frustum.up), -camera_sensitivity*y*dt*DEGTORAD);
+			frustum.Transform(rotation_quat);
 		}		
 
 		//Cap Camera Y axis
-		if (Y.y < 0.0f)
+		if (frustum.up.y < 0.0f)
 		{
-			Y = rotate(Y, (float)y * camera_sensitivity*dt, X);
-			Z = rotate(Z, (float)y * camera_sensitivity*dt, X);
+			Quat rotation_quat = math::Quat::RotateAxisAngle(math::Cross(frustum.front, frustum.up), camera_sensitivity*y*dt*DEGTORAD);
+			frustum.Transform(rotation_quat);
 		}
 		
 		//Locate camera around reference
-		if (Y.y > 0.0f)
-			Position = Reference + Z * length(Position);
+		if (frustum.up.y > 0.0f)
+			frustum.pos = pivot_point - frustum.up * (pivot_point.Length());
 	}
 
 	//Move camera in the local Z axis
 	if (App->input->GetMouseZ() == 1)
-		Position -= Z;
+		frustum.pos += frustum.front * camera_speed * 100;
 	else if (App->input->GetMouseZ() == -1)
-		Position += Z;
+		frustum.pos -= frustum.front * camera_speed * 100;
 		
 	//Reset Camera to 0, 0, 0 
 	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
@@ -237,18 +232,28 @@ void ModuleCamera3D::ControlCamera(float dt)
 
 void ModuleCamera3D::ResetCamera()
 {
-	X = vec3(1.0f, 0.0f, 0.0f);
-	Y = vec3(0.0f, 1.0f, 0.0f);
-	Z = vec3(0.0f, 0.0f, 1.0f);
-
-	Position = vec3(5.0f, 5.0f, 5.0f);
-	Reference = vec3(0.0f, 0.0f, 0.0f);
+	frustum.pos = float3(5.0f, 5.0f, 5.0f);
+	pivot_point = float3(0.0f, 0.0f, 0.0f);
 	
-
-	LookAt(Reference);
-
-	CalculateViewMatrix();
+	LookAt(pivot_point);
 }
+
+/*float4x4 ModuleCamera3D::CalculateProjectionMatrix(float vertical_fov, float aspect_ratio) const
+{
+	float4x4 projection_matrix;
+	float cotan_y = 1.0f / math::Tan(vertical_fov * (float)PI / 360.0f);
+
+	projection_matrix.ptr()[0] = cotan_y / aspect_ratio;
+	projection_matrix.ptr()[5] = cotan_y;
+	projection_matrix.ptr()[10] = (near_distance + far_distance) / (near_distance - far_distance);
+	projection_matrix.ptr()[11] = -1.0f;
+	projection_matrix.ptr()[14] = 2.0f * near_distance * far_distance / (near_distance - far_distance);
+	projection_matrix.ptr()[15] = 0.0f;
+
+	return projection_matrix;
+}*/
+
+
 
 bool ModuleCamera3D::SaveConfig(JSON_Object* config_data)
 {
@@ -256,12 +261,12 @@ bool ModuleCamera3D::SaveConfig(JSON_Object* config_data)
 
 	//Save window data
 
-	json_object_dotset_number(config_data, "x", Position.x);
-	json_object_dotset_number(config_data, "y", Position.y);
-	json_object_dotset_number(config_data, "z", Position.z);
-	json_object_dotset_number(config_data, "reference_x", Reference.x);
-	json_object_dotset_number(config_data, "reference_y", Reference.y);
-	json_object_dotset_number(config_data, "reference_z", Reference.z);
+	json_object_dotset_number(config_data, "x", frustum.pos.x);
+	json_object_dotset_number(config_data, "y", frustum.pos.y);
+	json_object_dotset_number(config_data, "z", frustum.pos.z);
+	json_object_dotset_number(config_data, "reference_x", pivot_point.x);
+	json_object_dotset_number(config_data, "reference_y", pivot_point.y);
+	json_object_dotset_number(config_data, "reference_z", pivot_point.z);
 
 	json_object_dotset_number(config_data, "speed", camera_speed);
 	json_object_dotset_number(config_data, "sensitivity", camera_sensitivity);
@@ -325,15 +330,15 @@ void ModuleCamera3D::AdaptToGeometry(GameObject* game_object)
 		vertices.push_back(new_aabb.CornerPoint(j));
 	}
 
-	Position.x = new_aabb.maxPoint.x + 5;
-	Position.y = new_aabb.maxPoint.y + 5;
-	Position.z = new_aabb.maxPoint.z + 5;
+	frustum.pos.x = new_aabb.maxPoint.x + 5;
+	frustum.pos.y = new_aabb.maxPoint.y + 5;
+	frustum.pos.z = new_aabb.maxPoint.z + 5;
 
-	Reference.x = new_aabb.CenterPoint().x;
-	Reference.y = new_aabb.CenterPoint().y;
-	Reference.z = new_aabb.CenterPoint().z;
+	pivot_point.x = new_aabb.CenterPoint().x;
+	pivot_point.y = new_aabb.CenterPoint().y;
+	pivot_point.z = new_aabb.CenterPoint().z;
 
-	LookAt(Reference);
+	LookAt(pivot_point);
 }
 
 
