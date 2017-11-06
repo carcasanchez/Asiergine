@@ -34,10 +34,9 @@ public:
 
 	void ResetCamera();
 
-	void CalculateRay();
+	//For mouse picking
+	void CalculatePickRay();
 
-
-	//float4x4 CalculateProjectionMatrix(float vertical_fov, float aspect_ratio) const;
 
 private:
 
@@ -47,8 +46,8 @@ private:
 public:	
 
 	math::Frustum frustum;
-	math::LineSegment picking;
-	std::vector<GameObject*> objects_picked;
+	math::LineSegment pick_ray;
+
 
 	float3 pivot_point;
 

@@ -50,7 +50,7 @@ public:
 	bool gl_texture_2D_enabled;
 	bool gl_wireframe_enabled;
 	bool hard_poly_enabled;
-	bool frustum_culling = false;
+	bool frustum_culling;
 
 private:
 	std::queue<ComponentMesh*> meshes_to_draw;

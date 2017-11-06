@@ -49,6 +49,7 @@ bool ModuleRenderer3D::Init(const JSON_Object* config_data)
 		gl_texture_2D_enabled = json_object_dotget_boolean(config_data, "gl_texture_2D_enabled");
 		gl_wireframe_enabled = json_object_dotget_boolean(config_data, "gl_wireframe_enabled");
 		hard_poly_enabled = json_object_dotget_boolean(config_data, "hard_poly_enabled");
+		frustum_culling = json_object_dotget_boolean(config_data, "frustum_culling");
 
 
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
@@ -213,6 +214,12 @@ update_status ModuleRenderer3D::PostUpdate(float real_dt, float game_dt)
 	DrawCameraFrustums();
 	DrawDebugBoxes();
 
+/*	//DELET DIS
+	glColor3f(0.0f, 3.0f, 3.0f);
+	float3 a = App->camera->pick_ray.a;
+	float3 b = App->camera->pick_ray.b;
+	glVertex3f(a.x, a.y, a.z);
+	glVertex3f(b.x, b.y, b.z);*/
 
 	glColor3f(1.0f, 1.0f, 1.0f);
 	glEnd();
@@ -240,6 +247,8 @@ void ModuleRenderer3D::OnResize(int width, int height)
 {
 	glViewport(0, 0, width, height);
 
+	App->window->window_height = height;
+	App->window->window_width = width;
 	App->camera->SetAspectRatio((float)width / (float)height);
 
 	glMatrixMode(GL_PROJECTION);
@@ -269,6 +278,7 @@ bool ModuleRenderer3D::SaveConfig(JSON_Object* config_data)
 	json_object_dotset_boolean(config_data, "gl_texture_2D_enabled", gl_texture_2D_enabled);
 	json_object_dotset_boolean(config_data, "gl_wireframe_enabled", gl_wireframe_enabled);
 	json_object_dotset_boolean(config_data, "hard_poly_enabled", hard_poly_enabled);
+	json_object_dotset_boolean(config_data, "frustum_culling", frustum_culling);
 
 	return true;
 }
@@ -284,7 +294,14 @@ void ModuleRenderer3D::DrawGeometry()
 	//plane.Render();
 	while (meshes_to_draw.empty() == false)
 	{
-		meshes_to_draw.front()->Draw();
+		if (frustum_culling)
+		{
+			if (CheckFrustumCulling(meshes_to_draw.front()))
+				meshes_to_draw.front()->Draw();
+		}
+		else meshes_to_draw.front()->Draw();
+		
+		
 		meshes_to_draw.pop();		
 	}
 

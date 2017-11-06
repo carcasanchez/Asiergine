@@ -37,10 +37,13 @@ public:
 	bool SaveConfig(JSON_Object* config_data);
 	bool calculate_fps_graph = false;
 
+	void SelectObject(GameObject*);
+
 	GameObject* GetSelectedGameObject() const { return selected_object; }
 
 	void UnselectAll()
 	{
+		objects_picked.clear();
 		selected_object = nullptr;
 	}
 
@@ -125,7 +128,9 @@ private:
 	bool bake_menu_open = false;
 	bool input_locked = false;
 	bool selected = false;
+
 	GameObject* selected_object = nullptr;
+	std::vector<GameObject*> objects_picked;
 
 };
 

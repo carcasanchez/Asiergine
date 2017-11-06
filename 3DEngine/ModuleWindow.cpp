@@ -105,7 +105,7 @@ float2 ModuleWindow::GetWindowPixels()
 {
 	float2 size;
 	size.x = window_width * screen_size;
-	size.x = window_height * screen_size;
+	size.y = window_height * screen_size;
 	return size;
 }
 

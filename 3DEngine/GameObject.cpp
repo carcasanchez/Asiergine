@@ -225,6 +225,8 @@ ComponentCamera * GameObject::CreateComponent_Camera(float near_dist, float far_
 	return new_camera;
 }
 
+
+//Recursive methods-------------------------------------------------------------------
 bool GameObject::PutInQuadTree(QuadTreeNodeObj* node)
 {
 	bool ret = true;
@@ -268,6 +270,25 @@ GameObject* GameObject::FindChildByID(uint other_uid) const
 	return ret;
 }
 
+void GameObject::CheckMouseRayCollision(math::LineSegment &l, float& distance, GameObject& best_candidate)
+{
+	for (int i = 0; i < children.size(); i++)
+	{
+		float in, out;		
+		if (l.Intersects(*children[i]->GetTransformedBox(), in, out))
+		{
+			if (in > distance)
+			{
+				distance = in;
+				best_candidate = *children[i];
+			}
+		}
+
+		children[i]->CheckMouseRayCollision(l, distance, best_candidate);
+	}
+
+}
+
 void GameObject::SendAllMeshesToDraw()
 {
 	for(std::vector<Component*>::iterator it = components.begin(); it != components.end(); ++it)
@@ -277,6 +298,10 @@ void GameObject::SendAllMeshesToDraw()
 	}
 }
 
+
+
+
+//Editor draw--------------------------------------------------------------------------
 void GameObject::OnEditor()
 {
 	ImGui::TextWrapped("%s", name.c_str());

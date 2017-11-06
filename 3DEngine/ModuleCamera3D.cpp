@@ -41,7 +41,7 @@ bool ModuleCamera3D::Init(const JSON_Object* config_data)
 	aspect_ratio = App->window->GetAspectRatio();
 
 	frustum.nearPlaneDistance = 1;
-	frustum.farPlaneDistance = 200;
+	frustum.farPlaneDistance = 500;
 
 	frustum.verticalFov = 1;
 	frustum.horizontalFov = math::Atan(aspect_ratio*math::Tan(frustum.verticalFov / 2)) * 2;
@@ -74,7 +74,7 @@ bool ModuleCamera3D::CleanUp()
 update_status ModuleCamera3D::Update(float real_dt, float game_dt)
 {	
 	ControlCamera(real_dt);
-	CalculateRay();
+	CalculatePickRay();
 	return UPDATE_CONTINUE;
 }
 
@@ -329,24 +329,23 @@ void ModuleCamera3D::AdaptToGeometry(GameObject* game_object)
 }
 
 //Mouse Picking---------------------------------------------
-void ModuleCamera3D::CalculateRay()
+void ModuleCamera3D::CalculatePickRay()
 {
-	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN&& App->input->GetKey(SDL_SCANCODE_LALT) != KEY_REPEAT)
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && App->input->GetKey(SDL_SCANCODE_LALT) != KEY_REPEAT)
 	{
-		objects_picked.clear();
-		math::float3 click_pos;
+		math::float2 normalized_click_pos;
+		math::float2 click_pos;
 		click_pos.x = App->input->GetMouseX();
 		click_pos.y = App->input->GetMouseY();
-		click_pos.z = App->input->GetMouseZ();
-		click_pos.Normalize();
-		picking = frustum.UnProjectLineSegment(click_pos.x, click_pos.y);
-		std::vector<GameObject*>::iterator it = App->scene->root->children.begin();
-		for (; it != App->scene->root->children.end(); ++it)
-		{
-			if (picking.Intersects(*(*it)->GetTransformedBox()))
-			{
-				objects_picked.push_back((*it));
-			}
-		}
+
+		//???????????????????????????????????????????????????????????????????????????????????????????
+		normalized_click_pos.x = -(1.0f - (float(click_pos.x) * 2.0f) / App->window->window_width);
+		normalized_click_pos.y = 1.0f - (float(click_pos.y) * 2.0f) / App->window->window_height;
+		
+		
+		pick_ray = frustum.UnProjectLineSegment(normalized_click_pos.x, normalized_click_pos.y);
+
+		//Call recursive picking
+		
 	}
 }
