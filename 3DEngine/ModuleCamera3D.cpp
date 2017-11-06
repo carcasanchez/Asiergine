@@ -103,7 +103,7 @@ void ModuleCamera3D::Move(const float3 &Movement)
 
 float * ModuleCamera3D::GetViewMatrixTransposed() const
 {	
-	static float4x4 view_m = frustum.WorldMatrix().Inverted();
+	float4x4 view_m = frustum.WorldMatrix().Inverted();
 	view_m.Transpose();
 	return (float*) view_m.v;
 }
@@ -111,7 +111,7 @@ float * ModuleCamera3D::GetViewMatrixTransposed() const
 
 float * ModuleCamera3D::GetProjectionMatrixTransposed() const
 {
-	static float4x4 proj_m = frustum.ProjectionMatrix();
+	float4x4 proj_m = frustum.ProjectionMatrix();
 	proj_m.Transpose();
 	return (float*) proj_m.v;
 }
