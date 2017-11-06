@@ -19,8 +19,8 @@ public:
 	void LookAt(const float3 &Spot);
 
 	void Move(const float3 &Movement);
-	const float* GetViewMatrixTransposed() const;
-	const float* GetProjectionMatrixTransposed() const;
+	float* GetViewMatrixTransposed() const;
+	float* GetProjectionMatrixTransposed() const;
 
 	void SetAspectRatio(float);
 

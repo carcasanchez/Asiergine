@@ -74,6 +74,10 @@ bool ModuleCamera3D::CleanUp()
 update_status ModuleCamera3D::Update(float real_dt, float game_dt)
 {	
 	ControlCamera(real_dt);
+
+	frustum.up.Normalize();
+	frustum.front.Normalize();
+
 	CalculatePickRay();
 	return UPDATE_CONTINUE;
 }
@@ -97,18 +101,19 @@ void ModuleCamera3D::Move(const float3 &Movement)
 	pivot_point += Movement;
 }
 
-const float * ModuleCamera3D::GetViewMatrixTransposed() const
-{
-	float4x4 view_m = frustum.ViewMatrix();
+float * ModuleCamera3D::GetViewMatrixTransposed() const
+{	
+	static float4x4 view_m = frustum.WorldMatrix().Inverted();
 	view_m.Transpose();
-
-	return view_m.ptr();
+	return (float*) view_m.v;
 }
 
 
-const float * ModuleCamera3D::GetProjectionMatrixTransposed() const
+float * ModuleCamera3D::GetProjectionMatrixTransposed() const
 {
-	return frustum.ProjectionMatrix().Transposed().ptr();
+	static float4x4 proj_m = frustum.ProjectionMatrix();
+	proj_m.Transpose();
+	return (float*) proj_m.v;
 }
 
 void ModuleCamera3D::SetAspectRatio(float new_aspect_ratio)
@@ -331,6 +336,9 @@ void ModuleCamera3D::AdaptToGeometry(GameObject* game_object)
 //Mouse Picking---------------------------------------------
 void ModuleCamera3D::CalculatePickRay()
 {
+	if (App->editor->IsInputLocked())
+		return;
+
 	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && App->input->GetKey(SDL_SCANCODE_LALT) != KEY_REPEAT)
 	{
 		math::float2 normalized_click_pos;
@@ -338,14 +346,24 @@ void ModuleCamera3D::CalculatePickRay()
 		click_pos.x = App->input->GetMouseX();
 		click_pos.y = App->input->GetMouseY();
 
-		//???????????????????????????????????????????????????????????????????????????????????????????
+		//TODO: ???????????????????????????????????????????????????????????????????????????????????????????
 		normalized_click_pos.x = -(1.0f - (float(click_pos.x) * 2.0f) / App->window->window_width);
 		normalized_click_pos.y = 1.0f - (float(click_pos.y) * 2.0f) / App->window->window_height;
 		
 		
 		pick_ray = frustum.UnProjectLineSegment(normalized_click_pos.x, normalized_click_pos.y);
 
-		//Call recursive picking
-		
+		float lenght = pick_ray.Length();
+		GameObject* picked_obj = nullptr;
+
+		App->scene->root->CheckMouseRayCollision(pick_ray, lenght, picked_obj);
+
+
+		if(picked_obj)
+			App->editor->SelectObject(picked_obj);
+		else
+		{
+			App->editor->UnselectAll();
+		}
 	}
 }

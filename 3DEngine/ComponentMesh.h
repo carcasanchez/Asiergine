@@ -18,7 +18,9 @@ public:
 	void SetNormals(float* n) { normals = n; }
 
 	int GetNumVertices() { return num_vertices; }
+	int GetNumIndices() { return num_indices; }
 	const float* GetVertices() { return vertices; }
+	const uint* GetIndices() { return indices; }
 
 	bool IsActive() { return active; }
 

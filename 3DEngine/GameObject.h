@@ -68,9 +68,11 @@ public:
 		UID = new_ID;
 	}
 
+	void CheckTriangleCollision(math::LineSegment &l, float& distance, GameObject* &best_candidate);
+
 	GameObject* FindChildByID(uint uid) const;
 	
-	void CheckMouseRayCollision(math::LineSegment &l, float& distance, GameObject& best_candidate);
+	void CheckMouseRayCollision(math::LineSegment &l, float& distance, GameObject* &best_candidate);
 	
 
 	math::AABB bounding_box = math::AABB(float3::zero, float3::zero);

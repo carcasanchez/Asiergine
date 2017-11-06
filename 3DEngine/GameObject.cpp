@@ -219,6 +219,12 @@ ComponentCamera * GameObject::CreateComponent_Camera(float near_dist, float far_
 	if (UID > 0)
 		new_camera->SetID(UID);
 
+
+	float3 corners[8];
+	new_camera->frustum.GetCornerPoints(corners);
+
+	bounding_box.Enclose(&corners[0], 8);
+
 	components.push_back(new_camera);
 	LOG("Creating new Camera in %s", name.c_str());
 
@@ -250,6 +256,41 @@ bool GameObject::PutInQuadTree(QuadTreeNodeObj* node)
 	return ret;
 }
 
+void GameObject::CheckTriangleCollision(math::LineSegment &l, float& distance, GameObject* &best_candidate)
+{
+	CompTransform* transf = (CompTransform*)GetComponentByType(COMPONENT_TRANSFORM);
+	std::vector<Component*> meshes = GetAllComponentOfType(COMPONENT_MESH);
+
+
+	for (int i = 0; i < meshes.size(); i++)
+	{
+
+ 		const float* vertices = ((ComponentMesh*)meshes[i])->GetVertices();
+		const uint* indices = ((ComponentMesh*)meshes[i])->GetIndices();
+
+
+		math::Triangle triangle;
+
+		for (int j = 0; j < ((ComponentMesh*)meshes[i])->GetNumIndices(); j += 3)
+		{
+			triangle.a.x = vertices[indices[j]];
+			triangle.a.y = vertices[indices[j] +1];
+			triangle.a.z = vertices[indices[j] +2];
+
+			triangle.b.x = vertices[indices[j + 1]];
+			triangle.b.y = vertices[indices[j + 1] + 1];
+			triangle.b.z = vertices[indices[j + 1] + 2];
+
+			triangle.c.x = vertices[indices[j + 2]];
+			triangle.c.y = vertices[indices[j + 2] + 1];
+			triangle.c.z = vertices[indices[j + 2] + 2];
+		}
+		
+	}
+
+
+}
+
 GameObject* GameObject::FindChildByID(uint other_uid) const
 {
 	GameObject* ret = nullptr;
@@ -270,17 +311,17 @@ GameObject* GameObject::FindChildByID(uint other_uid) const
 	return ret;
 }
 
-void GameObject::CheckMouseRayCollision(math::LineSegment &l, float& distance, GameObject& best_candidate)
+void GameObject::CheckMouseRayCollision(math::LineSegment &l, float& distance, GameObject* &best_candidate)
 {
 	for (int i = 0; i < children.size(); i++)
 	{
 		float in, out;		
 		if (l.Intersects(*children[i]->GetTransformedBox(), in, out))
 		{
-			if (in > distance)
+			if (in < distance)
 			{
 				distance = in;
-				best_candidate = *children[i];
+				best_candidate = children[i];
 			}
 		}
 

@@ -127,7 +127,7 @@ void CompTransform::Update(float real_dt, float game_dt)
 
 const float * CompTransform::GetMatrixPtr()
 {
-	return matrix.ptr();
+	return (float*) matrix.v;
 }
 
 float4x4 CompTransform::GetParentTransform()
