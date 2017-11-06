@@ -1,4 +1,4 @@
-#Asiergine v0.7.5
+#Asiergine v0.7.7
 
 3D Engine created by Carlos Cabreira and Asier Iglesias in OpenGL and C++ with educational purposes.
 
@@ -9,6 +9,14 @@ Code repository:
 https://github.com/carcasanchez/Asiergine
 
 #Changelog
+
+###v0.7.7
+-Camera Module migrated to MathGeoLib frustum. Removed gl::math
+-Implemented scene serialization: save and load to own format .carca
+-Added file system and library generation
+-Added first attemp of Quadtree
+-Numerous minor bugs solved  
+
 
 ###v0.7.5
 -Big migration to component system
