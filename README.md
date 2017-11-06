@@ -15,7 +15,9 @@ https://github.com/carcasanchez/Asiergine
 -Implemented scene serialization: save and load to own format .carca
 -Added file system and library generation
 -Added first attemp of Quadtree
+-Added Play Game and more time options
 -Numerous minor bugs solved  
+
 
 
 ###v0.7.5
