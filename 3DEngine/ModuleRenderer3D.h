@@ -7,6 +7,7 @@
 
 class ComponentMesh;
 class ComponentCamera;
+class QuadTreeNodeObj;
 
 class ModuleRenderer3D : public Module
 {
@@ -28,6 +29,7 @@ public:
 	void SetMeshToDraw(ComponentMesh*);
 	void SetBoxToDraw(math::AABB);
 	void SetBoxToDraw(math::Frustum*);
+	void SendQuadTreeGameObjectsToPaint(QuadTreeNodeObj* node);
 
 	void SetActiveCamera(ComponentCamera* c)
 	{

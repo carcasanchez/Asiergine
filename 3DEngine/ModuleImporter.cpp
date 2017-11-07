@@ -741,6 +741,7 @@ uint ModuleImporter::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>>
 	ComponentCamera* cam = (ComponentCamera*)to_save->GetComponentByType(COMPONENT_CAMERA);
 	if (cam != nullptr)
 	{
+		size += sizeof(bool);
 		size += sizeof(float) *2;
 	}
 	
@@ -885,12 +886,17 @@ uint ModuleImporter::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>>
 	{
 		float n_distance = cam->GetNearDistance();
 		float f_distance = cam->GetFarDistance();
+		bool active = cam->IsActive();
 
 		size_of = sizeof(float);
 		memcpy(cursor, &n_distance, size_of);
 		cursor += size_of;
 
 		memcpy(cursor, &f_distance, size_of);
+		cursor += size_of;
+
+		size_of = sizeof(bool);
+		memcpy(cursor, &active, size_of);
 		cursor += size_of;
 	}
 
@@ -1153,6 +1159,7 @@ uint ModuleImporter::LoadObjectFromOwnFormat(char*& cursor)
 	if (cam_id != 0)
 	{
 		float n_dist = 0, f_dist = 0;
+		bool active = false;
 
 		size_of = sizeof(float);
 
@@ -1160,8 +1167,11 @@ uint ModuleImporter::LoadObjectFromOwnFormat(char*& cursor)
 		cursor += size_of;
 		memcpy(&f_dist, cursor, size_of);
 		cursor += size_of;
+		size_of = sizeof(bool);
+		memcpy(&active, cursor, size_of);
+		cursor += size_of;
 
-		new_obj->CreateComponent_Camera(n_dist, f_dist, false ,cam_id);
+		new_obj->CreateComponent_Camera(n_dist, f_dist, active ,cam_id);
 	}
 
 	cursor++;

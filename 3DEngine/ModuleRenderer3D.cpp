@@ -293,6 +293,8 @@ void ModuleRenderer3D::SetMeshToDraw(ComponentMesh * m)
 void ModuleRenderer3D::DrawGeometry()
 {
 	//plane.Render();
+	if(frustum_culling)
+		SendQuadTreeGameObjectsToPaint(&App->scene->scene_quadtree.root);
 	while (meshes_to_draw.empty() == false)
 	{
 		if (frustum_culling)
@@ -306,6 +308,22 @@ void ModuleRenderer3D::DrawGeometry()
 		meshes_to_draw.pop();		
 	}
 
+}
+
+void ModuleRenderer3D::SendQuadTreeGameObjectsToPaint(QuadTreeNodeObj* node)
+{
+	for (std::vector<QuadTreeNodeObj*>::iterator it = node->children.begin(); it != node->children.end(); ++it)
+	{
+		if (active_camera->frustum.Contains((*it)->box))
+		{
+			SendQuadTreeGameObjectsToPaint((*it));
+			for (std::vector<GameObject*>::iterator obj_it = (*it)->game_objects.begin(); obj_it != (*it)->game_objects.end(); obj_it++)
+			{
+				if (active_camera->frustum.Contains(*(*obj_it)->GetTransformedBox()))
+					(*obj_it)->SendAllMeshesToDraw();
+			}
+		}
+	}
 }
 
 // Draw debug AABB's-----------------------------------------------------------

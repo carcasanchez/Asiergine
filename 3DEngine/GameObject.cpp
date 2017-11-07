@@ -36,10 +36,7 @@ void GameObject::Update(float real_dt, float game_dt)
 			LOG("YOU ARE ADOPTED");
 			assert(1 == 0);
 		}
-		if(!App->renderer3D->frustum_culling)
-			children[i]->Update(real_dt, game_dt);
-		else if (!children[i]->IsStatic())
-			children[i]->Update(real_dt, game_dt);
+		children[i]->Update(real_dt, game_dt);	
 	}
 	
 
@@ -243,6 +240,8 @@ bool GameObject::PutInQuadTree(QuadTreeNodeObj* node)
 	else {
 		if (node->box.Intersects(transformed_bounding_box))
 			node->Insert(this);
+		if (node->IsFull() && !node->IsOfMinSize())
+			ret = false;
 		for (std::vector<GameObject*>::iterator it = children.begin(); it != children.end(); ++it)
 		{
 			ret = (*it)->PutInQuadTree(node);
