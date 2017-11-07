@@ -99,11 +99,11 @@ void CompTransform::OnEditor()
 			SetRotation(new_rot);
 		}
 
-		if (ImGuizmo::IsUsing())
+		if (ImGuizmo::IsOver())
 		{
-
+			App->editor->LockSelection();
 		}
-
+		else App->editor->UnLockSelection();
 
 		//GUIZMOS
 		static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);

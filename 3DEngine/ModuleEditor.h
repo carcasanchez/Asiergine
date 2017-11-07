@@ -51,12 +51,30 @@ public:
 	{
 		return input_locked;
 	}
+	bool IsSelectionLocked() const
+	{
+		return selection_locked;
+	}
 
 	bool BakeQuadtreeOpen() const
 	{
 		return bake_menu_open;
 	}
 
+	void LockInput()
+	{
+		input_locked = true;
+	}
+
+	void LockSelection()
+	{
+		selection_locked = true;
+	}
+
+	void UnLockSelection()
+	{
+		selection_locked = false;
+	}
 	
 private:
 
@@ -127,6 +145,7 @@ private:
 
 	bool bake_menu_open = false;
 	bool input_locked = false;
+	bool selection_locked = false;
 	bool selected = false;
 
 	GameObject* selected_object = nullptr;

@@ -321,7 +321,7 @@ void ModuleCamera3D::AdaptToGeometry(GameObject* game_object)
 //Mouse Picking---------------------------------------------
 void ModuleCamera3D::CalculatePickRay()
 {
-	if (App->editor->IsInputLocked())
+	if (App->editor->IsInputLocked() || App->editor->IsSelectionLocked())
 		return;
 
 	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && App->input->GetKey(SDL_SCANCODE_LALT) != KEY_REPEAT)
