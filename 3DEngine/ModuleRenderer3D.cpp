@@ -164,9 +164,12 @@ update_status ModuleRenderer3D::PreUpdate(float real_dt, float game_dt)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 	
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glLoadMatrixf(App->camera->frustum.ViewProjMatrix().Transposed().ptr());
 
 	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(App->camera->GetViewMatrixTransposed());
+	glLoadIdentity();
 
 	// light 0 on cam pos
 	lights[0].SetPos(App->camera->frustum.pos.x, App->camera->frustum.pos.y, App->camera->frustum.pos.z);
@@ -244,13 +247,6 @@ void ModuleRenderer3D::OnResize(int width, int height)
 	App->window->window_height = height;
 	App->window->window_width = width;
 	App->camera->SetAspectRatio((float)width / (float)height);
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();		
-	glLoadMatrixf(App->camera->GetProjectionMatrixTransposed());
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
 }
 
 void ModuleRenderer3D::ChangeBackgroundColor(Color c)

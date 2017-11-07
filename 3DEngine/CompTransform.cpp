@@ -113,7 +113,7 @@ void CompTransform::OnEditor()
 	
 		ImGuiIO& io = ImGui::GetIO();
 		ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
-		ImGuizmo::Manipulate(App->camera->GetViewMatrixTransposed(), App->camera->GetProjectionMatrixTransposed(), mCurrentGizmoOperation, mCurrentGizmoMode, matrix.ptr(), NULL,  NULL);
+		ImGuizmo::Manipulate(App->camera->frustum.WorldMatrix().InverseTransposed().ptr(), App->camera->frustum.ProjectionMatrix().Transposed().ptr(), mCurrentGizmoOperation, mCurrentGizmoMode, matrix.ptr(), NULL,  NULL);
 
 
 		//______________________
