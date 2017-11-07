@@ -111,9 +111,11 @@ void ModuleCamera3D::SetAspectRatio(float new_aspect_ratio)
 
 void ModuleCamera3D::ControlCamera(float dt)
 {
-
+	App->editor->UnLockGizmos();
 	if (App->editor->IsInputLocked())
 		return;
+
+	
 		
 	//Displacement
 	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
@@ -141,6 +143,8 @@ void ModuleCamera3D::ControlCamera(float dt)
 
 			if (x != 0)
 				Move((math::Cross(frustum.front, frustum.up)*-camera_speed*dt*x));
+
+			App->editor->LockGizmos();
 		}
 		else
 		{
@@ -169,6 +173,7 @@ void ModuleCamera3D::ControlCamera(float dt)
 			//Adjust reference
 			float3 distance = pivot_point - frustum.pos;
 			pivot_point = frustum.pos + (frustum.front.Normalized() * distance.Length());
+			App->editor->LockGizmos();
 		}
 		
 	
@@ -189,6 +194,7 @@ void ModuleCamera3D::ControlCamera(float dt)
 
 		//Reorient camera to pivot
 		LookAt(pivot_point);
+		App->editor->LockGizmos();
 	}
 
 	//Move camera in the local Z axis
@@ -204,7 +210,7 @@ void ModuleCamera3D::ControlCamera(float dt)
 	//Adapt camera to geometry in scene
 	/*if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
 		AdaptToGeometry();*/
-		
+	
 }
 
 void ModuleCamera3D::ResetCamera()

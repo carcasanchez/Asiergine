@@ -25,6 +25,7 @@ void CompTransform::SetTranslation(float x, float y, float z)
 	translation.x = x;
 	translation.y = y;
 	translation.z = z;
+	RefreshMatrices();
 }
 
 math::float3 CompTransform::GetScale()
@@ -37,6 +38,7 @@ void CompTransform::SetScale(float x, float y, float z)
 	scale.x = x;
 	scale.y = y;
 	scale.z = z;
+	RefreshMatrices();
 }
 
 math::Quat CompTransform::GetRotation()
@@ -47,7 +49,9 @@ math::Quat CompTransform::GetRotation()
 void CompTransform::SetRotation(Quat rot)
 {
 	rotation = rot;
+	RefreshMatrices();
 }
+
 
 void CompTransform::OnEditor()
 {
@@ -77,12 +81,12 @@ void CompTransform::OnEditor()
 		float s_x = GetScale().x;
 		float s_y = GetScale().y;
 		float s_z = GetScale().z;
-		float scale[3] = { s_x, s_y, s_z };
+		float scale_tmp[3] = { s_x, s_y, s_z };
 
 		ImGui::TextWrapped("Scale:       ");
 		ImGui::SameLine();
-		if (ImGui::DragFloat3(" ", scale, drag_speed) && GetGameObject()->IsStatic() == false)
-			SetScale(scale[0], scale[1], scale[2]);
+		if (ImGui::DragFloat3(" ", scale_tmp, drag_speed) && GetGameObject()->IsStatic() == false)
+			SetScale(scale_tmp[0], scale_tmp[1], scale_tmp[2]);
 
 		//Rotation
 		float rotate[3] = { rot_in_euler.x,  rot_in_euler.y, rot_in_euler.z };
@@ -106,7 +110,12 @@ void CompTransform::OnEditor()
 		else App->editor->UnLockSelection();
 
 		//GUIZMOS
-		static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
+
+		if (App->editor->AreGizmosLocked())
+			ImGuizmo::Enable(false);
+		else ImGuizmo::Enable(true);
+
+		static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::ROTATE);
 		static ImGuizmo::MODE mCurrentGizmoMode(ImGuizmo::LOCAL);
 		if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 			mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
@@ -120,25 +129,37 @@ void CompTransform::OnEditor()
 		ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
 
 		
-			float4x4 view_matrix = App->camera->frustum.ViewMatrix();
-			float4x4 proj_matrix = App->camera->frustum.ProjectionMatrix();
-			view_matrix.Transpose();
-			proj_matrix.Transpose();
+		float4x4 view_matrix = App->camera->frustum.ViewMatrix();
+		float4x4 proj_matrix = App->camera->frustum.ProjectionMatrix();
+		view_matrix.Transpose();
+		proj_matrix.Transpose();
 
-			float4x4 transf_matrix = matrix.Transposed();
-			ImGuizmo::Manipulate(view_matrix.ptr(), proj_matrix.ptr(), mCurrentGizmoOperation, mCurrentGizmoMode, transf_matrix.ptr());
+
+		float4x4 trs_matrix = local_matrix;
+		ImGuizmo::Manipulate(view_matrix.ptr(), proj_matrix.ptr(), mCurrentGizmoOperation, mCurrentGizmoMode, trs_matrix.ptr());
 
 		if (ImGuizmo::IsUsing())
-		{
-			float3 new_pos, new_scale;
-			float4x4 new_rot;
-			math::Quat new_quat;
-			new_quat.Set(new_rot);
-			transf_matrix.Decompose(new_pos, new_rot, new_scale);
-
+		{				
+			trs_matrix.Transpose();
+			float3 new_pos;
+			float3 new_scale;
+			Quat new_q; 								
+			trs_matrix.Decompose(new_pos, new_q, new_scale);
+				
+	
 			SetTranslation(new_pos.x, new_pos.y, new_pos.z);
-			SetRotation(new_quat);
-			SetScale(new_scale.x, new_scale.y, new_scale.z);
+
+			if (new_scale.Equals(scale) == false)
+			{
+				SetScale(new_scale.x, new_scale.y, new_scale.z);
+			}
+
+			if (new_q.Equals(rotation) == false)
+			{
+				rot_in_euler = new_q.ToEulerXYZ();
+				SetRotation(new_q);
+			}
+			
 		}
 		//--------------------------------------------------------------------
 
@@ -157,15 +178,29 @@ void CompTransform::Update(float real_dt, float game_dt)
 
 	translation.x += 0.001 * game_dt;
 
-	if (GetGameObject()->IsStatic() == false) {
-		float4x4 rotation_matrix = float4x4::FromQuat(rotation);
-		local_matrix = float4x4::FromTRS(translation, rotation_matrix, scale);
-		local_matrix.Transpose();
-		matrix = GetParentTransform();
-	}
+	//if (GetGameObject()->IsStatic() == false) {
+	//	RefreshMatrices();
+	//}
 
 }
 
+
+void CompTransform::RefreshMatrices()
+{
+	float4x4 rotation_matrix = float4x4::FromQuat(rotation);
+	local_matrix = float4x4::FromTRS(translation, rotation_matrix, scale);
+	local_matrix.Transpose();
+	matrix = GetParentTransform();
+
+	std::vector<GameObject*> childrens = game_object->GetChildrens();
+
+	for (int i = 0; i < childrens.size(); i++)
+	{
+		Component* transform = childrens[i]->GetComponentByType(COMPONENT_TRANSFORM);
+		((CompTransform*)transform)->RefreshMatrices();
+	}
+
+}
 
 
 const float * CompTransform::GetMatrixPtr()
@@ -175,7 +210,6 @@ const float * CompTransform::GetMatrixPtr()
 
 float4x4 CompTransform::GetParentTransform()
 {
-
 	 GameObject* g = game_object->GetParent();
 	 float4x4 parent_transform = float4x4::identity;
 	
