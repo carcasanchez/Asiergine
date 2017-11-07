@@ -107,7 +107,7 @@ void CompTransform::OnEditor()
 
 		//GUIZMOS
 		static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
-		static ImGuizmo::MODE mCurrentGizmoMode(ImGuizmo::WORLD);
+		static ImGuizmo::MODE mCurrentGizmoMode(ImGuizmo::LOCAL);
 		if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 			mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
 		if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
@@ -119,15 +119,27 @@ void CompTransform::OnEditor()
 		ImGuiIO& io = ImGui::GetIO();
 		ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
 
-		float4x4 view_matrix = App->camera->frustum.ViewMatrix();
-		float4x4 proj_matrix = App->camera->frustum.ProjectionMatrix();
-		view_matrix.Transpose();
-		proj_matrix.Transpose();
-
 		
-		ImGuizmo::Manipulate(view_matrix.ptr(), proj_matrix.ptr(), mCurrentGizmoOperation, mCurrentGizmoMode, matrix.ptr());
+			float4x4 view_matrix = App->camera->frustum.ViewMatrix();
+			float4x4 proj_matrix = App->camera->frustum.ProjectionMatrix();
+			view_matrix.Transpose();
+			proj_matrix.Transpose();
 
+			float4x4 transf_matrix = matrix.Transposed();
+			ImGuizmo::Manipulate(view_matrix.ptr(), proj_matrix.ptr(), mCurrentGizmoOperation, mCurrentGizmoMode, transf_matrix.ptr());
 
+		if (ImGuizmo::IsUsing())
+		{
+			float3 new_pos, new_scale;
+			float4x4 new_rot;
+			math::Quat new_quat;
+			new_quat.Set(new_rot);
+			transf_matrix.Decompose(new_pos, new_rot, new_scale);
+
+			SetTranslation(new_pos.x, new_pos.y, new_pos.z);
+			SetRotation(new_quat);
+			SetScale(new_scale.x, new_scale.y, new_scale.z);
+		}
 		//--------------------------------------------------------------------
 
 		if (ImGui::Button("Reset Transform") && GetGameObject()->IsStatic() == false)
