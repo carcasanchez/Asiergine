@@ -215,13 +215,6 @@ update_status ModuleRenderer3D::PostUpdate(float real_dt, float game_dt)
 	DrawCameraFrustums();
 	DrawDebugBoxes();
 
-	//DELET DIS
-	glColor3f(0.0f, 3.0f, 3.0f);
-	float3 a = App->camera->pick_ray.a;
-	float3 b = App->camera->pick_ray.b;
-	glVertex3f(a.x, a.y, a.z);
-	glVertex3f(b.x, b.y, b.z);
-
 	glColor3f(1.0f, 1.0f, 1.0f);
 	glEnd();
 

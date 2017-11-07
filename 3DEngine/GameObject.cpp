@@ -300,8 +300,8 @@ void GameObject::CheckTriangleCollision(math::LineSegment &line, float& distance
 	for (int i = 0; i < meshes.size(); i++)
 	{
 		//Get vertices and indices from every mesh
-		const float* vertices = ((ComponentMesh*)meshes[i])->GetVertices();
-		const uint* indices = ((ComponentMesh*)meshes[i])->GetIndices();
+		 float* vertices = (float*)((ComponentMesh*)meshes[i])->GetVertices();
+		 uint* indices = (uint*)((ComponentMesh*)meshes[i])->GetIndices();
 
 		math::Triangle triangle;
 
@@ -311,9 +311,11 @@ void GameObject::CheckTriangleCollision(math::LineSegment &line, float& distance
 		segment_localized = inverted_m*segment_localized;
 
 
-		for (int j = 0; j < ((ComponentMesh*)meshes[i])->GetNumIndices(); j += 3)
+		for (int j = 0; j < ((ComponentMesh*)meshes[i])->GetNumIndices();)
 		{
-			triangle.a.x = vertices[indices[j]];
+
+
+			/*triangle.a.x = vertices[indices[j]];
 			triangle.a.y = vertices[indices[j] + 1];
 			triangle.a.z = vertices[indices[j] + 2];
 
@@ -323,8 +325,13 @@ void GameObject::CheckTriangleCollision(math::LineSegment &line, float& distance
 
 			triangle.c.x = vertices[indices[j + 2]];
 			triangle.c.y = vertices[indices[j + 2] + 1];
-			triangle.c.z = vertices[indices[j + 2] + 2];
+			triangle.c.z = vertices[indices[j + 2] + 2];*/
 
+			//TODO: ????????????????????????????????????????????????????????????
+			triangle.a.Set(&vertices[indices[j++] * 3]); 
+			triangle.b.Set(&vertices[indices[j++] * 3]);
+			triangle.c.Set(&vertices[indices[j++] * 3]);
+			
 			float tmp_distance;
 			if (segment_localized.Intersects(triangle, &tmp_distance, nullptr))
 			{
@@ -332,7 +339,6 @@ void GameObject::CheckTriangleCollision(math::LineSegment &line, float& distance
 				{
 					distance = tmp_distance;
 					best_candidate = this;
-					break;
 				}
 			}
 		}
@@ -340,29 +346,19 @@ void GameObject::CheckTriangleCollision(math::LineSegment &line, float& distance
 	}
 
 	//Check against frustum if camera component
-	ComponentCamera* cam = (ComponentCamera*)GetComponentByType(COMPONENT_TRANSFORM);
+	ComponentCamera* cam = (ComponentCamera*)GetComponentByType(COMPONENT_CAMERA);
 	if (cam)
-	{
-		Plane planes[6];
-		cam->frustum.GetPlanes(planes);
-
-		//Put the ray in local space of obj
-		math::LineSegment segment_localized(line);
-		float4x4 inverted_m = transf->GetGlobalTransform().Transposed().Inverted();
-		segment_localized = inverted_m*segment_localized;
-		float tmp_distance;
-
+	{	
+		float tmp_distance, out;
 		for (int i = 0; i < 6; i++)
 		{
-			if (segment_localized.Intersects(planes[i], &tmp_distance))
-			{
+			if (line.Intersects(transformed_bounding_box, tmp_distance, out))
 				if (tmp_distance < distance)
 				{
 					distance = tmp_distance;
 					best_candidate = this;
 					break;
 				}
-			}
 		}
 	}
 }
