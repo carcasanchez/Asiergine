@@ -101,6 +101,21 @@ void ModuleCamera3D::Move(const float3 &Movement)
 	pivot_point += Movement;
 }
 
+float * ModuleCamera3D::GetViewMatrix() const
+{
+	static float4x4 view_m;
+	view_m = frustum.ViewMatrix();
+ 	return (float*)view_m.v;
+}
+
+
+float * ModuleCamera3D::GetProjectionMatrix() const
+{
+	static float4x4 proj_m;
+	proj_m = frustum.ProjectionMatrix();
+	return (float*)proj_m.v;
+}
+
 float * ModuleCamera3D::GetViewMatrixTransposed() const
 {	
 	float4x4 view_m = frustum.WorldMatrix().Inverted();
@@ -363,7 +378,7 @@ void ModuleCamera3D::CalculatePickRay()
 			App->editor->SelectObject(picked_obj);
 		else
 		{
-			App->editor->UnselectAll();
+		//	App->editor->UnselectAll();
 		}
 	}
 }

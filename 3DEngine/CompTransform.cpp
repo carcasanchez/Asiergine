@@ -1,6 +1,7 @@
 #include "CompTransform.h"
 #include "Application.h"
 #include "imgui\imgui.h"
+#include "imgui\ImGuizmo.h"
 #include "GameObject.h"
 
 CompTransform::CompTransform(GameObject * game_object):Component(game_object)
@@ -98,6 +99,24 @@ void CompTransform::OnEditor()
 			SetRotation(new_rot);
 		}
 
+
+		//GUIZMOS
+		static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
+		static ImGuizmo::MODE mCurrentGizmoMode(ImGuizmo::WORLD);
+		if (App->input->GetKey(SDL_SCANCODE_T) == KEY_DOWN)
+			mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
+		if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
+			mCurrentGizmoOperation = ImGuizmo::ROTATE;
+		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
+			mCurrentGizmoOperation = ImGuizmo::SCALE;
+			
+	
+		ImGuiIO& io = ImGui::GetIO();
+		ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
+		ImGuizmo::Manipulate(App->camera->GetViewMatrixTransposed(), App->camera->GetProjectionMatrixTransposed(), mCurrentGizmoOperation, mCurrentGizmoMode, matrix.ptr(), NULL,  NULL);
+
+
+		//______________________
 
 		if (ImGui::Button("Reset Transform") && GetGameObject()->IsStatic() == false)
 		{

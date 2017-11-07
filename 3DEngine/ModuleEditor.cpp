@@ -11,7 +11,7 @@
 #include ".\mmgr\mmgr.h"
 #include "ModuleEditor.h"
 #include "GameObject.h"
-
+#include "imgui\ImGuizmo.h"
 
 
 
@@ -99,17 +99,7 @@ bool ModuleEditor::Start()
 	style.Colors[ImGuiCol_TextSelectedBg] = ImVec4(0.00f, 0.00f, 1.00f, 0.35f);
 	style.Colors[ImGuiCol_ModalWindowDarkening] = ImVec4(0.66f, 0.56f, 0.56f, 0.35f);
 
-
-
-
-
-
-
-
-
-
-
-
+	
 
 	//reserve for fps_log
 	fps_log = std::vector<float>(MAX_FPS_LOG, 0);
@@ -124,6 +114,7 @@ update_status ModuleEditor::PreUpdate(float real_dt, float game_dt)
 {
 	update_status ret = UPDATE_CONTINUE;
 	ImGui_ImplSdlGL3_NewFrame(App->window->window);
+	ImGuizmo::BeginFrame();
 	return ret;
 }
 

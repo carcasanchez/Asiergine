@@ -187,6 +187,9 @@
     <ClCompile Include="3DEngine\Primitive.cpp">
       <Filter>Source\Containers</Filter>
     </ClCompile>
+    <ClCompile Include="3DEngine\imgui\ImGuizmo.cpp">
+      <Filter>Source\Tools\imGui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3DEngine\Application.h">
@@ -500,6 +503,9 @@
     </ClInclude>
     <ClInclude Include="3DEngine\Primitive.h">
       <Filter>Source\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\imgui\ImGuizmo.h">
+      <Filter>Source\Tools\imGui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
