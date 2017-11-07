@@ -99,24 +99,36 @@ void CompTransform::OnEditor()
 			SetRotation(new_rot);
 		}
 
+		if (ImGuizmo::IsUsing())
+		{
+
+		}
+
 
 		//GUIZMOS
 		static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
 		static ImGuizmo::MODE mCurrentGizmoMode(ImGuizmo::WORLD);
-		if (App->input->GetKey(SDL_SCANCODE_T) == KEY_DOWN)
+		if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 			mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
-		if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
+		if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
 			mCurrentGizmoOperation = ImGuizmo::ROTATE;
-		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
+		if (App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN)
 			mCurrentGizmoOperation = ImGuizmo::SCALE;
 			
 	
 		ImGuiIO& io = ImGui::GetIO();
 		ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
-		ImGuizmo::Manipulate(App->camera->frustum.WorldMatrix().InverseTransposed().ptr(), App->camera->frustum.ProjectionMatrix().Transposed().ptr(), mCurrentGizmoOperation, mCurrentGizmoMode, matrix.ptr(), NULL,  NULL);
+
+		float4x4 view_matrix = App->camera->frustum.ViewMatrix();
+		float4x4 proj_matrix = App->camera->frustum.ProjectionMatrix();
+		view_matrix.Transpose();
+		proj_matrix.Transpose();
+
+		
+		ImGuizmo::Manipulate(view_matrix.ptr(), proj_matrix.ptr(), mCurrentGizmoOperation, mCurrentGizmoMode, matrix.ptr());
 
 
-		//______________________
+		//--------------------------------------------------------------------
 
 		if (ImGui::Button("Reset Transform") && GetGameObject()->IsStatic() == false)
 		{

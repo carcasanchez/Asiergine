@@ -387,7 +387,8 @@ void GameObject::OnEditor()
 	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); it++)
 	{
 		ImGui::PushID((*it)->GetID());
-			if (ImGui::CollapsingHeader((*it)->GetComponentNameByType()))
+
+			if (ImGui::CollapsingHeader((*it)->GetComponentNameByType(), "", true, true))
 			{
 
 			
