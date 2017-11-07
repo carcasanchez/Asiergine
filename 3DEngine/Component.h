@@ -40,7 +40,7 @@ public:
 	virtual void OnEditor() {}
 
 	bool active = true;
-
+	bool deleted = false;
 protected:
 	GameObject* game_object = nullptr;
 	ComponentType type;

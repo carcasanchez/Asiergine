@@ -134,7 +134,7 @@ void ComponentMesh::DebugDraw()
 
 void ComponentMesh::Update(float real_dt, float game_dt)
 {
-	if (game_object->IsStatic() && App->renderer3D->frustum_culling)
+	if (game_object->IsStatic() && App->renderer3D->frustum_culling && deleted == false)
 		return;
 	App->renderer3D->SetMeshToDraw(this);
 }

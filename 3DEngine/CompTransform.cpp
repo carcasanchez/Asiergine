@@ -154,15 +154,14 @@ void CompTransform::OnEditor()
 
 void CompTransform::Update(float real_dt, float game_dt)
 {
-
-	translation.x += 0.001 * game_dt;
-
 	if (GetGameObject()->IsStatic() == false) {
+		translation.x += 0.001 * game_dt;
+	}
+
 		float4x4 rotation_matrix = float4x4::FromQuat(rotation);
 		local_matrix = float4x4::FromTRS(translation, rotation_matrix, scale);
 		local_matrix.Transpose();
 		matrix = GetParentTransform();
-	}
 
 }
 

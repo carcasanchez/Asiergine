@@ -21,6 +21,19 @@ GameObject::~GameObject()
 
 void GameObject::Update(float real_dt, float game_dt)
 {
+	/*std::vector<Component*>::iterator del_comp = components.begin();
+	for (del_comp; del_comp != components.end(); ++del_comp)
+	{
+		if ((*del_comp)->deleted)
+			components_to_erase->push_back((*del_comp));
+	}
+	std::vector<Component*>::iterator &del_all_comp = components_to_erase->begin();
+	for (del_all_comp; del_all_comp != components_to_erase->end(); ++del_all_comp)
+	{
+		components.erase(del_all_comp);
+	}*/
+
+
 	std::vector<Component*>::iterator it = components.begin();
 	while (it != components.end())
 	{
@@ -386,12 +399,10 @@ void GameObject::OnEditor()
 
 	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); it++)
 	{
-		ImGui::PushID((*it)->GetID());
-
+		if ((*it)->deleted == false) {
+			ImGui::PushID((*it)->GetID());
 			if (ImGui::CollapsingHeader((*it)->GetComponentNameByType(), "", true, true))
 			{
-
-			
 				if (ImGui::Checkbox("Active", &(*it)->active))
 				{
 					if ((*it)->active == true)
@@ -411,10 +422,16 @@ void GameObject::OnEditor()
 					if (it + 1 != components.end())
 						std::iter_swap(it, it + 1);
 				}
-
+				ImGui::SameLine();
+				if (ImGui::Button("Delete Component"))
+				{
+					(*it)->deleted = true;
+					ImGui::PopID();
+					break;
+				}
 				(*it)->OnEditor();
 			}
-		ImGui::PopID();
+			ImGui::PopID();
+		}
 	}
-	
 }
