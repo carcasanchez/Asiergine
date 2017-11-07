@@ -22,9 +22,14 @@ public:
 	void Update(float real_dt, float game_dt);
 
 	const float* GetMatrixPtr();
-	float4x4 GetMatrix()
+	float4x4 GetGlobalTransform()
 	{
 		return matrix;
+	}
+
+	float4x4 GetLocalTransform()
+	{
+		return local_matrix;
 	}
 
 

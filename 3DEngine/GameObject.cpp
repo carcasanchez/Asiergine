@@ -10,7 +10,7 @@
 
 GameObject::GameObject(const char* name): name(name)
 {
-	//bounding_box.SetNegativeInfinity();
+	bounding_box.SetNegativeInfinity();
 	LCG rand_gen;
 	UID = rand_gen.Int();
 }
@@ -44,7 +44,7 @@ void GameObject::Update(float real_dt, float game_dt)
 	//Update bounding box -------------------------------------------------------------------------
 	if (t && bounding_box.IsFinite())
 	{
-		float4x4 matrix = ((CompTransform*)t)->GetMatrix();
+		float4x4 matrix = ((CompTransform*)t)->GetGlobalTransform();
 		matrix.Transpose();	
 		transformed_bounding_box = bounding_box;
 		transformed_bounding_box.TransformAsAABB(matrix);
@@ -255,40 +255,6 @@ bool GameObject::PutInQuadTree(QuadTreeNodeObj* node)
 	return ret;
 }
 
-void GameObject::CheckTriangleCollision(math::LineSegment &l, float& distance, GameObject* &best_candidate)
-{
-	CompTransform* transf = (CompTransform*)GetComponentByType(COMPONENT_TRANSFORM);
-	std::vector<Component*> meshes = GetAllComponentOfType(COMPONENT_MESH);
-
-
-	for (int i = 0; i < meshes.size(); i++)
-	{
-
- 		const float* vertices = ((ComponentMesh*)meshes[i])->GetVertices();
-		const uint* indices = ((ComponentMesh*)meshes[i])->GetIndices();
-
-
-		math::Triangle triangle;
-
-		for (int j = 0; j < ((ComponentMesh*)meshes[i])->GetNumIndices(); j += 3)
-		{
-			triangle.a.x = vertices[indices[j]];
-			triangle.a.y = vertices[indices[j] +1];
-			triangle.a.z = vertices[indices[j] +2];
-
-			triangle.b.x = vertices[indices[j + 1]];
-			triangle.b.y = vertices[indices[j + 1] + 1];
-			triangle.b.z = vertices[indices[j + 1] + 2];
-
-			triangle.c.x = vertices[indices[j + 2]];
-			triangle.c.y = vertices[indices[j + 2] + 1];
-			triangle.c.z = vertices[indices[j + 2] + 2];
-		}
-		
-	}
-
-
-}
 
 GameObject* GameObject::FindChildByID(uint other_uid) const
 {
@@ -310,24 +276,98 @@ GameObject* GameObject::FindChildByID(uint other_uid) const
 	return ret;
 }
 
+//MOUSE PICKING---------------------------------------------------------------------
 void GameObject::CheckMouseRayCollision(math::LineSegment &l, float& distance, GameObject* &best_candidate)
 {
 	for (int i = 0; i < children.size(); i++)
 	{
-		float in, out;		
-		if (l.Intersects(*children[i]->GetTransformedBox(), in, out))
+		if (l.Intersects(*children[i]->GetTransformedBox()))
 		{
-			if (in < distance)
-			{
-				distance = in;
-				best_candidate = children[i];
-			}
+			children[i]->CheckTriangleCollision(l, distance, best_candidate);
 		}
 
 		children[i]->CheckMouseRayCollision(l, distance, best_candidate);
 	}
 
 }
+
+void GameObject::CheckTriangleCollision(math::LineSegment &line, float& distance, GameObject* &best_candidate)
+{
+	CompTransform* transf = (CompTransform*)GetComponentByType(COMPONENT_TRANSFORM);
+	std::vector<Component*> meshes = GetAllComponentOfType(COMPONENT_MESH);
+
+	//Check against meshes
+	for (int i = 0; i < meshes.size(); i++)
+	{
+		//Get vertices and indices from every mesh
+		const float* vertices = ((ComponentMesh*)meshes[i])->GetVertices();
+		const uint* indices = ((ComponentMesh*)meshes[i])->GetIndices();
+
+		math::Triangle triangle;
+
+		//Put the ray in local space of obj
+		math::LineSegment segment_localized(line);
+		float4x4 inverted_m = transf->GetGlobalTransform().Transposed().Inverted();
+		segment_localized = inverted_m*segment_localized;
+
+
+		for (int j = 0; j < ((ComponentMesh*)meshes[i])->GetNumIndices(); j += 3)
+		{
+			triangle.a.x = vertices[indices[j]];
+			triangle.a.y = vertices[indices[j] + 1];
+			triangle.a.z = vertices[indices[j] + 2];
+
+			triangle.b.x = vertices[indices[j + 1]];
+			triangle.b.y = vertices[indices[j + 1] + 1];
+			triangle.b.z = vertices[indices[j + 1] + 2];
+
+			triangle.c.x = vertices[indices[j + 2]];
+			triangle.c.y = vertices[indices[j + 2] + 1];
+			triangle.c.z = vertices[indices[j + 2] + 2];
+
+			float tmp_distance;
+			if (segment_localized.Intersects(triangle, &tmp_distance, nullptr))
+			{
+				if (tmp_distance < distance)
+				{
+					distance = tmp_distance;
+					best_candidate = this;
+					break;
+				}
+			}
+		}
+
+	}
+
+	//Check against frustum if camera component
+	ComponentCamera* cam = (ComponentCamera*)GetComponentByType(COMPONENT_TRANSFORM);
+	if (cam)
+	{
+		Plane planes[6];
+		cam->frustum.GetPlanes(planes);
+
+		//Put the ray in local space of obj
+		math::LineSegment segment_localized(line);
+		float4x4 inverted_m = transf->GetGlobalTransform().Transposed().Inverted();
+		segment_localized = inverted_m*segment_localized;
+		float tmp_distance;
+
+		for (int i = 0; i < 6; i++)
+		{
+			if (segment_localized.Intersects(planes[i], &tmp_distance))
+			{
+				if (tmp_distance < distance)
+				{
+					distance = tmp_distance;
+					best_candidate = this;
+					break;
+				}
+			}
+		}
+	}
+}
+//-------------------------------------------------------------------
+
 
 void GameObject::SendAllMeshesToDraw()
 {

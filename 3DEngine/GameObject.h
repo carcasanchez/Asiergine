@@ -69,10 +69,10 @@ public:
 	}
 
 	void CheckTriangleCollision(math::LineSegment &l, float& distance, GameObject* &best_candidate);
-
 	GameObject* FindChildByID(uint uid) const;
-	
 	void CheckMouseRayCollision(math::LineSegment &l, float& distance, GameObject* &best_candidate);
+	
+	
 	
 
 	math::AABB bounding_box = math::AABB(float3::zero, float3::zero);
@@ -85,10 +85,9 @@ private:
 	std::string name;
 
 	std::vector<Component*> components;
-
 	
 	math::AABB transformed_bounding_box;
-
 	uint UID = 0;
+
 
 };

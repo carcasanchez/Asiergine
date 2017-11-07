@@ -42,10 +42,8 @@ void ComponentCamera::Update(float real_dt, float game_dt)
 		if (t)
 		{
 			frustum.pos = ((CompTransform*)t)->GetTranslation();
-
-			frustum.front = ((CompTransform*)t)->GetMatrix().Row3(2);
-
-			frustum.up = ((CompTransform*)t)->GetMatrix().Row3(1);
+			frustum.front = ((CompTransform*)t)->GetGlobalTransform().Row3(2);
+			frustum.up = ((CompTransform*)t)->GetGlobalTransform().Row3(1);
 		}
 		
 		App->renderer3D->SetBoxToDraw(&frustum);
