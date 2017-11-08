@@ -34,7 +34,7 @@ ComponentCamera::~ComponentCamera(){}
 
 void ComponentCamera::Update(float real_dt, float game_dt)
 {
-	if (IsActive() == true && deleted == false)
+	if (IsActive() == true)
 	{
 		aspect_ratio = App->window->GetAspectRatio();
 

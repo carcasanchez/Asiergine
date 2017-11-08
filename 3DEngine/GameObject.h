@@ -85,7 +85,6 @@ private:
 	std::string name;
 
 	std::vector<Component*> components;
-	std::vector<Component*>* components_to_erase;
 
 	
 	math::AABB transformed_bounding_box;
