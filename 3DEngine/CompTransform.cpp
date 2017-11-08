@@ -165,19 +165,17 @@ void CompTransform::OnEditor()
 			Quat new_q; 								
 			trs_matrix.Decompose(new_pos, new_q, new_scale);
 					
-			SetTranslation(new_pos.x, new_pos.y, new_pos.z);
-
-			if (new_scale.Equals(scale) == false)
-			{
+			if(mCurrentGizmoOperation==ImGuizmo::TRANSLATE)
+				SetTranslation(new_pos.x, new_pos.y, new_pos.z);
+			if (mCurrentGizmoOperation == ImGuizmo::SCALE)
 				SetScale(new_scale.x, new_scale.y, new_scale.z);
-			}
-
-			if (new_q.Equals(rotation) == false)
+			if (mCurrentGizmoOperation == ImGuizmo::ROTATE)
 			{
-				rot_in_euler = new_q.ToEulerXYZ();
+				rot_in_euler = new_q.ToEulerXYZ()*RADTODEG;
 				SetRotation(new_q);
 			}
-			
+
+				
 		}
 		//--------------------------------------------------------------------
 
