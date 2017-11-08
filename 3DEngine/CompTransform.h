@@ -33,9 +33,12 @@ public:
 	}
 
 
-	float4x4 GetParentTransform();
+	void RefreshMatrices();
 
 private:
+
+	float4x4 GetParentTransform();
+
 	math::float3 translation;
 	math::float3 scale;
 	math::Quat rotation;

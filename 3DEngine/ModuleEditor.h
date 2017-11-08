@@ -76,6 +76,21 @@ public:
 		selection_locked = false;
 	}
 	
+	void LockGizmos()
+	{
+		gizmos_locked = true;
+	}
+
+	void UnLockGizmos()
+	{
+		gizmos_locked = false;
+	}
+
+	bool AreGizmosLocked() const
+	{
+		return gizmos_locked;
+	}
+
 private:
 
 	AppConsole console;
@@ -146,6 +161,7 @@ private:
 	bool bake_menu_open = false;
 	bool input_locked = false;
 	bool selection_locked = false;
+	bool gizmos_locked = false;
 	bool selected = false;
 
 	GameObject* selected_object = nullptr;

@@ -304,6 +304,8 @@ void GameObject::CheckMouseRayCollision(math::LineSegment &l, float& distance, G
 
 }
 
+
+
 void GameObject::CheckTriangleCollision(math::LineSegment &line, float& distance, GameObject* &best_candidate)
 {
 	CompTransform* transf = (CompTransform*)GetComponentByType(COMPONENT_TRANSFORM);
