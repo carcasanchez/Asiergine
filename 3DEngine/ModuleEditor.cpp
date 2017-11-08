@@ -189,6 +189,7 @@ void ModuleEditor::ManagePlayAppOptions()
 		if (ImGui::Button("Stop"))
 		{
 			App->StopApp();
+			App->scene->scene_quadtree.Calculate();
 		}
 
 		ImGui::SameLine();

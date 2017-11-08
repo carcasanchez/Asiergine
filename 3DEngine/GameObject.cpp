@@ -395,6 +395,7 @@ void GameObject::OnEditor()
 	if (ImGui::Checkbox("Static", &obj_static))
 	{
 		SetStatic(obj_static, this);
+		App->scene->scene_quadtree.Calculate();
 	}
 
 	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); it++)
