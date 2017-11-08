@@ -410,15 +410,37 @@ void GameObject::OnEditor()
 				if (it + 1 != components.end())
 					std::iter_swap(it, it + 1);
 			}
-			ImGui::SameLine();
-			if (ImGui::Button("Delete Component"))
+			if ((*it)->GetType() != COMPONENT_TRANSFORM)
 			{
-				(*it)->deleted = true;
-				ImGui::PopID();
-				break;
+				ImGui::SameLine();
+				if (ImGui::Button("Delete Component"))
+				{
+					(*it)->deleted = true;
+					ImGui::PopID();
+					break;
+				}
 			}
 			(*it)->OnEditor();
 		}
 		ImGui::PopID();
 	}
+	if (ImGui::Button("CREATE COMPONENT"))	
+		ImGui::OpenPopup("CREATE COMPONENT");
+	if (ImGui::BeginPopup("CREATE COMPONENT"))
+	{
+		if (ImGui::MenuItem("Camera"))
+		{
+
+		}
+		if (ImGui::MenuItem("Material"))
+		{
+
+		}
+		if (ImGui::MenuItem("Mesh"))
+		{
+
+		}
+		ImGui::EndPopup();
+	}
+	
 }
