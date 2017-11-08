@@ -8,6 +8,8 @@ public:
 	CompTransform(GameObject* game_object);
 	~CompTransform() {}
 
+	void Update(float real_dt, float game_dt);
+
 	math::float3 GetTranslation();
 	void SetTranslation(float x, float y, float z);
 
@@ -17,21 +19,25 @@ public:
 	math::Quat GetRotation();
 	void SetRotation(Quat rot);
 
+
 	void OnEditor();
 	bool IsActive() { return active; }
-	void Update(float real_dt, float game_dt);
+	
 
-	const float* GetMatrixPtr();
-	float4x4 GetGlobalTransform()
+	const float* GetMatrixPtr() const;
+	float4x4 GetGlobalTransform() const
 	{
 		return matrix;
 	}
 
-	float4x4 GetLocalTransform()
+	float4x4 GetLocalTransform() const
 	{
 		return local_matrix;
 	}
 
+	float4x4 GetParentTransform() const;
+	float4x4 GetAllParentTransform() const;
+	
 
 	void RefreshMatrices();
 
@@ -42,7 +48,8 @@ public:
 
 private:
 
-	float4x4 GetParentTransform();
+	float4x4 UpdateParentTransform();
+
 
 	math::float3 translation;
 	math::float3 scale;

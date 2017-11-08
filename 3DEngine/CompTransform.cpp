@@ -15,6 +15,11 @@ CompTransform::CompTransform(GameObject * game_object):Component(game_object)
 	rot_in_euler = rotation.ToEulerXYZ()* RADTODEG;
 }
 
+void CompTransform::Update(float real_dt, float game_dt)
+{
+	RefreshMatrices();
+}
+
 math::float3 CompTransform::GetTranslation()
 {
 	return translation;
@@ -25,7 +30,7 @@ void CompTransform::SetTranslation(float x, float y, float z)
 	translation.x = x;
 	translation.y = y;
 	translation.z = z;
-	RefreshMatrices();
+
 }
 
 math::float3 CompTransform::GetScale()
@@ -38,7 +43,7 @@ void CompTransform::SetScale(float x, float y, float z)
 	scale.x = x;
 	scale.y = y;
 	scale.z = z;
-	RefreshMatrices();
+
 }
 
 math::Quat CompTransform::GetRotation()
@@ -49,7 +54,7 @@ math::Quat CompTransform::GetRotation()
 void CompTransform::SetRotation(Quat rot)
 {
 	rotation = rot;
-	RefreshMatrices();
+
 }
 
 
@@ -63,14 +68,12 @@ void CompTransform::OnEditor()
 		float z = GetTranslation().z;
 		float location[3] = { x, y, z };
 
-
 		float drag_speed = 0.1;
 
 		if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT)
 		{
 			drag_speed = 1;
 		}
-
 
 		ImGui::TextWrapped("Translation: ");
 		ImGui::SameLine();
@@ -111,17 +114,31 @@ void CompTransform::OnEditor()
 
 		//GUIZMOS
 
+
 		if (App->editor->AreGizmosLocked())
 			ImGuizmo::Enable(false);
 		else ImGuizmo::Enable(true);
 
 		static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::ROTATE);
-		static ImGuizmo::MODE mCurrentGizmoMode(ImGuizmo::LOCAL);
-		if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
+		static ImGuizmo::MODE mCurrentGizmoMode(ImGuizmo::WORLD);
+		
+		static bool local_opt = false;
+
+		ImGui::Separator();
+		if (ImGui::Checkbox("Local", &local_opt))
+		{
+			if(local_opt)
+				mCurrentGizmoMode = ImGuizmo::LOCAL;
+			else mCurrentGizmoMode = ImGuizmo::WORLD;
+		}
+
+		if (ImGui::Button("Translate") || App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 			mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
-		if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
+		ImGui::SameLine();			
+		if (ImGui::Button("Rotate") || App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
 			mCurrentGizmoOperation = ImGuizmo::ROTATE;
-		if (App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN)
+		ImGui::SameLine();
+		if (ImGui::Button("Scale") || App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN)
 			mCurrentGizmoOperation = ImGuizmo::SCALE;
 			
 	
@@ -135,18 +152,19 @@ void CompTransform::OnEditor()
 		proj_matrix.Transpose();
 
 
-		float4x4 trs_matrix = local_matrix;
+		float4x4 trs_matrix = matrix;
 		ImGuizmo::Manipulate(view_matrix.ptr(), proj_matrix.ptr(), mCurrentGizmoOperation, mCurrentGizmoMode, trs_matrix.ptr());
 
 		if (ImGuizmo::IsUsing())
-		{				
+		{					
 			trs_matrix.Transpose();
+			trs_matrix = GetParentTransform().Transposed().Inverted() * trs_matrix;
+
 			float3 new_pos;
 			float3 new_scale;
 			Quat new_q; 								
 			trs_matrix.Decompose(new_pos, new_q, new_scale);
-				
-	
+					
 			SetTranslation(new_pos.x, new_pos.y, new_pos.z);
 
 			if (new_scale.Equals(scale) == false)
@@ -173,17 +191,29 @@ void CompTransform::OnEditor()
 	}
 }
 
-void CompTransform::Update(float real_dt, float game_dt)
-{
-}
 
+
+float4x4 CompTransform::GetParentTransform() const
+{
+	GameObject* g = game_object->GetParent();
+	float4x4 parent_transform = float4x4::identity;
+
+	if (g != nullptr)
+	{
+		CompTransform* c_transform = ((CompTransform*)g->GetComponentByType(COMPONENT_TRANSFORM));
+		if (c_transform)
+			parent_transform = c_transform->GetGlobalTransform();
+
+		return parent_transform;
+	}	
+}
 
 void CompTransform::RefreshMatrices()
 {
 	float4x4 rotation_matrix = float4x4::FromQuat(rotation);
 	local_matrix = float4x4::FromTRS(translation, rotation_matrix, scale);
 	local_matrix.Transpose();
-	matrix = GetParentTransform();
+	matrix = UpdateParentTransform();
 
 	std::vector<GameObject*> childrens = game_object->GetChildrens();
 
@@ -197,25 +227,34 @@ void CompTransform::RefreshMatrices()
 
 
 
-const float * CompTransform::GetMatrixPtr()
+const float * CompTransform::GetMatrixPtr() const
 {
 	return (float*) matrix.v;
 }
 
-float4x4 CompTransform::GetParentTransform()
+float4x4 CompTransform::UpdateParentTransform()
 {
-	 GameObject* g = game_object->GetParent();
-	 float4x4 parent_transform = float4x4::identity;
-	
-	if (g != nullptr)
+	return local_matrix * GetParentTransform();
+}
+
+
+float4x4 CompTransform::GetAllParentTransform() const
+{
+	float4x4 all_parent_trsf = float4x4::identity;
+
+	GameObject* parent = game_object->GetParent();
+
+	if (parent)
 	{
-		 CompTransform* c_transform = ((CompTransform*)g->GetComponentByType(COMPONENT_TRANSFORM));
-		 if(c_transform)
-			 parent_transform = c_transform->GetParentTransform();
+				CompTransform* c_transform = ((CompTransform*)parent->GetComponentByType(COMPONENT_TRANSFORM));
+				if (c_transform)
+				{
+					all_parent_trsf = c_transform->GetLocalTransform().Transposed();
+					all_parent_trsf = c_transform->GetAllParentTransform() * all_parent_trsf;
+				}
 	}
-
-
-	return local_matrix * parent_transform;
+	
+	return all_parent_trsf;
 }
 
 
