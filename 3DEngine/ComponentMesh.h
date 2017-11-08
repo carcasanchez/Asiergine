@@ -1,11 +1,12 @@
 #pragma once
 #include "Component.h"
 #include "Globals.h"
+#include "ResourceMesh.h"
 
 class ComponentMesh : public Component
 {
 public:
-	ComponentMesh(GameObject* game_object, float* ver, uint* ind, uint num_vert, uint num_ind, float* normals, float* texture_coords = nullptr);
+	ComponentMesh(GameObject* game_object);
 	~ComponentMesh();
 
 	std::string name;
@@ -15,14 +16,20 @@ public:
 	void Update(float real_dt, float game_dt);
 	void OnEditor();
 
-	void SetNormals(float* n) { normals = n; }
-
-	int GetNumVertices() { return num_vertices; }
-	int GetNumIndices() { return num_indices; }
-	const float* GetVertices() { return vertices; }
-	const uint* GetIndices() { return indices; }
-
-	bool IsActive() { return active; }
+	void SetMesh(ResourceMesh* m)
+	{
+		if(mesh)
+			mesh->DecreaseInstancies();
+		mesh = m;
+		if (mesh)
+			mesh->IncreaseInstancies();
+	}
+		
+	int GetNumVertices() const { 	return mesh ? mesh->GetNumVertices():0;	}
+	int GetNumIndices() const { return mesh ? mesh->GetNumIndices() : 0; }
+	const float* GetVertices() const { return mesh ? mesh->GetVertices() : nullptr; }
+	const uint* GetIndices() const { return mesh ? mesh->GetIndices() : nullptr;}
+	bool IsActive() const { return active; }
 
 	//Scene serialization------------------------
 	uint PrepareToSave() const;
@@ -30,18 +37,6 @@ public:
 
 private:
 
-
-	uint id_vertices = 0;  //id in VRAM
-	uint num_vertices = 0;
-	float* vertices = nullptr;
-
-	uint id_indices = 0;  //id in VRAM
-	uint num_indices = 0;
-	uint* indices = nullptr;
-
-	float* normals = nullptr;
-
-	uint text_coord_id = 0;
-	float* texture_coords = nullptr;
-
+	ResourceMesh* mesh = nullptr;
+	
 };

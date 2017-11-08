@@ -1,8 +1,7 @@
 #pragma once
 #include "Module.h"
 #include <map>
-
-class Resource;
+#include "Resource.h"
 
 class ModuleResourceManager :
 	public Module
@@ -12,8 +11,11 @@ public:
 	~ModuleResourceManager();
 
 	bool Init(const JSON_Object* config_data);
+	bool CleanUp();
 
 	Resource* GetResource(uint id);
+
+	Resource* CreateResource(Resource::RESOURCE_TYPE type);
 
 private:
 

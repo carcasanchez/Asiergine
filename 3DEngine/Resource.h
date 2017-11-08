@@ -25,6 +25,17 @@ public:
 		return UID;
 	}
 
+	void IncreaseInstancies()
+	{
+		instancies++;
+	}
+
+	void DecreaseInstancies()
+	{
+		if(instancies>0)
+			instancies--;
+	}
+
 	bool HasInstancies() const
 	{
 		return instancies > 0;

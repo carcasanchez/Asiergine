@@ -8,6 +8,9 @@ class ComponentMesh;
 class ComponentMaterial;
 class ComponentCamera;
 
+class ResourceMesh;
+class ResourceTexture;
+
 enum ComponentType;
 
 class GameObject
@@ -32,7 +35,7 @@ public:
 	void SendAllMeshesToDraw();
 
 	CompTransform* CreateComponent_Transform(float3 trans = float3(0, 0, 0), float3 scaling = float3(1, 1, 1), Quat rot = Quat::identity, uint UID = 0);
-	ComponentMesh* CreateComponent_Mesh(const char* name, float* ver, uint* ind, uint num_vert, uint num_ind, float* normals, float* texture_coords = nullptr, uint UID = 0);
+	ComponentMesh* CreateComponent_Mesh(const char* name, ResourceMesh* m = nullptr, uint UID = 0);
 	ComponentMaterial* CreateComponent_Material(uint texture_id, const char* name, uint UID = 0);
 	ComponentCamera* CreateComponent_Camera(float near_dist, float far_dist, bool active = false, uint UID = 0);
 

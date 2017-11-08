@@ -172,21 +172,22 @@ CompTransform * GameObject::CreateComponent_Transform(float3 trans , float3 scal
 	return new_transform;
 }
 
-ComponentMesh * GameObject::CreateComponent_Mesh(const char* m_name, float * ver, uint * ind, uint num_vert, uint num_ind, float* normals, float * texture_coords, uint UID)
+ComponentMesh * GameObject::CreateComponent_Mesh(const char* m_name, ResourceMesh* m, uint UID)
 {
-	ComponentMesh* new_mesh = new ComponentMesh(this, ver, ind, num_vert, num_ind, normals, texture_coords);
+	ComponentMesh* new_mesh = new ComponentMesh(this);
 	new_mesh->name = m_name;
+	new_mesh->SetMesh(m);
 
 	//Adapt bounding box to geometry-----------------
 	std::vector <float3> vertex_array;
-
+	const float* ver = new_mesh->GetVertices();
+	uint num_vert = new_mesh->GetNumVertices();
 
 	for (int i = 0; i < num_vert*3; i += 3)
 		vertex_array.push_back(float3(ver[i], ver[i + 1], ver[i + 2]));
 
 	bounding_box.Enclose(&vertex_array[0], vertex_array.size());
-
-
+	
 	if (UID > 0)
 		new_mesh->SetID(UID);
 

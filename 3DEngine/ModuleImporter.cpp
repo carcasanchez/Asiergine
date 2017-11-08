@@ -9,6 +9,9 @@
 #include "ComponentCamera.h"
 #include "ModuleScene.h"
 
+#include "ModuleResourceManager.h"
+#include "ResourceMesh.h"
+
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"
 #include "Assimp/include/postprocess.h"
@@ -628,7 +631,11 @@ void ModuleImporter::LoadMeshFromOwnFormat(const char * name, GameObject* obj) c
 
 	LOG("Loaded %s mesh successfully", name);
 	delete[] data;
-	obj->CreateComponent_Mesh(name, vert, ind, num_vert, num_ind, normals, texture_coord);
+
+	//Create New resource
+	ResourceMesh* resource_mesh = (ResourceMesh*)App->resource_m->CreateResource(Resource::MESH);
+	resource_mesh->SetData(vert, ind, num_vert, num_ind, normals, texture_coord);
+	obj->CreateComponent_Mesh(name, resource_mesh);
 }
 
 bool ModuleImporter::SaveSceneToOwnFormat(const char* name)

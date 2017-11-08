@@ -10,101 +10,30 @@
 #include "ComponentMaterial.h"
 #include "CompTransform.h"
 
-ComponentMesh::ComponentMesh(GameObject* game_object, float* ver, uint* ind, uint num_vert, uint num_ind, float* normals, float* texture_coords): vertices(ver), indices(ind), num_vertices(num_vert), num_indices(num_ind), Component(game_object), normals(normals), texture_coords(texture_coords)
+ComponentMesh::ComponentMesh(GameObject* game_object): Component(game_object)
 {
 	type = COMPONENT_MESH;
-
-	//alloc vertices
-	glGenBuffers(1, (uint*)&(id_vertices));
-	glBindBuffer(GL_ARRAY_BUFFER, id_vertices);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_vertices * 3, vertices, GL_STATIC_DRAW);
-	
-	//alloc indices
-	glGenBuffers(1, (uint*)&(id_indices));
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * num_indices, indices, GL_STATIC_DRAW);
-		
-	if (texture_coords != nullptr)
-	{
-		//alloc texture coords
-		glGenBuffers(1, (uint*)&(text_coord_id));
-		glBindBuffer(GL_ARRAY_BUFFER, text_coord_id);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_vertices * 2, texture_coords, GL_STATIC_DRAW);
-	}
-
-	
 }
 
 ComponentMesh::~ComponentMesh()
 {
-	delete[] vertices;
-	delete[] indices;
-	delete[] normals;
-	delete[] texture_coords;
-
-	glDeleteBuffers(1, &text_coord_id);
-	glDeleteBuffers(1, &id_vertices);
-	glDeleteBuffers(1, &id_indices);
 }
 
 void ComponentMesh::Draw()
 {
-	if (IsActive() == true)
+	if (IsActive() == true && mesh)
 	{
-		//Bind vertices
-		glEnableClientState(GL_VERTEX_ARRAY);
-
-
-		Component* transform = game_object->GetComponentByType(COMPONENT_TRANSFORM);
+		CompTransform* transform = (CompTransform*)game_object->GetComponentByType(COMPONENT_TRANSFORM);
+		ComponentMaterial* mat = (ComponentMaterial*)game_object->GetComponentByType(COMPONENT_MATERIAL);
+		
+		const float* t_matrix = nullptr;
+		uint text_id = 0;
 		if (transform != nullptr && transform->IsActive())
-		{
-			glMatrixMode(GL_MODELVIEW);
-			glPushMatrix();
-			glMultMatrixf(((CompTransform*)transform)->GetMatrixPtr());
-		}
+			t_matrix = transform->GetMatrixPtr();
+		if (mat != nullptr && mat->IsActive())
+			text_id = mat->GetTextureID();
 		
-
-		glBindBuffer(GL_ARRAY_BUFFER, id_vertices);
-		glVertexPointer(3, GL_FLOAT, 0, NULL);
-
-		Component* mat = game_object->GetComponentByType(COMPONENT_MATERIAL);
-		
-			if (mat != nullptr && mat->IsActive())
-			{
-				glBindTexture(GL_TEXTURE, ((ComponentMaterial*)mat)->GetTextureID());
-				if (text_coord_id != 0)
-				{
-					//Bind textures
-					glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-					glBindTexture(GL_TEXTURE_2D, 0);
-					glBindTexture(GL_TEXTURE_2D, ((ComponentMaterial*)mat)->GetTextureID());
-					glBindBuffer(GL_ARRAY_BUFFER, text_coord_id);
-					glTexCoordPointer(2, GL_FLOAT, 0, NULL);
-				}
-			}
-		
-
-		//Bind indices and draw
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);
-		glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
-
-
-		glBindTexture(GL_TEXTURE_2D, 0);
-
-
-
-		glDisableClientState(GL_VERTEX_ARRAY);
-		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-
-		if (App->scene->debug_normals && normals != nullptr)
-		{
-			DebugDraw();
-		}
-
-		if (transform != nullptr)
-		{
-			glPopMatrix();
-		}
+		mesh->Draw(t_matrix, text_id);
 	}
 
 }
@@ -113,20 +42,7 @@ void ComponentMesh::DebugDraw()
 {
 	glEnableClientState(GL_VERTEX_ARRAY);
 
-	//Draw Normals
-	glBindBuffer(GL_ARRAY_BUFFER, id_vertices);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);
-		for (uint i = 0; i < num_vertices * 3; i += 3)
-		{
-			glColor3f(3.0f, 0.0f, 1.0f);
-			glBegin(GL_LINES);
-			glVertex3f(vertices[i], vertices[i + 1], vertices[i + 2]);
-			glVertex3f(vertices[i] + normals[i], vertices[i + 1] + normals[i + 1], vertices[i + 2] + normals[i + 2]);
-			glEnd();
-			glColor3f(1.0f, 1.0f, 1.0f);
-		}
-	glVertexPointer(3, GL_FLOAT, 0, NULL);
-	glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
+	
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 }
