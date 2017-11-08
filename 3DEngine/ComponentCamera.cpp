@@ -81,3 +81,31 @@ void ComponentCamera::OnEditor()
 	}
 }
 
+uint ComponentCamera::PrepareToSave()
+{
+	uint size = 0;
+
+	size += sizeof(bool); //Active
+	size += sizeof(float) * 2; //Far and near distance
+	return size;
+}
+
+void ComponentCamera::Save(char *& cursor)
+{	
+		float n_distance = frustum.nearPlaneDistance;
+		float f_distance = frustum.farPlaneDistance;
+		bool active = IsActive();
+
+		uint size_of = sizeof(float);
+		memcpy(cursor, &n_distance, size_of);
+		cursor += size_of;
+
+		memcpy(cursor, &f_distance, size_of);
+		cursor += size_of;
+
+		size_of = sizeof(bool);
+		memcpy(cursor, &active, size_of);
+		cursor += size_of;
+	
+}
+

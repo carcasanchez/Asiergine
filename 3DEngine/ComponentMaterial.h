@@ -19,6 +19,10 @@ public:
 
 	std::string texture_name;
 
+	//Scene serialization------------------------
+	uint PrepareToSave() const;
+	void Save(char* &cursor) const;
+
 private:
 	uint texture_id = 0;
 	bool change_text_window = false;

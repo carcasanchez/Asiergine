@@ -35,6 +35,11 @@ public:
 
 	void RefreshMatrices();
 
+	//Scene serialization------------------------
+	uint PrepareToSave() const;
+	void Save(char* &cursor) const;
+
+
 private:
 
 	float4x4 GetParentTransform();

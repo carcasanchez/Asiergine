@@ -79,3 +79,24 @@ void ComponentMaterial::OnEditor()
 		}
 	}
 }
+
+uint ComponentMaterial::PrepareToSave() const
+{
+	uint size = 0;
+
+	size += sizeof(uint); // Length of texture name length
+	size += texture_name.length(); // Length of texture name
+	return size;
+}
+
+void ComponentMaterial::Save(char *& cursor) const
+{
+	uint texture_name_size = texture_name.length();
+	uint size_of = sizeof(uint);
+	memcpy(cursor, &texture_name_size, size_of);
+	cursor += size_of;
+
+	size_of = texture_name_size;
+	memcpy(cursor, texture_name.data(), size_of);
+	cursor += size_of;
+}

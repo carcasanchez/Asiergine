@@ -39,6 +39,11 @@ public:
 
 	virtual void OnEditor() {}
 
+	//Scene serialization----------------------------------- 
+	virtual uint PrepareToSave() const { return 0; };
+	virtual void Save (char* &cursor) const {};
+	//----------------------------------------------------
+
 	bool active = true;
 	bool deleted = false;
 protected:

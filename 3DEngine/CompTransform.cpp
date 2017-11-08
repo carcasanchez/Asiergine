@@ -175,18 +175,6 @@ void CompTransform::OnEditor()
 
 void CompTransform::Update(float real_dt, float game_dt)
 {
-	if (GetGameObject()->IsStatic() == false) {
-		translation.x += 0.001 * game_dt;
-	}
-
-	float4x4 rotation_matrix = float4x4::FromQuat(rotation);
-	local_matrix = float4x4::FromTRS(translation, rotation_matrix, scale);
-	local_matrix.Transpose();
-	matrix = GetParentTransform();
-
-	//if (GetGameObject()->IsStatic() == false) {
-	//	RefreshMatrices();
-	//}
 }
 
 
@@ -208,6 +196,7 @@ void CompTransform::RefreshMatrices()
 }
 
 
+
 const float * CompTransform::GetMatrixPtr()
 {
 	return (float*) matrix.v;
@@ -227,4 +216,54 @@ float4x4 CompTransform::GetParentTransform()
 
 
 	return local_matrix * parent_transform;
+}
+
+
+//-------------------------------------------------------------
+uint CompTransform::PrepareToSave() const
+{
+	uint size = 0;
+
+	//Translation
+	size += sizeof(float) * 3;
+	//Rotation
+	size += sizeof(float) * 4;
+	//Scale
+	size += sizeof(float) * 3;
+	
+	return size;
+}
+
+void CompTransform::Save(char *& cursor) const
+{	
+	uint size_of = sizeof(float);
+
+	//Copy position
+	memcpy(cursor, &translation.x, size_of);
+	cursor += size_of;
+	memcpy(cursor, &translation.y, size_of);
+	cursor += size_of;
+	memcpy(cursor, &translation.z, size_of);
+	cursor += size_of;
+	
+	//Copy scale
+	memcpy(cursor, &scale.x, size_of);
+	cursor += size_of;
+	memcpy(cursor, &scale.y, size_of);
+	cursor += size_of;
+	memcpy(cursor, &scale.z, size_of);
+	cursor += size_of;
+	
+	//Copy rot
+	memcpy(cursor, &rotation.x, size_of);
+	cursor += size_of;
+	size_of = sizeof(float);
+	memcpy(cursor, &rotation.y, size_of);
+	cursor += size_of;
+	size_of = sizeof(float);
+	memcpy(cursor, &rotation.z, size_of);
+	cursor += size_of;
+	size_of = sizeof(float);
+	memcpy(cursor, &rotation.w, size_of);
+	cursor += size_of;
 }

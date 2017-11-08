@@ -146,3 +146,34 @@ void ComponentMesh::OnEditor()
 		ImGui::TextWrapped("Number of vertices: %i", GetNumVertices());
 	}
 }
+
+
+//----------------------------------------------------------
+uint ComponentMesh::PrepareToSave()const
+{
+	uint size = 0;
+	size += sizeof(uint); //UID
+	size += sizeof(uint); //size of mesh name
+	size += sizeof(char) * name.length(); //mesh name
+
+	return size;
+}
+
+void ComponentMesh::Save(char *& cursor) const
+{
+	//copy mesh UID
+	uint size_of = sizeof(uint);
+	memcpy(cursor, &UID, size_of);
+	cursor += size_of;
+
+	//copy mesh name size
+	uint size_of_name = name.length();
+	size_of = sizeof(uint);
+	memcpy(cursor, &size_of_name, size_of);
+	cursor += size_of;
+
+	//copy mesh name
+	size_of = size_of_name;
+	memcpy(cursor, name.data(), size_of);
+	cursor += size_of;
+}

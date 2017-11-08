@@ -354,7 +354,10 @@ void ModuleCamera3D::CalculatePickRay()
 			App->editor->SelectObject(picked_obj);
 		else
 		{
-		//	App->editor->UnselectAll();
+			App->editor->UnselectAll();
 		}
 	}
 }
+
+
+

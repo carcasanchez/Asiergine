@@ -42,6 +42,10 @@ public:
 
 	math::Frustum frustum;
 
+	//Scene serialization--------------------------------------------------
+	uint PrepareToSave();
+	void Save(char* &cursor);
+
 private:
 	float aspect_ratio;
 };

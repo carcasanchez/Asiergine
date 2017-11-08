@@ -694,7 +694,7 @@ uint ModuleImporter::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>>
 			    //  UID of transform - pos - scale - rot 
 				//  num of meshes - [UID of mesh - mesh name size - mesh name]
 				//  UID of material - size of texture name - texture name
-				//UID of camera - near dist - far dist
+				//UID of camera - near dist - far dist - active
 
 	//STORE SIZE-------------------------------------------------------------------
 	uint size = 1;
@@ -715,16 +715,14 @@ uint ModuleImporter::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>>
 	size += sizeof(uint);
 	if (transform != nullptr)
 	{		
-		size += sizeof(float) * 10;
+		size += transform->PrepareToSave();
 	}	
 
 	//Meshes
 	size += sizeof(uint); //num of meshes
 	for (int i = 0; i < meshes.size(); i++)
 	{
-		size += sizeof(uint); //UID
-		size += sizeof(uint); //size of mesh name
-		size += sizeof(char) * ((ComponentMesh*)(meshes[i]))->name.length(); //mesh name
+		size += meshes[i]->PrepareToSave();
 	}
 
 	//Material
@@ -732,8 +730,7 @@ uint ModuleImporter::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>>
 	ComponentMaterial* mat = (ComponentMaterial*)to_save->GetComponentByType(COMPONENT_MATERIAL);	
 	if (mat != nullptr)
 	{
-		size += sizeof(uint);
-		size += mat->texture_name.length();
+		size += mat->PrepareToSave();
 	}
 
 	//Camera
@@ -741,8 +738,7 @@ uint ModuleImporter::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>>
 	ComponentCamera* cam = (ComponentCamera*)to_save->GetComponentByType(COMPONENT_CAMERA);
 	if (cam != nullptr)
 	{
-		size += sizeof(bool);
-		size += sizeof(float) *2;
+		size += cam->PrepareToSave();
 	}
 	
 	//COPY DATA------------------------------------------------------
@@ -783,47 +779,14 @@ uint ModuleImporter::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>>
 	size_of = sizeof(uint);
 	memcpy(cursor, &transformID, size_of);
 	cursor += size_of;
-	
-	
 
-	//Copy pos
+	//Copy transform
 	if (transform != nullptr)
 	{
-		math::float3 pos = transform->GetTranslation();
-		size_of = sizeof(float);
-		memcpy(cursor, &pos.x, size_of);
-		cursor += size_of;
-		memcpy(cursor, &pos.y, size_of);
-		cursor += size_of;
-		memcpy(cursor, &pos.z, size_of);
-		cursor += size_of;
-
-
-		//Copy scale
-		math::float3 scale = transform->GetScale();
-		memcpy(cursor, &scale.x, size_of);
-		cursor += size_of;
-		memcpy(cursor, &scale.y, size_of);
-		cursor += size_of;
-		memcpy(cursor, &scale.z, size_of);
-		cursor += size_of;
-
-
-		//Copy rot
-		math::Quat rot = transform->GetRotation();
-		size_of = sizeof(float);
-		memcpy(cursor, &rot.x, size_of);
-		cursor += size_of;
-		size_of = sizeof(float);
-		memcpy(cursor, &rot.y, size_of);
-		cursor += size_of;
-		size_of = sizeof(float);
-		memcpy(cursor, &rot.z, size_of);
-		cursor += size_of;
-		size_of = sizeof(float);
-		memcpy(cursor, &rot.w, size_of);
-		cursor += size_of;
+		transform->Save(cursor);
 	}
+
+
 
 	//Copy meshes
 	uint num_of_meshes = meshes.size();
@@ -833,22 +796,7 @@ uint ModuleImporter::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>>
 
 	for (int i = 0; i < num_of_meshes; i++)
 	{
-		//copy mesh UID
-		uint meshID = ((ComponentMesh*)(meshes[i]))->GetID();
-		size_of = sizeof(uint);
-		memcpy(cursor, &meshID, size_of);
-		cursor += size_of;
-
-		//copy mesh name size
-		uint size_of_name = ((ComponentMesh*)(meshes[i]))->name.length();
-		size_of = sizeof(uint);
-		memcpy(cursor, &size_of_name, size_of);
-		cursor += size_of;
-
-		//copy mesh name
-		size_of = size_of_name;
-		memcpy(cursor, ((ComponentMesh*)(meshes[i]))->name.data(), size_of);
-		cursor += size_of;
+		meshes[i]->Save(cursor);
 	}
 
 	
@@ -863,14 +811,7 @@ uint ModuleImporter::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>>
 
 	if (mat != nullptr)
 	{
-		uint texture_name_size = mat->texture_name.length();
-		size_of = sizeof(uint);
-		memcpy(cursor, &texture_name_size, size_of);
-		cursor += size_of;
-
-		size_of = texture_name_size;
-		memcpy(cursor, mat->texture_name.data(), size_of);
-		cursor += size_of;
+		mat->Save(cursor);
 	}
 
 	//copy cam settings
@@ -884,23 +825,9 @@ uint ModuleImporter::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>>
 
 	if (cam != nullptr)
 	{
-		float n_distance = cam->GetNearDistance();
-		float f_distance = cam->GetFarDistance();
-		bool active = cam->IsActive();
-
-		size_of = sizeof(float);
-		memcpy(cursor, &n_distance, size_of);
-		cursor += size_of;
-
-		memcpy(cursor, &f_distance, size_of);
-		cursor += size_of;
-
-		size_of = sizeof(bool);
-		memcpy(cursor, &active, size_of);
-		cursor += size_of;
+		cam->Save(cursor);
 	}
-
-	
+		
 
 	data[size-1] = '\0';
 	std::pair<char*, uint> pair_of_data;

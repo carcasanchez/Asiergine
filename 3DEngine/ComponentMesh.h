@@ -24,6 +24,10 @@ public:
 
 	bool IsActive() { return active; }
 
+	//Scene serialization------------------------
+	uint PrepareToSave() const;
+	void Save(char* &cursor) const;
+
 private:
 
 

@@ -35,7 +35,7 @@ public:
 	//For mouse picking
 	void CalculatePickRay();
 
-
+	
 private:
 
 	void ControlCamera(float dt);
