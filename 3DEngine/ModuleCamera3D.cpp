@@ -208,8 +208,8 @@ void ModuleCamera3D::ControlCamera(float dt)
 		ResetCamera();
 
 	//Adapt camera to geometry in scene
-	/*if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
-		AdaptToGeometry();*/
+	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
+		AdaptToGeometry(App->editor->GetSelectedGameObject());
 	
 }
 
@@ -288,38 +288,15 @@ void ModuleCamera3D::AdaptToGeometry(GameObject* game_object)
 	if (game_object == nullptr)
 		return;
 
-	std::vector<float3> vertices;
-	ComponentMesh* it = (ComponentMesh*)game_object->GetComponentByType(COMPONENT_MESH);
-	
-	if (it == nullptr)
-		return;
+	const AABB* box = game_object->GetTransformedBox();
 
-	//Generate AABBS for each geom in scene
-	math::AABB new_aabb(float3(0, 0, 0), float3(0, 0, 0));
-	std::vector <float3> vertex_array;
+	frustum.pos.x = box->maxPoint.x + 5;
+	frustum.pos.y = box->maxPoint.y + 5;
+	frustum.pos.z = box->maxPoint.z + 5;
 
-	const float* original_vertices = it->GetVertices();
-
-	for (int j = 0; j < it->GetNumVertices() * 3; j += 3)
-	{
-		vertex_array.push_back(float3(original_vertices[j], original_vertices[j + 1], original_vertices[j + 2]));
-	}
-
-	new_aabb.Enclose(&vertex_array[0], it->GetNumVertices());
-
-	//Stores the 8 vertices of the box in a general array
-	for (int j = 0; j < 8; j++)
-	{
-		vertices.push_back(new_aabb.CornerPoint(j));
-	}
-
-	frustum.pos.x = new_aabb.maxPoint.x + 5;
-	frustum.pos.y = new_aabb.maxPoint.y + 5;
-	frustum.pos.z = new_aabb.maxPoint.z + 5;
-
-	pivot_point.x = new_aabb.CenterPoint().x;
-	pivot_point.y = new_aabb.CenterPoint().y;
-	pivot_point.z = new_aabb.CenterPoint().z;
+	pivot_point.x = box->CenterPoint().x;
+	pivot_point.y = box->CenterPoint().y;
+	pivot_point.z = box->CenterPoint().z;
 
 	LookAt(pivot_point);
 }
@@ -336,11 +313,9 @@ void ModuleCamera3D::CalculatePickRay()
 		math::float2 click_pos;
 		click_pos.x = App->input->GetMouseX();
 		click_pos.y = App->input->GetMouseY();
-
-		//TODO: ???????????????????????????????????????????????????????????????????????????????????????????
+	
 		normalized_click_pos.x = -(1.0f - (float(click_pos.x) * 2.0f) / App->window->window_width);
-		normalized_click_pos.y = 1.0f - (float(click_pos.y) * 2.0f) / App->window->window_height;
-		
+		normalized_click_pos.y = 1.0f - (float(click_pos.y) * 2.0f) / App->window->window_height;		
 		
 		pick_ray = frustum.UnProjectLineSegment(normalized_click_pos.x, normalized_click_pos.y);
 

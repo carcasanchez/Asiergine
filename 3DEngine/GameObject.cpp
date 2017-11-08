@@ -10,7 +10,7 @@
 
 GameObject::GameObject(const char* name): name(name)
 {
-	bounding_box.SetNegativeInfinity();
+
 	LCG rand_gen;
 	UID = rand_gen.Int();
 }
@@ -327,22 +327,7 @@ void GameObject::CheckTriangleCollision(math::LineSegment &line, float& distance
 
 
 		for (int j = 0; j < ((ComponentMesh*)meshes[i])->GetNumIndices();)
-		{
-
-
-			/*triangle.a.x = vertices[indices[j]];
-			triangle.a.y = vertices[indices[j] + 1];
-			triangle.a.z = vertices[indices[j] + 2];
-
-			triangle.b.x = vertices[indices[j + 1]];
-			triangle.b.y = vertices[indices[j + 1] + 1];
-			triangle.b.z = vertices[indices[j + 1] + 2];
-
-			triangle.c.x = vertices[indices[j + 2]];
-			triangle.c.y = vertices[indices[j + 2] + 1];
-			triangle.c.z = vertices[indices[j + 2] + 2];*/
-
-			//TODO: ????????????????????????????????????????????????????????????
+		{	
 			triangle.a.Set(&vertices[indices[j++] * 3]); 
 			triangle.b.Set(&vertices[indices[j++] * 3]);
 			triangle.c.Set(&vertices[indices[j++] * 3]);
