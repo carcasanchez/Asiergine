@@ -376,7 +376,15 @@ void GameObject::SendAllMeshesToDraw()
 	}
 }
 
-
+void GameObject::SetStatic(bool obj_static, GameObject* child)
+{
+	std::vector<GameObject*>::iterator it = child->children.begin();
+	for (it; it != child->children.end(); ++it)
+	{
+		SetStatic(obj_static, (*it));
+	}
+	child->obj_static = obj_static;
+}
 
 
 //Editor draw--------------------------------------------------------------------------
@@ -384,7 +392,10 @@ void GameObject::OnEditor()
 {
 	ImGui::TextWrapped("%s", name.c_str());
 	ImGui::Separator();
-	ImGui::Checkbox("Static", &obj_static);
+	if (ImGui::Checkbox("Static", &obj_static))
+	{
+		SetStatic(obj_static, this);
+	}
 
 	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); it++)
 	{
@@ -430,11 +441,11 @@ void GameObject::OnEditor()
 	{
 		if (ImGui::MenuItem("Camera"))
 		{
-
+			CreateComponent_Camera(0.5f, 5.0f, true);
 		}
 		if (ImGui::MenuItem("Material"))
 		{
-
+			
 		}
 		if (ImGui::MenuItem("Mesh"))
 		{

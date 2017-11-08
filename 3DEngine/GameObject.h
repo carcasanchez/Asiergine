@@ -32,6 +32,7 @@ public:
 	std::vector<GameObject*> GetChildrens() const { return children;}
 	void SetParent(GameObject* new_parent);
 	bool IsStatic() const { return obj_static; }
+	void SetStatic(bool obj_static, GameObject* child);
 	void SendAllMeshesToDraw();
 
 	CompTransform* CreateComponent_Transform(float3 trans = float3(0, 0, 0), float3 scaling = float3(1, 1, 1), Quat rot = Quat::identity, uint UID = 0);
