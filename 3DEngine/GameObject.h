@@ -73,7 +73,10 @@ public:
 	void CheckMouseRayCollision(math::LineSegment &l, float& distance, GameObject* &best_candidate);
 	
 
-	
+	void SetStatic(bool s)
+	{
+		obj_static = s;
+	}
 
 	math::AABB bounding_box = math::AABB(float3::zero, float3::zero);
 	std::vector<GameObject*> children;
