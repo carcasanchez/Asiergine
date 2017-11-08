@@ -190,6 +190,18 @@
     <ClCompile Include="3DEngine\imgui\ImGuizmo.cpp">
       <Filter>Source\Tools\imGui</Filter>
     </ClCompile>
+    <ClCompile Include="3DEngine\ModuleResourceManager.cpp">
+      <Filter>Source\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="3DEngine\Resource.cpp">
+      <Filter>Source\Containers\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="3DEngine\ResourceMesh.cpp">
+      <Filter>Source\Containers\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="3DEngine\ResourceTexture.cpp">
+      <Filter>Source\Containers\Resources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3DEngine\Application.h">
@@ -507,6 +519,18 @@
     <ClInclude Include="3DEngine\imgui\ImGuizmo.h">
       <Filter>Source\Tools\imGui</Filter>
     </ClInclude>
+    <ClInclude Include="3DEngine\ModuleResourceManager.h">
+      <Filter>Source\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\Resource.h">
+      <Filter>Source\Containers\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\ResourceMesh.h">
+      <Filter>Source\Containers\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\ResourceTexture.h">
+      <Filter>Source\Containers\Resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -556,6 +580,9 @@
     </Filter>
     <Filter Include="Source\Containers\Components">
       <UniqueIdentifier>{17e0469d-65de-46f4-96f1-8e885b760955}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Containers\Resources">
+      <UniqueIdentifier>{d49042b6-a8e6-475d-acb4-c25dc83940a4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

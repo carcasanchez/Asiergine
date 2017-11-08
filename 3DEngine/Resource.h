@@ -1,0 +1,40 @@
+#pragma once
+#include "Globals.h"
+
+class Resource
+{
+public:
+
+	enum RESOURCE_TYPE
+	{
+		NONE = 0,
+		TEXTURE,
+		MESH
+	};
+
+	Resource(uint uid, RESOURCE_TYPE type);
+	~Resource();
+
+	RESOURCE_TYPE GetType() const
+	{
+		return type;
+	}
+
+	uint GetID() const
+	{
+		return UID;
+	}
+
+	bool HasInstancies() const
+	{
+		return instancies > 0;
+	}
+
+protected:
+	RESOURCE_TYPE type = RESOURCE_TYPE::NONE;
+	uint UID = 0;
+	std::string file;
+	std::string library_file;	
+	uint instancies = 0;
+};
+
