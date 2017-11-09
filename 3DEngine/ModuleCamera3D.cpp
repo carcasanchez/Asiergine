@@ -151,14 +151,14 @@ void ModuleCamera3D::ControlCamera(float dt)
 			//FP control
 			if (x != 0)
 			{
-				Quat rotation_quat = Quat::RotateY(-camera_sensitivity*dt*x);
+				Quat rotation_quat = Quat::RotateY(-camera_sensitivity*dt*x * DEGTORAD);
 				frustum.front = rotation_quat.Transform(frustum.front).Normalized();				
 				frustum.up = rotation_quat.Transform(frustum.up).Normalized();
 			}
 
 			if (y != 0)
 			{
-				Quat rotation_quat = Quat::RotateAxisAngle(frustum.WorldRight(), -camera_sensitivity*dt*y);
+				Quat rotation_quat = Quat::RotateAxisAngle(frustum.WorldRight(), -camera_sensitivity*dt*y * DEGTORAD);
 
 				float3 new_Y_axis = rotation_quat.Transform(frustum.up).Normalized();
 
@@ -180,20 +180,44 @@ void ModuleCamera3D::ControlCamera(float dt)
 }
 	else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)
 	{
-		float3 distance = frustum.pos - pivot_point;
+		if (x != 0)
+		{
 
-		Quat rot_y(frustum.up, -x*camera_sensitivity*dt);
-		Quat rot_x(frustum.WorldRight(), -y*camera_sensitivity*dt);
+			float dist = frustum.pos.Distance(pivot_point);
+			Quat rot;
 
-		//Calculate point around pivot
-		distance = rot_x.Transform(distance);
-		distance = rot_y.Transform(distance);
+			//rotate camera
+			rot.SetFromAxisAngle({ 0,1,0 }, -x*dt*camera_sensitivity * DEGTORAD);
+			frustum.Transform(rot);
 
-		//Place camera in point
-		frustum.pos = distance + pivot_point;
+			//put camera on correct distance
+			frustum.pos = pivot_point - (frustum.front * dist);
+			
+		}
 
-		//Reorient camera to pivot
-		LookAt(pivot_point);
+		if (y != 0)
+		{
+			float dist = frustum.pos.Distance(pivot_point);
+			Quat rot;
+
+			//rotate camera
+			rot.SetFromAxisAngle(frustum.WorldRight(), dt * -y * camera_sensitivity * DEGTORAD);
+			frustum.Transform(rot);
+
+			//rotate camera back if y.y<0
+			if (frustum.up.y < 0)
+			{
+				Quat rot_back;	
+				rot_back.SetFromAxisAngle(frustum.WorldRight(), dt * y * camera_sensitivity * DEGTORAD);
+				frustum.Transform(rot_back);
+			}
+
+			//put camera on correct distance
+			frustum.pos = pivot_point - (frustum.front * dist);
+		}
+
+
+
 		App->editor->LockGizmos();
 	}
 
