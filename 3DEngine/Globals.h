@@ -53,6 +53,9 @@ void log(const char file[], int line, const char* format, ...);
 #define FORMAT_EXTENSION ".carca"
 #define TEXTURE_EXTENSION ".dds"
 
+
+#define META_EXTENSION ".meta.json"
+
 #define MIN_SCENE_POINT_X -20.f
 #define MIN_SCENE_POINT_Y -20.f
 #define MIN_SCENE_POINT_Z -20.f

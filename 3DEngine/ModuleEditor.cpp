@@ -127,7 +127,7 @@ update_status ModuleEditor::Update(float real_dt, float game_dt)
 	const char* f_path = App->input->GetFileDropped();	
 	if (f_path != nullptr)
 	{
-		App->importer->LoadFile(f_path);
+		App->resource_m->CheckFileStatus(f_path);
 	}
 
 			

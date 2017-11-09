@@ -1,5 +1,5 @@
 #include "Globals.h"
-#include "Application.h"
+#include "Application.h"   
 #include ".\mmgr\mmgr.h"
 #include "ModuleImporter.h"
 #include "GameObject.h"
@@ -8,6 +8,7 @@
 #include "CompTransform.h"
 #include "ComponentCamera.h"
 #include "ModuleScene.h"
+#include "parson.h"
 
 #include "ModuleResourceManager.h"
 #include "ResourceMesh.h"
@@ -73,7 +74,6 @@ bool ModuleImporter::Init(const JSON_Object* config_data)
 }
 
 
-
 bool ModuleImporter::CleanUp()
 {
 
@@ -87,40 +87,18 @@ bool ModuleImporter::CleanUp()
 //Load General file and identify the format
 void ModuleImporter::LoadFile(const char * path)
 {
-	std::string tmp = path;
-	std::string extension;
-
-	LOG("-----------------------Loading file from %s", path);
 	
-	//Get file extension (reversed)
-	while (tmp.back() != '.')
-	{
-		extension.push_back(tmp.back());
-		tmp.pop_back();
-
-		if (tmp.empty())
-			break;
-	}
-
-
-	//Normalize to lower case
-	std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
-	//Reverse to be human readable
-	std::reverse(extension.begin(), extension.end());
-
+/*
 
 	//Check if extension is valid
-	if (extension.compare("fbx") == 0)
-	{
-		LoadFBX(path);
-	}
+	
 	else if (extension.compare("png") || extension.compare("jpg") || extension.compare("dds") || extension.compare("tga"))
 	{
 		GLuint text_id = LoadTexture(path);
 		SaveTextureToDDS(std::experimental::filesystem::path(path).stem().string().c_str());
 		glDeleteTextures(1, &text_id);
-	}
-	else LOG("ERROR: File extension '.%s' not allowed", extension.c_str());
+	}*/
+	
 
 }
 
@@ -131,14 +109,16 @@ bool ModuleImporter::LoadFBX(const char * path)
 	bool ret = true;
 	const aiScene* scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality);
 
+	FBX_data fbx_d;
 	
 	if (scene != nullptr)
 	{
 		fbx_path = path;
-		ImportScene(scene);
+		ImportScene(scene, fbx_d);
 		aiReleaseImport(scene);	
-
 		materials.clear();
+
+		CreateFBXmeta(fbx_d, path);
 	}
 	else
 	{
@@ -150,8 +130,31 @@ bool ModuleImporter::LoadFBX(const char * path)
 }
 
 
+void ModuleImporter::CreateFBXmeta(FBX_data &d, const char* path)
+{
+	std::string meta_path = App->fs->GetAssetDirectory();
+
+	//Extract file name
+	std::string file_path = path;
+	size_t begin_name = file_path.find_last_of('\\');
+	std::string file_name = file_path.substr(begin_name +1);
+	meta_path += file_name + META_EXTENSION;
+
+	//Serialize to JSON
+
+	fopen(meta_path.c_str(), "w");
+
+	JSON_Value * meta_file = json_parse_file(meta_path.c_str());
+	
+	JSON_Object * obj_data = json_value_get_object(meta_file);
+	json_object_dotset_string(obj_data, "fbx name", file_name.c_str());
+
+	json_serialize_to_file(meta_file, "config.json");
+
+}
+
 //Iterates all nodes saving materials and meshes
-void ModuleImporter::ImportScene(const aiScene * scene)
+void ModuleImporter::ImportScene(const aiScene * scene, FBX_data &fbx_d)
 {	
 	//Store all materials in a vector and assign a id of -1
 	if (scene->HasMaterials())
@@ -168,17 +171,13 @@ void ModuleImporter::ImportScene(const aiScene * scene)
 	if(scene->HasMeshes())
 		for (int i = 0; i < scene->mRootNode->mNumChildren; i++)
 		{
-			SearchNode(scene->mRootNode->mChildren[i], scene, App->scene->root);
+			SearchNode(scene->mRootNode->mChildren[i], scene, App->scene->root, fbx_d);
 		}
 }
 
 //Searches every FBX node for data and creates one GameObject per node
-std::string ModuleImporter::SearchNode(const aiNode* n, const aiScene* scene, GameObject* parent)
+std::string ModuleImporter::SearchNode(const aiNode* n, const aiScene* scene, GameObject* parent, FBX_data &fbx_d)
 {
-
-
-
-
 	aiVector3D ai_location;
 	aiVector3D ai_scale;
 	aiQuaternion ai_rotation;
@@ -218,11 +217,14 @@ std::string ModuleImporter::SearchNode(const aiNode* n, const aiScene* scene, Ga
 		std::string mesh_name = ImportGeometry(m, n->mName.C_Str());
 		LoadMeshFromOwnFormat(mesh_name.c_str(), new_obj);
 		last_material_index = m->mMaterialIndex;
+
+		//Put mesh name in fbx data
+		fbx_d.mesh_names.push_back(mesh_name);
 	}
 
 	//Searches and loads texture
 	std::string texture_name;
-	int text_id = SearchForTexture(scene, fbx_path.c_str(), last_material_index, texture_name);
+	int text_id = SearchForTexture(scene, fbx_path.c_str(), last_material_index, texture_name, fbx_d);
 
 	ResourceTexture* t = (ResourceTexture*)App->resource_m->CreateResource(Resource::TEXTURE);
 	t->SetData(text_id, std::experimental::filesystem::path(texture_name).stem().string().c_str());
@@ -231,7 +233,7 @@ std::string ModuleImporter::SearchNode(const aiNode* n, const aiScene* scene, Ga
 
 	//Searches for children nodes
 	for (int i = 0; i < n->mNumChildren; i++)
-		SearchNode(n->mChildren[i], scene, new_obj);
+		SearchNode(n->mChildren[i], scene, new_obj, fbx_d);
 	
 	return n->mName.C_Str();
 }
@@ -339,15 +341,15 @@ std::string ModuleImporter::ImportGeometry(const aiMesh* m, const char* obj_name
 
 
 //Loads all textures of the fbx in memory. Stores the ID 
-int ModuleImporter::SearchForTexture(const aiScene* scene, const char* path, int material_index, std::string &texture_name)
+int ModuleImporter::SearchForTexture(const aiScene* scene, const char* path, int material_index, std::string &texture_name, FBX_data& fbx_d)
 {
 	int text_id = 0;	
 	
 	if (!materials.empty())		
 	{	
-		aiString s;
-		materials[material_index].first->GetTexture(aiTextureType_DIFFUSE, 0, &s);
-		texture_name = s.C_Str();
+		aiString texture_file;
+		materials[material_index].first->GetTexture(aiTextureType_DIFFUSE, 0, &texture_file);
+		texture_name = texture_file.C_Str();
 		std::string  geom_path = path;
 
 		//Construc the general path for the texture
@@ -363,7 +365,8 @@ int ModuleImporter::SearchForTexture(const aiScene* scene, const char* path, int
 		//If texture already loaded, don't load again
 		if (materials[material_index].second == -1)
 		{
-			
+		
+			fbx_d.texture_names.push_back(texture_file.C_Str());
 
 			//Load texture and get ID
 			text_id = LoadTexture(geom_path.c_str());

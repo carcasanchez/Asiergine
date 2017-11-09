@@ -15,13 +15,25 @@ ModuleFileSystem::~ModuleFileSystem()
 {
 }
 
-std::string ModuleFileSystem::GetLibraryDirectory()
+std::string ModuleFileSystem::GetLibraryDirectory()const
 {
 	std::string path;
 #if _DEBUG
 	path = "../Library/";
 #else
 	path = "Library/";
+#endif
+
+	return path;
+}
+
+std::string ModuleFileSystem::GetAssetDirectory()const
+{
+	std::string path;
+#if _DEBUG
+	path = "../Assets/";
+#else
+	path = "Assets/";
 #endif
 
 	return path;
@@ -114,4 +126,10 @@ std::string ModuleFileSystem::CreateDirectoryInLibrary(const char * folder) cons
 	path += "/";
 
 	return path;
+}
+
+bool ModuleFileSystem::ExistsFile(const char * path) const
+{
+	std::fstream infile(path);
+	return infile.good();
 }

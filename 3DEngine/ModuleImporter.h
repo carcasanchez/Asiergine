@@ -6,6 +6,12 @@ struct aiMesh;
 struct aiScene;
 struct aiMaterial;
 
+struct FBX_data
+{
+	std::vector<std::string> mesh_names;
+	std::vector<std::string> texture_names;
+};
+
 
 class ModuleImporter : public Module
 {
@@ -31,18 +37,18 @@ public:
 
 	uint LoadTexture(const char * path, bool from_scene = false) const;
 
+	bool LoadFBX(const char* path);
 
 private:
 
-	
-	bool LoadFBX(const char* path);
+	void CreateFBXmeta(FBX_data& d, const char* path);
 
 
-	void ImportScene(const aiScene* scene);
-	std::string  SearchNode(const aiNode* n, const aiScene* scene, GameObject* parent);
+	void ImportScene(const aiScene* scene, FBX_data&);
+	std::string  SearchNode(const aiNode* n, const aiScene* scene, GameObject* parent, FBX_data&);
 	std::string ImportGeometry(const aiMesh*, const char*);
 
-	int SearchForTexture(const aiScene* scene, const char* path, int material_index, std::string &texture_name);
+	int SearchForTexture(const aiScene* scene, const char* path, int material_index, std::string &texture_name, FBX_data&);
 
 	//Save methodology
 	bool SaveMeshToOwnFormat(const char* name, uint, uint, const float* vert, uint* ind, const float* normals = nullptr, const float* texture_coords = nullptr) const;

@@ -14,10 +14,14 @@ public:
 	bool CleanUp();
 
 	Resource* GetResource(uint id);
-
 	Resource* CreateResource(Resource::RESOURCE_TYPE type);
 
+	void CheckFileStatus(const char* path);
+
+
 private:
+
+	void LoadFile(const char* path);
 
 	std::map<uint, Resource*> resources;
 
