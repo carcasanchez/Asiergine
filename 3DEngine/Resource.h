@@ -13,7 +13,7 @@ public:
 	};
 
 	Resource(uint uid, RESOURCE_TYPE type);
-	~Resource();
+	virtual ~Resource();
 
 	RESOURCE_TYPE GetType() const
 	{

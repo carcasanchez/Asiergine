@@ -17,6 +17,7 @@ ComponentMesh::ComponentMesh(GameObject* game_object): Component(game_object)
 
 ComponentMesh::~ComponentMesh()
 {
+
 }
 
 void ComponentMesh::Draw()
