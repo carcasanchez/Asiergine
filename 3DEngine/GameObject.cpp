@@ -196,7 +196,7 @@ ComponentMesh * GameObject::CreateComponent_Mesh(const char* m_name, ResourceMes
 	return new_mesh;
 }
 
-ComponentMaterial * GameObject::CreateComponent_Material(uint texture_id, const char* txt_name, uint UID)
+ComponentMaterial * GameObject::CreateComponent_Material(ResourceTexture* t, uint UID)
 {
 	if (GetComponentByType(COMPONENT_MATERIAL) != nullptr)
 	{
@@ -204,8 +204,9 @@ ComponentMaterial * GameObject::CreateComponent_Material(uint texture_id, const 
 		return nullptr;
 	}
 
-	ComponentMaterial* new_mat = new ComponentMaterial(this, texture_id);
-	new_mat->texture_name = txt_name;
+	ComponentMaterial* new_mat = new ComponentMaterial(this);
+	
+	new_mat->SetTexture(t);
 
 	if (UID > 0)
 		new_mat->SetID(UID);

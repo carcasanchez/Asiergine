@@ -223,7 +223,10 @@ std::string ModuleImporter::SearchNode(const aiNode* n, const aiScene* scene, Ga
 	//Searches and loads texture
 	std::string texture_name;
 	int text_id = SearchForTexture(scene, fbx_path.c_str(), last_material_index, texture_name);
-	new_obj->CreateComponent_Material(text_id, std::experimental::filesystem::path(texture_name).stem().string().c_str());
+
+	ResourceTexture* t = (ResourceTexture*)App->resource_m->CreateResource(Resource::TEXTURE);
+	t->SetData(text_id, std::experimental::filesystem::path(texture_name).stem().string().c_str());
+	new_obj->CreateComponent_Material(t);
 
 
 	//Searches for children nodes
@@ -1078,9 +1081,13 @@ uint ModuleImporter::LoadObjectFromOwnFormat(char*& cursor)
 			text.second = texture_ID;
 			loaded_textures.push_back(text);
 		}
+		
 
 
-		new_obj->CreateComponent_Material(texture_ID, text_name, mat_id);
+		ResourceTexture* t = (ResourceTexture*)App->resource_m->CreateResource(Resource::TEXTURE);
+		t->SetData(texture_ID, std::experimental::filesystem::path(text_name).stem().string().c_str());
+		new_obj->CreateComponent_Material(t, mat_id);
+
 		delete[] text_name;
 	}
 

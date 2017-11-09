@@ -9,7 +9,7 @@
 #include "imgui\imgui.h"
 
 
-ComponentMaterial::ComponentMaterial(GameObject* g, uint id):Component(g), texture_id(id)
+ComponentMaterial::ComponentMaterial(GameObject* g):Component(g)
 {
 	type = COMPONENT_MATERIAL;
 }
@@ -17,26 +17,25 @@ ComponentMaterial::ComponentMaterial(GameObject* g, uint id):Component(g), textu
 
 ComponentMaterial::~ComponentMaterial()
 {
-	glDeleteTextures(1, &texture_id);
 }
 
 void ComponentMaterial::OnEditor()
 {
 	if (IsActive() == true)
 	{
-		if (texture_id != 0)
+		if (GetTextureID() != 0)
 		{
 			ImVec2 size;
 			size.x = 200;
 			size.y = 200;
 
-			ImGui::Image((ImTextureID)texture_id, ImVec2(200, 200));
+			ImGui::Image((ImTextureID)GetTextureID(), ImVec2(200, 200));
 			ImGui::TextColored(ImVec4(0, 255, 0, 255), "%i x %i", (int)size.x, (int)size.y);
-			ImGui::TextWrapped("%s", texture_name.c_str());	
+			ImGui::TextWrapped("%s", texture->GetTextureName().c_str());	
 		}
 
 
-		if (ImGui::Button("Change Texture"))
+		/*if (ImGui::Button("Change Texture"))
 		{
 			change_text_window = true;
 		}
@@ -61,7 +60,7 @@ void ComponentMaterial::OnEditor()
 					{
 						path += filename.c_str();
 						path += ".dds";
-						texture_id = App->importer->LoadTexture(path.c_str(), true);
+						texture->SetData(App->importer->LoadTexture(path.c_str(), true));
 						texture_name = filename;
 						change_text_window = false;
 					}
@@ -76,7 +75,7 @@ void ComponentMaterial::OnEditor()
 
 				ImGui::EndPopup();
 			}
-		}
+		}*/
 	}
 }
 
@@ -85,18 +84,20 @@ uint ComponentMaterial::PrepareToSave() const
 	uint size = 0;
 
 	size += sizeof(uint); // Length of texture name length
-	size += texture_name.length(); // Length of texture name
+	size += GetTextureName().size(); // Length of texture name
 	return size;
 }
 
 void ComponentMaterial::Save(char *& cursor) const
 {
-	uint texture_name_size = texture_name.length();
+	uint texture_name_size = GetTextureName().size();
 	uint size_of = sizeof(uint);
 	memcpy(cursor, &texture_name_size, size_of);
 	cursor += size_of;
 
+	std::string text_name = GetTextureName();
+
 	size_of = texture_name_size;
-	memcpy(cursor, texture_name.data(), size_of);
+	memcpy(cursor, text_name.data(), size_of);
 	cursor += size_of;
 }

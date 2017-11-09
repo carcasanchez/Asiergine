@@ -1,11 +1,12 @@
 #pragma once
 #include "Component.h"
 #include "GameObject.h"
+#include "ResourceTexture.h"
 
 class ComponentMaterial :public Component
 {
 public:
-	ComponentMaterial(GameObject*, uint id);
+	ComponentMaterial(GameObject*);
 	~ComponentMaterial();
 
 	void OnEditor();
@@ -14,17 +15,31 @@ public:
 
 	uint GetTextureID() const
 	{
-		return texture_id;
+		return texture ? texture->GetTextureId() : 0;
 	}
 
-	std::string texture_name;
+	std::string GetTextureName()const
+	{
+		return texture ? texture->GetTextureName() : "- none -";
+	}
+
+	void SetTexture(ResourceTexture* t)
+	{
+		if (texture)
+			texture->DecreaseInstancies();
+		texture = t;
+		if (texture)
+			texture->IncreaseInstancies();
+	}
+
 
 	//Scene serialization------------------------
 	uint PrepareToSave() const;
 	void Save(char* &cursor) const;
 
 private:
-	uint texture_id = 0;
+	
+	ResourceTexture* texture = nullptr;
 	bool change_text_window = false;
 };
 
