@@ -130,7 +130,7 @@ bool ModuleImporter::LoadFBX(const char * path)
 }
 
 
-void ModuleImporter::CreateFBXmeta(FBX_data &d, const char* path)
+void ModuleImporter::CreateFBXmeta(FBX_data &fbx_d, const char* path)
 {
 	std::string meta_path = App->fs->GetAssetDirectory();
 
@@ -142,14 +142,37 @@ void ModuleImporter::CreateFBXmeta(FBX_data &d, const char* path)
 
 	//Serialize to JSON
 
-	fopen(meta_path.c_str(), "w");
 
-	JSON_Value * meta_file = json_parse_file(meta_path.c_str());
+	JSON_Value * meta_file = json_value_init_object();	
+	JSON_Object* obj_data = json_value_get_object(meta_file);
+
 	
-	JSON_Object * obj_data = json_value_get_object(meta_file);
-	json_object_dotset_string(obj_data, "fbx name", file_name.c_str());
+	json_object_dotset_string(obj_data, "FBX name", file_name.c_str());	
 
-	json_serialize_to_file(meta_file, "config.json");
+	//Serialize mesh names
+	json_object_set_value(obj_data, "Mesh names", json_value_init_object());	
+	JSON_Object* mesh_name = json_object_get_object(obj_data, "Mesh names");
+	for (int i = 0; i < fbx_d.mesh_names.size(); i++)
+	{
+		std::string mesh_number = "Mesh ";
+		mesh_number += std::to_string(i);
+		json_object_dotset_string(mesh_name, mesh_number.c_str(), fbx_d.mesh_names[i].c_str());
+	}
+
+	//Serialize texture names
+	json_object_set_value(obj_data, "Texture names", json_value_init_object());
+	JSON_Object* texture_name = json_object_get_object(obj_data, "Texture names");
+	for (int i = 0; i < fbx_d.texture_names.size(); i++)
+	{
+		std::string text_number = "Texture ";
+		text_number += std::to_string(i);
+		json_object_dotset_string(texture_name, text_number.c_str(), fbx_d.texture_names[i].c_str());
+	}
+
+
+
+
+	json_serialize_to_file(meta_file, meta_path.c_str());
 
 }
 
