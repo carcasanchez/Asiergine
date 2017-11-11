@@ -159,6 +159,7 @@ bool ModuleEditor::CleanUp()
 //Draw functions------------------------------------------------------------------------
 void ModuleEditor::DrawUI()
 {
+	Resize();
 	input_locked = ImGui::IsMouseHoveringAnyWindow();
 
 	ManagePlayAppOptions();
@@ -178,56 +179,58 @@ void ModuleEditor::DrawUI()
 
 void ModuleEditor::ManagePlayAppOptions()
 {
-	ImGui::SetNextWindowSize(ImVec2(300, 80));
-	ImGui::SetNextWindowPos(ImVec2(400, 20));
-
-	ImGui::Begin("Play Game");
-
-	if (App->IsAppRunning())
+	if (play_window_open)
 	{
-	
-		if (ImGui::Button("Stop"))
-		{
-			App->StopApp();
-			App->scene->scene_quadtree.Calculate();
-		}
+		ImGui::SetNextWindowSize(ImVec2(300, 60));
+		ImGui::SetNextWindowPos(ImVec2(440, 18));
+		ImGui::Begin("Play Game", &play_window_open, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar);
 
-		ImGui::SameLine();
-		if (!App->IsAppPaused())
+		if (App->IsAppRunning())
 		{
-			static float speed = App->GetGameSpeed();
-			
-			if (ImGui::Button("Pause"))
+
+			if (ImGui::Button("Stop"))
 			{
-				App->PauseApp();
+				App->StopApp();
+				App->scene->scene_quadtree.Calculate();
 			}
-			
-			if (ImGui::DragFloat("Game Speed", &speed, 0.01, 0.0, 1.0))
-			{
-				App->SetGameSpeed(speed);
-			}			
-				
-		}	
 
-		if (App->IsAppPaused())
-		{
-			if(ImGui::Button("Restart"))
-				App->UnPauseApp();
 			ImGui::SameLine();
-			if (ImGui::Button("Update Once"))
-				App->UpdateOnce();
+			if (!App->IsAppPaused())
+			{
+				static float speed = App->GetGameSpeed();
+
+				if (ImGui::Button("Pause"))
+				{
+					App->PauseApp();
+				}
+
+				if (ImGui::DragFloat("Game Speed", &speed, 0.01, 0.0, 1.0))
+				{
+					App->SetGameSpeed(speed);
+				}
+
+			}
+
+			if (App->IsAppPaused())
+			{
+				if (ImGui::Button("Restart"))
+					App->UnPauseApp();
+				ImGui::SameLine();
+				if (ImGui::Button("Update Once"))
+					App->UpdateOnce();
+			}
 		}
-	}
-	else
-	{
-		if (ImGui::Button("Play"))
+		else
 		{
-			App->PlayApp();
+			if (ImGui::Button("Play"))
+			{
+				App->PlayApp();
+			}
 		}
+
+
+		ImGui::End();
 	}
-
-
-	ImGui::End();
 }
 
 //MAIN MENU BAR management------------------------------------------------------------------------
@@ -320,7 +323,7 @@ void ModuleEditor::ManageAboutWindow()
 {
 	if (about_engine_open)
 	{
-		ImGui::Begin("About", &about_engine_open, ImGuiWindowFlags_ShowBorders);
+		ImGui::Begin("About", &about_engine_open, ImGuiWindowFlags_ShowBorders | ImGuiWindowFlags_NoResize);
 		ImGui::TextWrapped("ASIERGINE");
 		ImGui::Separator();
 		ImGui::TextWrapped("Made by");
@@ -378,8 +381,12 @@ void ModuleEditor::ManageAboutWindow()
 //Console management------------------------------------------------------------------------
 void ModuleEditor::ManageConsole()
 {
-	if(console_open)
+	if (console_open) 
+	{
+		ImGui::SetNextWindowSize(ImVec2(300, 200));
+		ImGui::SetNextWindowPosCenter();
 		console.Draw("Asiergine Console", &console_open);
+	}
 }
 
 void ModuleEditor::DrawInConsole(const char * to_console)
@@ -393,7 +400,9 @@ void ModuleEditor::ManageConfigurationWindow()
 {
 	if (configuration_open)
 	{
-		ImGui::Begin("Configuration", &configuration_open, ImGuiWindowFlags_ShowBorders);
+		ImGui::SetNextWindowSize(ImVec2(config_size.x, config_size.y));
+		ImGui::SetNextWindowPos(ImVec2(config_pos.x, config_pos.y));
+		ImGui::Begin("Configuration", &configuration_open, ImGuiWindowFlags_ShowBorders | ImGuiWindowFlags_NoResize);
 		
 		//Application submenu
 		if (ImGui::CollapsingHeader("Application"))
@@ -539,7 +548,9 @@ void ModuleEditor::ManageHierarchyWindow()
 {
 	if (hierarchy_open)
 	{
-		ImGui::Begin("Hierarchy", &hierarchy_open, ImGuiWindowFlags_ShowBorders);
+		ImGui::SetNextWindowSize(ImVec2(hierarchy_size.x, hierarchy_size.y));
+		ImGui::SetNextWindowPos(ImVec2(hierarchy_pos.x, hierarchy_pos.y));
+		ImGui::Begin("Hierarchy", &hierarchy_open, ImGuiWindowFlags_ShowBorders | ImGuiWindowFlags_NoResize);
 
 		if (ImGui::TreeNode("Scene"))
 		{
@@ -584,7 +595,9 @@ void ModuleEditor::ManageInspectorWindow()
 {
 	if (inspector_open)
 	{
-		ImGui::Begin("Inspector", &inspector_open, ImGuiWindowFlags_ShowBorders);
+		ImGui::SetNextWindowSize(ImVec2(inspector_size.x, inspector_size.y));
+		ImGui::SetNextWindowPos(ImVec2(inspector_pos.x, inspector_pos.y));
+		ImGui::Begin("Inspector", &inspector_open, ImGuiWindowFlags_ShowBorders | ImGuiWindowFlags_NoResize);
 		if(selected_object != nullptr)
 			selected_object->OnEditor();
 		ImGui::End();
@@ -1008,5 +1021,24 @@ void ModuleEditor::SelectObject(GameObject * g)
 	objects_picked.push_back(g);
 }
 
+void ModuleEditor::Resize()
+{
+	//Configuration
+	config_size.x = 300;
+	config_size.y = 300;
+	config_pos.x = App->window->window_width - 300;
+	config_pos.y = App->window->window_height - 300;
 
+	//hierarchy
+	hierarchy_size.x = 220;
+	hierarchy_size.y = 400;
+	hierarchy_pos.x = 0;
+	hierarchy_pos.y = 18;
+
+	//Inspector
+	inspector_size.x = 300;
+	inspector_size.y = App->window->window_height - 318;
+	inspector_pos.x = App->window->window_width - 300;
+	inspector_pos.y = 18;
+}
 

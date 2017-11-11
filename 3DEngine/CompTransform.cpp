@@ -75,7 +75,7 @@ void CompTransform::OnEditor()
 			drag_speed = 1;
 		}
 
-		ImGui::TextWrapped("Translation: ");
+		ImGui::TextWrapped("Translate:");
 		ImGui::SameLine();
 		if (ImGui::DragFloat3("", location, drag_speed) && GetGameObject()->IsStatic() == false)
 			SetTranslation(location[0], location[1], location[2]);
@@ -86,7 +86,7 @@ void CompTransform::OnEditor()
 		float s_z = GetScale().z;
 		float scale_tmp[3] = { s_x, s_y, s_z };
 
-		ImGui::TextWrapped("Scale:       ");
+		ImGui::TextWrapped("Scale:    ");
 		ImGui::SameLine();
 		if (ImGui::DragFloat3(" ", scale_tmp, drag_speed) && GetGameObject()->IsStatic() == false)
 			SetScale(scale_tmp[0], scale_tmp[1], scale_tmp[2]);
@@ -94,7 +94,7 @@ void CompTransform::OnEditor()
 		//Rotation
 		float rotate[3] = { rot_in_euler.x,  rot_in_euler.y, rot_in_euler.z };
 
-		ImGui::TextWrapped("Rotation:    ");
+		ImGui::TextWrapped("Rotation: ");
 		ImGui::SameLine();
 		if (ImGui::DragFloat3("  ", rotate, drag_speed) && GetGameObject()->IsStatic() == false)
 		{

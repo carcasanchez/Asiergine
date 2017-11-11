@@ -104,6 +104,7 @@ private:
 	bool inspector_open = false;
 	bool camera_config_open = false;
 	bool hierarchy_open = false;
+	bool play_window_open = true;
 
 	bool unlimitedFramerate = true;
 	bool bake_quadtree = false;
@@ -166,6 +167,16 @@ private:
 
 	GameObject* selected_object = nullptr;
 	std::vector<GameObject*> objects_picked;
+
+	//Editor sizes
+	void Resize();
+	math::float2 config_size;
+	math::float2 config_pos;
+	math::float2 hierarchy_size;
+	math::float2 hierarchy_pos;
+	math::float2 inspector_size;
+	math::float2 inspector_pos;
+
 
 };
 
