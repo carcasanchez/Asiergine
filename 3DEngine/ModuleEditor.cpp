@@ -181,8 +181,8 @@ void ModuleEditor::ManagePlayAppOptions()
 {
 	if (play_window_open)
 	{
-		ImGui::SetNextWindowSize(ImVec2(300, 60));
-		ImGui::SetNextWindowPos(ImVec2(440, 18));
+		ImGui::SetNextWindowSize(ImVec2(play_size.x, play_size.y));
+		ImGui::SetNextWindowPos(ImVec2(play_pos.x, play_pos.y));
 		ImGui::Begin("Play Game", &play_window_open, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar);
 
 		if (App->IsAppRunning())
@@ -1040,5 +1040,11 @@ void ModuleEditor::Resize()
 	inspector_size.y = App->window->window_height - 318;
 	inspector_pos.x = App->window->window_width - 300;
 	inspector_pos.y = 18;
+
+	//Play
+	play_size.x = 250;
+	play_size.y = 60;
+	play_pos.x = (hierarchy_pos.x + inspector_pos.x) / 2;
+	play_pos.y = 18;
 }
 

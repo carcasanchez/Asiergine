@@ -176,7 +176,7 @@ private:
 	math::float2 hierarchy_pos;
 	math::float2 inspector_size;
 	math::float2 inspector_pos;
-
-
+	math::float2 play_size;
+	math::float2 play_pos;
 };
 
