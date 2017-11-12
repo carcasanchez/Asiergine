@@ -158,6 +158,7 @@ private:
 	void ShowExampleWindow_option();
 	void File_option();
 	void Window_option();
+	void Create_option();
 
 	bool bake_menu_open = false;
 	bool input_locked = false;

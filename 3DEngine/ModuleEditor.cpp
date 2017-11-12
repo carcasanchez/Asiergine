@@ -251,6 +251,12 @@ void ModuleEditor::ManageMainMenuBar()
 			ImGui::EndMenu();
 		}
 
+		if (ImGui::BeginMenu("Create"))
+		{
+			Create_option();
+			ImGui::EndMenu();
+		}
+
 		if (ImGui::MenuItem("About"))
 		{
 			about_engine_open = true;
@@ -308,6 +314,14 @@ void ModuleEditor::File_option()
 		quit_editor = true;
 }
 
+void ModuleEditor::Create_option()
+{
+	if (ImGui::MenuItem("Empty GameObject"))
+	{
+		GameObject* empty = App->scene->CreateGameObject("Empty GameObject", App->scene->root);
+		empty->CreateComponent_Transform();
+	}
+}
 
 //EMERGENT WINDOWS management
 
