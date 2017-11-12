@@ -185,8 +185,8 @@ ComponentMesh * GameObject::CreateComponent_Mesh(const char* m_name, ResourceMes
 
 	for (int i = 0; i < num_vert*3; i += 3)
 		vertex_array.push_back(float3(ver[i], ver[i + 1], ver[i + 2]));
-
-	bounding_box.Enclose(&vertex_array[0], vertex_array.size());
+	if(vertex_array.size() > 0)
+		bounding_box.Enclose(&vertex_array[0], vertex_array.size());
 	
 	if (UID > 0)
 		new_mesh->SetID(UID);
@@ -445,13 +445,21 @@ void GameObject::OnEditor()
 		{
 			CreateComponent_Camera(0.5f, 5.0f, true);
 		}
-		if (ImGui::MenuItem("Material"))
+		if (ImGui::BeginMenu ("Material"))
 		{
-			
+			/*for (int i = 0; i < App->importer->loaded_textures.size(); ++i)
+			{
+				if (ImGui::MenuItem(App->importer->loaded_textures[i].first.c_str()))
+				{
+					CreateComponent_Material(App->importer->loaded_textures[i].first);
+				}
+			}*/
+			ImGui::EndMenu();
+			CreateComponent_Material();
 		}
 		if (ImGui::MenuItem("Mesh"))
 		{
-
+			CreateComponent_Mesh("Mesh");
 		}
 		ImGui::EndPopup();
 	}
