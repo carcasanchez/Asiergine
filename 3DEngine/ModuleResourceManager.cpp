@@ -6,6 +6,7 @@
 
 #include "ResourceTexture.h"
 #include "ResourceMesh.h"
+#include "parson.h"
 
 ModuleResourceManager::ModuleResourceManager()
 {
@@ -44,11 +45,15 @@ Resource * ModuleResourceManager::GetResource(uint id)
 	return res;
 }
 
-Resource * ModuleResourceManager::CreateResource(Resource::RESOURCE_TYPE type)
+Resource * ModuleResourceManager::CreateResource(Resource::RESOURCE_TYPE type, uint id)
 {
 	Resource* ret = nullptr;
 	LCG rand_gen;
-	uint UID = rand_gen.Int();
+	uint UID;
+	if(id == 0)
+		UID = rand_gen.Int();
+	else UID = id;
+	
 	switch (type) 
 	{
 		case Resource::TEXTURE: ret = (Resource*) new ResourceTexture(UID);
@@ -63,29 +68,12 @@ Resource * ModuleResourceManager::CreateResource(Resource::RESOURCE_TYPE type)
 	return ret;
 }
 
-void ModuleResourceManager::CheckFileStatus(const char * path)
-{
-	std::string meta_path = path;	
-	meta_path += META_EXTENSION;
-
-	//Check if the file has meta 	
-	//--IF NOT: Import file to library, create meta file and load in memory
-	if (!App->fs->ExistsFile(meta_path.c_str()))
-	{
-		LoadFile(path);
-	}
-	
-
-		//--IF HAS: Check if its already loaded in memory
-				//-IF HAS: return the resource ID and skip load
-				//-IF NOT: load the file from library using the meta data
-		
-}
-
-void ModuleResourceManager::LoadFile(const char* path)
+uint ModuleResourceManager::LoadResource(const char * path)
 {
 	std::string tmp = path;
 	std::string extension;
+
+	uint resource_id = 0;
 
 	LOG("-----------------------Loading file from %s", path);
 
@@ -104,14 +92,69 @@ void ModuleResourceManager::LoadFile(const char* path)
 	//Reverse to be human readable
 	std::reverse(extension.begin(), extension.end());
 
-	//Load file depending on extension
+	//Manage file depending on extension
 	if (extension.compare("fbx") == 0)
 	{
-		App->importer->LoadFBX(path);
+		ManageFBX(path);
+	}
+	else LOG("ERROR: File extension '.%s' not allowed", extension.c_str());
+		
+	return resource_id;
+}
+
+void ModuleResourceManager::ManageFBX(const char* path)
+{
+	App->importer->ImportFBX(path);	
+	App->importer->LoadFBX(path);
+}
+
+uint ModuleResourceManager::ManageMesh(const char * path)
+{
+
+	uint resource_id = 0;
+	std::string meta_file = path;
+	meta_file += META_EXTENSION;
+
+	//Check if meta exists
+
+	//IF NOT: create meta
+	if (!App->fs->ExistsFile(meta_file.c_str()))
+	{
+
 	}
 
+	return resource_id;
+}
 
-	else LOG("ERROR: File extension '.%s' not allowed", extension.c_str());
+uint ModuleResourceManager::CreateMeshMeta(const char * path)
+{
+
+	return uint();
+}
+
+
+
+//Utility
+bool ModuleResourceManager::CheckTimestamp(const char * path)
+{
+	JSON_Value* meta_file = json_parse_file(path);
+
+	if (meta_file == nullptr)
+	{
+		LOG("Error: could not open %s", path);
+		return 0;
+	}
+
+	//Extract timestamp from meta
+	JSON_Object * object_data = json_value_get_object(meta_file);
+	std::string timestamp = json_object_dotget_string(object_data, "Time Stamp");
+
+	//Check last modification of file
+	struct stat st;
+	stat(path, &st);
+	std::string last_modified_date = std::asctime(std::localtime(&st.st_mtime));
+
+	return timestamp.compare(last_modified_date);
 }
 
 

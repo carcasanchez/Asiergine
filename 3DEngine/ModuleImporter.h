@@ -22,57 +22,38 @@ public:
 
 	bool Init(const JSON_Object* config_data);
 	bool CleanUp();
-
-	void LoadFile(const char* path);
-
-	bool SaveSceneToOwnFormat(const char* name);
-	GameObject* LoadSceneFromOwnFormat(const char* path);
-
-	void CleanTemps()
-	{
-		materials.clear();
-		tmp_parent_ids.clear();
-		loaded_textures.clear();
-	}
-
-	uint LoadTexture(const char * path, bool from_scene = false) const;
-
-	bool LoadFBX(const char* path);
-
-private:
-
-	void CreateFBXmeta(FBX_data& d, const char* path);
-
-
-	void ImportScene(const aiScene* scene, FBX_data&);
-	std::string  SearchNode(const aiNode* n, const aiScene* scene, GameObject* parent, FBX_data&);
-	std::string ImportGeometry(const aiMesh*, const char*);
-
-	int SearchForTexture(const aiScene* scene, const char* path, int material_index, std::string &texture_name, FBX_data&);
-
-	//Save methodology
-	bool SaveMeshToOwnFormat(const char* name, uint, uint, const float* vert, uint* ind, const float* normals = nullptr, const float* texture_coords = nullptr) const;
-	void LoadMeshFromOwnFormat(const char* path, GameObject* obj)const;
-	void SaveTextureToDDS(const char * name) const;
 	
 
-	uint SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>>& buffer, GameObject* to_save);
-	uint LoadObjectFromOwnFormat(char*& cursor);
+
+	uint LoadTexture(const char * path, bool flip = false) const;
 
 
-	//Temporal storing of FBX file path
-	std::string fbx_path;	
+	bool ImportFBX(const char* path);
+	bool LoadFBX(const char* path);
 
-	//Temporal storing of materials to avoid double loading
-	std::vector <std::pair <aiMaterial*, int>> materials;
-	//if id == -1, still not loaded
 
-	//Temporal storing of textures when loaded scene
-	std::vector<std::pair <std::string, int>> loaded_textures;
+	//Import from FBX-------------------------
+	void ImportScene(const char* path, const aiScene* scene, FBX_data&);
+	int ImportTextureFromFBX(const aiScene* scene, const char* path, int material_index, FBX_data&);
+	std::string ImportMeshFromFBX(const aiMesh*, const char*, FBX_data&);
 
-	//Temporal storing of parent id's
-	std::vector<uint> tmp_parent_ids;
 
+	void CreateFBXmeta(FBX_data& d, const char* path);
+	void CreateMeshMeta(const char* path);
+
+	//Save resources to library after import
+	void SaveTextureToDDS(const char * name) const;
+
+	//Load hierarchy from fbx
+	std::string  SearchFBXNode(const aiNode* n, const aiScene* scene, GameObject* parent);
+
+
+	//Save methodology
+	bool SaveMeshToOwnFormat(const char* path, const char* name, uint, uint, const float* vert, uint* ind, const float* normals = nullptr, const float* texture_coords = nullptr) const;
+	void LoadMeshFromOwnFormat(const char* path, GameObject* obj)const;
+	
+		
+private:
 	//For meshes without name
 	int mesh_id = 0;
 };

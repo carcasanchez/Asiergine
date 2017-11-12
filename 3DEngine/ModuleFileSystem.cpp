@@ -10,7 +10,6 @@ ModuleFileSystem::ModuleFileSystem(bool start_enabled) : Module(start_enabled)
 	name = "file_system";
 }
 
-
 ModuleFileSystem::~ModuleFileSystem()
 {
 }
@@ -40,11 +39,12 @@ std::string ModuleFileSystem::GetAssetDirectory()const
 }
 
 
-bool ModuleFileSystem::SaveDataToLibrary(const char* data, uint size, const char* name, const char* directory, const char* extension) const
+
+bool ModuleFileSystem::SaveDataTo(const char * data, uint size, const char * name, const char * path, const char * extension) const
 {
 	bool ret = true;
 
-	std::string file_path = CreateDirectoryInLibrary(directory);
+	std::string file_path = path;
 	file_path += name;
 	file_path += extension;
 
@@ -65,6 +65,7 @@ bool ModuleFileSystem::SaveDataToLibrary(const char* data, uint size, const char
 
 	return ret;
 }
+
 
 bool ModuleFileSystem::LoadDataFromLibrary(char ** data, const char * name, const char * directory, const char * extension) const
 {
@@ -127,9 +128,89 @@ std::string ModuleFileSystem::CreateDirectoryInLibrary(const char * folder) cons
 
 	return path;
 }
+std::string ModuleFileSystem::CreateDirectoryInAssets(const char * folder) const
+{
+	std::string path;
+
+#if _DEBUG
+	path = "../Assets";
+
+#else 
+	path = "./Assets";
+#endif
+
+	CreateDirectory(path.c_str(), NULL);
+	SetFileAttributes(path.c_str(), FILE_ATTRIBUTE_HIDDEN);
+
+	path += "/";
+	path += folder;
+
+	CreateDirectory(path.c_str(), NULL);
+	SetFileAttributes(path.c_str(), FILE_ATTRIBUTE_HIDDEN);
+
+	path += "/";
+
+	return path;
+}
+
 
 bool ModuleFileSystem::ExistsFile(const char * path) const
 {
 	std::fstream infile(path);
 	return infile.good();
+}
+
+
+
+//Deprecated-----------------------------------------------------------------------
+bool ModuleFileSystem::SaveDataToAssets(const char * data, uint size, const char * name, const char * extension) const
+{
+	bool ret = true;
+
+	std::string file_path = GetAssetDirectory();
+	file_path += name;
+	file_path += extension;
+
+
+	//Write all to new file
+	std::ofstream new_file(file_path.c_str(), std::ofstream::binary);
+
+	if (new_file.good())
+	{
+		new_file.write(data, size);
+		new_file.close();
+	}
+	else
+	{
+		LOG("ERROR: Could not save file to %s", extension);
+		ret = false;
+	}
+
+	return ret;
+}
+
+bool ModuleFileSystem::SaveDataToLibrary(const char* data, uint size, const char* name, const char* directory, const char* extension) const
+{
+	bool ret = true;
+
+	std::string file_path = CreateDirectoryInLibrary(directory);
+	file_path += name;
+	file_path += extension;
+
+
+	//Write all to new file
+	std::ofstream new_file(file_path.c_str(), std::ofstream::binary);
+
+	if (new_file.good())
+	{
+		new_file.write(data, size);
+		new_file.close();
+	}
+	else
+	{
+		LOG("ERROR: Could not save file to %s", extension);
+		ret = false;
+	}
+
+	return ret;
 }
