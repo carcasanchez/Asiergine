@@ -40,13 +40,12 @@ std::string ModuleFileSystem::GetAssetDirectory()const
 
 
 
-bool ModuleFileSystem::SaveDataTo(const char * data, uint size, const char * name, const char * path, const char * extension) const
+bool ModuleFileSystem::SaveDataTo(const char * data, uint size, const char * name, const char * path) const
 {
 	bool ret = true;
 
 	std::string file_path = path;
 	file_path += name;
-	file_path += extension;
 
 
 	//Write all to new file
@@ -59,28 +58,15 @@ bool ModuleFileSystem::SaveDataTo(const char * data, uint size, const char * nam
 	}
 	else
 	{
-		LOG("ERROR: Could not save file to %s", extension);
+		LOG("ERROR: Could not save file %s", name);
 		ret = false;
 	}
 
 	return ret;
 }
 
-
-bool ModuleFileSystem::LoadDataFromLibrary(char ** data, const char * name, const char * directory, const char * extension) const
+bool ModuleFileSystem::LoadDataFrom(char* & data, const char * path) const
 {
-	std::string path;
-#if _DEBUG
-	path = "../Library/";
-#else
-	path = "Library/";
-#endif
-
-	path += directory;
-	path += '/';
-	path += name;
-	path += extension;
-
 	//Search file
 	std::ifstream file(path, std::ifstream::binary);
 
@@ -88,21 +74,23 @@ bool ModuleFileSystem::LoadDataFromLibrary(char ** data, const char * name, cons
 	file.seekg(0, file.end);
 	std::streamsize length = file.tellg();
 	file.seekg(0, file.beg);
-	
+
 	//Load data to buffer-----------------------------------------
 	if (file.good() && file.is_open())
 	{
-		data[0] = new char[length];
-		file.read(data[0], length);
+		data = new char[length];
+		file.read(data, length);
 		file.close();
 		return true;
 	}
 	else
 	{
-		LOG("ERROR: could not load mesh %s.carca", name);
+		LOG("ERROR: could not load data from %s", path);
 		return false;
 	}
 }
+
+
 
 std::string ModuleFileSystem::CreateDirectoryInLibrary(const char * folder) const
 {
@@ -213,4 +201,40 @@ bool ModuleFileSystem::SaveDataToLibrary(const char* data, uint size, const char
 	}
 
 	return ret;
+}
+bool ModuleFileSystem::LoadDataFromLibrary(char ** data, const char * name, const char * directory, const char * extension) const
+{
+	std::string path;
+#if _DEBUG
+	path = "../Library/";
+#else
+	path = "Library/";
+#endif
+
+	path += directory;
+	path += '/';
+	path += name;
+	path += extension;
+
+	//Search file
+	std::ifstream file(path, std::ifstream::binary);
+
+	//Get file length
+	file.seekg(0, file.end);
+	std::streamsize length = file.tellg();
+	file.seekg(0, file.beg);
+	
+	//Load data to buffer-----------------------------------------
+	if (file.good() && file.is_open())
+	{
+		data[0] = new char[length];
+		file.read(data[0], length);
+		file.close();
+		return true;
+	}
+	else
+	{
+		LOG("ERROR: could not load mesh %s.carca", name);
+		return false;
+	}
 }

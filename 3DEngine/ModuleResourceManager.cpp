@@ -53,6 +53,8 @@ Resource * ModuleResourceManager::CreateResource(Resource::RESOURCE_TYPE type, u
 	if(id == 0)
 		UID = rand_gen.Int();
 	else UID = id;
+
+	
 	
 	switch (type) 
 	{
@@ -68,7 +70,7 @@ Resource * ModuleResourceManager::CreateResource(Resource::RESOURCE_TYPE type, u
 	return ret;
 }
 
-uint ModuleResourceManager::LoadResource(const char * path)
+Resource* ModuleResourceManager::LoadResource(const char * path)
 {
 	std::string tmp = path;
 	std::string extension;
@@ -94,12 +96,15 @@ uint ModuleResourceManager::LoadResource(const char * path)
 
 	//Manage file depending on extension
 	if (extension.compare("fbx") == 0)
-	{
 		ManageFBX(path);
-	}
+	else if (extension.compare("carca") == 0)
+		resource_id = ManageMesh(path);
 	else LOG("ERROR: File extension '.%s' not allowed", extension.c_str());
 		
-	return resource_id;
+
+	Resource* res = GetResource(resource_id);
+
+	return res;
 }
 
 void ModuleResourceManager::ManageFBX(const char* path)
@@ -110,26 +115,66 @@ void ModuleResourceManager::ManageFBX(const char* path)
 
 uint ModuleResourceManager::ManageMesh(const char * path)
 {
-
 	uint resource_id = 0;
 	std::string meta_file = path;
 	meta_file += META_EXTENSION;
 
 	//Check if meta exists
 
-	//IF NOT: create meta
+	//IF NOT: create meta 
 	if (!App->fs->ExistsFile(meta_file.c_str()))
 	{
+		resource_id = CreateMeshMeta(path);
+		App->importer->LoadMeshFromOwnFormat(path, resource_id);
+		//TODO: import to library
+	}	
+	else
+	{
+		//TODO:Delete this
+		resource_id = CreateMeshMeta(path);
+		App->importer->LoadMeshFromOwnFormat(path, resource_id);
 
+		//TODO: Read UID from meta and check if it has been already loaded
+		/*JSON_Value * value = json_parse_file(meta_file.c_str());
+		JSON_Object* obj_data = json_value_get_object(value);
+		resource_id = json_object_dotget_number(obj_data, "UID");*/
 	}
+
 
 	return resource_id;
 }
 
 uint ModuleResourceManager::CreateMeshMeta(const char * path)
 {
+	LCG rand;
+	uint UID = rand.Int();
 
-	return uint();
+
+
+	//Extract file name
+	std::string file_path = path;
+	size_t begin_name = file_path.find_last_of('/');
+	std::string file_name = file_path.substr(begin_name + 1);
+	std::string meta_path = path;
+	meta_path += META_EXTENSION;
+
+	//Serialize to JSON
+	JSON_Value * meta_file = json_value_init_object();
+	JSON_Object* obj_data = json_value_get_object(meta_file);
+
+	json_object_dotset_string(obj_data, "Resource Type:", "Mesh");
+	json_object_dotset_string(obj_data, "Binary file:", file_name.c_str());
+
+
+	json_object_dotset_number(obj_data, "UID", UID);
+
+	std::time_t result = std::time(nullptr);
+	std::string timestamp = std::asctime(std::localtime(&result));
+
+	json_object_dotset_string(obj_data, "Time Stamp", timestamp.c_str());
+	json_serialize_to_file(meta_file, meta_path.c_str());
+
+	return UID;
 }
 
 

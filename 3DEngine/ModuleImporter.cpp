@@ -95,7 +95,10 @@ bool ModuleImporter::ImportFBX(const char * path)
 	FBX_data fbx_d;
 
 	if (scene != nullptr)
-	{		
+	{
+		//For un-named meshes
+		mesh_id = 0;
+
 		ImportScene(path, scene, fbx_d);
 		aiReleaseImport(scene);
 		
@@ -279,7 +282,7 @@ std::string ModuleImporter::ImportMeshFromFBX(const aiMesh* m, const char* scene
 
 
 //Create meta files
-void ModuleImporter::CreateFBXmeta(FBX_data &fbx_d, const char* path)
+void ModuleImporter::CreateFBXmeta(FBX_data &fbx_d, const char* path) const
 {
 	std::string meta_path = App->fs->GetAssetDirectory();
 
@@ -327,37 +330,13 @@ void ModuleImporter::CreateFBXmeta(FBX_data &fbx_d, const char* path)
 
 }
 
-void ModuleImporter::CreateMeshMeta(const char * path)
+void ModuleImporter::GetFBXdataFromMeta(FBX_data & fbx_d, const char * path)
 {
-	std::string meta_path = App->fs->GetAssetDirectory();
 
-	//Extract file name
-	std::string file_path = path;
-	size_t begin_name = file_path.find_last_of('\\');
-	std::string file_name = file_path.substr(begin_name + 1);
-	meta_path += file_name + META_EXTENSION;
 
-	//Serialize to JSON
-	JSON_Value * meta_file = json_value_init_object();
-	JSON_Object* obj_data = json_value_get_object(meta_file);
-
-	json_object_dotset_string(obj_data, "Resource Type:", "Mesh");
-	json_object_dotset_string(obj_data, "Binary file:", file_name.c_str());
-	
-	LCG rand_gen;
-	uint UID;	
-	UID = rand_gen.Int();
-	json_object_dotset_number(obj_data, "UID", UID);
-
-	std::time_t result = std::time(nullptr);
-	std::string timestamp = std::asctime(std::localtime(&result));
-
-	json_object_dotset_string(obj_data, "Time Stamp", timestamp.c_str());
-
-		
-
-	json_serialize_to_file(meta_file, meta_path.c_str());
 }
+
+
 
 //LOAD AND SAVE METHODS --------------------------------------------------------------------------------
 
@@ -370,9 +349,12 @@ bool ModuleImporter::LoadFBX(const char * path)
 
 	if (scene != nullptr)
 	{
+
+		std::string scene_name = std::experimental::filesystem::path(path).stem().string().c_str();
+		
 		//Creates scene hierarchy
 		for(int i=0;i<scene->mRootNode->mNumChildren;i++)
-			SearchFBXNode(scene->mRootNode->mChildren[i], scene, nullptr);
+			SearchFBXNode(scene->mRootNode->mChildren[i], scene, nullptr, scene_name.c_str());
 
 		aiReleaseImport(scene);
 	}
@@ -461,7 +443,7 @@ void ModuleImporter::SaveTextureToDDS(const char * name) const
 
 
 //Searches every FBX node for data and creates one GameObject per node
-std::string ModuleImporter::SearchFBXNode(const aiNode* n, const aiScene* scene, GameObject* parent)
+std::string ModuleImporter::SearchFBXNode(const aiNode* n, const aiScene* scene, GameObject* parent, const char* scene_name)
 {
 	aiVector3D ai_location;
 	aiVector3D ai_scale;
@@ -485,9 +467,6 @@ std::string ModuleImporter::SearchFBXNode(const aiNode* n, const aiScene* scene,
 	rot.z = ai_rotation.z;
 	rot.w = ai_rotation.w;
 
-	//For meshes without name
-	mesh_id = 0;
-
 	//Create the object
 	GameObject* new_obj = App->scene->CreateGameObject(n->mName.C_Str(), parent);
 	new_obj->CreateComponent_Transform(location, scale, rot);
@@ -498,15 +477,21 @@ std::string ModuleImporter::SearchFBXNode(const aiNode* n, const aiScene* scene,
 	for (int i = 0; i < n->mNumMeshes; i++)
 	{
 		std::string mesh_name = scene->mMeshes[n->mMeshes[i]]->mName.C_Str();
+		//Put generic name if name is empty
+		if (mesh_name.empty())
+		{
+			mesh_name = scene_name;
+			mesh_name += "_mesh_";
+			mesh_name += std::to_string(mesh_id);
+			mesh_id++;
+		}
+		//Call resource manager to load mesh
+		std::string mesh_file_path = App->fs->GetAssetDirectory();
+		mesh_file_path += "Meshes/" + mesh_name + FORMAT_EXTENSION;
+		ResourceMesh* mesh = (ResourceMesh*)App->resource_m->LoadResource(mesh_file_path.c_str());
+		new_obj->CreateComponent_Mesh(mesh_name.c_str(),mesh);
 
-		//TODO: call resource manager to load mesh
-
-		//App->resource_m->LoadResource();
-
-		//LoadMeshFromOwnFormat(mesh_name.c_str(), new_obj);
-		//last_material_index = m->mMaterialIndex;
-		//Put mesh name in fbx data
-		//fbx_d.mesh_names.push_back(mesh_name);
+		last_material_index = scene->mMeshes[n->mMeshes[i]]->mMaterialIndex;
 	}
 
 	//TODO: call resource manager to load texture
@@ -522,7 +507,7 @@ std::string ModuleImporter::SearchFBXNode(const aiNode* n, const aiScene* scene,
 
 	//Searches for children nodes
 	for (int i = 0; i < n->mNumChildren; i++)
-		SearchFBXNode(n->mChildren[i], scene, new_obj);
+		SearchFBXNode(n->mChildren[i], scene, new_obj, scene_name);
 	
 	return n->mName.C_Str();
 }
@@ -604,21 +589,23 @@ bool ModuleImporter::SaveMeshToOwnFormat(const char* path, const char* name, uin
 		memcpy(cursor, texture_coords, size_of);
 		cursor += size_of;
 	}
-
-
 	//save meshes in path
-	App->fs->SaveDataTo(data, size, name, path, FORMAT_EXTENSION);
+	App->fs->SaveDataTo(data, size, name, path);
+
+	//TODO: move this to res manager
+	App->fs->SaveDataToLibrary(data, size, name, "Meshes/", FORMAT_EXTENSION);
 	
 	delete[] data;
 
 	return ret;
 }
 
-void ModuleImporter::LoadMeshFromOwnFormat(const char * name, GameObject* obj) const
+//Creates the resource with the given ID
+void ModuleImporter::LoadMeshFromOwnFormat(const char * path, uint UID) const
 {
 	char* data = nullptr;
 
-	if (App->fs->LoadDataFromLibrary(&data, name, "Meshes", FORMAT_EXTENSION) == false)
+	if (App->fs->LoadDataFrom(data, path) == false)
 	{
 		return;
 	}	
@@ -701,9 +688,8 @@ void ModuleImporter::LoadMeshFromOwnFormat(const char * name, GameObject* obj) c
 	delete[] data;
 
 	//Create New resource
-	ResourceMesh* resource_mesh = (ResourceMesh*)App->resource_m->CreateResource(Resource::MESH);
+	ResourceMesh* resource_mesh = (ResourceMesh*)App->resource_m->CreateResource(Resource::MESH, UID);
 	resource_mesh->SetData(vert, ind, num_vert, num_ind, normals, texture_coord);
-	obj->CreateComponent_Mesh(name, resource_mesh);
 }
 
 

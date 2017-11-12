@@ -510,7 +510,7 @@ uint ModuleScene::LoadObjectFromOwnFormat(char*& cursor)
 
 		mesh_name[mesh_name_size] = '\0';
 
-		App->importer->LoadMeshFromOwnFormat(mesh_name, new_obj);
+		//App->importer->LoadMeshFromOwnFormat(mesh_name, new_obj);
 		delete[] mesh_name;
 	}
 

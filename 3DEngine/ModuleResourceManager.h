@@ -14,7 +14,7 @@ public:
 	bool CleanUp();
 
 	//Checks if resource is in memory and loads it if not
-	uint LoadResource(const char* path);
+	Resource* LoadResource(const char* path);
 	Resource* CreateResource(Resource::RESOURCE_TYPE type, uint id = 0);
 
 private:

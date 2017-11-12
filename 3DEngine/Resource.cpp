@@ -2,7 +2,7 @@
 
 
 
-Resource::Resource(uint uid, RESOURCE_TYPE type)
+Resource::Resource(uint uid, RESOURCE_TYPE type) : UID(uid), type(type)
 {
 }
 
