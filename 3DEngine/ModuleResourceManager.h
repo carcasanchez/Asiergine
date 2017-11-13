@@ -26,7 +26,7 @@ private:
 	uint ManageMesh(const char* path);
 	uint CreateMeshMeta(const char* path);
 
-	bool CheckTimestamp(const char* path);
+	bool CheckTimestamp(const char* file, const char* meta);
 
 	std::map<uint, Resource*> resources;
 

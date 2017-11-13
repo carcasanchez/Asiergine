@@ -60,6 +60,21 @@ void ComponentMesh::OnEditor()
 {
 	if (IsActive() == true)
 	{
+		bool want_to_change_mesh = false;
+
+		ImGui::TextWrapped("Current Mesh:", GetNumVertices());
+
+		if (mesh)
+		{
+			want_to_change_mesh = ImGui::Button(name.c_str());
+			ImGui::TextWrapped("Instancies in scene: %i",mesh->GetInstancies());
+		}
+		else 	
+			want_to_change_mesh = ImGui::Button("MISSING!");
+
+
+
+
 		ImGui::TextWrapped("Number of vertices: %i", GetNumVertices());
 	}
 }

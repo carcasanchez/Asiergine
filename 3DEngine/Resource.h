@@ -41,6 +41,11 @@ public:
 		return instancies > 0;
 	}
 
+	uint GetInstancies() const
+	{
+		return instancies;
+	}
+
 
 	void SetFile(const char* asset_f = nullptr, const char* library_f = nullptr)
 	{

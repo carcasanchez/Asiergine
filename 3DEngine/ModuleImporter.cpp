@@ -292,13 +292,11 @@ std::string ModuleImporter::ImportMeshFromFBX(const aiMesh* m, const char* scene
 //Create meta files
 void ModuleImporter::CreateFBXmeta(FBX_data &fbx_d, const char* path) const
 {
-	std::string meta_path = App->fs->GetAssetDirectory();
-
 	//Extract file name
-	std::string file_path = path;
-	size_t begin_name = file_path.find_last_of('\\');
-	std::string file_name = file_path.substr(begin_name +1);
-	meta_path += file_name + META_EXTENSION;
+	std::string meta_path = path;
+	size_t begin_name = meta_path.find_last_of('\\');
+	std::string file_name = meta_path.substr(begin_name +1);
+	meta_path += META_EXTENSION;
 
 	//Serialize to JSON
 	JSON_Value * meta_file = json_value_init_object();	
@@ -354,10 +352,10 @@ bool ModuleImporter::LoadFBX(const char * path)
 	bool ret = true;
 	const aiScene* scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality);
 
-
+	//For un-named meshes
+	mesh_id = 0;
 	if (scene != nullptr)
 	{
-
 		std::string scene_name = std::experimental::filesystem::path(path).stem().string().c_str();
 		
 		//Creates scene hierarchy

@@ -128,15 +128,18 @@ uint ModuleResourceManager::ManageMesh(const char * path)
 		
 		ResourceMesh* new_mesh = App->importer->LoadMeshFromOwnFormat(path, resource_id);
 
-		//Import mesh to library
-		App->importer->SaveMeshToOwnFormat(library_path.c_str(), new_mesh);
+		if (new_mesh)
+		{	//Import mesh to library
+			App->importer->SaveMeshToOwnFormat(library_path.c_str(), new_mesh);
 
-		new_mesh->SetFile(path, library_path.c_str());
+
+			new_mesh->SetFile(path, library_path.c_str());
+		}
 	}	
 	else
 	{		
-		//TODO: chek if meta has been modified
-				//IF HAS: reimport asset
+		//TODO: check if meta timestamp doesn't match
+				//IF HASN'T: reimport asset
 
 		//Read UID from meta 
 		JSON_Value * value = json_parse_file(meta_file.c_str());
@@ -146,8 +149,7 @@ uint ModuleResourceManager::ManageMesh(const char * path)
 		//Chek if mesh has been already loaded
 		Resource* new_mesh = GetResource(resource_id);
 		
-		//IF HASN'T: load asset from library
-		
+		//IF HASN'T: load asset from library		
 		if (new_mesh == nullptr)
 		{
 			//Extract file name
@@ -207,13 +209,13 @@ uint ModuleResourceManager::CreateMeshMeta(const char * path)
 
 
 //Utility
-bool ModuleResourceManager::CheckTimestamp(const char * path)
+bool ModuleResourceManager::CheckTimestamp(const char* file, const char* meta)
 {
-	JSON_Value* meta_file = json_parse_file(path);
+	JSON_Value* meta_file = json_parse_file(meta);
 
 	if (meta_file == nullptr)
 	{
-		LOG("Error: could not open %s", path);
+		LOG("Error: could not open %s", meta);
 		return 0;
 	}
 
@@ -223,7 +225,7 @@ bool ModuleResourceManager::CheckTimestamp(const char * path)
 
 	//Check last modification of file
 	struct stat st;
-	stat(path, &st);
+	stat(file, &st);
 	std::string last_modified_date = std::asctime(std::localtime(&st.st_mtime));
 
 	return timestamp.compare(last_modified_date);
