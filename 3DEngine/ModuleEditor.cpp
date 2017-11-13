@@ -687,6 +687,12 @@ void ModuleEditor::ConfigAppMenu()
 	sprintf_s(title, 25, "Milliseconds %0.1f", ms_log[ms_log.size() - 1]);
 	ImGui::PlotHistogram("##Milliseconds", &ms_log[0], ms_log.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
 
+
+	sMStats memory_stats = m_getMemoryStatistics();
+	//Memory usage
+	ImGui::TextWrapped("Accumulated memory: %i", memory_stats.accumulatedAllocUnitCount);
+	ImGui::TextWrapped("Actual memory: %i", memory_stats.peakActualMemory);
+
 }
 
 //Window submenu on Configuration window
