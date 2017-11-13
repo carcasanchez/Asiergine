@@ -118,7 +118,6 @@ uint ModuleResourceManager::ManageMesh(const char * path)
 	if (!App->fs->ExistsFile(meta_file.c_str()))
 	{
 		resource_id = CreateMeshMeta(path);
-		ResourceMesh* new_mesh = App->importer->LoadMeshFromOwnFormat(path, resource_id);
 		
 		//Extract file name
 		std::string file_name = std::experimental::filesystem::path(path).stem().string().c_str();
@@ -127,8 +126,12 @@ uint ModuleResourceManager::ManageMesh(const char * path)
 		std::string library_path = App->fs->GetLibraryDirectory();
 		library_path += App->fs->CreateDirectoryInLibrary("Meshes") + file_name + FORMAT_EXTENSION;
 		
+		ResourceMesh* new_mesh = App->importer->LoadMeshFromOwnFormat(path, resource_id);
+
 		//Import mesh to library
 		App->importer->SaveMeshToOwnFormat(library_path.c_str(), new_mesh);
+
+		new_mesh->SetFile(path, library_path.c_str());
 	}	
 	else
 	{		
@@ -141,10 +144,11 @@ uint ModuleResourceManager::ManageMesh(const char * path)
 		resource_id = json_object_dotget_number(obj_data, "UID");
 
 		//Chek if mesh has been already loaded
-		Resource* m = GetResource(resource_id);
+		Resource* new_mesh = GetResource(resource_id);
 		
 		//IF HASN'T: load asset from library
-		if (m == nullptr)
+		
+		if (new_mesh == nullptr)
 		{
 			//Extract file name
 			std::string file_name = std::experimental::filesystem::path(path).stem().string().c_str();
@@ -152,7 +156,14 @@ uint ModuleResourceManager::ManageMesh(const char * path)
 			//Construct path to library
 			std::string library_path = App->fs->GetLibraryDirectory();
 			library_path += "Meshes/" + file_name + FORMAT_EXTENSION;
-			App->importer->LoadMeshFromOwnFormat(path, resource_id);
+			new_mesh = App->importer->LoadMeshFromOwnFormat(library_path.c_str(), resource_id);
+			if(new_mesh)			
+				new_mesh->SetFile(path, library_path.c_str());
+			else
+			{
+				LOG("Mesh %s missing from library!", file_name.c_str());
+				resource_id = 0;
+			}
 		}
 
 	}
@@ -165,7 +176,6 @@ uint ModuleResourceManager::CreateMeshMeta(const char * path)
 {
 	LCG rand;
 	uint UID = rand.Int();
-
 
 
 	//Extract file name

@@ -41,6 +41,27 @@ public:
 		return instancies > 0;
 	}
 
+
+	void SetFile(const char* asset_f = nullptr, const char* library_f = nullptr)
+	{
+		if (asset_f)
+			assets_file = asset_f;
+
+		if (library_f)
+			library_file = library_f;
+	}
+
+	const char* GetAssetFile() const
+	{
+		return assets_file.c_str();
+	}
+
+	const char* GetLibraryFile() const
+	{
+		return library_file.c_str();
+	}
+
+
 protected:
 	RESOURCE_TYPE type = RESOURCE_TYPE::NONE;
 	uint UID = 0;
