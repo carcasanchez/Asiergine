@@ -5,6 +5,7 @@ struct aiNode;
 struct aiMesh;
 struct aiScene;
 struct aiMaterial;
+class ResourceMesh;
 
 struct FBX_data
 {
@@ -48,8 +49,8 @@ public:
 
 
 	//Save methodology
-	bool SaveMeshToOwnFormat(const char* path, const char* name, uint, uint, const float* vert, uint* ind, const float* normals = nullptr, const float* texture_coords = nullptr) const;
-	void LoadMeshFromOwnFormat(const char * path, uint UID)const;
+	bool SaveMeshToOwnFormat(const char* path, ResourceMesh* m) const;
+	ResourceMesh* LoadMeshFromOwnFormat(const char * path, uint UID)const;
 	
 		
 private:

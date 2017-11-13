@@ -36,14 +36,7 @@ bool ModuleResourceManager::CleanUp()
 	return true;
 }
 
-Resource * ModuleResourceManager::GetResource(uint id)
-{
-	Resource* res = nullptr;
-	if(resources.count(id) >0)
-			res = resources[id];
 
-	return res;
-}
 
 Resource * ModuleResourceManager::CreateResource(Resource::RESOURCE_TYPE type, uint id)
 {
@@ -121,23 +114,30 @@ uint ModuleResourceManager::ManageMesh(const char * path)
 
 	//Check if meta exists
 
-	//IF NOT: create meta 
+	//IF NOT: create meta and import to library
 	if (!App->fs->ExistsFile(meta_file.c_str()))
 	{
 		resource_id = CreateMeshMeta(path);
-		App->importer->LoadMeshFromOwnFormat(path, resource_id);
-		//TODO: import to library
+		ResourceMesh* new_mesh = App->importer->LoadMeshFromOwnFormat(path, resource_id);
+		
+		//Extract file name
+		std::string file_name = std::experimental::filesystem::path(path).stem().string().c_str();
+
+		//Construct path to library
+		std::string library_path = App->fs->GetLibraryDirectory();
+		library_path += App->fs->CreateDirectoryInLibrary("Meshes") + file_name + FORMAT_EXTENSION;
+		
+		//Import mesh to library
+		App->importer->SaveMeshToOwnFormat(library_path.c_str(), new_mesh);
 	}	
 	else
-	{
-		//TODO:Delete this
-		resource_id = CreateMeshMeta(path);
-		App->importer->LoadMeshFromOwnFormat(path, resource_id);
-
+	{		
 		//TODO: Read UID from meta and check if it has been already loaded
-		/*JSON_Value * value = json_parse_file(meta_file.c_str());
+		JSON_Value * value = json_parse_file(meta_file.c_str());
 		JSON_Object* obj_data = json_value_get_object(value);
-		resource_id = json_object_dotget_number(obj_data, "UID");*/
+		resource_id = json_object_dotget_number(obj_data, "UID");
+
+
 	}
 
 
@@ -202,6 +202,28 @@ bool ModuleResourceManager::CheckTimestamp(const char * path)
 	return timestamp.compare(last_modified_date);
 }
 
+Resource * ModuleResourceManager::GetResource(uint id)
+{
+	Resource* res = nullptr;
+	if (resources.count(id) >0)
+		res = resources[id];
 
+	return res;
+}
+
+bool ModuleResourceManager::DeleteResource(uint id)
+{
+	if (resources.count(id) > 0)
+	{
+		Resource* res = resources[id];
+		if (res)
+			delete res;
+
+		resources.erase(id);
+		return true;
+	}
+
+	return false;
+}
 
 

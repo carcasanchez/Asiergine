@@ -15,6 +15,17 @@ public:
 	int GetNumIndices() const { return num_indices; }
 	const float* GetVertices() const { return vertices; }
 	const uint* GetIndices() const { return indices; }
+	const float* GetTextureCoords()const { return texture_coords; };
+	const float* GetNormals()const { return normals; };
+
+	//CAUTION: this doesn't deallocate memory. Use wisely
+	void SetDataToNullptr()
+	{
+		vertices = nullptr;
+		normals = nullptr;
+		indices = nullptr;
+		texture_coords = nullptr;
+	}
 
 private:
 	uint id_vertices = 0;  //id in VRAM

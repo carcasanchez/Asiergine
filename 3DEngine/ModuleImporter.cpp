@@ -272,9 +272,17 @@ std::string ModuleImporter::ImportMeshFromFBX(const aiMesh* m, const char* scene
 		name += FORMAT_EXTENSION;
 		fbx_d.mesh_names.push_back(name);
 		std::string asset_folder = App->fs->GetAssetDirectory();
-		asset_folder += App->fs->CreateDirectoryInAssets("Meshes");
+		asset_folder += App->fs->CreateDirectoryInAssets("Meshes") + name;
+		
+		//Create tmp mesh to save to binary
+		ResourceMesh mesh(0);
+		mesh.SetData(vertices.data(),indices.data(), numVertx, numInd, normals.data(), texture_coords.data());
 
-		SaveMeshToOwnFormat(asset_folder.c_str(), name.c_str(), numVertx, numInd, vertices.data(), indices.data(), normals.data(), texture_coords.data());
+		SaveMeshToOwnFormat(asset_folder.c_str(), &mesh);
+
+		//Set data to nullptr to avoid exceptions
+		mesh.SetDataToNullptr();
+		
 	}
 
 	return name;
@@ -515,11 +523,19 @@ std::string ModuleImporter::SearchFBXNode(const aiNode* n, const aiScene* scene,
 
 
 
-bool ModuleImporter::SaveMeshToOwnFormat(const char* path, const char* name, uint num_vert, uint num_ind, const float* vert, uint* ind, const float* normals, const float* texture_coords)const
+bool ModuleImporter::SaveMeshToOwnFormat(const char* path, ResourceMesh* mesh)const
 {
 	bool ret = true;
 
 	//DATA ORDER: tag - num vertex - num index - vertex - index - has normals - has text coords - normals - text coords
+
+	uint num_vert = mesh->GetNumVertices();
+	const float* vert = mesh->GetVertices();
+	uint num_ind = mesh->GetNumIndices();
+	const uint* ind = mesh->GetIndices();
+	const float* normals = mesh->GetNormals();
+	const float* texture_coords = mesh->GetTextureCoords();
+
 
 	bool has_normals = false;
 	bool has_text_coords = false;
@@ -590,10 +606,7 @@ bool ModuleImporter::SaveMeshToOwnFormat(const char* path, const char* name, uin
 		cursor += size_of;
 	}
 	//save meshes in path
-	App->fs->SaveDataTo(data, size, name, path);
-
-	//TODO: move this to res manager
-	App->fs->SaveDataToLibrary(data, size, name, "Meshes/", FORMAT_EXTENSION);
+	App->fs->SaveDataTo(data, size, path);	
 	
 	delete[] data;
 
@@ -601,13 +614,13 @@ bool ModuleImporter::SaveMeshToOwnFormat(const char* path, const char* name, uin
 }
 
 //Creates the resource with the given ID
-void ModuleImporter::LoadMeshFromOwnFormat(const char * path, uint UID) const
+ResourceMesh* ModuleImporter::LoadMeshFromOwnFormat(const char * path, uint UID) const
 {
 	char* data = nullptr;
 
 	if (App->fs->LoadDataFrom(data, path) == false)
 	{
-		return;
+		return nullptr;
 	}	
 
 	//Get data from buffer---------------
@@ -629,7 +642,7 @@ void ModuleImporter::LoadMeshFromOwnFormat(const char * path, uint UID) const
 	if (*tag != MESH_SAVETAG)
 	{
 		LOG("ERROR: this is not a mesh");
-		return;
+		return nullptr;
 	}
 	cursor += size_of;
 
@@ -690,6 +703,8 @@ void ModuleImporter::LoadMeshFromOwnFormat(const char * path, uint UID) const
 	//Create New resource
 	ResourceMesh* resource_mesh = (ResourceMesh*)App->resource_m->CreateResource(Resource::MESH, UID);
 	resource_mesh->SetData(vert, ind, num_vert, num_ind, normals, texture_coord);
+
+	return resource_mesh;
 }
 
 

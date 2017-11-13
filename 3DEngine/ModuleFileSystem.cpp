@@ -40,16 +40,12 @@ std::string ModuleFileSystem::GetAssetDirectory()const
 
 
 
-bool ModuleFileSystem::SaveDataTo(const char * data, uint size, const char * name, const char * path) const
+bool ModuleFileSystem::SaveDataTo(const char * data, uint size, const char * path) const
 {
 	bool ret = true;
 
-	std::string file_path = path;
-	file_path += name;
-
-
 	//Write all to new file
-	std::ofstream new_file(file_path.c_str(), std::ofstream::binary);
+	std::ofstream new_file(path, std::ofstream::binary);
 
 	if (new_file.good())
 	{

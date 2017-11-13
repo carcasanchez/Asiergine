@@ -13,7 +13,7 @@ public:
 	std::string  GetAssetDirectory() const;
 
 
-	bool SaveDataTo(const char* data, uint size, const char* file_name, const char* path) const;
+	bool SaveDataTo(const char* data, uint size, const char* path) const;
 	bool LoadDataFrom(char* &data, const char * path) const;
 	std::string CreateDirectoryInLibrary(const char* folder) const;
 	std::string CreateDirectoryInAssets(const char* folder) const;

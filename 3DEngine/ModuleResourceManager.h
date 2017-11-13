@@ -16,10 +16,11 @@ public:
 	//Checks if resource is in memory and loads it if not
 	Resource* LoadResource(const char* path);
 	Resource* CreateResource(Resource::RESOURCE_TYPE type, uint id = 0);
+	Resource* GetResource(uint id);
+	bool DeleteResource(uint id);
 
 private:
 
-	Resource* GetResource(uint id);
 
 	void ManageFBX(const char* path);
 	uint ManageMesh(const char* path);

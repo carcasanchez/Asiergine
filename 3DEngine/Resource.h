@@ -44,7 +44,7 @@ public:
 protected:
 	RESOURCE_TYPE type = RESOURCE_TYPE::NONE;
 	uint UID = 0;
-	std::string file;
+	std::string assets_file;
 	std::string library_file;	
 	uint instancies = 0;
 };

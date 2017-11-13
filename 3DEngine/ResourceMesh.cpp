@@ -15,14 +15,22 @@ ResourceMesh::ResourceMesh(uint id) : Resource(id, RESOURCE_TYPE::MESH)
 
 ResourceMesh::~ResourceMesh()
 {
-	delete[] vertices;
-	delete[] indices;
-	delete[] normals;
-	delete[] texture_coords;
 
-	glDeleteBuffers(1, &text_coord_id);
-	glDeleteBuffers(1, &id_vertices);
-	glDeleteBuffers(1, &id_indices);
+	if(vertices)
+		delete[] vertices;	
+	if(indices) 
+		delete[] indices;
+	if (normals)
+		delete[] normals;
+	if(texture_coords)
+		delete[] texture_coords;
+
+	if(text_coord_id != 0)
+		glDeleteBuffers(1, &text_coord_id);
+	if (id_vertices != 0)
+		glDeleteBuffers(1, &id_vertices);
+	if (id_indices != 0)
+		glDeleteBuffers(1, &id_indices);
 }
 
 void ResourceMesh::SetData(float* ver, uint* ind, uint num_vert, uint num_ind, float* norm, float* text_coords)
