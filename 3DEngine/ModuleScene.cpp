@@ -510,7 +510,12 @@ uint ModuleScene::LoadObjectFromOwnFormat(char*& cursor)
 
 		mesh_name[mesh_name_size] = '\0';
 
-		//App->importer->LoadMeshFromOwnFormat(mesh_name, new_obj);
+		std::string mesh_path = App->fs->GetAssetDirectory();
+		mesh_path += "Meshes/";
+		mesh_path += mesh_name;
+		mesh_path += FORMAT_EXTENSION;
+
+		App->resource_m->LoadResource(mesh_path.c_str());
 		delete[] mesh_name;
 	}
 

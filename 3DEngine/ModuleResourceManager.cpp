@@ -132,11 +132,28 @@ uint ModuleResourceManager::ManageMesh(const char * path)
 	}	
 	else
 	{		
-		//TODO: Read UID from meta and check if it has been already loaded
+		//TODO: chek if meta has been modified
+				//IF HAS: reimport asset
+
+		//Read UID from meta 
 		JSON_Value * value = json_parse_file(meta_file.c_str());
 		JSON_Object* obj_data = json_value_get_object(value);
 		resource_id = json_object_dotget_number(obj_data, "UID");
 
+		//Chek if mesh has been already loaded
+		Resource* m = GetResource(resource_id);
+		
+		//IF HASN'T: load asset from library
+		if (m == nullptr)
+		{
+			//Extract file name
+			std::string file_name = std::experimental::filesystem::path(path).stem().string().c_str();
+
+			//Construct path to library
+			std::string library_path = App->fs->GetLibraryDirectory();
+			library_path += "Meshes/" + file_name + FORMAT_EXTENSION;
+			App->importer->LoadMeshFromOwnFormat(path, resource_id);
+		}
 
 	}
 
