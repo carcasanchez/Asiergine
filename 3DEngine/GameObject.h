@@ -35,6 +35,7 @@ public:
 	void SetStatic(bool obj_static, GameObject* child);
 	void SendAllMeshesToDraw();
 	void SetBoundingBox(const ResourceMesh* m);
+	void EraseChild(GameObject* game_object);
 
 	CompTransform* CreateComponent_Transform(float3 trans = float3(0, 0, 0), float3 scaling = float3(1, 1, 1), Quat rot = Quat::identity, uint UID = 0);
 	ComponentMesh* CreateComponent_Mesh(const char* name, ResourceMesh* m = nullptr, uint UID = 0);

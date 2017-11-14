@@ -72,9 +72,23 @@ void GameObject::Update(float real_dt, float game_dt)
 
 }
 
+void GameObject::EraseChild(GameObject* game_object)
+{
+	if (game_object)
+	{
+		for (std::vector<GameObject*>::iterator it = children.begin(); it != children.end(); it++)
+		{
+			if (game_object == (*it))
+			{
+				children.erase(it);
+				break;
+			}
+		}
+	}
+}
+
 void GameObject::CleanUp()
 {
-
 	//Delete components
 	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); it++)
 	{

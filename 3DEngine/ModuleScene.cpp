@@ -58,6 +58,11 @@ update_status ModuleScene::Update(float real_dt, float game_dt)
 	if(App->editor->BakeQuadtreeOpen())
 		scene_quadtree.root.SetAABBToDraw();
 
+	//Delete GameObject
+	if (App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN)
+	{		
+		DeleteSelectedGameObject();
+	}
 	//Check debug key
 	if (App->input->GetKey(DEBUG_NORMALS_KEY) == KEY_DOWN)
 		debug_normals = !debug_normals;
@@ -107,7 +112,19 @@ GameObject * ModuleScene::CreateGameObject(const char* object_name, GameObject* 
 	return new_object;
 }
 
+void ModuleScene::DeleteSelectedGameObject()
+{
+	GameObject* del_game_object = App->editor->GetSelectedGameObject();
 
+	if (del_game_object && del_game_object->GetParent())
+	{
+		del_game_object->GetParent()->EraseChild(del_game_object);
+		del_game_object->CleanUp();
+		delete del_game_object;
+		App->editor->UnselectAll();
+		App->editor->UnLockSelection();
+	}
+}
 
 void ModuleScene::CleanScene()
 {

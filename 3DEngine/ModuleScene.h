@@ -21,7 +21,7 @@ public:
 	bool CleanUp();
 
 	GameObject* CreateGameObject(const char* name, GameObject* parent = nullptr, uint UID = 0);
-		
+	void DeleteSelectedGameObject();
 
 	GameObject* root = nullptr;
 
