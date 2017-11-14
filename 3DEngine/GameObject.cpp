@@ -415,6 +415,7 @@ void GameObject::OnEditor()
 	ImGui::Separator();
 	if (ImGui::Checkbox("Static", &obj_static))
 	{
+		GetComponentByType(COMPONENT_TRANSFORM)->SetActive(!obj_static);
 		SetStatic(obj_static);
 		App->scene->scene_quadtree.Calculate();
 	}
@@ -422,8 +423,10 @@ void GameObject::OnEditor()
 	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); it++)
 	{
 		ImGui::PushID((*it)->GetID());
+		
 		if (ImGui::CollapsingHeader((*it)->GetComponentNameByType(), "", true, true))
 		{
+		
 			if (ImGui::Checkbox("Active", &(*it)->active))
 			{
 				if ((*it)->active == true)
@@ -431,7 +434,7 @@ void GameObject::OnEditor()
 				if ((*it)->active == false)
 					(*it)->Disable();
 			}
-			ImGui::SameLine();
+			ImGui::SameLine();			
 			if (ImGui::Button("Up"))
 			{
 				if (it != components.begin())
