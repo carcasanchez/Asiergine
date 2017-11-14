@@ -36,7 +36,8 @@ public:
 	void Save(char* &cursor) const;
 
 private:
-
+	bool want_to_change_mesh = false;
+	std::string library_meshes_path;
 	ResourceMesh* mesh = nullptr;
 	
 };

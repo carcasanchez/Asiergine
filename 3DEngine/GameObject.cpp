@@ -147,6 +147,19 @@ void GameObject::SetParent(GameObject* new_parent)
 
 }
 
+void GameObject::SetBoundingBox(const ResourceMesh* m)
+{
+	//Adapt bounding box to geometry-----------------
+	std::vector <float3> vertex_array;
+	const float* ver = m->GetVertices();
+	uint num_vert = m->GetNumVertices();
+
+	for (int i = 0; i < num_vert * 3; i += 3)
+		vertex_array.push_back(float3(ver[i], ver[i + 1], ver[i + 2]));
+	if (vertex_array.size() > 0)
+		bounding_box.Enclose(&vertex_array[0], vertex_array.size());
+
+}
 //CREATE COMPONENT METHODS----------------------------------------------------
 CompTransform * GameObject::CreateComponent_Transform(float3 trans , float3 scale, Quat rot, uint UID)
 {
@@ -175,19 +188,12 @@ CompTransform * GameObject::CreateComponent_Transform(float3 trans , float3 scal
 ComponentMesh * GameObject::CreateComponent_Mesh(const char* m_name, ResourceMesh* m, uint UID)
 {
 	ComponentMesh* new_mesh = new ComponentMesh(this);
-	new_mesh->name = m_name;
-	new_mesh->SetMesh(m);
-
-	//Adapt bounding box to geometry-----------------
-	std::vector <float3> vertex_array;
-	const float* ver = new_mesh->GetVertices();
-	uint num_vert = new_mesh->GetNumVertices();
-
-	for (int i = 0; i < num_vert*3; i += 3)
-		vertex_array.push_back(float3(ver[i], ver[i + 1], ver[i + 2]));
-	if(vertex_array.size() > 0)
-		bounding_box.Enclose(&vertex_array[0], vertex_array.size());
-	
+	if (m)
+	{
+		new_mesh->name = m_name;
+		new_mesh->SetMesh(m);
+		SetBoundingBox(m);
+	}
 	if (UID > 0)
 		new_mesh->SetID(UID);
 
@@ -437,8 +443,10 @@ void GameObject::OnEditor()
 		}
 		ImGui::PopID();
 	}
+
 	if (ImGui::Button("CREATE COMPONENT"))	
 		ImGui::OpenPopup("CREATE COMPONENT");
+
 	if (ImGui::BeginPopup("CREATE COMPONENT"))
 	{
 		if (ImGui::MenuItem("Camera"))
@@ -455,7 +463,7 @@ void GameObject::OnEditor()
 				}
 			}*/
 			ImGui::EndMenu();
-			CreateComponent_Material();
+			//CreateComponent_Material();
 		}
 		if (ImGui::MenuItem("Mesh"))
 		{
