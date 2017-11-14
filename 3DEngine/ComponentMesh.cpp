@@ -17,7 +17,8 @@ ComponentMesh::ComponentMesh(GameObject* game_object): Component(game_object)
 
 ComponentMesh::~ComponentMesh()
 {
-
+	if (mesh)
+		mesh->DecreaseInstancies();
 }
 
 void ComponentMesh::Draw()

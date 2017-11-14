@@ -3,7 +3,6 @@
 #include "SDL/include/SDL_opengl.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
-#include "mmgr\mmgr.h"
 #include "Application.h"
 #include "ModuleScene.h"
 

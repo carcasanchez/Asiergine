@@ -112,6 +112,7 @@ GameObject * ModuleScene::CreateGameObject(const char* object_name, GameObject* 
 void ModuleScene::CleanScene()
 {
 	CleanUp();
+	App->resource_m->CleanUp();
 	scene_quadtree.Clear();
 	root = CreateGameObject("Root");	
 	root->SetID(0);
@@ -175,9 +176,11 @@ bool ModuleScene::SaveSceneToOwnFormat(const char* name)
 	}
 
 
-	App->fs->SaveDataToLibrary(data, size, name, "Scenes", FORMAT_EXTENSION);
-
-
+	std::string scenes_dir = App->fs->CreateDirectoryInAssets("Scenes");
+	scenes_dir += name;
+	scenes_dir += FORMAT_EXTENSION;
+	App->fs->SaveDataTo(data, size, scenes_dir.c_str());
+	
 
 	delete[] data;
 	LOG("Saved Scene %s to Library", name);
@@ -350,7 +353,12 @@ GameObject * ModuleScene::LoadSceneFromOwnFormat(const char * name)
 
 	char* data = nullptr;
 
-	if (App->fs->LoadDataFromLibrary(&data, name, "Scenes", FORMAT_EXTENSION) == false)
+	std::string data_path = App->fs->GetAssetDirectory();
+	data_path += "Scenes/";
+	data_path += name;
+	data_path += FORMAT_EXTENSION;
+
+	if (App->fs->LoadDataFrom(data, data_path.c_str()) == false)
 	{
 		return nullptr;
 	}
@@ -515,7 +523,7 @@ uint ModuleScene::LoadObjectFromOwnFormat(char*& cursor)
 		mesh_path += mesh_name;
 		mesh_path += FORMAT_EXTENSION;
 
-		App->resource_m->LoadResource(mesh_path.c_str());
+		new_obj->CreateComponent_Mesh(mesh_name, (ResourceMesh*)App->resource_m->LoadResource(mesh_path.c_str()));
 		delete[] mesh_name;
 	}
 

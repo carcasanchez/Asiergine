@@ -258,6 +258,7 @@ std::string ModuleImporter::ImportMeshFromFBX(const aiMesh* m, const char* scene
 	//save mesh to .carca
 
 	std::string name = m->mName.C_Str();
+
 	//Put generic name if name is empty
 	if (name.empty())
 	{

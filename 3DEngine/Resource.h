@@ -30,11 +30,9 @@ public:
 		instancies++;
 	}
 
-	void DecreaseInstancies()
-	{
-		if(instancies>0)
-			instancies--;
-	}
+	
+	void DecreaseInstancies();
+	
 
 	bool HasInstancies() const
 	{

@@ -529,7 +529,7 @@ void ModuleEditor::ManageSaveWindow()
 		{
 			ImGui::BeginChildFrame(0, ImVec2(150, 420));
 
-			std::string path = App->fs->GetLibraryDirectory();
+			std::string path = App->fs->GetAssetDirectory();
 			path += "Scenes/";
 
 			for (std::experimental::filesystem::recursive_directory_iterator::value_type it : std::experimental::filesystem::recursive_directory_iterator(path.c_str()))

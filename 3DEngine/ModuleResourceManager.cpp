@@ -26,16 +26,32 @@ bool ModuleResourceManager::Init(const JSON_Object* config_data)
 	return ret;
 }
 
+update_status ModuleResourceManager::PreUpdate(float real_dt, float game_dt)
+{
+	if (!to_delete.empty())
+	{
+		//delete all marked resources
+		for (int i = 0; i < to_delete.size(); i++)
+		{
+			DeleteResource(to_delete[i]);
+		}
+		to_delete.clear();
+	}
+
+	return UPDATE_CONTINUE;
+}
+
 bool ModuleResourceManager::CleanUp()
 {
 	for (std::map<uint, Resource*>::iterator it = resources.begin(); it != resources.end(); ++it)
 	{
 		delete it->second;
 	}
+	resources.clear();
+	to_delete.clear();
 
 	return true;
 }
-
 
 
 Resource * ModuleResourceManager::CreateResource(Resource::RESOURCE_TYPE type, uint id)
@@ -207,7 +223,6 @@ uint ModuleResourceManager::CreateMeshMeta(const char * path)
 }
 
 
-
 //Utility
 bool ModuleResourceManager::CheckTimestamp(const char* file, const char* meta)
 {
@@ -240,16 +255,22 @@ Resource * ModuleResourceManager::GetResource(uint id)
 	return res;
 }
 
+void ModuleResourceManager::SetToDelete(uint id)
+{
+	to_delete.push_back(id);
+}
+
 bool ModuleResourceManager::DeleteResource(uint id)
 {
 	if (resources.count(id) > 0)
 	{
 		Resource* res = resources[id];
 		if (res)
+		{
 			delete res;
-
-		resources.erase(id);
-		return true;
+			resources.erase(id);
+			return true;
+		}
 	}
 
 	return false;
