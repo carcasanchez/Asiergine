@@ -437,8 +437,10 @@ void GameObject::OnEditor()
 		}
 		ImGui::PopID();
 	}
+
 	if (ImGui::Button("CREATE COMPONENT"))	
 		ImGui::OpenPopup("CREATE COMPONENT");
+
 	if (ImGui::BeginPopup("CREATE COMPONENT"))
 	{
 		if (ImGui::MenuItem("Camera"))
@@ -455,7 +457,7 @@ void GameObject::OnEditor()
 				}
 			}*/
 			ImGui::EndMenu();
-			CreateComponent_Material();
+			//CreateComponent_Material();
 		}
 		if (ImGui::MenuItem("Mesh"))
 		{

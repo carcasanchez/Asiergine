@@ -61,7 +61,6 @@ void ComponentMesh::OnEditor()
 {
 	if (IsActive() == true)
 	{
-		bool want_to_change_mesh = false;
 
 		ImGui::TextWrapped("Current Mesh:", GetNumVertices());
 
@@ -73,7 +72,38 @@ void ComponentMesh::OnEditor()
 		else 	
 			want_to_change_mesh = ImGui::Button("MISSING!");
 
+		if (want_to_change_mesh)
+		{
+			library_meshes_path = App->fs->GetAssetDirectory();
+			library_meshes_path += "Meshes/";
+			ImGui::OpenPopup("Meshes");
+			want_to_change_mesh = false;			
+		}
 
+		if (ImGui::BeginPopup("Meshes"))
+		{
+			for (std::experimental::filesystem::recursive_directory_iterator::value_type it : std::experimental::filesystem::recursive_directory_iterator(library_meshes_path.c_str()))
+			{
+				std::string filename = std::experimental::filesystem::path(it.path().string().c_str()).stem().string().c_str();
+				if (ImGui::MenuItem(filename.c_str()))
+				{
+					if (mesh)
+						mesh->DecreaseInstancies();
+
+					library_meshes_path += filename + FORMAT_EXTENSION;
+					mesh = (ResourceMesh*)App->resource_m->LoadResource(library_meshes_path.c_str());
+
+					if (mesh)
+					{
+						mesh->IncreaseInstancies();
+						name = filename;
+					}
+					else
+						LOG("Mesh %s does not exist!", filename.c_str());
+				}
+			}
+			ImGui::EndPopup();
+		}
 
 
 		ImGui::TextWrapped("Number of vertices: %i", GetNumVertices());
