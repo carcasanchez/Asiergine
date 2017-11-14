@@ -265,8 +265,8 @@ std::string ModuleImporter::ImportMeshFromFBX(const aiMesh* m, const char* scene
 		name = scene_name;
 		name += "_mesh_";
 		name += std::to_string(mesh_id);
-		mesh_id++;
 	}
+	mesh_id++;
 
 	if (ret)
 	{
@@ -489,8 +489,7 @@ std::string ModuleImporter::SearchFBXNode(const aiNode* n, const aiScene* scene,
 		{
 			mesh_name = scene_name;
 			mesh_name += "_mesh_";
-			mesh_name += std::to_string(mesh_id);
-			mesh_id++;
+			mesh_name += std::to_string(n->mMeshes[i]);
 		}
 		//Call resource manager to load mesh
 		std::string mesh_file_path = App->fs->GetAssetDirectory();
