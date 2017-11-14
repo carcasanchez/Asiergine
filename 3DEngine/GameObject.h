@@ -32,7 +32,7 @@ public:
 	std::vector<GameObject*> GetChildrens() const { return children;}
 	void SetParent(GameObject* new_parent);
 	bool IsStatic() const { return obj_static; }
-	void SetStatic(bool obj_static, GameObject* child);
+	void SetStatic(bool obj_static);
 	void SendAllMeshesToDraw();
 	void SetBoundingBox(const ResourceMesh* m);
 	void EraseChild(GameObject* game_object);

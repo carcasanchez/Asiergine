@@ -397,14 +397,14 @@ void GameObject::SendAllMeshesToDraw()
 	}
 }
 
-void GameObject::SetStatic(bool obj_static, GameObject* child)
+void GameObject::SetStatic(bool is_static)
 {
-	std::vector<GameObject*>::iterator it = child->children.begin();
-	for (it; it != child->children.end(); ++it)
+	std::vector<GameObject*>::iterator it = children.begin();
+	for (it; it != children.end(); ++it)
 	{
-		SetStatic(obj_static, (*it));
+		(*it)->SetStatic(is_static);
 	}
-	child->obj_static = obj_static;
+	obj_static = is_static;
 }
 
 
@@ -415,7 +415,7 @@ void GameObject::OnEditor()
 	ImGui::Separator();
 	if (ImGui::Checkbox("Static", &obj_static))
 	{
-		SetStatic(obj_static, this);
+		SetStatic(obj_static);
 		App->scene->scene_quadtree.Calculate();
 	}
 

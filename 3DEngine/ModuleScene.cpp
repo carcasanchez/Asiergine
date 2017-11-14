@@ -207,7 +207,7 @@ bool ModuleScene::SaveSceneToOwnFormat(const char* name)
 
 uint ModuleScene::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>> &buffer, GameObject* to_save)
 {
-	//DATA ORDER: UID of obj - size of name - name -
+	//DATA ORDER: UID of obj - size of name - name - static -
 	// UID of parent
 	//  UID of transform - pos - scale - rot 
 	//  num of meshes - [UID of mesh - mesh name size - mesh name]
@@ -219,11 +219,13 @@ uint ModuleScene::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>> &b
 
 	std::vector<Component*> meshes = to_save->GetAllComponentOfType(COMPONENT_MESH);
 
-
 	size += sizeof(uint);
 	std::string name = to_save->GetName();
 	size += sizeof(uint);
 	size += name.size();
+
+	//Static option
+	size += sizeof(bool);
 
 	//UID parent
 	size += sizeof(uint);
@@ -281,6 +283,12 @@ uint ModuleScene::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>> &b
 	//Copy name
 	size_of = name_size[0];
 	memcpy(cursor, name.data(), size_of);
+	cursor += size_of;
+
+	//Copy static option
+	size_of = sizeof(bool);
+	bool static_option = to_save->IsStatic();
+	memcpy(cursor, &static_option, size_of);
 	cursor += size_of;
 
 	//Copy UID of parent
@@ -446,7 +454,7 @@ GameObject * ModuleScene::LoadSceneFromOwnFormat(const char * name)
 
 uint ModuleScene::LoadObjectFromOwnFormat(char*& cursor)
 {
-	//DATA ORDER: UID of obj - size of name - name -
+	//DATA ORDER: UID of obj - size of name - name - static -
 	// UID of parent
 	//  UID of transform - pos - scale - rot 
 	//  num of meshes - [UID of mesh - mesh name size - mesh name]
@@ -474,6 +482,12 @@ uint ModuleScene::LoadObjectFromOwnFormat(char*& cursor)
 	GameObject* new_obj = App->scene->CreateGameObject(obj_name, App->scene->root, object_id);
 
 	delete[] obj_name;
+
+	bool static_option;
+	size_of = sizeof(bool);
+	memcpy(&static_option, cursor, size_of);
+	cursor += size_of;
+	new_obj->SetStatic(static_option);
 
 	uint parent_id = 0;
 	size_of = sizeof(uint);
