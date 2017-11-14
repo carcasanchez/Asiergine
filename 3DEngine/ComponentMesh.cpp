@@ -97,6 +97,7 @@ void ComponentMesh::OnEditor()
 					{
 						mesh->IncreaseInstancies();
 						name = filename;
+						game_object->SetBoundingBox(mesh);
 					}
 					else
 						LOG("Mesh %s does not exist!", filename.c_str());
