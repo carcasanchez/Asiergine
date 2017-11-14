@@ -214,11 +214,8 @@ uint ModuleResourceManager::ManageTexture(const char * path, const char* extensi
 
 	//IF NOT: create meta and import to library
 	if (!App->fs->ExistsFile(meta_file.c_str()))
-	{
-		//TODO: Create texture meta
-
-		LCG rand;
-		resource_id = rand.Int();
+	{			
+		resource_id = CreateTextureMeta(path);
 
 		//Construct path to library
 		std::string library_path = App->fs->CreateDirectoryInLibrary("Textures") + std::experimental::filesystem::path(path).stem().string().c_str() + TEXTURE_EXTENSION;
@@ -226,10 +223,41 @@ uint ModuleResourceManager::ManageTexture(const char * path, const char* extensi
 		ResourceTexture* new_texture = (ResourceTexture*)CreateResource(Resource::TEXTURE, resource_id);
 
 		std::string texture_name = std::experimental::filesystem::path(path).stem().string().c_str();
-		texture_name += ".";
-		texture_name += extension;
+		std::string text_extension = extension;
 
-		new_texture->SetData(App->importer->LoadTexture(path, true), texture_name.c_str());
+		new_texture->SetData(App->importer->LoadTexture(path, true), (texture_name + text_extension).c_str());
+		App->importer->SaveTextureToDDS(texture_name.c_str());
+	}
+	else
+	{
+		//TODO: check if meta timestamp doesn't match
+		//IF HASN'T: reimport asset
+
+		//Read UID from meta 
+		JSON_Value * value = json_parse_file(meta_file.c_str());
+		JSON_Object* obj_data = json_value_get_object(value);
+		resource_id = json_object_dotget_number(obj_data, "UID");
+
+		//Chek if mesh has been already loaded
+		ResourceTexture* new_texture = (ResourceTexture*)GetResource(resource_id);
+
+		//IF HASN'T: load asset from library		
+		if (new_texture == nullptr)
+		{
+			new_texture = (ResourceTexture*)CreateResource(Resource::TEXTURE, resource_id);
+			
+			//Extract file name
+			std::string file_name = std::experimental::filesystem::path(path).stem().string().c_str();
+							
+
+			//Construct path to library
+			std::string library_path = App->fs->GetLibraryDirectory();
+			library_path += "Textures/" + file_name + TEXTURE_EXTENSION;
+			new_texture->SetData(App->importer->LoadTexture(library_path.c_str()), file_name.c_str());
+			new_texture->SetFile(path, library_path.c_str());
+						
+		}
+
 	}
 
 	return resource_id;
@@ -262,6 +290,40 @@ uint ModuleResourceManager::CreateMeshMeta(const char * path)
 	std::string timestamp = std::asctime(std::localtime(&result));
 
 	json_object_dotset_string(obj_data, "Time Stamp", timestamp.c_str());
+	json_serialize_to_file(meta_file, meta_path.c_str());
+
+	return UID;
+}
+
+uint ModuleResourceManager::CreateTextureMeta(const char * path)
+{
+	LCG rand;
+	uint UID = rand.Int();
+
+
+	//Extract file name
+	std::string file_path = path;
+	size_t begin_name = file_path.find_last_of('/');
+	std::string file_name = file_path.substr(begin_name + 1);
+	std::string meta_path = path;
+	meta_path += META_EXTENSION;
+
+	//Serialize to JSON
+	JSON_Value * meta_file = json_value_init_object();
+	JSON_Object* obj_data = json_value_get_object(meta_file);
+
+	json_object_dotset_string(obj_data, "Resource Type", "Texture");
+	json_object_dotset_string(obj_data, "Binary file", file_name.c_str());
+
+
+	json_object_dotset_number(obj_data, "UID", UID);
+
+	std::time_t result = std::time(nullptr);
+	std::string timestamp = std::asctime(std::localtime(&result));
+
+	json_object_dotset_string(obj_data, "Time Stamp", timestamp.c_str());
+
+	json_object_dotset_boolean(obj_data, "Flip", false);
 	json_serialize_to_file(meta_file, meta_path.c_str());
 
 	return UID;
