@@ -117,13 +117,13 @@ bool ModuleImporter::ImportFBX(const char * path)
 void ModuleImporter::ImportScene(const char* path, const aiScene * scene, FBX_data &fbx_d)
 {
 	//Store all materials in a vector and assign a id of -1
-	if (scene->HasMaterials())
+	/*if (scene->HasMaterials())
 	{
 		for (int i = 0; i < scene->mNumMaterials; i++)
 		{
 			ImportTextureFromFBX(scene, path, i, fbx_d );
 		}
-	}
+	}*/
 
 	if (scene->HasMeshes())
 	{
@@ -337,11 +337,7 @@ void ModuleImporter::CreateFBXmeta(FBX_data &fbx_d, const char* path) const
 
 }
 
-void ModuleImporter::GetFBXdataFromMeta(FBX_data & fbx_d, const char * path)
-{
 
-
-}
 
 
 
@@ -357,6 +353,7 @@ bool ModuleImporter::LoadFBX(const char * path)
 	mesh_id = 0;
 	if (scene != nullptr)
 	{
+		fbx_path = path;
 		std::string scene_name = std::experimental::filesystem::path(path).stem().string().c_str();
 		
 		//Creates scene hierarchy
@@ -500,15 +497,11 @@ std::string ModuleImporter::SearchFBXNode(const aiNode* n, const aiScene* scene,
 		last_material_index = scene->mMeshes[n->mMeshes[i]]->mMaterialIndex;
 	}
 
-	//TODO: call resource manager to load texture
 
-	//Searches and loads texture
-	//std::string texture_name;
-	//int text_id = SearchForTexture(scene, fbx_path.c_str(), last_material_index, texture_name, fbx_d);
-
-	//ResourceTexture* t = (ResourceTexture*)App->resource_m->CreateResource(Resource::TEXTURE);
-	//t->SetData(text_id, std::experimental::filesystem::path(texture_name).stem().string().c_str());
-	//new_obj->CreateComponent_Material(t);
+	//Call resource manager to load texture
+	std::string texture_path = ExtractTexturePath(scene->mMaterials[last_material_index]);
+	ResourceTexture* t = (ResourceTexture*)App->resource_m->LoadResource(texture_path.c_str());	
+	new_obj->CreateComponent_Material(t);
 
 
 	//Searches for children nodes
@@ -516,6 +509,23 @@ std::string ModuleImporter::SearchFBXNode(const aiNode* n, const aiScene* scene,
 		SearchFBXNode(n->mChildren[i], scene, new_obj, scene_name);
 	
 	return n->mName.C_Str();
+}
+
+std::string ModuleImporter::ExtractTexturePath(const aiMaterial* material)
+{
+	aiString s;
+	material->GetTexture(aiTextureType_DIFFUSE, 0, &s);
+	std::string texture_name = s.C_Str();
+	std::string  text_path = fbx_path;
+
+	//Construc the general path for the texture
+	while (text_path.back() != '\\')
+	{
+		text_path.pop_back();
+	}
+	text_path += texture_name;
+
+	return text_path;
 }
 
 

@@ -27,6 +27,7 @@ private:
 
 	void ManageFBX(const char* path);
 	uint ManageMesh(const char* path);
+	uint ManageTexture(const char* path, const char* extension);
 	uint CreateMeshMeta(const char* path);
 
 	bool CheckTimestamp(const char* file, const char* meta);

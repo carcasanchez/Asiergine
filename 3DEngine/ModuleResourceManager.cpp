@@ -108,6 +108,8 @@ Resource* ModuleResourceManager::LoadResource(const char * path)
 		ManageFBX(path);
 	else if (extension.compare("carca") == 0)
 		resource_id = ManageMesh(path);
+	else if (extension.compare("png") == 0 || extension.compare("dds") == 0 || extension.compare("tga") == 0 || extension.compare("jpg") == 0)
+		resource_id = ManageTexture(path, extension.c_str());
 	else LOG("ERROR: File extension '.%s' not allowed", extension.c_str());
 		
 
@@ -125,6 +127,12 @@ void ModuleResourceManager::ManageFBX(const char* path)
 uint ModuleResourceManager::ManageMesh(const char * path)
 {
 	uint resource_id = 0;
+
+	if (!App->fs->ExistsFile(path))
+	{
+		return resource_id;
+	}
+
 	std::string meta_file = path;
 	meta_file += META_EXTENSION;
 
@@ -145,10 +153,9 @@ uint ModuleResourceManager::ManageMesh(const char * path)
 		ResourceMesh* new_mesh = App->importer->LoadMeshFromOwnFormat(path, resource_id);
 
 		if (new_mesh)
-		{	//Import mesh to library
+		{	
+			//Import mesh to library
 			App->importer->SaveMeshToOwnFormat(library_path.c_str(), new_mesh);
-
-
 			new_mesh->SetFile(path, library_path.c_str());
 		}
 	}	
@@ -186,6 +193,44 @@ uint ModuleResourceManager::ManageMesh(const char * path)
 
 	}
 
+
+	return resource_id;
+}
+
+uint ModuleResourceManager::ManageTexture(const char * path, const char* extension)
+{
+	uint resource_id = 0;
+
+	if (!App->fs->ExistsFile(path))
+	{
+		return resource_id;
+	}
+
+
+	std::string meta_file = path;
+	meta_file += META_EXTENSION;
+
+	//Check if meta exists
+
+	//IF NOT: create meta and import to library
+	if (!App->fs->ExistsFile(meta_file.c_str()))
+	{
+		//TODO: Create texture meta
+
+		LCG rand;
+		resource_id = rand.Int();
+
+		//Construct path to library
+		std::string library_path = App->fs->CreateDirectoryInLibrary("Textures") + std::experimental::filesystem::path(path).stem().string().c_str() + TEXTURE_EXTENSION;
+		
+		ResourceTexture* new_texture = (ResourceTexture*)CreateResource(Resource::TEXTURE, resource_id);
+
+		std::string texture_name = std::experimental::filesystem::path(path).stem().string().c_str();
+		texture_name += ".";
+		texture_name += extension;
+
+		new_texture->SetData(App->importer->LoadTexture(path, true), texture_name.c_str());
+	}
 
 	return resource_id;
 }

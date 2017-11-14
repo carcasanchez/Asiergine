@@ -547,48 +547,11 @@ uint ModuleScene::LoadObjectFromOwnFormat(char*& cursor)
 		cursor += size_of;
 
 		text_name[text_name_size] = '\0';
-
-		bool loaded = false;
-		uint texture_ID = -1;
-		//Check if texture already loaded and, if not, load it
-		for (std::vector<std::pair<std::string, int>>::iterator it = loaded_textures.begin(); it != loaded_textures.end(); it++)
-		{
-			if ((*it).first.compare(text_name) == 0)
-			{
-				loaded = true;
-				texture_ID = (*it).second;
-				break;
-			}
-		}
-
-		if (loaded == false)
-		{
-			//Construct path to texture
-			std::string path;
-#if _DEBUG
-			path = "../Library/";
-#else
-			path = "Library/";
-#endif
-
-			path += "Textures/";
-			path += text_name;
-			path += ".dds";
-
-			texture_ID = App->importer->LoadTexture(path.c_str(), true);
-
-			//Save the texture in the already-loaded vector
-			std::pair<std::string, int> text;
-			text.first = text_name;
-			text.second = texture_ID;
-			loaded_textures.push_back(text);
-		}
-
-
-
-		ResourceTexture* t = (ResourceTexture*)App->resource_m->CreateResource(Resource::TEXTURE);
-		t->SetData(texture_ID, std::experimental::filesystem::path(text_name).stem().string().c_str());
-		new_obj->CreateComponent_Material(t, mat_id);
+		std::string texture_path = App->fs->GetLibraryDirectory();
+		texture_path += "Textures/";
+		texture_path +=  text_name;
+		ResourceTexture* t = (ResourceTexture*)App->resource_m->LoadResource(texture_path.c_str());
+		new_obj->CreateComponent_Material(t);
 
 		delete[] text_name;
 	}

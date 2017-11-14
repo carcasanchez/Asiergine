@@ -39,14 +39,13 @@ public:
 	std::string ImportMeshFromFBX(const aiMesh*, const char*, FBX_data&);
 	void CreateFBXmeta(FBX_data& d, const char* path) const;
 
-	void GetFBXdataFromMeta(FBX_data& d, const char* path);
 
 	//Save resources to library after import
 	void SaveTextureToDDS(const char * name) const;
 
 	//Load hierarchy from fbx
 	std::string  SearchFBXNode(const aiNode* n, const aiScene* scene, GameObject* parent, const char* scene_name);
-
+	std::string ExtractTexturePath(const aiMaterial* material);
 
 	//Save methodology
 	bool SaveMeshToOwnFormat(const char* path, ResourceMesh* m) const;
@@ -56,4 +55,6 @@ public:
 private:
 	//For meshes without name
 	int mesh_id = 0;
+	//For texture referencing
+	std::string fbx_path;
 };
