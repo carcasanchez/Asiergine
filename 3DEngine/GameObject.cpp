@@ -271,17 +271,17 @@ bool GameObject::PutInQuadTree(QuadTreeNodeObj* node)
 	bool ret = true;
 	if (!IsStatic())
 		return ret;
-	if (node->IsFull() && !node->IsOfMinSize())
+	if (node->IsFull() || node->IsOfMinSize())
 		ret = false;
 	else {
 		if (node->box.Intersects(transformed_bounding_box))
 			node->Insert(this);
-		if (node->IsFull() && !node->IsOfMinSize())
+		if (node->IsFull() || node->IsOfMinSize())
 			ret = false;
 		for (std::vector<GameObject*>::iterator it = children.begin(); it != children.end(); ++it)
 		{
 			ret = (*it)->PutInQuadTree(node);
-			if (ret == false || !node->IsOfMinSize())
+			if (ret == false || node->IsOfMinSize())
 			{
 				break;
 			}
@@ -415,7 +415,7 @@ void GameObject::OnEditor()
 	ImGui::Separator();
 	if (ImGui::Checkbox("Static", &obj_static))
 	{
-		GetComponentByType(COMPONENT_TRANSFORM)->SetActive(!obj_static);
+		//GetComponentByType(COMPONENT_TRANSFORM)->SetActive(!obj_static);
 		SetStatic(obj_static);
 		App->scene->scene_quadtree.Calculate();
 	}
