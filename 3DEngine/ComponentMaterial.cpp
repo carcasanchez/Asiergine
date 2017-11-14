@@ -17,6 +17,8 @@ ComponentMaterial::ComponentMaterial(GameObject* g):Component(g)
 
 ComponentMaterial::~ComponentMaterial()
 {
+	if (texture)
+		texture->DecreaseInstancies();
 }
 
 void ComponentMaterial::OnEditor()
@@ -34,6 +36,10 @@ void ComponentMaterial::OnEditor()
 			ImGui::TextWrapped("%s", texture->GetTextureName().c_str());	
 		}
 
+		if (texture)
+		{
+			ImGui::TextWrapped("Instancies: %i", texture->GetInstancies());
+		}
 
 		/*if (ImGui::Button("Change Texture"))
 		{
