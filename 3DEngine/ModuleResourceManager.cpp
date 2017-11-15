@@ -141,23 +141,7 @@ uint ModuleResourceManager::ManageMesh(const char * path)
 	//IF NOT: create meta and import to library
 	if (!App->fs->ExistsFile(meta_file.c_str()))
 	{
-		resource_id = CreateMeshMeta(path);
-		
-		//Extract file name
-		std::string file_name = std::experimental::filesystem::path(path).stem().string().c_str();
-
-		//Construct path to library
-		std::string library_path = App->fs->GetLibraryDirectory();
-		library_path += App->fs->CreateDirectoryInLibrary("Meshes") + file_name + FORMAT_EXTENSION;
-		
-		ResourceMesh* new_mesh = App->importer->LoadMeshFromOwnFormat(path, resource_id);
-
-		if (new_mesh)
-		{	
-			//Import mesh to library
-			App->importer->SaveMeshToOwnFormat(library_path.c_str(), new_mesh);
-			new_mesh->SetFile(path, library_path.c_str());
-		}
+		resource_id = ImportMesh(path);
 	}	
 	else
 	{		
@@ -193,6 +177,36 @@ uint ModuleResourceManager::ManageMesh(const char * path)
 
 	}
 
+
+	return resource_id;
+}
+
+uint ModuleResourceManager::ImportMesh(const char * path, bool unload_after_import)
+{
+	uint resource_id = CreateMeshMeta(path);
+
+	//Extract file name
+	std::string file_name = std::experimental::filesystem::path(path).stem().string().c_str();
+
+	//Construct path to library
+	std::string library_path = App->fs->GetLibraryDirectory();
+	library_path += App->fs->CreateDirectoryInLibrary("Meshes") + file_name + FORMAT_EXTENSION;
+
+	ResourceMesh* new_mesh = App->importer->LoadMeshFromOwnFormat(path, resource_id);
+
+	if (new_mesh)
+	{
+		//Import mesh to library
+		App->importer->SaveMeshToOwnFormat(library_path.c_str(), new_mesh);
+		new_mesh->SetFile(path, library_path.c_str());
+	}
+
+	//Unload if only wants to import to library
+	if (unload_after_import)
+	{
+		DeleteResource(resource_id);
+		resource_id = 0;
+	}
 
 	return resource_id;
 }
@@ -368,6 +382,27 @@ void ModuleResourceManager::SetToDelete(uint id)
 {
 	to_delete.push_back(id);
 }
+
+void ModuleResourceManager::ReimportAllAssets()
+{
+	//Reimport Meshes
+	std::string mesh_asset_directory = App->fs->GetAssetDirectory();
+	mesh_asset_directory += "Meshes/";
+	for (std::experimental::filesystem::recursive_directory_iterator::value_type it : std::experimental::filesystem::recursive_directory_iterator(mesh_asset_directory.c_str()))
+	{
+		std::string extension = std::experimental::filesystem::path(it.path().string().c_str()).extension().string().c_str();
+		std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
+
+		//Skips everything that it's not a mesh
+		if (extension.compare(".carca") != 0)
+			continue;
+
+		ImportMesh(it.path().string().c_str(), true);
+
+	}
+}
+
+
 
 bool ModuleResourceManager::DeleteResource(uint id)
 {

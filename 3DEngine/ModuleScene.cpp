@@ -81,7 +81,11 @@ update_status ModuleScene::Update(float real_dt, float game_dt)
 		debug_normals = !debug_normals;
 	if (App->input->GetKey(DEBUG_BOXES_KEY) == KEY_DOWN)
 		debug_boxes = !debug_boxes;
-	
+
+
+	//TODO: delet dis
+	if (App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
+		App->resource_m->ReimportAllAssets();
 
 	return UPDATE_CONTINUE;
 }
