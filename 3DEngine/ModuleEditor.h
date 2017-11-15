@@ -2,9 +2,10 @@
 #include "Module.h"
 #include "Console.h"
 #include "imgui\imgui.h"
+#include "imgui\ImGuizmo.h"
 #include "MathGeoLib\include\Math.h"
 
-#include "Imgui/imgui_impl_sdl_gl3.h"
+#include "Imgui\imgui_impl_sdl_gl3.h"
 
 
 #define MAX_FPS_LOG 100
@@ -47,6 +48,13 @@ public:
 		selected_object = nullptr;
 	}
 
+	bool BakeQuadtreeOpen() const
+	{
+		return bake_menu_open;
+	}
+
+
+	//Lock and Unlock options for editor properly work
 	bool IsInputLocked() const
 	{
 		return input_locked;
@@ -55,41 +63,38 @@ public:
 	{
 		return selection_locked;
 	}
-
-	bool BakeQuadtreeOpen() const
-	{
-		return bake_menu_open;
-	}
-
 	void LockInput()
 	{
 		input_locked = true;
 	}
-
 	void LockSelection()
 	{
 		selection_locked = true;
 	}
-
 	void UnLockSelection()
 	{
 		selection_locked = false;
 	}
-	
 	void LockGizmos()
 	{
 		gizmos_locked = true;
 	}
-
 	void UnLockGizmos()
 	{
 		gizmos_locked = false;
 	}
-
+	bool UsingGizmos() const
+	{
+		return ImGuizmo::IsUsing();
+	}
 	bool AreGizmosLocked() const
 	{
 		return gizmos_locked;
 	}
+
+	
+
+
 
 private:
 

@@ -59,10 +59,11 @@ update_status ModuleScene::Update(float real_dt, float game_dt)
 		scene_quadtree.root.SetAABBToDraw();
 
 	//Delete GameObject
-	if (App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN && !App->editor->UsingGizmos())
 	{		
 		DeleteSelectedGameObject();
 	}
+
 	//Check debug key
 	if (App->input->GetKey(DEBUG_NORMALS_KEY) == KEY_DOWN)
 		debug_normals = !debug_normals;
