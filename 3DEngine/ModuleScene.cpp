@@ -579,8 +579,7 @@ uint ModuleScene::LoadObjectFromOwnFormat(char*& cursor)
 		cursor += size_of;
 
 		text_name[text_name_size] = '\0';
-		std::string texture_path = App->fs->GetLibraryDirectory();
-		texture_path += "Textures/";
+		std::string texture_path = App->fs->GetAssetDirectory();
 		texture_path +=  text_name;
 		ResourceTexture* t = (ResourceTexture*)App->resource_m->LoadResource(texture_path.c_str());
 		new_obj->CreateComponent_Material(t);
