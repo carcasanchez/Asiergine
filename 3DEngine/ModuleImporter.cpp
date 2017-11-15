@@ -689,7 +689,7 @@ bool ModuleImporter::SaveSceneToOwnFormat(const char* name)
 
 uint ModuleImporter::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>> &buffer, GameObject* to_save)
 {
-	//DATA ORDER: UID of obj - size of name - name - is static
+	//DATA ORDER: UID of obj - size of name - name -
 				// UID of parent
 			    //  UID of transform - pos - scale - rot 
 				//  num of meshes - [UID of mesh - mesh name size - mesh name]
@@ -706,7 +706,6 @@ uint ModuleImporter::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>>
 	std::string name = to_save->GetName();
 	size += sizeof(uint);
 	size += name.size();
-	size += sizeof(bool);
 
 	//UID parent
 	size += sizeof(uint);
@@ -764,12 +763,6 @@ uint ModuleImporter::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>>
 	//Copy name
 	size_of = name_size[0];
 	memcpy(cursor, name.data(), size_of);
-	cursor += size_of;
-
-	//Copy static
-	bool is_static = to_save->IsStatic();
-	size_of = sizeof(bool);
-	memcpy(cursor, &is_static, size_of);
 	cursor += size_of;
 
 	//Copy UID of parent
@@ -929,7 +922,7 @@ GameObject * ModuleImporter::LoadSceneFromOwnFormat(const char * name)
 
 uint ModuleImporter::LoadObjectFromOwnFormat(char*& cursor)
 {
-	//DATA ORDER: UID of obj - size of name - name - is static
+	//DATA ORDER: UID of obj - size of name - name -
 	// UID of parent
 	//  UID of transform - pos - scale - rot 
 	//  num of meshes - [UID of mesh - mesh name size - mesh name]
@@ -954,15 +947,7 @@ uint ModuleImporter::LoadObjectFromOwnFormat(char*& cursor)
 	obj_name[size_of_name] = '\0';
 
 
-	bool is_static = false;
-	size_of = sizeof(bool);
-	memcpy(&is_static, cursor, size_of);
-	cursor += size_of;
-
-
 	GameObject* new_obj = App->scene->CreateGameObject(obj_name, App->scene->root, object_id);
-
-	new_obj->SetStatic(is_static);
 
 	delete[] obj_name;
 
