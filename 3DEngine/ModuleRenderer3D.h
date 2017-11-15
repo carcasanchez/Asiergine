@@ -53,6 +53,9 @@ public:
 	bool hard_poly_enabled;
 	bool frustum_culling;
 
+	//Num of lights in scene
+	short int light_index = 0;
+
 private:
 	std::queue<ComponentMesh*> meshes_to_draw;
 	std::queue<math::AABB> boxes_to_draw;
@@ -71,6 +74,6 @@ private:
 
 	Plane_prim plane;
 
-
 	ComponentCamera* active_camera = nullptr;
+
 };

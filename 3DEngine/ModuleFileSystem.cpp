@@ -61,7 +61,7 @@ bool ModuleFileSystem::SaveDataTo(const char * data, uint size, const char * pat
 	return ret;
 }
 
-bool ModuleFileSystem::LoadDataFrom(char* & data, const char * path) const
+uint ModuleFileSystem::LoadDataFrom(char* & data, const char * path) const
 {
 	//Search file
 	std::ifstream file(path, std::ifstream::binary);
@@ -77,12 +77,12 @@ bool ModuleFileSystem::LoadDataFrom(char* & data, const char * path) const
 		data = new char[length];
 		file.read(data, length);
 		file.close();
-		return true;
+		return length;
 	}
 	else
 	{
 		LOG("ERROR: could not load data from %s", path);
-		return false;
+		return 0;
 	}
 }
 
@@ -142,6 +142,20 @@ bool ModuleFileSystem::ExistsFile(const char * path) const
 {
 	std::fstream infile(path);
 	return infile.good();
+}
+
+bool ModuleFileSystem::CloneFile(const char * source, const char * destination) const
+{
+	char* data = nullptr;
+
+	uint size = LoadDataFrom(data, source);
+	if (size > 0)
+	{
+		SaveDataTo(data, size, destination);
+		delete[] data;
+	}
+
+	return true;
 }
 
 

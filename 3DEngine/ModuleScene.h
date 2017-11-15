@@ -17,6 +17,7 @@ public:
 	virtual ~ModuleScene();
 
 	bool Init(const JSON_Object* config_data);
+	bool Start();
 	update_status Update(float real_dt, float game_dt);
 	bool CleanUp();
 

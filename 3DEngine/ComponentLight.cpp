@@ -15,12 +15,13 @@ ComponentLight::ComponentLight(GameObject* g, Light l) :Component(g)
 {
 	type = COMPONENT_LIGHT;
 	light = l;
+	name = "Light";
 }
 
 
 ComponentLight::~ComponentLight()
 {
-	
+	App->renderer3D->light_index--;
 }
 
 void ComponentLight::Update(float real_dt, float game_dt)

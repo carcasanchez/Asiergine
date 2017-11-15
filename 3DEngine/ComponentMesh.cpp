@@ -105,8 +105,7 @@ void ComponentMesh::OnEditor()
 			}
 			ImGui::EndPopup();
 		}
-
-
+		
 		ImGui::TextWrapped("Number of vertices: %i", GetNumVertices());
 	}
 }

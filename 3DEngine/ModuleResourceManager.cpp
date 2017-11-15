@@ -205,12 +205,11 @@ uint ModuleResourceManager::ManageTexture(const char * path, const char* image_e
 	{
 		return resource_id;
 	}
-
-
+	
 	std::string meta_file = path;
 	meta_file += META_EXTENSION;
-
-	//Check if meta exists
+	
+	//Check if meta exists (a.k.a if textre has already been imported)
 
 	//IF NOT: create meta and import to library
 	if (!App->fs->ExistsFile(meta_file.c_str()))
@@ -224,19 +223,20 @@ uint ModuleResourceManager::ManageTexture(const char * path, const char* image_e
 
 		std::string texture_name = std::experimental::filesystem::path(path).stem().string().c_str();
 		
+		//Import Texture and save it to library
 		uint texture_id = App->importer->LoadTexture(path, true);
 		if (texture_id != 0)
 		{
-			new_texture->SetData(App->importer->LoadTexture(path, true), (texture_name + image_extension).c_str());
-			App->importer->SaveTextureToDDS(texture_name.c_str());
+			App->importer->SaveTextureToDDS(library_path.c_str());
+
+			//Unload texture and load it from DDS (to be sure that you loaded it from dds format)
+			glDeleteTextures(1, &texture_id);
+			new_texture->SetData(App->importer->LoadTexture(library_path.c_str()), (texture_name + image_extension).c_str());
 			new_texture->SetFile(path, library_path.c_str());
 		}
 	}
 	else
 	{
-		//TODO: check if meta timestamp doesn't match
-		//IF HASN'T: reimport asset
-
 		//Read UID from meta 
 		JSON_Value * value = json_parse_file(meta_file.c_str());
 		JSON_Object* obj_data = json_value_get_object(value);
@@ -251,8 +251,7 @@ uint ModuleResourceManager::ManageTexture(const char * path, const char* image_e
 			new_texture = (ResourceTexture*)CreateResource(Resource::TEXTURE, resource_id);
 			
 			//Extract file name
-			std::string file_name = std::experimental::filesystem::path(path).stem().string().c_str();
-		
+			std::string file_name = std::experimental::filesystem::path(path).stem().string().c_str();		
 
 			//Construct path to library
 			std::string library_path = App->fs->GetLibraryDirectory();

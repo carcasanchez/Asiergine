@@ -74,7 +74,6 @@ bool ModuleImporter::Init(const JSON_Object* config_data)
 	return ret;
 }
 
-
 bool ModuleImporter::CleanUp()
 {
 
@@ -86,7 +85,7 @@ bool ModuleImporter::CleanUp()
 
 //IMPORT METHODS--------------------------------------------------------------
 
-//Import meshes and textures to assets and library
+//Import scenes to asset folder
 bool ModuleImporter::ImportFBX(const char * path)
 {
 	bool ret = true;
@@ -113,17 +112,17 @@ bool ModuleImporter::ImportFBX(const char * path)
 	return ret;
 }
 
-//Imports all materials and meshes
+//Search all materials and meshes in a fbx scene
 void ModuleImporter::ImportScene(const char* path, const aiScene * scene, FBX_data &fbx_d)
 {
 	//Store all materials in a vector and assign a id of -1
-	/*if (scene->HasMaterials())
+	if (scene->HasMaterials())
 	{
 		for (int i = 0; i < scene->mNumMaterials; i++)
 		{
 			ImportTextureFromFBX(scene, path, i, fbx_d );
 		}
-	}*/
+	}
 
 	if (scene->HasMeshes())
 	{
@@ -136,13 +135,13 @@ void ModuleImporter::ImportScene(const char* path, const aiScene * scene, FBX_da
 	}
 }
 
-//Imports texture to library 
+//Imports texture to asset 
 int ModuleImporter::ImportTextureFromFBX(const aiScene* scene, const char* path, int material_index, FBX_data& fbx_d)
 {
 	uint text_id = 0;
-	aiString texture_file;
-	scene->mMaterials[material_index]->GetTexture(aiTextureType_DIFFUSE, 0, &texture_file);
-	std::string	texture_name = texture_file.C_Str();
+	aiString t;
+	scene->mMaterials[material_index]->GetTexture(aiTextureType_DIFFUSE, 0, &t);
+	std::string	texture_name = t.C_Str();
 	std::string texture_path = path;
 
 	//Construc the general path for the texture
@@ -152,30 +151,16 @@ int ModuleImporter::ImportTextureFromFBX(const aiScene* scene, const char* path,
 	}
 	texture_path += texture_name;
 
-	//Extract the extension to texture name
-	texture_name = std::experimental::filesystem::path(texture_name).stem().string().c_str();
-
-	fbx_d.texture_names.push_back(texture_file.C_Str());
-
-	//Load texture and get ID
-	text_id = LoadTexture(texture_path.c_str());
-	
-	//Store texture Library in DDS format
-	SaveTextureToDDS(texture_name.c_str());
-	
-	//Unload texture from memory
-	glDeleteTextures(1, &text_id);
-
-	if (text_id == 0)
-	{
-		LOG("Warning: --------Scene missing textures");
-	}		
-	
+	fbx_d.texture_names.push_back(texture_name.c_str());
+		
+	std::string texture_asset_file = App->fs->CreateDirectoryInAssets("Textures");
+	texture_asset_file += texture_name;
+	App->fs->CloneFile(texture_path.c_str(), texture_asset_file.c_str());
 	
 	return text_id;
 }
 
-//Imports meshes to library and assets
+//Imports meshes to assets
 std::string ModuleImporter::ImportMeshFromFBX(const aiMesh* m, const char* scene_name, FBX_data& fbx_d)
 {
 	bool ret = true;
@@ -290,7 +275,6 @@ std::string ModuleImporter::ImportMeshFromFBX(const aiMesh* m, const char* scene
 	return name;
 }
 
-
 //Create meta files
 void ModuleImporter::CreateFBXmeta(FBX_data &fbx_d, const char* path) const
 {
@@ -354,7 +338,6 @@ bool ModuleImporter::LoadFBX(const char * path)
 	mesh_id = 0;
 	if (scene != nullptr)
 	{
-		fbx_path = path;
 		std::string scene_name = std::experimental::filesystem::path(path).stem().string().c_str();
 		
 		//Creates scene hierarchy
@@ -372,7 +355,88 @@ bool ModuleImporter::LoadFBX(const char * path)
 	return ret;
 }
 
-//Load texture from image-----------------------------
+//Searches every FBX node for data and creates one GameObject per node
+std::string ModuleImporter::SearchFBXNode(const aiNode* n, const aiScene* scene, GameObject* parent, const char* scene_name)
+{
+	aiVector3D ai_location;
+	aiVector3D ai_scale;
+	aiQuaternion ai_rotation;
+
+	//Decompose transformation matrix
+	n->mTransformation.Decompose(ai_scale, ai_rotation, ai_location);
+
+	float3 location;
+	float3 scale;
+	math::Quat rot;
+
+	location.x = ai_location.x;
+	location.y = ai_location.y;
+	location.z = ai_location.z;
+	scale.x = ai_scale.x;
+	scale.y = ai_scale.y;
+	scale.z = ai_scale.z;
+	rot.x = ai_rotation.x;
+	rot.y = ai_rotation.y;
+	rot.z = ai_rotation.z;
+	rot.w = ai_rotation.w;
+
+	//Create the object
+	GameObject* new_obj = App->scene->CreateGameObject(n->mName.C_Str(), parent);
+	new_obj->CreateComponent_Transform(location, scale, rot);
+
+
+	//Load all meshes and store the last texture id
+	int last_material_index = 0;
+	for (int i = 0; i < n->mNumMeshes; i++)
+	{
+		std::string mesh_name = scene->mMeshes[n->mMeshes[i]]->mName.C_Str();
+		//Put generic name if name is empty
+		if (mesh_name.empty())
+		{
+			mesh_name = scene_name;
+			mesh_name += "_mesh_";
+			mesh_name += std::to_string(n->mMeshes[i]);
+		}
+		//Call resource manager to load mesh
+		std::string mesh_file_path = App->fs->GetAssetDirectory();
+		mesh_file_path += "Meshes/" + mesh_name + FORMAT_EXTENSION;
+		ResourceMesh* mesh = (ResourceMesh*)App->resource_m->LoadResource(mesh_file_path.c_str());
+		new_obj->CreateComponent_Mesh(mesh_name.c_str(),mesh);
+
+		last_material_index = scene->mMeshes[n->mMeshes[i]]->mMaterialIndex;
+	}
+
+
+	//Call resource manager to load texture
+	std::string texture_path = ExtractTextureName(scene->mMaterials[last_material_index]);
+	ResourceTexture* t = (ResourceTexture*)App->resource_m->LoadResource(texture_path.c_str());	
+	new_obj->CreateComponent_Material(t);
+
+
+	//Searches for children nodes
+	for (int i = 0; i < n->mNumChildren; i++)
+		SearchFBXNode(n->mChildren[i], scene, new_obj, scene_name);
+	
+	return n->mName.C_Str();
+}
+
+//Small utility for extraction texture path in assets
+std::string ModuleImporter::ExtractTextureName(const aiMaterial* material)
+{
+	
+	aiString s;
+	material->GetTexture(aiTextureType_DIFFUSE, 0, &s);
+	std::string texture_name = std::experimental::filesystem::path(s.C_Str()).stem().string().c_str();
+	std::string texture_extension = std::experimental::filesystem::path(s.C_Str()).extension().string().c_str();
+	std::string texture_path = App->fs->GetAssetDirectory();
+	texture_path += "Textures/";	
+	texture_path += texture_name + texture_extension;
+
+	return texture_path;
+}
+
+
+//Load texture from image
 uint ModuleImporter::LoadTexture(const char * path, bool flip) const
 {
 	//Gen image
@@ -428,7 +492,7 @@ uint ModuleImporter::LoadTexture(const char * path, bool flip) const
 }
 
 //Store texture in library
-void ModuleImporter::SaveTextureToDDS(const char * name) const
+void ModuleImporter::SaveTextureToDDS(const char * path) const
 {
 	ILuint size;
 	ILubyte *data;
@@ -438,100 +502,14 @@ void ModuleImporter::SaveTextureToDDS(const char * name) const
 		data = new ILubyte[size]; // allocate data buffer
 		if (ilSaveL(IL_DDS, data, size) > 0) // Save to buffer with the ilSaveIL function
 		{
-			App->fs->SaveDataToLibrary((char*)data, size, name, "Textures", TEXTURE_EXTENSION);
+			App->fs->SaveDataTo((char*)data, size, path);
 		}
 
 		delete[] data;
 	}
 }
 
-
-
-//Searches every FBX node for data and creates one GameObject per node
-std::string ModuleImporter::SearchFBXNode(const aiNode* n, const aiScene* scene, GameObject* parent, const char* scene_name)
-{
-	aiVector3D ai_location;
-	aiVector3D ai_scale;
-	aiQuaternion ai_rotation;
-
-	//Decompose transformation matrix
-	n->mTransformation.Decompose(ai_scale, ai_rotation, ai_location);
-
-	float3 location;
-	float3 scale;
-	math::Quat rot;
-
-	location.x = ai_location.x;
-	location.y = ai_location.y;
-	location.z = ai_location.z;
-	scale.x = ai_scale.x;
-	scale.y = ai_scale.y;
-	scale.z = ai_scale.z;
-	rot.x = ai_rotation.x;
-	rot.y = ai_rotation.y;
-	rot.z = ai_rotation.z;
-	rot.w = ai_rotation.w;
-
-	//Create the object
-	GameObject* new_obj = App->scene->CreateGameObject(n->mName.C_Str(), parent);
-	new_obj->CreateComponent_Transform(location, scale, rot);
-
-
-	//Load all meshes and store the last texture id
-	int last_material_index = 0;
-	for (int i = 0; i < n->mNumMeshes; i++)
-	{
-		std::string mesh_name = scene->mMeshes[n->mMeshes[i]]->mName.C_Str();
-		//Put generic name if name is empty
-		if (mesh_name.empty())
-		{
-			mesh_name = scene_name;
-			mesh_name += "_mesh_";
-			mesh_name += std::to_string(n->mMeshes[i]);
-		}
-		//Call resource manager to load mesh
-		std::string mesh_file_path = App->fs->GetAssetDirectory();
-		mesh_file_path += "Meshes/" + mesh_name + FORMAT_EXTENSION;
-		ResourceMesh* mesh = (ResourceMesh*)App->resource_m->LoadResource(mesh_file_path.c_str());
-		new_obj->CreateComponent_Mesh(mesh_name.c_str(),mesh);
-
-		last_material_index = scene->mMeshes[n->mMeshes[i]]->mMaterialIndex;
-	}
-
-
-	//Call resource manager to load texture
-	std::string texture_path = ExtractTexturePath(scene->mMaterials[last_material_index]);
-	ResourceTexture* t = (ResourceTexture*)App->resource_m->LoadResource(texture_path.c_str());	
-	new_obj->CreateComponent_Material(t);
-
-
-	//Searches for children nodes
-	for (int i = 0; i < n->mNumChildren; i++)
-		SearchFBXNode(n->mChildren[i], scene, new_obj, scene_name);
-	
-	return n->mName.C_Str();
-}
-
-std::string ModuleImporter::ExtractTexturePath(const aiMaterial* material)
-{
-	aiString s;
-	material->GetTexture(aiTextureType_DIFFUSE, 0, &s);
-	std::string texture_name = s.C_Str();
-	std::string  text_path = fbx_path;
-
-	//Construc the general path for the texture
-	while (text_path.back() != '\\')
-	{
-		text_path.pop_back();
-	}
-	text_path += texture_name;
-
-	return text_path;
-}
-
-
-
-
+//Save mesh to .carca in given path
 bool ModuleImporter::SaveMeshToOwnFormat(const char* path, ResourceMesh* mesh)const
 {
 	bool ret = true;

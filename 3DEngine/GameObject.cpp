@@ -269,6 +269,7 @@ ComponentLight * GameObject::CreateComponent_Light(uint UID)
 {
 	Light l;
 	l.ref = GL_LIGHT0;
+	App->renderer3D->light_index++;
 	l.ambient.Set(0.25f, 0.25f, 0.25f, 1.0f);
 	l.diffuse.Set(0.75f, 0.75f, 0.75f, 1.0f);
 	l.Init();

@@ -41,11 +41,11 @@ public:
 
 
 	//Save resources to library after import
-	void SaveTextureToDDS(const char * name) const;
+	void SaveTextureToDDS(const char * path) const;
 
 	//Load hierarchy from fbx
 	std::string  SearchFBXNode(const aiNode* n, const aiScene* scene, GameObject* parent, const char* scene_name);
-	std::string ExtractTexturePath(const aiMaterial* material);
+	std::string ExtractTextureName(const aiMaterial* material);
 
 	//Save methodology
 	bool SaveMeshToOwnFormat(const char* path, ResourceMesh* m) const;
@@ -53,8 +53,8 @@ public:
 	
 		
 private:
+
 	//For meshes without name
 	int mesh_id = 0;
-	//For texture referencing
-	std::string fbx_path;
+
 };

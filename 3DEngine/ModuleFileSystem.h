@@ -14,10 +14,14 @@ public:
 
 
 	bool SaveDataTo(const char* data, uint size, const char* path) const;
-	bool LoadDataFrom(char* &data, const char * path) const;
+	uint LoadDataFrom(char* &data, const char * path) const;
 	std::string CreateDirectoryInLibrary(const char* folder) const;
+
+	//Creates directory or returns its path if it exists
 	std::string CreateDirectoryInAssets(const char* folder) const;
 	bool ExistsFile(const char* path) const;
+
+	bool CloneFile(const char* source, const char* destination)const;
 
 
 	//Deprecated----------------------------------

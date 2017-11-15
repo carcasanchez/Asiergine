@@ -26,12 +26,20 @@ bool ModuleScene::Init(const JSON_Object * config_data)
 
 	root = CreateGameObject("Root");
 	root->SetID(0);
+	
+	return true;
+}
 
+bool ModuleScene::Start()
+{
 	GameObject* camera = CreateGameObject("Camera1", root);
 	camera->CreateComponent_Camera(0.5, 5, true);
 	camera->CreateComponent_Transform();
-		
-	
+
+	GameObject* light = CreateGameObject("Lamp", root);
+	light->CreateComponent_Transform(float3(5, 5, 5));
+	light->CreateComponent_Light();
+
 	return true;
 }
 
@@ -580,7 +588,7 @@ uint ModuleScene::LoadObjectFromOwnFormat(char*& cursor)
 		cursor += size_of;
 
 		text_name[text_name_size] = '\0';
-		std::string texture_path = App->fs->GetAssetDirectory();
+		std::string texture_path = App->fs->GetAssetDirectory() + "Textures/";
 		texture_path +=  text_name;
 		ResourceTexture* t = (ResourceTexture*)App->resource_m->LoadResource(texture_path.c_str());
 		new_obj->CreateComponent_Material(t);
