@@ -268,6 +268,7 @@ std::string ModuleImporter::ImportMeshFromFBX(const aiMesh* m, const char* scene
 	}
 	mesh_id++;
 
+
 	if (ret)
 	{
 		name += FORMAT_EXTENSION;

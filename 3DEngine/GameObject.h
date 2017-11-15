@@ -7,6 +7,7 @@ class CompTransform;
 class ComponentMesh;
 class ComponentMaterial;
 class ComponentCamera;
+class ComponentLight;
 
 class ResourceMesh;
 class ResourceTexture;
@@ -41,6 +42,7 @@ public:
 	ComponentMesh* CreateComponent_Mesh(const char* name, ResourceMesh* m = nullptr, uint UID = 0);
 	ComponentMaterial* CreateComponent_Material(ResourceTexture* t = nullptr, uint UID = 0);
 	ComponentCamera* CreateComponent_Camera(float near_dist, float far_dist, bool active = false, uint UID = 0);
+	ComponentLight* CreateComponent_Light(uint UID = 0);
 
 	void OnEditor();
 

@@ -30,15 +30,14 @@ public:
 	void SetBoxToDraw(math::AABB);
 	void SetBoxToDraw(math::Frustum*);
 	void SendQuadTreeGameObjectsToPaint(QuadTreeNodeObj* node);
+	void SetLightToRender(Light* l);
 
 	void SetActiveCamera(ComponentCamera* c)
 	{
 		active_camera = c;
 	};
 
-public:
-
-	std::vector<Light> lights;
+public:	
 	SDL_GLContext context;
 	float3x3 NormalMatrix;
 	float4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
@@ -59,9 +58,14 @@ private:
 	std::queue<math::AABB> boxes_to_draw;
 	std::queue<math::Frustum*> frustums_to_draw;
 
+	std::queue<Light*> lights_to_render;
+
 	void DrawGeometry();
 	void DrawDebugBoxes();
 	void DrawCameraFrustums();
+
+
+	void RenderLights();
 
 	bool CheckFrustumCulling(const ComponentMesh*);
 

@@ -6,6 +6,7 @@
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
 #include "ComponentCamera.h"
+#include "ComponentLight.h"
 #include "MathGeoLib\include\Algorithm\Random\LCG.h"
 
 GameObject::GameObject(const char* name): name(name)
@@ -264,6 +265,23 @@ ComponentCamera * GameObject::CreateComponent_Camera(float near_dist, float far_
 	return new_camera;
 }
 
+ComponentLight * GameObject::CreateComponent_Light(uint UID)
+{
+	Light l;
+	l.ref = GL_LIGHT0;
+	l.ambient.Set(0.25f, 0.25f, 0.25f, 1.0f);
+	l.diffuse.Set(0.75f, 0.75f, 0.75f, 1.0f);
+	l.Init();
+	l.Active(true);
+	ComponentLight* new_light = new ComponentLight(this, l);
+
+	if (UID > 0)
+		new_light->SetID(UID);
+	
+	components.push_back(new_light);
+	return new_light;
+}
+
 
 //Recursive methods-------------------------------------------------------------------
 bool GameObject::PutInQuadTree(QuadTreeNodeObj* node)
@@ -486,6 +504,12 @@ void GameObject::OnEditor()
 		{
 			CreateComponent_Mesh("Mesh");
 		}
+
+		if (ImGui::MenuItem("Light"))
+		{
+			CreateComponent_Light();
+		}
+
 		ImGui::EndPopup();
 	}
 	

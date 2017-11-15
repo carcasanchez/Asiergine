@@ -36,6 +36,7 @@ private:
 	uint num_indices = 0;
 	uint* indices = nullptr;
 
+	uint id_normals = 0;
 	float* normals = nullptr;
 
 	uint text_coord_id = 0;

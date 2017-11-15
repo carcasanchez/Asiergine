@@ -124,15 +124,7 @@ bool ModuleRenderer3D::Init(const JSON_Object* config_data)
 			}
 
 			GLfloat LightModelAmbient[] = { 0.0f, 0.0f, 0.0f, 1.0f };
-			glLightModelfv(GL_LIGHT_MODEL_AMBIENT, LightModelAmbient);
-
-			Light first_l;
-			first_l.ref = GL_LIGHT0;
-			first_l.ambient.Set(0.25f, 0.25f, 0.25f, 1.0f);
-			first_l.diffuse.Set(0.75f, 0.75f, 0.75f, 1.0f);
-			first_l.SetPos(0.0f, 0.0f, 2.5f);
-			first_l.Init();
-			lights.push_back(first_l);
+			glLightModelfv(GL_LIGHT_MODEL_AMBIENT, LightModelAmbient);			
 
 			GLfloat MaterialAmbient[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 			glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, MaterialAmbient);
@@ -146,9 +138,7 @@ bool ModuleRenderer3D::Init(const JSON_Object* config_data)
 			gl_color_material_enabled ? glEnable(GL_COLOR_MATERIAL) : glDisable(GL_COLOR_MATERIAL);
 			gl_texture_2D_enabled ? glEnable(GL_TEXTURE_2D) : glDisable(GL_TEXTURE_2D);
 			gl_wireframe_enabled ? glPolygonMode(GL_FRONT_AND_BACK, GL_LINE) : glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-			hard_poly_enabled ? glShadeModel(GL_FLAT) : glShadeModel(GL_SMOOTH);
-
-			lights[0].Active(true);
+			hard_poly_enabled ? glShadeModel(GL_FLAT) : glShadeModel(GL_SMOOTH);			
 		}
 	}
 
@@ -170,12 +160,7 @@ update_status ModuleRenderer3D::PreUpdate(float real_dt, float game_dt)
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-
-	// light 0 on cam pos
-	lights[0].SetPos(App->camera->frustum.pos.x, App->camera->frustum.pos.y, App->camera->frustum.pos.z);
-
-	for(std::vector<Light>::iterator it = lights.begin(); it!= lights.end(); it++)
-		(*it).Render();
+	
 
 	return UPDATE_CONTINUE;
 }
@@ -186,6 +171,9 @@ update_status ModuleRenderer3D::PostUpdate(float real_dt, float game_dt)
 	//Call all draw operative
 
 	plane.Render();
+
+	//Render lights
+	RenderLights();
 
 	//Draw Geometries
 	DrawGeometry();
@@ -211,7 +199,8 @@ update_status ModuleRenderer3D::PostUpdate(float real_dt, float game_dt)
 	glVertex3f(0, 0, 3);
 
 	glLineWidth(1.0);
-	
+
+
 	
 	//Draw debug
 	
@@ -316,6 +305,11 @@ void ModuleRenderer3D::SendQuadTreeGameObjectsToPaint(QuadTreeNodeObj* node)
 	}
 }
 
+void ModuleRenderer3D::SetLightToRender(Light* l)
+{
+	lights_to_render.push(l);
+}
+
 // Draw debug AABB's-----------------------------------------------------------
 void ModuleRenderer3D::SetBoxToDraw(math::AABB b) 
 {
@@ -397,6 +391,15 @@ void ModuleRenderer3D::DrawCameraFrustums()
 		}
 
 		frustums_to_draw.pop();
+	}
+}
+
+void ModuleRenderer3D::RenderLights()
+{
+	while (lights_to_render.empty() == false)
+	{
+		lights_to_render.back()->Render();
+		lights_to_render.pop();
 	}
 }
 

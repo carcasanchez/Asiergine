@@ -104,7 +104,7 @@ Resource* ModuleResourceManager::LoadResource(const char * path)
 	std::reverse(extension.begin(), extension.end());
 
 	//Manage file depending on extension
-	if (extension.compare("fbx") == 0)
+	if (extension.compare("fbx") == 0 || extension.compare("obj") == 0)
 		ManageFBX(path);
 	else if (extension.compare("carca") == 0)
 		resource_id = ManageMesh(path);

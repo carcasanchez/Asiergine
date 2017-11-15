@@ -30,6 +30,8 @@ ResourceMesh::~ResourceMesh()
 		glDeleteBuffers(1, &id_vertices);
 	if (id_indices != 0)
 		glDeleteBuffers(1, &id_indices);
+	if (id_normals != 0)
+		glDeleteBuffers(1, &id_normals);
 }
 
 void ResourceMesh::SetData(float* ver, uint* ind, uint num_vert, uint num_ind, float* norm, float* text_coords)
@@ -51,6 +53,14 @@ void ResourceMesh::SetData(float* ver, uint* ind, uint num_vert, uint num_ind, f
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * num_indices, indices, GL_STATIC_DRAW);
 
+	if (normals)
+	{
+		//Alloc normals
+		glGenBuffers(1, (uint*)&(id_normals));
+		glBindBuffer(GL_ARRAY_BUFFER, id_normals);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_vertices * 3, normals, GL_STATIC_DRAW);
+	}
+
 	if (texture_coords != nullptr)
 	{
 		//alloc texture coords
@@ -64,6 +74,9 @@ void ResourceMesh::Draw(const float* transform, uint texture_id) const
 {
 	//Bind vertices
 	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glEnableClientState(GL_NORMAL_ARRAY);
+
 	if(transform != nullptr)
 	{ 
 		glMatrixMode(GL_MODELVIEW);
@@ -73,12 +86,16 @@ void ResourceMesh::Draw(const float* transform, uint texture_id) const
 
 	glBindBuffer(GL_ARRAY_BUFFER, id_vertices);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
-		
+
+	if(normals)
+	{ 
+		glBindBuffer(GL_ARRAY_BUFFER, id_normals);
+		glNormalPointer(GL_FLOAT, 0, NULL);
+	}
+
 	if (text_coord_id != 0)
 	{
 		//Bind textures
-		glBindTexture(GL_TEXTURE, texture_id);
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glBindTexture(GL_TEXTURE_2D, texture_id);
 		glBindBuffer(GL_ARRAY_BUFFER, text_coord_id);
@@ -91,9 +108,7 @@ void ResourceMesh::Draw(const float* transform, uint texture_id) const
 	
 	if (App->scene->debug_normals && normals != nullptr)
 	{
-		//Draw Normals
-		glBindBuffer(GL_ARRAY_BUFFER, id_vertices);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);
+		//Draw Normals	
 		for (uint i = 0; i < num_vertices * 3; i += 3)
 		{
 			glColor3f(3.0f, 0.0f, 1.0f);
@@ -102,9 +117,7 @@ void ResourceMesh::Draw(const float* transform, uint texture_id) const
 			glVertex3f(vertices[i] + normals[i], vertices[i + 1] + normals[i + 1], vertices[i + 2] + normals[i + 2]);
 			glEnd();
 			glColor3f(1.0f, 1.0f, 1.0f);
-		}
-		glVertexPointer(3, GL_FLOAT, 0, NULL);
-		glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
+		}		
 	}
 
 	if (transform != nullptr)
@@ -115,5 +128,5 @@ void ResourceMesh::Draw(const float* transform, uint texture_id) const
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-
+	glDisableClientState(GL_NORMAL_ARRAY);
 }

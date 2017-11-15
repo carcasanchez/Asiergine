@@ -202,6 +202,9 @@
     <ClCompile Include="3DEngine\ResourceTexture.cpp">
       <Filter>Source\Containers\Resources</Filter>
     </ClCompile>
+    <ClCompile Include="3DEngine\ComponentLight.cpp">
+      <Filter>Source\Containers\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3DEngine\Application.h">
@@ -530,6 +533,9 @@
     </ClInclude>
     <ClInclude Include="3DEngine\ResourceTexture.h">
       <Filter>Source\Containers\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\ComponentLight.h">
+      <Filter>Source\Containers\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

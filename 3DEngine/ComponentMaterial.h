@@ -37,6 +37,8 @@ public:
 	uint PrepareToSave() const;
 	void Save(char* &cursor) const;
 
+
+
 private:
 	
 	ResourceTexture* texture = nullptr;
