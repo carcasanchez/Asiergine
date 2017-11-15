@@ -214,7 +214,7 @@ uint ModuleResourceManager::ManageTexture(const char * path, const char* image_e
 	//IF NOT: create meta and import to library
 	if (!App->fs->ExistsFile(meta_file.c_str()))
 	{			
-		resource_id = CreateTextureMeta(path);
+	resource_id = CreateTextureMeta(path);
 
 		//Construct path to library
 		std::string library_path = App->fs->CreateDirectoryInLibrary("Textures") + std::experimental::filesystem::path(path).stem().string().c_str() + TEXTURE_EXTENSION;
@@ -231,7 +231,7 @@ uint ModuleResourceManager::ManageTexture(const char * path, const char* image_e
 
 			//Unload texture and load it from DDS (to be sure that you loaded it from dds format)
 			glDeleteTextures(1, &texture_id);
-			new_texture->SetData(App->importer->LoadTexture(library_path.c_str()), (texture_name + image_extension).c_str());
+			new_texture->SetData(App->importer->LoadTexture(library_path.c_str()), (texture_name + "." + image_extension).c_str());
 			new_texture->SetFile(path, library_path.c_str());
 		}
 	}

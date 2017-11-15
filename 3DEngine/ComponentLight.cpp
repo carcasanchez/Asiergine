@@ -36,10 +36,8 @@ void ComponentLight::Update(float real_dt, float game_dt)
 		}
 		else light.SetPos(0, 0, 0);
 
-		App->renderer3D->SetLightToRender(&light);
-		
-	}
-		
+		App->renderer3D->SetLightToRender(&light);		
+	}		
 }
 
 void ComponentLight::OnEditor()

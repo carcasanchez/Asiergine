@@ -10,6 +10,7 @@
 #include "CompTransform.h"
 #include "ComponentCamera.h"
 #include "ComponentMesh.h"
+#include "ComponentLight.h"
 
 ModuleScene::ModuleScene(bool start_enabled) : Module(start_enabled)
 {
@@ -223,6 +224,7 @@ uint ModuleScene::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>> &b
 	//  num of meshes - [UID of mesh - mesh name size - mesh name]
 	//  UID of material - size of texture name - texture name
 	//UID of camera - near dist - far dist - active
+	//UID of light
 
 	//STORE SIZE-------------------------------------------------------------------
 	uint size = 1;
@@ -270,6 +272,9 @@ uint ModuleScene::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>> &b
 	{
 		size += cam->PrepareToSave();
 	}
+
+	//Light
+	size += sizeof(uint);
 
 	//COPY DATA------------------------------------------------------
 	char* data = new char[size];
@@ -364,6 +369,15 @@ uint ModuleScene::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>> &b
 		cam->Save(cursor);
 	}
 
+	//Copy light
+	ComponentLight* light = (ComponentLight*)to_save->GetComponentByType(COMPONENT_LIGHT);
+	uint lightID = 0;
+	if (light != nullptr)
+		lightID = light->GetID();
+
+	size_of = sizeof(uint);
+	memcpy(cursor, &lightID, size_of);
+	cursor += size_of;
 
 	data[size - 1] = '\0';
 	std::pair<char*, uint> pair_of_data;
@@ -470,6 +484,7 @@ uint ModuleScene::LoadObjectFromOwnFormat(char*& cursor)
 	//  num of meshes - [UID of mesh - mesh name size - mesh name]
 	//  UID of material - size of texture name - texture name
 	// UID of camera - near distance - far distance
+	//UID of light
 	uint object_id = 0;
 
 	uint size_of = sizeof(uint);
@@ -618,6 +633,17 @@ uint ModuleScene::LoadObjectFromOwnFormat(char*& cursor)
 		cursor += size_of;
 
 		new_obj->CreateComponent_Camera(n_dist, f_dist, active, cam_id);
+	}
+
+	//Light
+	uint light_id = 0;
+	size_of = sizeof(uint);
+	memcpy(&light_id, cursor, size_of);
+	cursor += size_of;
+
+	if (light_id != 0)
+	{
+		new_obj->CreateComponent_Light(light_id);
 	}
 
 	cursor++;
