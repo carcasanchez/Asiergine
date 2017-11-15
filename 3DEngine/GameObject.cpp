@@ -10,7 +10,7 @@
 
 GameObject::GameObject(const char* name): name(name)
 {
-	bounding_box.SetNegativeInfinity();
+
 	LCG rand_gen;
 	UID = rand_gen.Int();
 }
@@ -21,17 +21,18 @@ GameObject::~GameObject()
 
 void GameObject::Update(float real_dt, float game_dt)
 {
-	/*std::vector<Component*>::iterator del_comp = components.begin();
+	//Delete the selected component------
+	std::vector<Component*>::iterator del_comp = components.begin();
 	for (del_comp; del_comp != components.end(); ++del_comp)
 	{
 		if ((*del_comp)->deleted)
-			components_to_erase->push_back((*del_comp));
+		{
+			(*del_comp)->deleted == false;
+			components.erase(del_comp);
+			break;
+		}
 	}
-	std::vector<Component*>::iterator &del_all_comp = components_to_erase->begin();
-	for (del_all_comp; del_all_comp != components_to_erase->end(); ++del_all_comp)
-	{
-		components.erase(del_all_comp);
-	}*/
+	//-----------------------------------
 
 
 	std::vector<Component*>::iterator it = components.begin();
@@ -71,9 +72,23 @@ void GameObject::Update(float real_dt, float game_dt)
 
 }
 
+void GameObject::EraseChild(GameObject* game_object)
+{
+	if (game_object)
+	{
+		for (std::vector<GameObject*>::iterator it = children.begin(); it != children.end(); it++)
+		{
+			if (game_object == (*it))
+			{
+				children.erase(it);
+				break;
+			}
+		}
+	}
+}
+
 void GameObject::CleanUp()
 {
-
 	//Delete components
 	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); it++)
 	{
@@ -146,6 +161,19 @@ void GameObject::SetParent(GameObject* new_parent)
 
 }
 
+void GameObject::SetBoundingBox(const ResourceMesh* m)
+{
+	//Adapt bounding box to geometry-----------------
+	std::vector <float3> vertex_array;
+	const float* ver = m->GetVertices();
+	uint num_vert = m->GetNumVertices();
+
+	for (int i = 0; i < num_vert * 3; i += 3)
+		vertex_array.push_back(float3(ver[i], ver[i + 1], ver[i + 2]));
+	if (vertex_array.size() > 0)
+		bounding_box.Enclose(&vertex_array[0], vertex_array.size());
+
+}
 //CREATE COMPONENT METHODS----------------------------------------------------
 CompTransform * GameObject::CreateComponent_Transform(float3 trans , float3 scale, Quat rot, uint UID)
 {
@@ -171,21 +199,15 @@ CompTransform * GameObject::CreateComponent_Transform(float3 trans , float3 scal
 	return new_transform;
 }
 
-ComponentMesh * GameObject::CreateComponent_Mesh(const char* m_name, float * ver, uint * ind, uint num_vert, uint num_ind, float* normals, float * texture_coords, uint UID)
+ComponentMesh * GameObject::CreateComponent_Mesh(const char* m_name, ResourceMesh* m, uint UID)
 {
-	ComponentMesh* new_mesh = new ComponentMesh(this, ver, ind, num_vert, num_ind, normals, texture_coords);
-	new_mesh->name = m_name;
-
-	//Adapt bounding box to geometry-----------------
-	std::vector <float3> vertex_array;
-
-
-	for (int i = 0; i < num_vert*3; i += 3)
-		vertex_array.push_back(float3(ver[i], ver[i + 1], ver[i + 2]));
-
-	bounding_box.Enclose(&vertex_array[0], vertex_array.size());
-
-
+	ComponentMesh* new_mesh = new ComponentMesh(this);
+	if (m)
+	{
+		new_mesh->name = m_name;
+		new_mesh->SetMesh(m);
+		SetBoundingBox(m);
+	}
 	if (UID > 0)
 		new_mesh->SetID(UID);
 
@@ -194,7 +216,7 @@ ComponentMesh * GameObject::CreateComponent_Mesh(const char* m_name, float * ver
 	return new_mesh;
 }
 
-ComponentMaterial * GameObject::CreateComponent_Material(uint texture_id, const char* txt_name, uint UID)
+ComponentMaterial * GameObject::CreateComponent_Material(ResourceTexture* t, uint UID)
 {
 	if (GetComponentByType(COMPONENT_MATERIAL) != nullptr)
 	{
@@ -202,8 +224,9 @@ ComponentMaterial * GameObject::CreateComponent_Material(uint texture_id, const 
 		return nullptr;
 	}
 
-	ComponentMaterial* new_mat = new ComponentMaterial(this, texture_id);
-	new_mat->texture_name = txt_name;
+	ComponentMaterial* new_mat = new ComponentMaterial(this);
+	
+	new_mat->SetTexture(t);
 
 	if (UID > 0)
 		new_mat->SetID(UID);
@@ -248,17 +271,17 @@ bool GameObject::PutInQuadTree(QuadTreeNodeObj* node)
 	bool ret = true;
 	if (!IsStatic())
 		return ret;
-	if (node->IsFull() && !node->IsOfMinSize())
+	if (node->IsFull() || node->IsOfMinSize())
 		ret = false;
 	else {
 		if (node->box.Intersects(transformed_bounding_box))
 			node->Insert(this);
-		if (node->IsFull() && !node->IsOfMinSize())
+		if (node->IsFull() || node->IsOfMinSize())
 			ret = false;
 		for (std::vector<GameObject*>::iterator it = children.begin(); it != children.end(); ++it)
 		{
 			ret = (*it)->PutInQuadTree(node);
-			if (ret == false || !node->IsOfMinSize())
+			if (ret == false || node->IsOfMinSize())
 			{
 				break;
 			}
@@ -327,22 +350,7 @@ void GameObject::CheckTriangleCollision(math::LineSegment &line, float& distance
 
 
 		for (int j = 0; j < ((ComponentMesh*)meshes[i])->GetNumIndices();)
-		{
-
-
-			/*triangle.a.x = vertices[indices[j]];
-			triangle.a.y = vertices[indices[j] + 1];
-			triangle.a.z = vertices[indices[j] + 2];
-
-			triangle.b.x = vertices[indices[j + 1]];
-			triangle.b.y = vertices[indices[j + 1] + 1];
-			triangle.b.z = vertices[indices[j + 1] + 2];
-
-			triangle.c.x = vertices[indices[j + 2]];
-			triangle.c.y = vertices[indices[j + 2] + 1];
-			triangle.c.z = vertices[indices[j + 2] + 2];*/
-
-			//TODO: ????????????????????????????????????????????????????????????
+		{	
 			triangle.a.Set(&vertices[indices[j++] * 3]); 
 			triangle.b.Set(&vertices[indices[j++] * 3]);
 			triangle.c.Set(&vertices[indices[j++] * 3]);
@@ -389,7 +397,15 @@ void GameObject::SendAllMeshesToDraw()
 	}
 }
 
-
+void GameObject::SetStatic(bool is_static)
+{
+	std::vector<GameObject*>::iterator it = children.begin();
+	for (it; it != children.end(); ++it)
+	{
+		(*it)->SetStatic(is_static);
+	}
+	obj_static = is_static;
+}
 
 
 //Editor draw--------------------------------------------------------------------------
@@ -397,33 +413,41 @@ void GameObject::OnEditor()
 {
 	ImGui::TextWrapped("%s", name.c_str());
 	ImGui::Separator();
-	ImGui::Checkbox("Static", &obj_static);
+	if (ImGui::Checkbox("Static", &obj_static))
+	{
+		//GetComponentByType(COMPONENT_TRANSFORM)->SetActive(!obj_static);
+		SetStatic(obj_static);
+		App->scene->scene_quadtree.Calculate();
+	}
 
 	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); it++)
 	{
-		if ((*it)->deleted == false) {
-			ImGui::PushID((*it)->GetID());
-			if (ImGui::CollapsingHeader((*it)->GetComponentNameByType(), "", true, true))
+		ImGui::PushID((*it)->GetID());
+		
+		if (ImGui::CollapsingHeader((*it)->GetComponentNameByType(), "", true, true))
+		{
+		
+			if (ImGui::Checkbox("Active", &(*it)->active))
 			{
-				if (ImGui::Checkbox("Active", &(*it)->active))
-				{
-					if ((*it)->active == true)
-						(*it)->Enable();
-					if ((*it)->active == false)
-						(*it)->Disable();
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("Up"))
-				{
-					if (it != components.begin())
-						std::iter_swap(it, it - 1);
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("Down"))
-				{
-					if (it + 1 != components.end())
-						std::iter_swap(it, it + 1);
-				}
+				if ((*it)->active == true)
+					(*it)->Enable();
+				if ((*it)->active == false)
+					(*it)->Disable();
+			}
+			ImGui::SameLine();			
+			if (ImGui::Button("Up"))
+			{
+				if (it != components.begin())
+					std::iter_swap(it, it - 1);
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Down"))
+			{
+				if (it + 1 != components.end())
+					std::iter_swap(it, it + 1);
+			}
+			if ((*it)->GetType() != COMPONENT_TRANSFORM)
+			{
 				ImGui::SameLine();
 				if (ImGui::Button("Delete Component"))
 				{
@@ -431,9 +455,38 @@ void GameObject::OnEditor()
 					ImGui::PopID();
 					break;
 				}
-				(*it)->OnEditor();
 			}
-			ImGui::PopID();
+			(*it)->OnEditor();
 		}
+		ImGui::PopID();
 	}
+
+	if (ImGui::Button("CREATE COMPONENT"))	
+		ImGui::OpenPopup("CREATE COMPONENT");
+
+	if (ImGui::BeginPopup("CREATE COMPONENT"))
+	{
+		if (ImGui::MenuItem("Camera"))
+		{
+			CreateComponent_Camera(0.5f, 5.0f, true);
+		}
+		if (ImGui::BeginMenu ("Material"))
+		{
+			/*for (int i = 0; i < App->importer->loaded_textures.size(); ++i)
+			{
+				if (ImGui::MenuItem(App->importer->loaded_textures[i].first.c_str()))
+				{
+					CreateComponent_Material(App->importer->loaded_textures[i].first);
+				}
+			}*/
+			ImGui::EndMenu();
+			//CreateComponent_Material();
+		}
+		if (ImGui::MenuItem("Mesh"))
+		{
+			CreateComponent_Mesh("Mesh");
+		}
+		ImGui::EndPopup();
+	}
+	
 }

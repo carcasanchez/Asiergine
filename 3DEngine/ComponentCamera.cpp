@@ -34,7 +34,7 @@ ComponentCamera::~ComponentCamera(){}
 
 void ComponentCamera::Update(float real_dt, float game_dt)
 {
-	if (IsActive() == true && deleted == false)
+	if (IsActive() == true)
 	{
 		aspect_ratio = App->window->GetAspectRatio();
 
@@ -59,13 +59,13 @@ void ComponentCamera::OnEditor()
 		ImGui::TextColored(ImVec4(1, 1, 0, 1), "%.3f", aspect_ratio);
 
 
-		ImGui::DragFloat("Near Distance", &frustum.nearPlaneDistance, 0.1, 0.0, frustum.farPlaneDistance);
+		ImGui::DragFloat("Near Dist.", &frustum.nearPlaneDistance, 0.1, 0.0, frustum.farPlaneDistance);
 
-		ImGui::DragFloat("Far Distance", &frustum.farPlaneDistance, 0.1);
+		ImGui::DragFloat("Far Dist.", &frustum.farPlaneDistance, 0.1);
 
 
 		static int selected_option = 0;
-		if (ImGui::Combo("Perspective type", &selected_option, "Perspective\0Orthographic", 2))
+		if (ImGui::Combo("Persp. type", &selected_option, "Perspective\0Orthographic", 2))
 		{
 			if (selected_option == 0)
 				frustum.type = PerspectiveFrustum;

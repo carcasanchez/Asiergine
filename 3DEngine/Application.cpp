@@ -1,6 +1,5 @@
 #include "Application.h"
 #include "parson.h"
-
 #include ".\mmgr\mmgr.h"
 
 
@@ -17,6 +16,7 @@ Application::Application()
 	importer = new ModuleImporter();
 	scene = new ModuleScene();
 	fs = new ModuleFileSystem();
+	resource_m = new ModuleResourceManager();
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
@@ -26,8 +26,8 @@ Application::Application()
 	AddModule(window);
 	AddModule(camera);
 	AddModule(input);
+	AddModule(resource_m);
 	AddModule(audio);
-	//AddModule(physics);
 	AddModule(editor);
 	AddModule(importer);
 	AddModule(fs);
@@ -242,7 +242,6 @@ void Application::AddModule(Module* mod)
 {
 	list_modules.push_back(mod);
 }
-
 
 void Application::SetGameSpeed(float game_speed)
 {

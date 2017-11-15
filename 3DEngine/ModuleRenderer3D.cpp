@@ -301,17 +301,18 @@ void ModuleRenderer3D::DrawGeometry()
 
 void ModuleRenderer3D::SendQuadTreeGameObjectsToPaint(QuadTreeNodeObj* node)
 {
+	if (active_camera->frustum.Contains(node->box))
+	{
+		
+		for (std::vector<GameObject*>::iterator obj_it = node->game_objects.begin(); obj_it != node->game_objects.end(); obj_it++)
+		{
+			if (active_camera->frustum.Contains(*(*obj_it)->GetTransformedBox()))
+				(*obj_it)->SendAllMeshesToDraw();
+		}
+	}
 	for (std::vector<QuadTreeNodeObj*>::iterator it = node->children.begin(); it != node->children.end(); ++it)
 	{
-		if (active_camera->frustum.Contains((*it)->box))
-		{
-			SendQuadTreeGameObjectsToPaint((*it));
-			for (std::vector<GameObject*>::iterator obj_it = (*it)->game_objects.begin(); obj_it != (*it)->game_objects.end(); obj_it++)
-			{
-				if (active_camera->frustum.Contains(*(*obj_it)->GetTransformedBox()))
-					(*obj_it)->SendAllMeshesToDraw();
-			}
-		}
+		SendQuadTreeGameObjectsToPaint((*it));
 	}
 }
 

@@ -78,7 +78,7 @@ public:
 	float3 max_scene_point = { 200, 100, 200 };
 
 
-	int max_game_objects = 4;
+	int max_game_objects = 6;
 
 private:
 	std::vector<GameObject*> game_objects;
