@@ -489,18 +489,11 @@ void GameObject::OnEditor()
 		{
 			CreateComponent_Camera(0.5f, 5.0f, true);
 		}
-		if (ImGui::BeginMenu ("Material"))
+		if (ImGui::MenuItem("Material"))
 		{
-			/*for (int i = 0; i < App->importer->loaded_textures.size(); ++i)
-			{
-				if (ImGui::MenuItem(App->importer->loaded_textures[i].first.c_str()))
-				{
-					CreateComponent_Material(App->importer->loaded_textures[i].first);
-				}
-			}*/
-			ImGui::EndMenu();
-			//CreateComponent_Material();
+			CreateComponent_Material();
 		}
+
 		if (ImGui::MenuItem("Mesh"))
 		{
 			CreateComponent_Mesh("Mesh");

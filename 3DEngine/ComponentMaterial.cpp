@@ -32,56 +32,49 @@ void ComponentMaterial::OnEditor()
 			size.y = 200;
 
 			ImGui::Image((ImTextureID)GetTextureID(), ImVec2(200, 200));
-			ImGui::TextColored(ImVec4(0, 255, 0, 255), "%i x %i", (int)size.x, (int)size.y);
-			ImGui::TextWrapped("%s", texture->GetTextureName().c_str());	
+			ImGui::TextColored(ImVec4(0, 255, 0, 255), "%i x %i", (int)size.x, (int)size.y);	
 		}
 
 		if (texture)
 		{
-			ImGui::TextWrapped("Instancies: %i", texture->GetInstancies());
+			want_to_change_texture = ImGui::Button(GetTextureName().c_str());
+			ImGui::TextWrapped("Instancies in scene: %i", texture->GetInstancies());
+		}
+		else
+			want_to_change_texture = ImGui::Button("MISSING!");
+
+		if (want_to_change_texture)
+		{
+			library_textures_path = App->fs->GetAssetDirectory();
+			library_textures_path += "Textures/";
+			ImGui::OpenPopup("Textures");
+			want_to_change_texture = false;
 		}
 
-		/*if (ImGui::Button("Change Texture"))
+		if (ImGui::BeginPopup("Textures"))
 		{
-			change_text_window = true;
-		}
-
-		if (change_text_window)
-		{
-			ImGui::OpenPopup("Change Texture");
-			ImGui::SetNextWindowSize(ImVec2(500, 500));
-			ImGui::SetNextWindowPosCenter();
-
-			if (ImGui::BeginPopupModal("Change Texture", nullptr))
+			for (std::experimental::filesystem::recursive_directory_iterator::value_type it : std::experimental::filesystem::recursive_directory_iterator(library_textures_path.c_str()))
 			{
-				ImGui::BeginChildFrame(0, ImVec2(150, 420));
-
-				std::string path = App->fs->GetLibraryDirectory();
-				path += "Textures/";
-
-				for (std::experimental::filesystem::recursive_directory_iterator::value_type it : std::experimental::filesystem::recursive_directory_iterator(path.c_str()))
+				std::string filename = std::experimental::filesystem::path(it.path().string().c_str()).stem().string().c_str();
+				if (ImGui::MenuItem(filename.c_str()))
 				{
-					std::string filename = std::experimental::filesystem::path(it.path().string().c_str()).stem().string().c_str();
-					if (ImGui::Selectable(filename.c_str()))
+					if (texture)
+						texture->DecreaseInstancies();
+
+					library_textures_path += filename + FORMAT_EXTENSION;
+					texture = (ResourceTexture*)App->resource_m->LoadResource(library_textures_path.c_str());
+
+					if (texture)
 					{
-						path += filename.c_str();
-						path += ".dds";
-						texture->SetData(App->importer->LoadTexture(path.c_str(), true));
-						texture_name = filename;
-						change_text_window = false;
+						texture->IncreaseInstancies();
+						name = filename;
 					}
+					else
+						LOG("Texture %s does not exist!", filename.c_str());
 				}
-
-				ImGui::EndChildFrame();
-
-				if (ImGui::Button("Cancel"))
-				{
-					change_text_window = false;
-				}
-
-				ImGui::EndPopup();
 			}
-		}*/
+			ImGui::EndPopup();
+		}
 	}
 }
 

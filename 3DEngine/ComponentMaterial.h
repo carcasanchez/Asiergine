@@ -17,6 +17,7 @@ public:
 	{
 		return texture ? texture->GetTextureId() : 0;
 	}
+	std::string name;
 
 	std::string GetTextureName()const
 	{
@@ -42,6 +43,7 @@ public:
 private:
 	
 	ResourceTexture* texture = nullptr;
-	bool change_text_window = false;
+	bool want_to_change_texture= false;
+	std::string library_textures_path;
 };
 
