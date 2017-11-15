@@ -43,6 +43,9 @@ const char* Component::GetComponentNameByType()
 	case COMPONENT_CAMERA:
 		return "Component Camera";
 
+	case COMPONENT_LIGHT:
+		return "Component Light";
+
 	default:
 		break;
 	}

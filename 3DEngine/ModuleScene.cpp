@@ -63,16 +63,18 @@ update_status ModuleScene::Update(float real_dt, float game_dt)
 		LoadSceneFromOwnFormat(scene_name.c_str());
 	}
 
+	//Delete GameObject
+	if (App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN && !App->editor->UsingGizmos())
+	{
+		DeleteSelectedGameObject();
+	}
+
 	root->Update(real_dt, game_dt);
 	
 	if(App->editor->BakeQuadtreeOpen())
 		scene_quadtree.root.SetAABBToDraw();
 
-	//Delete GameObject
-	if (App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN && !App->editor->UsingGizmos())
-	{		
-		DeleteSelectedGameObject();
-	}
+	
 
 	//Check debug key
 	if (App->input->GetKey(DEBUG_NORMALS_KEY) == KEY_DOWN)
