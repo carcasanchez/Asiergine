@@ -564,23 +564,91 @@ void ModuleEditor::ManageAssetWindow()
 {
 	if (asset_window_open)
 	{
-		static bool meshes_selected;
-		static bool textures_selected;
-		static bool scenes_selected;
-		static bool fbx_selected;
-
 		ImGui::SetNextWindowPos(ImVec2(asset_pos.x, asset_pos.y));
 		ImGui::SetNextWindowSize(ImVec2(asset_size.x, asset_size.y));
 		ImGui::Begin("Assets", &asset_window_open, ImGuiWindowFlags_ShowBorders | ImGuiWindowFlags_NoResize);
 
 		ImGui::BeginChildFrame(0, ImVec2(150, 290));
+		
 		meshes_selected = ImGui::Selectable("Meshes");
 		textures_selected = ImGui::Selectable("Textures");
 		scenes_selected = ImGui::Selectable("Scenes");
 		fbx_selected = ImGui::Selectable("Fbx");
+
 		ImGui::EndChildFrame();
 		ImGui::SameLine();
-		ImGui::BeginChildFrame(1, ImVec2(900, 290));
+		ImGui::BeginChildFrame(1, ImVec2(600, 290));
+		if (meshes_selected)
+		{
+			objects_to_show.clear();
+			std::string library_meshes_path = App->fs->GetAssetDirectory();
+			library_meshes_path += "Meshes/";
+			for (std::experimental::filesystem::recursive_directory_iterator::value_type it : std::experimental::filesystem::recursive_directory_iterator(library_meshes_path.c_str()))
+			{
+				std::string filename = std::experimental::filesystem::path(it.path().string().c_str()).stem().string().c_str();
+				std::string extension = std::experimental::filesystem::path(it.path().string().c_str()).extension().string().c_str();
+
+				if (extension.compare(FORMAT_EXTENSION) != 0)
+					continue;
+
+				objects_to_show.push_back(filename);			
+			}
+		}
+		if (textures_selected)
+		{
+			objects_to_show.clear();
+			std::string library_meshes_path = App->fs->GetAssetDirectory();
+			library_meshes_path += "Textures/";
+			for (std::experimental::filesystem::recursive_directory_iterator::value_type it : std::experimental::filesystem::recursive_directory_iterator(library_meshes_path.c_str()))
+			{
+				std::string filename = std::experimental::filesystem::path(it.path().string().c_str()).stem().string().c_str();
+				std::string extension = std::experimental::filesystem::path(it.path().string().c_str()).extension().string().c_str();
+
+				if (extension.compare(".dds") != 0 && extension.compare(".png") != 0 && extension.compare(".jpg") != 0 && extension.compare(".tga") != 0 && extension.compare(".jpeg") != 0)
+					continue;
+
+				objects_to_show.push_back(filename);
+			}
+		}
+		if (scenes_selected)
+		{
+			objects_to_show.clear();
+			std::string library_meshes_path = App->fs->GetAssetDirectory();
+			library_meshes_path += "Scenes/";
+			for (std::experimental::filesystem::recursive_directory_iterator::value_type it : std::experimental::filesystem::recursive_directory_iterator(library_meshes_path.c_str()))
+			{
+				std::string filename = std::experimental::filesystem::path(it.path().string().c_str()).stem().string().c_str();
+				std::string extension = std::experimental::filesystem::path(it.path().string().c_str()).extension().string().c_str();
+
+				if (extension.compare(FORMAT_EXTENSION) != 0)
+					continue;
+
+				objects_to_show.push_back(filename);
+			}
+		}
+		if (fbx_selected)
+		{
+			objects_to_show.clear();
+			std::string library_meshes_path = App->fs->GetAssetDirectory();
+			library_meshes_path += "FBX/";
+			for (std::experimental::filesystem::recursive_directory_iterator::value_type it : std::experimental::filesystem::recursive_directory_iterator(library_meshes_path.c_str()))
+			{
+				std::string filename = std::experimental::filesystem::path(it.path().string().c_str()).stem().string().c_str();
+				std::string extension = std::experimental::filesystem::path(it.path().string().c_str()).extension().string().c_str();
+
+				if (extension.compare(".fbx") != 0)
+					continue;
+
+				objects_to_show.push_back(filename);
+			}
+		}
+		if (objects_to_show.size() > 0)
+		{
+			for (std::vector<std::string>::iterator mesh_it = objects_to_show.begin(); mesh_it != objects_to_show.end(); ++mesh_it)
+			{
+				ImGui::Selectable((*mesh_it).c_str());
+			}
+		}
 		ImGui::EndChildFrame();
 
 		ImGui::End();
@@ -1076,7 +1144,7 @@ void ModuleEditor::Resize()
 {
 	//Configuration
 	config_size.x = 280;
-	config_size.y = 200;
+	config_size.y = App->window->window_height/2;
 	config_pos.x = App->window->window_width - config_size.x;
 	config_pos.y = App->window->window_height - config_size.y;
 
