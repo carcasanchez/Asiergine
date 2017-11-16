@@ -45,14 +45,12 @@ void ComponentMaterial::OnEditor()
 
 		if (want_to_change_texture)
 		{
+			textures_to_show.clear();
 			library_textures_path = App->fs->GetAssetDirectory();
 			library_textures_path += "Textures/";
 			ImGui::OpenPopup("Textures");
 			want_to_change_texture = false;
-		}
-
-		if (ImGui::BeginPopup("Textures"))
-		{
+			
 			for (std::experimental::filesystem::recursive_directory_iterator::value_type it : std::experimental::filesystem::recursive_directory_iterator(library_textures_path.c_str()))
 			{
 				std::string filename = std::experimental::filesystem::path(it.path().string().c_str()).stem().string().c_str();
@@ -62,11 +60,18 @@ void ComponentMaterial::OnEditor()
 				if (extension.compare(".dds") != 0 && extension.compare(".png") != 0 && extension.compare(".jpg") != 0 && extension.compare(".tga") != 0 && extension.compare(".jpeg") != 0)
 					continue;
 
-				if (ImGui::MenuItem(filename.c_str()))
-				{					
-					library_textures_path += filename + extension;
+				textures_to_show.push_back(filename + extension);
+			}
+		}
+		if (ImGui::BeginPopup("Textures"))
+		{
+			for (std::vector<std::string>::iterator it = textures_to_show.begin(); it != textures_to_show.end(); ++it)
+			{
+				if (ImGui::MenuItem((*it).c_str()))
+				{
+					library_textures_path += (*it);
 					texture = (ResourceTexture*)App->resource_m->ChangeResource(texture, library_textures_path.c_str());
-					name = filename;					
+					name = (*it);
 				}
 			}
 			ImGui::EndPopup();
