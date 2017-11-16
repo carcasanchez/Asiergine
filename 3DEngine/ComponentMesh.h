@@ -38,6 +38,7 @@ public:
 private:
 	bool want_to_change_mesh = false;
 	std::string library_meshes_path;
+	std::vector<std::string> meshes_to_show;
 	ResourceMesh* mesh = nullptr;
 	
 };
