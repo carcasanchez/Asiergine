@@ -11,6 +11,7 @@ public:
 	~ModuleResourceManager();
 
 	bool Init(const JSON_Object* config_data);
+	bool Start();
 	update_status PreUpdate(float real_dt, float game_dt);
 	bool CleanUp();
 

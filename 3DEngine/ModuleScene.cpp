@@ -41,6 +41,8 @@ bool ModuleScene::Start()
 	light->CreateComponent_Transform(float3(5, 5, 5));
 	light->CreateComponent_Light();
 
+
+
 	return true;
 }
 
@@ -73,20 +75,14 @@ update_status ModuleScene::Update(float real_dt, float game_dt)
 	
 	if(App->editor->BakeQuadtreeOpen())
 		scene_quadtree.root.SetAABBToDraw();
-
-	
+		
 
 	//Check debug key
 	if (App->input->GetKey(DEBUG_NORMALS_KEY) == KEY_DOWN)
 		debug_normals = !debug_normals;
 	if (App->input->GetKey(DEBUG_BOXES_KEY) == KEY_DOWN)
 		debug_boxes = !debug_boxes;
-
-
-	//TODO: delet dis
-	if (App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
-		App->resource_m->ReimportAllAssets();
-
+	
 	return UPDATE_CONTINUE;
 }
 

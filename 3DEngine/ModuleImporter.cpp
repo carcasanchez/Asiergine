@@ -100,8 +100,15 @@ bool ModuleImporter::ImportFBX(const char * path)
 
 		ImportScene(path, scene, fbx_d);
 		aiReleaseImport(scene);
-		
-		CreateFBXmeta(fbx_d, path);
+
+
+		std::string filename = std::experimental::filesystem::path(path).stem().string().c_str();
+		std::string extension = std::experimental::filesystem::path(path).extension().string().c_str();
+		std::string fbx_folder = App->fs->CreateDirectoryInAssets("FBX");
+		fbx_folder += filename + extension;
+
+		App->fs->CloneFile(path, fbx_folder.c_str());		
+		CreateFBXmeta(fbx_d, fbx_folder.c_str());
 	}
 	else
 	{

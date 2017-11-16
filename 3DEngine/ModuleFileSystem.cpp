@@ -146,6 +146,9 @@ bool ModuleFileSystem::ExistsFile(const char * path) const
 
 bool ModuleFileSystem::CloneFile(const char * source, const char * destination) const
 {
+	if (strcmp(source, destination) == 0)
+		return false;
+
 	char* data = nullptr;
 
 	uint size = LoadDataFrom(data, source);

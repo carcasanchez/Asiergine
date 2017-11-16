@@ -22,8 +22,13 @@ ModuleResourceManager::~ModuleResourceManager()
 bool ModuleResourceManager::Init(const JSON_Object* config_data)
 {
 	bool ret = true;
-
 	return ret;
+}
+
+bool ModuleResourceManager::Start()
+{
+	ReimportAllAssets();
+	return true;
 }
 
 update_status ModuleResourceManager::PreUpdate(float real_dt, float game_dt)
@@ -89,26 +94,17 @@ Resource* ModuleResourceManager::LoadResource(const char * path)
 	LOG("-----------------------Loading file from %s", path);
 
 	//Get file extension (reversed)
-	while (tmp.back() != '.')
-	{
-		extension.push_back(tmp.back());
-		tmp.pop_back();
-
-		if (tmp.empty())
-			break;
-	}
+	extension = std::experimental::filesystem::path(path).extension().string().c_str();
 
 	//Normalize to lower case
 	std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
-	//Reverse to be human readable
-	std::reverse(extension.begin(), extension.end());
 
 	//Manage file depending on extension
-	if (extension.compare("fbx") == 0 || extension.compare("obj") == 0)
+	if (extension.compare(".fbx") == 0 || extension.compare(".obj") == 0)
 		ManageFBX(path);
-	else if (extension.compare("carca") == 0)
+	else if (extension.compare(".carca") == 0)
 		resource_id = ManageMesh(path);
-	else if (extension.compare("png") == 0 || extension.compare("dds") == 0 || extension.compare("tga") == 0 || extension.compare("jpg") == 0)
+	else if (extension.compare(".png") == 0 || extension.compare(".dds") == 0 || extension.compare(".tga") == 0 || extension.compare(".jpg") == 0)
 		resource_id = ManageTexture(path, extension.c_str());
 	else LOG("ERROR: File extension '.%s' not allowed", extension.c_str());
 		
@@ -121,6 +117,8 @@ Resource* ModuleResourceManager::LoadResource(const char * path)
 void ModuleResourceManager::ManageFBX(const char* path)
 {
 	App->importer->ImportFBX(path);	
+
+
 	App->importer->LoadFBX(path);
 }
 
