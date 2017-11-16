@@ -112,6 +112,10 @@ void CompTransform::OnEditor()
 		}
 		else App->editor->UnLockSelection();
 
+		if (game_object->IsStatic())
+			ImGuizmo::Enable(false);
+		else ImGuizmo::Enable(true);
+
 		//GUIZMOS
 
 
