@@ -74,27 +74,33 @@ void ComponentMesh::OnEditor()
 
 		if (want_to_change_mesh)
 		{
+			meshes_to_show.clear();
 			library_meshes_path = App->fs->GetAssetDirectory();
 			library_meshes_path += "Meshes/";
 			ImGui::OpenPopup("Meshes");
-			want_to_change_mesh = false;			
-		}
+			want_to_change_mesh = false;
 
-		if (ImGui::BeginPopup("Meshes"))
-		{
 			for (std::experimental::filesystem::recursive_directory_iterator::value_type it : std::experimental::filesystem::recursive_directory_iterator(library_meshes_path.c_str()))
 			{
 				std::string filename = std::experimental::filesystem::path(it.path().string().c_str()).stem().string().c_str();
 				std::string extension = std::experimental::filesystem::path(it.path().string().c_str()).extension().string().c_str();
-				
+
 				if (extension.compare(FORMAT_EXTENSION) != 0)
 					continue;
-				
-				if (ImGui::MenuItem(filename.c_str()))
+
+				meshes_to_show.push_back(filename);
+			}
+		}
+
+		if (ImGui::BeginPopup("Meshes"))
+		{
+			for (std::vector<std::string>::iterator it = meshes_to_show.begin(); it != meshes_to_show.end(); ++it)
+			{
+				if (ImGui::MenuItem((*it).c_str()))
 				{
-					library_meshes_path += filename + FORMAT_EXTENSION;					
+					library_meshes_path += (*it) + FORMAT_EXTENSION;
 					mesh = (ResourceMesh*)App->resource_m->ChangeResource(mesh, library_meshes_path.c_str());
-					name = filename;				
+					name = (*it);
 				}
 			}
 			ImGui::EndPopup();

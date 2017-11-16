@@ -161,6 +161,13 @@ private:
 	void ConfigVramUsageMenu();
 	void ConfigTimeMenu();
 
+	//Asset window selectables
+	bool meshes_selected = false;
+	bool textures_selected = false;
+	bool scenes_selected = false;
+	bool fbx_selected = false;
+	std::vector<std::string> objects_to_show;
+
 	//Main menu bar options
 	void ShowExampleWindow_option();
 	void File_option();

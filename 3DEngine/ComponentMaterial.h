@@ -45,5 +45,6 @@ private:
 	ResourceTexture* texture = nullptr;
 	bool want_to_change_texture= false;
 	std::string library_textures_path;
+	std::vector<std::string> textures_to_show;
 };
 
