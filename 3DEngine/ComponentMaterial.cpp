@@ -66,13 +66,7 @@ void ComponentMaterial::OnEditor()
 				{					
 					library_textures_path += filename + extension;
 					texture = (ResourceTexture*)App->resource_m->ChangeResource(texture, library_textures_path.c_str());
-
-					if (texture)
-					{						
-						name = filename;
-					}
-					else
-						LOG("Texture %s does not exist!", filename.c_str());
+					name = filename;					
 				}
 			}
 			ImGui::EndPopup();

@@ -15,6 +15,8 @@ public:
 	update_status PreUpdate(float real_dt, float game_dt);
 	bool CleanUp();
 
+	void FileDroppedInEditor(const char* path);
+
 	//Checks if resource is in memory and loads it if not
 	Resource* LoadResource(const char* path);
 	Resource* CreateResource(Resource::RESOURCE_TYPE type, uint id = 0);
@@ -22,6 +24,7 @@ public:
 	void SetToDelete(uint id);
 
 	void ReimportAllAssets();
+	void ReloadAllAssets();
 
 	uint ImportMesh(const char* path, bool unload_after_import = false);
 	uint ImportTexture(const char* path, bool unload_after_import = false);

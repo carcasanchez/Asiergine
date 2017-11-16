@@ -92,14 +92,9 @@ void ComponentMesh::OnEditor()
 				
 				if (ImGui::MenuItem(filename.c_str()))
 				{
-					library_meshes_path += filename + FORMAT_EXTENSION;
-					
+					library_meshes_path += filename + FORMAT_EXTENSION;					
 					mesh = (ResourceMesh*)App->resource_m->ChangeResource(mesh, library_meshes_path.c_str());
-
-					if (mesh)
-					{
-						name = filename;
-					}					
+					name = filename;				
 				}
 			}
 			ImGui::EndPopup();

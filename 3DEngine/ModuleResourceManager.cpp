@@ -58,6 +58,27 @@ bool ModuleResourceManager::CleanUp()
 	return true;
 }
 
+void ModuleResourceManager::FileDroppedInEditor(const char * path)
+{
+	std::string tmp = path;
+	std::string extension;
+
+	//Get file extension (reversed)
+	extension = std::experimental::filesystem::path(path).extension().string().c_str();
+
+	//Normalize to lower case
+	std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
+
+	//Manage file depending on extension
+	if (extension.compare(".fbx") == 0 || extension.compare(".obj") == 0)
+		LoadResource(path);
+	else if (extension.compare(".carca") == 0)
+		ImportMesh(path, true);
+	else if (extension.compare(".png") == 0 || extension.compare(".dds") == 0 || extension.compare(".tga") == 0 || extension.compare(".jpg") == 0 || extension.compare(".jpeg") == 0)
+		ImportTexture(path, true);
+	else LOG("ERROR: File extension '.%s' not allowed", extension.c_str());
+}
+
 
 Resource * ModuleResourceManager::CreateResource(Resource::RESOURCE_TYPE type, uint id)
 {
@@ -104,7 +125,7 @@ Resource* ModuleResourceManager::LoadResource(const char * path)
 		ManageFBX(path);
 	else if (extension.compare(".carca") == 0)
 		resource_id = ManageMesh(path);
-	else if (extension.compare(".png") == 0 || extension.compare(".dds") == 0 || extension.compare(".tga") == 0 || extension.compare(".jpg") == 0)
+	else if (extension.compare(".png") == 0 || extension.compare(".dds") == 0 || extension.compare(".tga") == 0 || extension.compare(".jpg") == 0 || extension.compare(".jpeg") == 0)
 		resource_id = ManageTexture(path, extension.c_str());
 	else LOG("ERROR: File extension '.%s' not allowed", extension.c_str());
 		
@@ -117,8 +138,6 @@ Resource* ModuleResourceManager::LoadResource(const char * path)
 void ModuleResourceManager::ManageFBX(const char* path)
 {
 	App->importer->ImportFBX(path);	
-
-
 	App->importer->LoadFBX(path);
 }
 
@@ -365,6 +384,8 @@ uint ModuleResourceManager::CreateTextureMeta(const char * path)
 
 
 //Utility
+
+
 bool ModuleResourceManager::CheckTimestamp(const char* file, const char* meta)
 {
 	JSON_Value* meta_file = json_parse_file(meta);
@@ -401,6 +422,7 @@ void ModuleResourceManager::SetToDelete(uint id)
 	to_delete.push_back(id);
 }
 
+//Reimports all .carca and images to library. Called every init.
 void ModuleResourceManager::ReimportAllAssets()
 {
 	//Reimport Meshes
@@ -434,6 +456,13 @@ void ModuleResourceManager::ReimportAllAssets()
 
 		ImportTexture(it.path().string().c_str(), true);
 	}
+}
+
+void ModuleResourceManager::ReloadAllAssets()
+{
+
+
+
 }
 
 Resource* ModuleResourceManager::ChangeResource(Resource* res, const char * path) const
