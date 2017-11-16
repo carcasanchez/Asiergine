@@ -171,6 +171,7 @@ void ModuleEditor::DrawUI()
 	ManageExampleWindow();
 	ManageHierarchyWindow();
 	ManageInspectorWindow();
+	ManageAssetWindow();
 
 	ImGui::Render();
 }
@@ -293,6 +294,9 @@ void ModuleEditor::Window_option()
 
 	if (ImGui::MenuItem("Inspector"))
 		inspector_open = true;	
+
+	if (ImGui::MenuItem("Assets"))
+		asset_window_open = true;
 }
 
 void ModuleEditor::File_option() 
@@ -553,6 +557,31 @@ void ModuleEditor::ManageSaveWindow()
 		
 
 		ImGui::EndPopup();
+	}
+}
+
+void ModuleEditor::ManageAssetWindow()
+{
+	if (asset_window_open)
+	{
+		static bool meshes_selected;
+		static bool textures_selected;
+		static bool scenes_selected;
+
+		ImGui::SetNextWindowPos(ImVec2(-6, 451));
+		ImGui::SetNextWindowSize(ImVec2(986, 290));
+		ImGui::Begin("Assets", &asset_window_open, ImGuiWindowFlags_ShowBorders);
+
+		ImGui::BeginChildFrame(0, ImVec2(150, 290));
+		meshes_selected = ImGui::Selectable("Meshes");
+		textures_selected = ImGui::Selectable("Textures");
+		scenes_selected = ImGui::Selectable("Scenes");		
+		ImGui::EndChildFrame();
+		ImGui::SameLine();
+		ImGui::BeginChildFrame(1, ImVec2(900, 290));
+		ImGui::EndChildFrame();
+
+		ImGui::End();
 	}
 }
 

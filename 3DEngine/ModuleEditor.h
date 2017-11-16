@@ -110,6 +110,7 @@ private:
 	bool camera_config_open = false;
 	bool hierarchy_open = false;
 	bool play_window_open = true;
+	bool asset_window_open = true;
 
 	bool unlimitedFramerate = true;
 	bool bake_quadtree = false;
@@ -146,6 +147,7 @@ private:
 	void ManageHierarchyChildren(GameObject*);
 	void ManageInspectorWindow();
 	void ManageSaveWindow();
+	void ManageAssetWindow();
 
 	//Configuration Window
 	void ConfigAppMenu();
