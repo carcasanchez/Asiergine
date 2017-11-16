@@ -71,6 +71,11 @@ update_status ModuleScene::Update(float real_dt, float game_dt)
 		DeleteSelectedGameObject();
 	}
 
+	if (App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
+	{
+		App->resource_m->ReloadAllAssets();
+	}
+
 	root->Update(real_dt, game_dt);
 	
 	if(App->editor->BakeQuadtreeOpen())
