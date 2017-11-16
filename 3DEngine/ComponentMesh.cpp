@@ -85,22 +85,21 @@ void ComponentMesh::OnEditor()
 			for (std::experimental::filesystem::recursive_directory_iterator::value_type it : std::experimental::filesystem::recursive_directory_iterator(library_meshes_path.c_str()))
 			{
 				std::string filename = std::experimental::filesystem::path(it.path().string().c_str()).stem().string().c_str();
+				std::string extension = std::experimental::filesystem::path(it.path().string().c_str()).extension().string().c_str();
+				
+				if (extension.compare(FORMAT_EXTENSION) != 0)
+					continue;
+				
 				if (ImGui::MenuItem(filename.c_str()))
 				{
-					if (mesh)
-						mesh->DecreaseInstancies();
-
 					library_meshes_path += filename + FORMAT_EXTENSION;
-					mesh = (ResourceMesh*)App->resource_m->LoadResource(library_meshes_path.c_str());
+					
+					mesh = (ResourceMesh*)App->resource_m->ChangeResource(mesh, library_meshes_path.c_str());
 
 					if (mesh)
 					{
-						mesh->IncreaseInstancies();
 						name = filename;
-						game_object->SetBoundingBox(mesh);
-					}
-					else
-						LOG("Mesh %s does not exist!", filename.c_str());
+					}					
 				}
 			}
 			ImGui::EndPopup();

@@ -57,18 +57,18 @@ void ComponentMaterial::OnEditor()
 			{
 				std::string filename = std::experimental::filesystem::path(it.path().string().c_str()).stem().string().c_str();
 				std::string extension = std::experimental::filesystem::path(it.path().string().c_str()).extension().string().c_str();
-				
+				std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
+
+				if (extension.compare(".dds") != 0 && extension.compare(".png") != 0 && extension.compare(".jpg") != 0 && extension.compare(".tga") != 0 && extension.compare(".jpeg") != 0)
+					continue;
+
 				if (ImGui::MenuItem(filename.c_str()))
-				{
-					if (texture)
-						texture->DecreaseInstancies();
-
+				{					
 					library_textures_path += filename + extension;
-					texture = (ResourceTexture*)App->resource_m->LoadResource(library_textures_path.c_str());
+					texture = (ResourceTexture*)App->resource_m->ChangeResource(texture, library_textures_path.c_str());
 
 					if (texture)
-					{
-						texture->IncreaseInstancies();
+					{						
 						name = filename;
 					}
 					else

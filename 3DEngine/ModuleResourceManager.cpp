@@ -298,6 +298,7 @@ uint ModuleResourceManager::ImportTexture(const char * path, bool unload_after_i
 	return resource_id;
 }
 
+
 uint ModuleResourceManager::CreateMeshMeta(const char * path)
 {
 	LCG rand;
@@ -437,6 +438,23 @@ void ModuleResourceManager::ReimportAllAssets()
 	}
 }
 
+Resource* ModuleResourceManager::ChangeResource(Resource* res, const char * path) const
+{
+	if (res)
+		res->DecreaseInstancies();
+
+	res = App->resource_m->LoadResource(path);
+
+	if (res)
+	{
+		res->IncreaseInstancies();
+		return res;
+	}
+	else
+		LOG("Resource %s does not exist!", path);
+	
+	return nullptr;
+}
 
 
 bool ModuleResourceManager::DeleteResource(uint id)

@@ -25,6 +25,9 @@ public:
 	uint ImportMesh(const char* path, bool unload_after_import = false);
 	uint ImportTexture(const char* path, bool unload_after_import = false);
 
+	Resource* ChangeResource(Resource* res, const char* path) const;
+
+
 private:
 
 	bool DeleteResource(uint id);
