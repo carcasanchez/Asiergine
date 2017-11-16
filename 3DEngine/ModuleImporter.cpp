@@ -151,17 +151,26 @@ int ModuleImporter::ImportTextureFromFBX(const aiScene* scene, const char* path,
 	std::string	texture_name = t.C_Str();
 	std::string texture_path = path;
 
+	std::string texture_asset_file = App->fs->CreateDirectoryInAssets("Textures");
+	texture_asset_file += texture_name;
+
 	//Construc the general path for the texture
-	while (texture_path.back() != '\\')
+	while (!texture_path.empty() && texture_path.back() != '\\')
 	{
 		texture_path.pop_back();
 	}
-	texture_path += texture_name;
 
-	fbx_d.texture_names.push_back(texture_name.c_str());
-		
-	std::string texture_asset_file = App->fs->CreateDirectoryInAssets("Textures");
-	texture_asset_file += texture_name;
+	//Check in assets/textures if the could not find the texture in the given path
+	if(texture_path.empty())
+		texture_path = texture_asset_file;
+	else
+	{
+		texture_path += texture_name;
+	}
+
+
+	fbx_d.texture_names.push_back(texture_name.c_str());		
+	
 	App->fs->CloneFile(texture_path.c_str(), texture_asset_file.c_str());
 	
 	return text_id;
@@ -298,8 +307,10 @@ void ModuleImporter::CreateFBXmeta(FBX_data &fbx_d, const char* path) const
 	
 	json_object_dotset_string(obj_data, "FBX name", file_name.c_str());	
 
-	std::time_t result = std::time(nullptr);
-	std::string timestamp = std::asctime(std::localtime(&result));
+	//Save timestamp of file
+	struct stat st;
+	stat(path, &st);
+	std::string timestamp = std::asctime(std::localtime(&st.st_mtime));
 	
 	json_object_dotset_string(obj_data, "Time Stamp", timestamp.c_str());
 

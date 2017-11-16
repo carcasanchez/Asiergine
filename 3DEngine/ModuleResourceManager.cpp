@@ -339,8 +339,10 @@ uint ModuleResourceManager::CreateMeshMeta(const char * path)
 
 	json_object_dotset_number(obj_data, "UID", UID);
 
-	std::time_t result = std::time(nullptr);
-	std::string timestamp = std::asctime(std::localtime(&result));
+	//Save timestamp of file
+	struct stat st;
+	stat(path, &st);
+	std::string timestamp = std::asctime(std::localtime(&st.st_mtime));
 
 	json_object_dotset_string(obj_data, "Time Stamp", timestamp.c_str());
 	json_serialize_to_file(meta_file, meta_path.c_str());
@@ -371,8 +373,10 @@ uint ModuleResourceManager::CreateTextureMeta(const char * path)
 
 	json_object_dotset_number(obj_data, "UID", UID);
 
-	std::time_t result = std::time(nullptr);
-	std::string timestamp = std::asctime(std::localtime(&result));
+	//Save timestamp of file
+	struct stat st;
+	stat(path, &st);
+	std::string timestamp = std::asctime(std::localtime(&st.st_mtime));
 
 	json_object_dotset_string(obj_data, "Time Stamp", timestamp.c_str());
 
@@ -458,9 +462,31 @@ void ModuleResourceManager::ReimportAllAssets()
 	}
 }
 
+//Checks if assets have been changed and reloads them
 void ModuleResourceManager::ReloadAllAssets()
 {
+	std::string fbx_directory = App->fs->GetAssetDirectory();
+	std::string meshes_directory = App->fs->GetAssetDirectory();
+	std::string textures_directory = App->fs->GetAssetDirectory();
+	fbx_directory += "FBX/";
+	meshes_directory += "Meshes/";
+	textures_directory += "Textures/";
 
+	//Reload FBX
+	for (std::experimental::filesystem::recursive_directory_iterator::value_type it : std::experimental::filesystem::recursive_directory_iterator(fbx_directory.c_str()))
+	{
+		std::string filename = std::experimental::filesystem::path(it.path().string().c_str()).stem().string().c_str();
+		std::string extension = std::experimental::filesystem::path(it.path().string().c_str()).extension().string().c_str();
+		std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
+		if (extension.compare(".fbx") != 0)
+			continue;
+
+		if (CheckTimestamp((fbx_directory + filename + extension).c_str(), (fbx_directory + filename + extension + META_EXTENSION).c_str()))
+		{
+			App->importer->ImportFBX((fbx_directory + filename + extension).c_str());
+		}
+
+	}
 
 
 }
