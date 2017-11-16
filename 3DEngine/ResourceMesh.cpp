@@ -14,7 +14,6 @@ ResourceMesh::ResourceMesh(uint id) : Resource(id, RESOURCE_TYPE::MESH)
 
 ResourceMesh::~ResourceMesh()
 {
-
 	if(vertices)
 		delete[] vertices;	
 	if(indices) 

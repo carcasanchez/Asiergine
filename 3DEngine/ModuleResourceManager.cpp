@@ -61,9 +61,13 @@ bool ModuleResourceManager::CleanUp()
 void ModuleResourceManager::FileDroppedInEditor(const char * path)
 {
 	std::string tmp = path;
+	std::string name;
 	std::string extension;
 
-	//Get file extension (reversed)
+	//Get file name
+	name = std::experimental::filesystem::path(path).stem().string().c_str();
+
+	//Get file extension
 	extension = std::experimental::filesystem::path(path).extension().string().c_str();
 
 	//Normalize to lower case
@@ -73,9 +77,19 @@ void ModuleResourceManager::FileDroppedInEditor(const char * path)
 	if (extension.compare(".fbx") == 0 || extension.compare(".obj") == 0)
 		LoadResource(path);
 	else if (extension.compare(".carca") == 0)
-		ImportMesh(path, true);
+	{
+		std::string asset_dir = App->fs->CreateDirectoryInAssets("Meshes");
+		asset_dir += name + extension;
+		App->fs->CloneFile(path, asset_dir.c_str());
+		ImportMesh(asset_dir.c_str(), true);
+	}
 	else if (extension.compare(".png") == 0 || extension.compare(".dds") == 0 || extension.compare(".tga") == 0 || extension.compare(".jpg") == 0 || extension.compare(".jpeg") == 0)
-		ImportTexture(path, true);
+	{
+		std::string asset_dir = App->fs->CreateDirectoryInAssets("Textures");
+		asset_dir += name + extension;
+		App->fs->CloneFile(path, asset_dir.c_str());
+		ImportTexture(asset_dir.c_str(), true);
+	}
 	else LOG("ERROR: File extension '.%s' not allowed", extension.c_str());
 }
 
@@ -114,7 +128,7 @@ Resource* ModuleResourceManager::LoadResource(const char * path)
 
 	LOG("-----------------------Loading file from %s", path);
 
-	//Get file extension (reversed)
+	//Get file extension
 	extension = std::experimental::filesystem::path(path).extension().string().c_str();
 
 	//Normalize to lower case
@@ -162,26 +176,29 @@ uint ModuleResourceManager::ManageMesh(const char * path)
 	}	
 	else
 	{		
-		//TODO: check if meta timestamp doesn't match
-				//IF HASN'T: reimport asset
-
+		//Construct path to library
+		//Extract file name
+		std::string file_name = std::experimental::filesystem::path(path).stem().string().c_str();
+		std::string library_path = App->fs->GetLibraryDirectory();
+		library_path += "Meshes/" + file_name + FORMAT_EXTENSION;
+				
 		//Read UID from meta 
 		JSON_Value * value = json_parse_file(meta_file.c_str());
 		JSON_Object* obj_data = json_value_get_object(value);
 		resource_id = json_object_dotget_number(obj_data, "UID");
 
-		//Chek if mesh has been already loaded
+		//If timestamp doen't match, reimport
+		if (!CheckTimestamp(path, meta_file.c_str()))
+		{
+			resource_id = ImportMesh(path);
+		}
+			
+		//Check if mesh has been already loaded
 		Resource* new_mesh = GetResource(resource_id);
 		
 		//IF HASN'T: load asset from library		
 		if (new_mesh == nullptr)
-		{
-			//Extract file name
-			std::string file_name = std::experimental::filesystem::path(path).stem().string().c_str();
-
-			//Construct path to library
-			std::string library_path = App->fs->GetLibraryDirectory();
-			library_path += "Meshes/" + file_name + FORMAT_EXTENSION;
+		{			
 			new_mesh = App->importer->LoadMeshFromOwnFormat(library_path.c_str(), resource_id);
 			if(new_mesh)			
 				new_mesh->SetFile(path, library_path.c_str());
@@ -240,7 +257,7 @@ uint ModuleResourceManager::ManageTexture(const char * path, const char* image_e
 	std::string meta_file = path;
 	meta_file += META_EXTENSION;
 	
-	//Check if meta exists (a.k.a if textre has already been imported)
+	//Check if meta exists (a.k.a if texture has already been imported)
 
 	//IF NOT: create meta and import to library
 	if (!App->fs->ExistsFile(meta_file.c_str()))
@@ -253,6 +270,12 @@ uint ModuleResourceManager::ManageTexture(const char * path, const char* image_e
 		JSON_Value * value = json_parse_file(meta_file.c_str());
 		JSON_Object* obj_data = json_value_get_object(value);
 		resource_id = json_object_dotget_number(obj_data, "UID");
+
+		//If timestamp doen't match, reimport
+		if (!CheckTimestamp(path, meta_file.c_str()))
+		{
+			resource_id = ImportTexture(path);
+		}
 
 		//Chek if mesh has been already loaded
 		ResourceTexture* new_texture = (ResourceTexture*)GetResource(resource_id);
@@ -268,7 +291,7 @@ uint ModuleResourceManager::ManageTexture(const char * path, const char* image_e
 			//Construct path to library
 			std::string library_path = App->fs->GetLibraryDirectory();
 			library_path += "Textures/" + file_name + TEXTURE_EXTENSION;
-			new_texture->SetData(App->importer->LoadTexture(library_path.c_str()), (file_name + "." + image_extension).c_str());
+			new_texture->SetData(App->importer->LoadTexture(library_path.c_str()), (file_name + image_extension).c_str());
 			new_texture->SetFile(path, library_path.c_str());
 		}
 
@@ -409,7 +432,7 @@ bool ModuleResourceManager::CheckTimestamp(const char* file, const char* meta)
 	stat(file, &st);
 	std::string last_modified_date = std::asctime(std::localtime(&st.st_mtime));
 
-	return timestamp.compare(last_modified_date);
+	return (timestamp.compare(last_modified_date)==0);
 }
 
 Resource * ModuleResourceManager::GetResource(uint id)
@@ -443,8 +466,7 @@ void ModuleResourceManager::ReimportAllAssets()
 
 		ImportMesh(it.path().string().c_str(), true);
 	}
-
-
+	
 
 	//Reimport Textures
 	std::string texture_asset_directory = App->fs->GetAssetDirectory();
@@ -466,11 +488,11 @@ void ModuleResourceManager::ReimportAllAssets()
 void ModuleResourceManager::ReloadAllAssets()
 {
 	std::string fbx_directory = App->fs->GetAssetDirectory();
-	std::string meshes_directory = App->fs->GetAssetDirectory();
-	std::string textures_directory = App->fs->GetAssetDirectory();
 	fbx_directory += "FBX/";
+	/*std::string meshes_directory = App->fs->GetAssetDirectory();
+	std::string textures_directory = App->fs->GetAssetDirectory();
 	meshes_directory += "Meshes/";
-	textures_directory += "Textures/";
+	textures_directory += "Textures/";*/
 
 	//Reload FBX
 	for (std::experimental::filesystem::recursive_directory_iterator::value_type it : std::experimental::filesystem::recursive_directory_iterator(fbx_directory.c_str()))
@@ -487,7 +509,46 @@ void ModuleResourceManager::ReloadAllAssets()
 		}
 
 	}
+	//TODO: Reload meshes and textures already in memory
+	/*//Reload Meshes
+	for (std::experimental::filesystem::recursive_directory_iterator::value_type it : std::experimental::filesystem::recursive_directory_iterator(meshes_directory.c_str()))
+	{
+		std::string filename = std::experimental::filesystem::path(it.path().string().c_str()).stem().string().c_str();
+		std::string extension = std::experimental::filesystem::path(it.path().string().c_str()).extension().string().c_str();
+		std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
+		if (extension.compare(FORMAT_EXTENSION) != 0)
+			continue;
 
+		std::string file = fbx_directory + filename + extension;
+		std::string meta_file = file + META_EXTENSION;
+
+		if (CheckTimestamp((fbx_directory + filename + extension).c_str(), meta_file.c_str()))
+		{
+			uint resource_uid = 0;
+			
+			JSON_Value* j_value = json_parse_file(meta_file.c_str());
+
+			if (j_value == nullptr)
+			{
+				LOG("Error: could not open %s", meta_file.c_str());
+				continue;
+			}
+
+			//Extract uid from meta
+			JSON_Object * object_data = json_value_get_object(j_value);
+			resource_uid = json_object_dotget_number(object_data, "UID");
+
+			//Check if resource is already loaded
+			Resource* res = GetResource(resource_uid);
+			if (res)
+			{
+				ChangeResource(res, file.c_str());
+			}
+
+		}
+
+	}*/
+	
 
 }
 
