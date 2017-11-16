@@ -186,5 +186,7 @@ private:
 	math::float2 inspector_pos;
 	math::float2 play_size;
 	math::float2 play_pos;
+	math::float2 asset_size;
+	math::float2 asset_pos;
 };
 

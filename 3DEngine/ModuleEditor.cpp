@@ -57,12 +57,12 @@ bool ModuleEditor::Start()
 	style.ScrollbarRounding = 0.0f;
 	style.Colors[ImGuiCol_Text] = ImVec4(0.98f, 0.98f, 0.98f, 1.00f);
 	style.Colors[ImGuiCol_TextDisabled] = ImVec4(0.60f, 0.82f, 0.55f, 1.00f);
-	style.Colors[ImGuiCol_WindowBg] = ImVec4(0.08f, 0.10f, 0.43f, 1.00f);
+	style.Colors[ImGuiCol_WindowBg] = ImVec4(0.08f, 0.10f, 0.43f, 0.70f);
 	style.Colors[ImGuiCol_ChildWindowBg] = ImVec4(0.03f, 0.06f, 0.26f, 0.31f);
 	style.Colors[ImGuiCol_PopupBg] = ImVec4(0.17f, 0.14f, 0.52f, 0.90f);
 	style.Colors[ImGuiCol_Border] = ImVec4(0.50f, 0.83f, 0.43f, 0.43f);
 	style.Colors[ImGuiCol_BorderShadow] = ImVec4(0.99f, 0.99f, 0.99f, 0.00f);
-	style.Colors[ImGuiCol_FrameBg] = ImVec4(0.49f, 0.22f, 0.78f, 1.00f);
+	style.Colors[ImGuiCol_FrameBg] = ImVec4(0.49f, 0.22f, 0.78f, 0.40f);
 	style.Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.36f, 0.06f, 0.06f, 0.40f);
 	style.Colors[ImGuiCol_FrameBgActive] = ImVec4(0.35f, 0.09f, 0.09f, 0.45f);
 	style.Colors[ImGuiCol_TitleBg] = ImVec4(0.51f, 0.51f, 0.98f, 1.00f);
@@ -567,15 +567,17 @@ void ModuleEditor::ManageAssetWindow()
 		static bool meshes_selected;
 		static bool textures_selected;
 		static bool scenes_selected;
+		static bool fbx_selected;
 
-		ImGui::SetNextWindowPos(ImVec2(-6, 451));
-		ImGui::SetNextWindowSize(ImVec2(986, 290));
-		ImGui::Begin("Assets", &asset_window_open, ImGuiWindowFlags_ShowBorders);
+		ImGui::SetNextWindowPos(ImVec2(asset_pos.x, asset_pos.y));
+		ImGui::SetNextWindowSize(ImVec2(asset_size.x, asset_size.y));
+		ImGui::Begin("Assets", &asset_window_open, ImGuiWindowFlags_ShowBorders | ImGuiWindowFlags_NoResize);
 
 		ImGui::BeginChildFrame(0, ImVec2(150, 290));
 		meshes_selected = ImGui::Selectable("Meshes");
 		textures_selected = ImGui::Selectable("Textures");
-		scenes_selected = ImGui::Selectable("Scenes");		
+		scenes_selected = ImGui::Selectable("Scenes");
+		fbx_selected = ImGui::Selectable("Fbx");
 		ImGui::EndChildFrame();
 		ImGui::SameLine();
 		ImGui::BeginChildFrame(1, ImVec2(900, 290));
@@ -712,9 +714,9 @@ void ModuleEditor::ConfigAppMenu()
 	//Plot the Histograms
 	char title[25];
 	sprintf_s(title, 25, "Framerate %.1f", fps_log[fps_log.size() - 1]);
-	ImGui::PlotHistogram("##framerate", &fps_log[0], fps_log.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
+	ImGui::PlotHistogram("##framerate", &fps_log[0], fps_log.size(), 0, title, 0.0f, 100.0f, ImVec2(260, 100));
 	sprintf_s(title, 25, "Milliseconds %0.1f", ms_log[ms_log.size() - 1]);
-	ImGui::PlotHistogram("##Milliseconds", &ms_log[0], ms_log.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
+	ImGui::PlotHistogram("##Milliseconds", &ms_log[0], ms_log.size(), 0, title, 0.0f, 100.0f, ImVec2(260, 100));
 
 
 	sMStats memory_stats = m_getMemoryStatistics();
@@ -787,12 +789,12 @@ void ModuleEditor::ConfigCameraMenu()
 {
 	//Camera speed
 	float cam_vel = App->camera->camera_speed * 5000;
-	ImGui::SliderFloat("Camera Speed", &cam_vel, 0, 200);
+	ImGui::SliderFloat("Speed", &cam_vel, 0, 200);
 	App->camera->camera_speed = cam_vel / 5000;
 
 	//Camera sensitivity
 	float cam_sens = App->camera->camera_sensitivity * 1000;
-	ImGui::SliderFloat("Camera Sensitivity", &cam_sens, 0, 100);
+	ImGui::SliderFloat("Sensitivity", &cam_sens, 0, 100);
 	App->camera->camera_sensitivity = cam_sens / 1000;
 
 	//Camera position info
@@ -1073,21 +1075,21 @@ void ModuleEditor::SelectObject(GameObject * g)
 void ModuleEditor::Resize()
 {
 	//Configuration
-	config_size.x = 300;
-	config_size.y = 300;
-	config_pos.x = App->window->window_width - 300;
-	config_pos.y = App->window->window_height - 300;
+	config_size.x = 280;
+	config_size.y = 200;
+	config_pos.x = App->window->window_width - config_size.x;
+	config_pos.y = App->window->window_height - config_size.y;
 
 	//hierarchy
 	hierarchy_size.x = 220;
-	hierarchy_size.y = 400;
+	hierarchy_size.y = App->window->window_height - asset_size.y - 18;
 	hierarchy_pos.x = 0;
 	hierarchy_pos.y = 18;
 
 	//Inspector
-	inspector_size.x = 300;
-	inspector_size.y = App->window->window_height - 318;
-	inspector_pos.x = App->window->window_width - 300;
+	inspector_size.x = 280;
+	inspector_size.y = App->window->window_height - config_size.y - 18;
+	inspector_pos.x = App->window->window_width - inspector_size.x;
 	inspector_pos.y = 18;
 
 	//Play
@@ -1095,5 +1097,11 @@ void ModuleEditor::Resize()
 	play_size.y = 60;
 	play_pos.x = (hierarchy_pos.x + inspector_pos.x) / 2;
 	play_pos.y = 18;
+
+	//Asset
+	asset_size.x = App->window->window_width - config_size.x;
+	asset_size.y = 180;
+	asset_pos.x = 0;
+	asset_pos.y = App->window->window_height - asset_size.y;
 }
 

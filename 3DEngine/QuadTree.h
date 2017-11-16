@@ -50,7 +50,7 @@ private:
 
 	
 	float3 minaabb = { 0, MIN_SCENE_POINT_Y, 0 };
-	float3 maxaabb = { 1,MAX_SCENE_POINT_X,1 };
+	float3 maxaabb = { 10,MAX_SCENE_POINT_X,10 };
 	math::AABB minimum_aabb = math::AABB(minaabb, maxaabb);
 
 	bool min_size_posible = false;
