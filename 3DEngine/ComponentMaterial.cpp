@@ -56,12 +56,14 @@ void ComponentMaterial::OnEditor()
 			for (std::experimental::filesystem::recursive_directory_iterator::value_type it : std::experimental::filesystem::recursive_directory_iterator(library_textures_path.c_str()))
 			{
 				std::string filename = std::experimental::filesystem::path(it.path().string().c_str()).stem().string().c_str();
+				std::string extension = std::experimental::filesystem::path(it.path().string().c_str()).extension().string().c_str();
+				
 				if (ImGui::MenuItem(filename.c_str()))
 				{
 					if (texture)
 						texture->DecreaseInstancies();
 
-					library_textures_path += filename + FORMAT_EXTENSION;
+					library_textures_path += filename + extension;
 					texture = (ResourceTexture*)App->resource_m->LoadResource(library_textures_path.c_str());
 
 					if (texture)
