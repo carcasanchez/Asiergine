@@ -24,7 +24,7 @@ public:
 	void SetAABBToDraw();
 	void Partition();
 	void Fill();
-	bool IsFull() { return game_objects.size() >= max_game_objects; }
+	bool IsFull() { return game_objects.size() > max_game_objects; }
 
 	math::AABB box;
 	std::vector<QuadTreeNodeObj*> children;

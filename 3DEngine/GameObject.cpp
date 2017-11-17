@@ -288,24 +288,27 @@ ComponentLight * GameObject::CreateComponent_Light(uint UID)
 bool GameObject::PutInQuadTree(QuadTreeNodeObj* node)
 {
 	bool ret = true;
-	if (!IsStatic())
-		return ret;
-	if (node->IsFull() || node->IsOfMinSize())
-		ret = false;
-	else {
-		if (node->box.Intersects(transformed_bounding_box))
-			node->Insert(this);
-		if (node->IsFull() || node->IsOfMinSize())
-			ret = false;
-		for (std::vector<GameObject*>::iterator it = children.begin(); it != children.end(); ++it)
-		{
+
+	
+	for (std::vector<GameObject*>::iterator it = children.begin(); it != children.end(); ++it)
+	{
 			ret = (*it)->PutInQuadTree(node);
-			if (ret == false || node->IsOfMinSize())
+			if (ret == false && !node->IsOfMinSize())
 			{
 				break;
 			}
-		}
 	}
+
+
+	if (!IsStatic())
+		return ret;
+	if (node->box.Intersects(transformed_bounding_box) && ret)
+	{
+			node->Insert(this);
+			if (node->IsFull() && !node->IsOfMinSize())
+				ret = false;
+	}
+	
 	
 	return ret;
 }

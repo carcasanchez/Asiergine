@@ -71,14 +71,9 @@ void QuadTreeNodeObj::Fill()
 	{
 		if ((*it)->PutInQuadTree(this) == false)
 		{
-			if (!min_size_posible)
-			{
-				game_objects.clear();
-				Partition();
-				break;
-			}
-			else
-				break;
+			game_objects.clear();
+			Partition();
+			break;	
 		}
 	}
 
