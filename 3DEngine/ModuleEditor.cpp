@@ -115,6 +115,14 @@ update_status ModuleEditor::PreUpdate(float real_dt, float game_dt)
 	update_status ret = UPDATE_CONTINUE;
 	ImGui_ImplSdlGL3_NewFrame(App->window->window);
 	ImGuizmo::BeginFrame();
+
+	//Check if Asset has been dropped and load geometry
+	const char* f_path = App->input->GetFileDropped();
+	if (f_path != nullptr)
+	{
+		App->resource_m->FileDroppedInEditor(f_path);
+	}
+
 	return ret;
 }
 
@@ -123,12 +131,7 @@ update_status ModuleEditor::Update(float real_dt, float game_dt)
 
 	update_status ret = UPDATE_CONTINUE;
 	
-	//Check if Asset has been dropped and load geometry
-	const char* f_path = App->input->GetFileDropped();	
-	if (f_path != nullptr)
-	{
-		App->resource_m->FileDroppedInEditor(f_path);
-	}
+
 
 			
 	return ret;

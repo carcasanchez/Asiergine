@@ -71,7 +71,6 @@ void ComponentMaterial::OnEditor()
 				{
 					library_textures_path += (*it);
 					texture = (ResourceTexture*)App->resource_m->ChangeResource(texture, library_textures_path.c_str());
-					name = (*it);
 				}
 			}
 			ImGui::EndPopup();
