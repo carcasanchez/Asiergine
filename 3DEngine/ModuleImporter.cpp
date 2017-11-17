@@ -497,13 +497,13 @@ uint ModuleImporter::LoadTexture(const char * path, bool flip) const
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, ilGetInteger(IL_IMAGE_WIDTH), ilGetInteger(IL_IMAGE_HEIGHT),
 		0, GL_RGBA, GL_UNSIGNED_BYTE, ilGetData());
 
+	glBindTexture(GL_TEXTURE_2D, 0);
 	ILuint devilError3 = ilGetError();
 	if (devilError3 != IL_NO_ERROR)
 	{
 		LOG("Devil Error (ilInit: %s)", iluErrorString(devilError3));
 		return 0;
 	}
-
 
 	LOG("Loaded Texture Successfully");
 	return img_id;
@@ -702,7 +702,7 @@ ResourceMesh* ModuleImporter::LoadMeshFromOwnFormat(const char * path, uint UID)
 	}
 
 
-	LOG("Loaded %s mesh successfully", name);
+	LOG("Loaded %s mesh successfully", path);
 	delete[] data;
 
 	//Create New resource

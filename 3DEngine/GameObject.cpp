@@ -11,9 +11,9 @@
 
 GameObject::GameObject(const char* name): name(name)
 {
-
 	LCG rand_gen;
 	UID = rand_gen.Int();
+	this->name.reserve(31);
 }
 
 GameObject::~GameObject()
@@ -253,11 +253,9 @@ ComponentCamera * GameObject::CreateComponent_Camera(float near_dist, float far_
 	if (UID > 0)
 		new_camera->SetID(UID);
 
-
-	float3 corners[8];
-	new_camera->frustum.GetCornerPoints(corners);
-
-	bounding_box.Enclose(&corners[0], 8);
+		
+	bounding_box.minPoint = float3(-1, -1, -1);
+	bounding_box.maxPoint = float3(1, 1, 1);
 
 	components.push_back(new_camera);
 	LOG("Creating new Camera in %s", name.c_str());
@@ -433,14 +431,17 @@ void GameObject::SetStatic(bool is_static)
 //Editor draw--------------------------------------------------------------------------
 void GameObject::OnEditor()
 {
-	ImGui::TextWrapped("%s", name.c_str());
-	ImGui::Separator();
+	ImGui::InputText("", (char*)name.c_str(), 30);
+
+	ImGui::SameLine();
 	if (ImGui::Checkbox("Static", &obj_static))
 	{
 		//GetComponentByType(COMPONENT_TRANSFORM)->SetActive(!obj_static);
 		SetStatic(obj_static);
 		App->scene->scene_quadtree.Calculate();
 	}
+
+	ImGui::Separator();
 
 	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); it++)
 	{
@@ -482,6 +483,9 @@ void GameObject::OnEditor()
 		}
 		ImGui::PopID();
 	}
+
+	ImGui::Separator();
+	ImGui::Separator();
 
 	if (ImGui::Button("CREATE COMPONENT"))	
 		ImGui::OpenPopup("CREATE COMPONENT");

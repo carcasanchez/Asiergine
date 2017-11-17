@@ -38,7 +38,9 @@ update_status ModuleResourceManager::PreUpdate(float real_dt, float game_dt)
 		//delete all marked resources
 		for (int i = 0; i < to_delete.size(); i++)
 		{
-			DeleteResource(to_delete[i]);
+			Resource* res = GetResource(to_delete[i]);
+			if(res->GetInstancies() == 0)
+				DeleteResource(to_delete[i]);
 		}
 		to_delete.clear();
 	}
@@ -223,7 +225,7 @@ uint ModuleResourceManager::ImportMesh(const char * path, bool unload_after_impo
 	std::string file_name = std::experimental::filesystem::path(path).stem().string().c_str();
 
 	//Construct path to library
-	std::string library_path = App->fs->GetLibraryDirectory();
+	std::string library_path;
 	library_path += App->fs->CreateDirectoryInLibrary("Meshes") + file_name + FORMAT_EXTENSION;
 
 	ResourceMesh* new_mesh = App->importer->LoadMeshFromOwnFormat(path, resource_id);

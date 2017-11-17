@@ -54,7 +54,7 @@ bool ModuleFileSystem::SaveDataTo(const char * data, uint size, const char * pat
 	}
 	else
 	{
-		LOG("ERROR: Could not save file %s", name);
+		LOG("ERROR: Could not save file %s", path);
 		ret = false;
 	}
 

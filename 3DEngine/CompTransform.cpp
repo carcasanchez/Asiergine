@@ -118,7 +118,6 @@ void CompTransform::OnEditor()
 
 		//GUIZMOS
 
-
 		if (App->editor->AreGizmosLocked())
 			ImGuizmo::Enable(false);
 		else ImGuizmo::Enable(true);
@@ -128,7 +127,6 @@ void CompTransform::OnEditor()
 		
 		static bool local_opt = false;
 
-		ImGui::Separator();
 		if (ImGui::Checkbox("Local", &local_opt))
 		{
 			if(local_opt)
