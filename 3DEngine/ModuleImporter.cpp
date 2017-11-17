@@ -274,7 +274,7 @@ std::string ModuleImporter::ImportMeshFromFBX(const aiMesh* m, const char* scene
 	{
 		name += FORMAT_EXTENSION;
 		fbx_d.mesh_names.push_back(name);
-		std::string asset_folder = App->fs->GetAssetDirectory();
+		std::string asset_folder;
 		asset_folder += App->fs->CreateDirectoryInAssets("Meshes") + name;
 		
 		//Create tmp mesh to save to binary
