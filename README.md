@@ -10,27 +10,27 @@ https://github.com/carcasanchez/Asiergine/tree/Second_Asignment
 
 ## Controls
 
--Left Click to select object
--Right Click to active first person camera movement
--WASD to displace the camera
--Mouse wheel to Zoom in and out
--Alt+Left Click to active orbital control
--Alt+Right Click to pan the camera
--F to focus on selected object
--R to reset camera to 0, 0, 0
-- 1, 2 and 3 to change the Gizmos between Translation, Rotation and Scale mode
+-Left Click to select object   
+-Right Click to active first person camera movement   
+-WASD to displace the camera   
+-Mouse wheel to Zoom in and out   
+-Alt+Left Click to active orbital control   
+-Alt+Right Click to pan the camera   
+-F to focus on selected object   
+-R to reset camera to 0, 0, 0   
+- 1, 2 and 3 to change the Gizmos between Translation, Rotation and Scale mode   
 
 
--F1 to show vertex normals
--F2 to show bounding boxes
+-F1 to show vertex normals   
+-F2 to show bounding boxes   
 
 ## About Quadtree
  
- The Quadtree only will generate if you have any static object in scene. If you make static an object (and viceversa), all its children
-will become static.
- To see the Quadtree drawn in scene, the menu Bake Quadtree (in the Configuration Window) must be opened.
- In this menu, you can change the size of the quadtree and the maximum number of objects each node will admit before division.
- If you want to active frustum culling, go to Configuration Window -> Rendering -> Frustum Culling.
+ The Quadtree only will generate if you have any static object in scene. If you make static an object (and viceversa), all its children   
+ will become static.   
+ To see the Quadtree drawn in scene, the menu Bake Quadtree (in the Configuration Window) must be opened.   
+ In this menu, you can change the size of the quadtree and the maximum number of objects each node will admit before division.   
+ If you want to active frustum culling, go to Configuration Window -> Rendering -> Frustum Culling.   
  
 ## About Assets and Library
 
