@@ -52,6 +52,7 @@ void ComponentCamera::Update(float real_dt, float game_dt)
 		}
 
 		aspect_ratio = App->window->GetAspectRatio();
+		frustum.horizontalFov = math::Atan(aspect_ratio*math::Tan(frustum.verticalFov / 2)) * 2;
 
 		
 		App->renderer3D->SetBoxToDraw(&frustum);

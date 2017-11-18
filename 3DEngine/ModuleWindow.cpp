@@ -117,6 +117,11 @@ bool ModuleWindow::SwitchVSync()
 	return true;
 }
 
+void ModuleWindow::SetAspectRatio(float new_aspect)
+{
+	aspect_ratio = new_aspect;
+}
+
 bool ModuleWindow::SaveConfig(JSON_Object* config_data)
 {
 	LOG("Saving data to config--------");

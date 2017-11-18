@@ -236,6 +236,7 @@ void ModuleRenderer3D::OnResize(int width, int height)
 	App->window->window_height = height;
 	App->window->window_width = width;
 	App->camera->SetAspectRatio((float)width / (float)height);
+	App->window->SetAspectRatio((float)width / (float)height);
 }
 
 void ModuleRenderer3D::ChangeBackgroundColor(Color c)

@@ -25,6 +25,8 @@ public:
 
 
 	bool SwitchVSync();
+	void SetAspectRatio(float new_aspect);
+
 	float GetAspectRatio()
 	{
 		return aspect_ratio;
