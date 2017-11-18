@@ -6,7 +6,7 @@ Asiergine is under the MIT license. If you want to know more, please, see this l
 https://github.com/carcasanchez/Asiergine/blob/master/LICENSE
 
 Code repository:
-https://github.com/carcasanchez/Asiergine
+https://github.com/carcasanchez/Asiergine/tree/Second_Asignment
 
 ## Controls
 
