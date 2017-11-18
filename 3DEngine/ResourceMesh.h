@@ -17,6 +17,7 @@ public:
 	const uint* GetIndices() const { return indices; }
 	const float* GetTextureCoords()const { return texture_coords; };
 	const float* GetNormals()const { return normals; };
+	const AABB* GetBoundingBox() const	{ return &bounding_box; }
 
 	//CAUTION: this doesn't deallocate memory. Use wisely
 	void SetDataToNullptr()
@@ -41,5 +42,7 @@ private:
 
 	uint text_coord_id = 0;
 	float* texture_coords = nullptr;
+
+	math::AABB bounding_box = math::AABB(float3::zero, float3::zero);
 };
 

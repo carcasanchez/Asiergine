@@ -55,22 +55,6 @@ void GameObject::Update(float real_dt, float game_dt)
 	}
 	
 
-	Component* t = GetComponentByType(COMPONENT_TRANSFORM);
-	//Update bounding box -------------------------------------------------------------------------
-	if (t && bounding_box.IsFinite())
-	{
-		float4x4 matrix = ((CompTransform*)t)->GetGlobalTransform();
-		matrix.Transpose();	
-		transformed_bounding_box = bounding_box;
-		transformed_bounding_box.TransformAsAABB(matrix);
-	
-		//Debug Bounding Box
-		if (App->scene->debug_boxes)
-		{
-			App->renderer3D->SetBoxToDraw(transformed_bounding_box);
-		}
-	}
-
 }
 
 void GameObject::EraseChild(GameObject* game_object)
@@ -162,19 +146,6 @@ void GameObject::SetParent(GameObject* new_parent)
 
 }
 
-void GameObject::SetBoundingBox(const ResourceMesh* m)
-{
-	//Adapt bounding box to geometry-----------------
-	std::vector <float3> vertex_array;
-	const float* ver = m->GetVertices();
-	uint num_vert = m->GetNumVertices();
-
-	for (int i = 0; i < num_vert * 3; i += 3)
-		vertex_array.push_back(float3(ver[i], ver[i + 1], ver[i + 2]));
-	if (vertex_array.size() > 0)
-		bounding_box.Enclose(&vertex_array[0], vertex_array.size());
-
-}
 //CREATE COMPONENT METHODS----------------------------------------------------
 CompTransform * GameObject::CreateComponent_Transform(float3 trans , float3 scale, Quat rot, uint UID)
 {
@@ -207,7 +178,6 @@ ComponentMesh * GameObject::CreateComponent_Mesh(const char* m_name, ResourceMes
 	{
 		new_mesh->name = m_name;
 		new_mesh->SetMesh(m);
-		SetBoundingBox(m);
 	}
 	if (UID > 0)
 		new_mesh->SetID(UID);
@@ -253,10 +223,6 @@ ComponentCamera * GameObject::CreateComponent_Camera(float near_dist, float far_
 	if (UID > 0)
 		new_camera->SetID(UID);
 
-		
-	bounding_box.minPoint = float3(-1, -1, -1);
-	bounding_box.maxPoint = float3(1, 1, 1);
-
 	components.push_back(new_camera);
 	LOG("Creating new Camera in %s", name.c_str());
 
@@ -300,12 +266,19 @@ bool GameObject::PutInQuadTree(QuadTreeNodeObj* node)
 
 	if (!IsStatic())
 		return ret;
-	if (node->box.Intersects(transformed_bounding_box) && ret)
+
+	std::vector<Component*> meshes = GetAllComponentOfType(COMPONENT_MESH);
+	for (int i = 0; i < meshes.size(); i++)
 	{
+		if (node->box.Intersects(*((ComponentMesh*)meshes[i])->GetTransformedBox()) && ret)
+		{
 			node->Insert(this);
 			if (node->IsFull() && !node->IsOfMinSize())
 				ret = false;
+			break;
+		}
 	}
+	
 	
 	
 	return ret;
@@ -336,8 +309,9 @@ GameObject* GameObject::FindChildByID(uint other_uid) const
 void GameObject::CheckMouseRayCollision(math::LineSegment &l, float& distance, GameObject* &best_candidate)
 {
 	for (int i = 0; i < children.size(); i++)
-	{
-		if (l.Intersects(*children[i]->GetTransformedBox()))
+	{	
+
+		if (l.Intersects(GetBoundingBox()))
 		{
 			children[i]->CheckTriangleCollision(l, distance, best_candidate);
 		}
@@ -348,6 +322,24 @@ void GameObject::CheckMouseRayCollision(math::LineSegment &l, float& distance, G
 }
 
 
+AABB GameObject::GetBoundingBox()
+{
+	std::vector<Component*> meshes = GetAllComponentOfType(COMPONENT_MESH);
+	ComponentCamera* cam = (ComponentCamera*)GetComponentByType(COMPONENT_CAMERA);
+	math::AABB total_aabb;
+	total_aabb.SetNegativeInfinity();
+
+	for (int i = 0; i < meshes.size(); i++)
+	{
+		total_aabb.Enclose(*((ComponentMesh*)meshes[i])->GetTransformedBox());
+	}
+	if (cam)
+	{
+		total_aabb.Enclose(*cam->GetBox());
+	}
+
+	return total_aabb;
+}
 
 void GameObject::CheckTriangleCollision(math::LineSegment &line, float& distance, GameObject* &best_candidate)
 {
@@ -395,7 +387,7 @@ void GameObject::CheckTriangleCollision(math::LineSegment &line, float& distance
 		float tmp_distance, out;
 		for (int i = 0; i < 6; i++)
 		{
-			if (line.Intersects(transformed_bounding_box, tmp_distance, out))
+			if (line.Intersects(*cam->GetBox(), tmp_distance, out))
 				if (tmp_distance < distance)
 				{
 					distance = tmp_distance;

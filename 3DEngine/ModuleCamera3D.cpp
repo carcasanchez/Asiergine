@@ -312,15 +312,15 @@ void ModuleCamera3D::AdaptToGeometry(GameObject* game_object)
 	if (game_object == nullptr)
 		return;
 
-	const AABB* box = game_object->GetTransformedBox();
+	AABB box = game_object->GetBoundingBox();
 
-	frustum.pos.x = box->maxPoint.x + 5;
-	frustum.pos.y = box->maxPoint.y + 5;
-	frustum.pos.z = box->maxPoint.z + 5;
+	frustum.pos.x = box.maxPoint.x + 5;
+	frustum.pos.y = box.maxPoint.y + 5;
+	frustum.pos.z = box.maxPoint.z + 5;
 
-	pivot_point.x = box->CenterPoint().x;
-	pivot_point.y = box->CenterPoint().y;
-	pivot_point.z = box->CenterPoint().z;
+	pivot_point.x = box.CenterPoint().x;
+	pivot_point.y = box.CenterPoint().y;
+	pivot_point.z = box.CenterPoint().z;
 
 	LookAt(pivot_point);
 }

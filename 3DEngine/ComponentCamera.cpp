@@ -26,6 +26,9 @@ ComponentCamera::ComponentCamera(GameObject* g, float near_distance, float far_d
 
 	frustum.horizontalFov = math::Atan(aspect_ratio*math::Tan(frustum.verticalFov/2))*2;
 
+	camera_box.minPoint = float3(-1, -1, -1);
+	camera_box.minPoint = float3(1, 1, 1);
+
 }
 
 
@@ -34,19 +37,29 @@ ComponentCamera::~ComponentCamera(){}
 
 void ComponentCamera::Update(float real_dt, float game_dt)
 {
+	
 	if (IsActive() == true)
 	{
-		aspect_ratio = App->window->GetAspectRatio();
-
-		Component* t = game_object->GetComponentByType(COMPONENT_TRANSFORM);
+		//Update camera aabb
+		CompTransform* t = (CompTransform*)game_object->GetComponentByType(COMPONENT_TRANSFORM);
 		if (t)
 		{
-			frustum.pos = ((CompTransform*)t)->GetTranslation();
-			frustum.front = ((CompTransform*)t)->GetGlobalTransform().Row3(2);
-			frustum.up = ((CompTransform*)t)->GetGlobalTransform().Row3(1);
+			camera_box.minPoint = t->GetTranslation() - float3(1, 1, 1);
+			camera_box.maxPoint = t->GetTranslation() + float3(1, 1, 1);
+			frustum.pos = t->GetTranslation();
+			frustum.front = t->GetGlobalTransform().Row3(2);
+			frustum.up = t->GetGlobalTransform().Row3(1);
 		}
+
+		aspect_ratio = App->window->GetAspectRatio();
+
 		
 		App->renderer3D->SetBoxToDraw(&frustum);
+
+		if (App->scene->debug_boxes)
+		{
+			App->renderer3D->SetBoxToDraw(camera_box);
+		}
 	}	
 }
 

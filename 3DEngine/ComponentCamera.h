@@ -11,7 +11,6 @@ public:
 	~ComponentCamera();
 
 	void Update(float real_dt, float game_dt);
-	void SendQuadTreeGameObjectsToPaint(QuadTreeNodeObj* node);
 
 	float GetNearDistance()
 	{
@@ -33,6 +32,8 @@ public:
 		frustum.farPlaneDistance = d;
 	}
 
+	const AABB* GetBox() const { return &camera_box; }
+
 	bool IsActive() { return active; }
 
 	void OnEditor();
@@ -48,5 +49,7 @@ public:
 
 private:
 	float aspect_ratio;
+
+	math::AABB camera_box;
 };
 

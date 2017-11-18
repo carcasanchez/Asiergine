@@ -67,6 +67,13 @@ void ResourceMesh::SetData(float* ver, uint* ind, uint num_vert, uint num_ind, f
 		glBindBuffer(GL_ARRAY_BUFFER, text_coord_id);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_vertices * 2, texture_coords, GL_STATIC_DRAW);
 	}
+
+	//Adapt bounding box to geometry-----------------
+	std::vector <float3> vertex_array;
+	for (int i = 0; i < num_vert * 3; i += 3)
+		vertex_array.push_back(float3(vertices[i], vertices[i + 1], vertices[i + 2]));
+	if (vertex_array.size() > 0)
+		bounding_box.Enclose(&vertex_array[0], vertex_array.size());
 }
 
 void ResourceMesh::Draw(const float* transform, uint texture_id) const

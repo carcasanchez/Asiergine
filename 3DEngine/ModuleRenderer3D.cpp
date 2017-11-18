@@ -296,8 +296,13 @@ void ModuleRenderer3D::SendQuadTreeGameObjectsToPaint(QuadTreeNodeObj* node)
 		
 		for (std::vector<GameObject*>::iterator obj_it = node->game_objects.begin(); obj_it != node->game_objects.end(); obj_it++)
 		{
-			if (active_camera->frustum.Contains(*(*obj_it)->GetTransformedBox()))
-				(*obj_it)->SendAllMeshesToDraw();
+
+			std::vector<Component*> meshes = (*obj_it)->GetAllComponentOfType(COMPONENT_MESH);
+			for(int i = 0;i<meshes.size();i++)
+			{ 
+				if (active_camera->frustum.Contains(*((ComponentMesh*)meshes[i])->GetTransformedBox()))
+					App->renderer3D->SetMeshToDraw(((ComponentMesh*)meshes[i]));
+			}
 		}
 
 		for (std::vector<QuadTreeNodeObj*>::iterator it = node->children.begin(); it != node->children.end(); ++it)
@@ -408,6 +413,6 @@ void ModuleRenderer3D::RenderLights()
 
 bool ModuleRenderer3D::CheckFrustumCulling(const ComponentMesh * m)
 {
-	return active_camera->frustum.Contains(*m->GetGameObject()->GetTransformedBox());	
+	return active_camera->frustum.Contains(*m->GetTransformedBox());	
 }
 

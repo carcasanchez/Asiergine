@@ -52,6 +52,23 @@ void ComponentMesh::DebugDraw()
 
 void ComponentMesh::Update(float real_dt, float game_dt)
 {
+	//Update bounding box -------------------------------------------------------------------------
+	Component* t = game_object->GetComponentByType(COMPONENT_TRANSFORM);
+	if (t && mesh && mesh->GetBoundingBox()->IsFinite())
+	{
+		float4x4 matrix = ((CompTransform*)t)->GetGlobalTransform();
+		matrix.Transpose();
+		transformed_bounding_box = *mesh->GetBoundingBox();
+		transformed_bounding_box.TransformAsAABB(matrix);
+
+		//Debug Bounding Box
+		if (App->scene->debug_boxes)
+		{
+			App->renderer3D->SetBoxToDraw(transformed_bounding_box);
+		}
+	}
+
+
 	if (game_object->IsStatic() && App->renderer3D->frustum_culling)
 		return;
 	App->renderer3D->SetMeshToDraw(this);

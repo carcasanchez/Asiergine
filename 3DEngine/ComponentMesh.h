@@ -30,6 +30,7 @@ public:
 	const float* GetVertices() const { return mesh ? mesh->GetVertices() : nullptr; }
 	const uint* GetIndices() const { return mesh ? mesh->GetIndices() : nullptr;}
 	bool IsActive() const { return active; }
+	const AABB* GetTransformedBox() const { return &transformed_bounding_box;}
 
 	//Scene serialization------------------------
 	uint PrepareToSave() const;
@@ -40,5 +41,6 @@ private:
 	std::string library_meshes_path;
 	std::vector<std::string> meshes_to_show;
 	ResourceMesh* mesh = nullptr;
+	math::AABB transformed_bounding_box;
 	
 };

@@ -14,6 +14,8 @@ class ResourceTexture;
 
 enum ComponentType;
 
+
+
 class GameObject
 {
 public:
@@ -35,7 +37,6 @@ public:
 	bool IsStatic() const { return obj_static; }
 	void SetStatic(bool obj_static);
 	void SendAllMeshesToDraw();
-	void SetBoundingBox(const ResourceMesh* m);
 	void EraseChild(GameObject* game_object);
 
 	CompTransform* CreateComponent_Transform(float3 trans = float3(0, 0, 0), float3 scaling = float3(1, 1, 1), Quat rot = Quat::identity, uint UID = 0);
@@ -48,15 +49,6 @@ public:
 
 	bool PutInQuadTree(QuadTreeNodeObj* node);
 
-	const AABB* GetBoundingBox() const
-	{
-		 return &bounding_box;
-	}
-
-	const AABB* GetTransformedBox() const
-	{
-		return &transformed_bounding_box;
-	}
 
 	uint GetID() const
 	{
@@ -71,19 +63,19 @@ public:
 		return parent->GetID();
 	}
 
+	AABB GetBoundingBox();
+
 	void SetID(uint new_ID)
 	{
 		UID = new_ID;
 	}
 
+
 	void CheckTriangleCollision(math::LineSegment &l, float& distance, GameObject* &best_candidate);
 	GameObject* FindChildByID(uint uid) const;
 	void CheckMouseRayCollision(math::LineSegment &l, float& distance, GameObject* &best_candidate);
 	
-
 	
-
-	math::AABB bounding_box = math::AABB(float3::zero, float3::zero);
 	std::vector<GameObject*> children;
 
 private:
@@ -94,9 +86,6 @@ private:
 
 	std::vector<Component*> components;
 
-	
-	math::AABB transformed_bounding_box;
 	uint UID = 0;
-
 
 };
