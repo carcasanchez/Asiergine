@@ -7,7 +7,7 @@ public:
 	ResourceTexture(uint id);
 	~ResourceTexture();
 
-	void SetData(uint text_id, const char* t_name);
+	void SetData(uint text_id, const char* t_name, int x, int y);
 
 	uint GetTextureId() const
 	{
@@ -17,6 +17,11 @@ public:
 	std::string GetTextureName()const
 	{
 		return texture_name;
+	}
+
+	float2 GetDimensions() const
+	{
+		return float2(width, height);
 	}
 
 private:

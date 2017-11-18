@@ -455,7 +455,7 @@ std::string ModuleImporter::ExtractTextureName(const aiMaterial* material)
 
 
 //Load texture from image
-uint ModuleImporter::LoadTexture(const char * path, bool flip) const
+uint ModuleImporter::LoadTexture(const char * path, float2 &size, bool flip) const
 {
 	//Gen image
 	ILuint img_id = 0;
@@ -505,6 +505,7 @@ uint ModuleImporter::LoadTexture(const char * path, bool flip) const
 		return 0;
 	}
 
+	size = math::float2(ilGetInteger(IL_IMAGE_WIDTH), ilGetInteger(IL_IMAGE_HEIGHT));
 	LOG("Loaded Texture Successfully");
 	return img_id;
 }

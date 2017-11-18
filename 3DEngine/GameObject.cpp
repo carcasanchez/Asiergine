@@ -461,6 +461,8 @@ void GameObject::OnEditor()
 				if (it + 1 != components.end())
 					std::iter_swap(it, it + 1);
 			}
+
+			//ComponentTransform can't be deleted!
 			if ((*it)->GetType() != COMPONENT_TRANSFORM)
 			{
 				ImGui::SameLine();
@@ -471,6 +473,8 @@ void GameObject::OnEditor()
 					break;
 				}
 			}
+
+			ImGui::Separator();
 			(*it)->OnEditor();
 		}
 		ImGui::PopID();

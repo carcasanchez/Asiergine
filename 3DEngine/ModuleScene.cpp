@@ -404,7 +404,7 @@ uint ModuleScene::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>> &b
 
 
 
-GameObject * ModuleScene::LoadSceneFromOwnFormat(const char * name)
+void ModuleScene::LoadSceneFromOwnFormat(const char * name)
 {
 
 	char* data = nullptr;
@@ -416,7 +416,7 @@ GameObject * ModuleScene::LoadSceneFromOwnFormat(const char * name)
 
 	if (App->fs->LoadDataFrom(data, data_path.c_str()) == false)
 	{
-		return nullptr;
+		return;
 	}
 
 	tmp_parent_ids.clear();
@@ -437,7 +437,7 @@ GameObject * ModuleScene::LoadSceneFromOwnFormat(const char * name)
 	if (*tag != SCENE_SAVETAG)
 	{
 		LOG("ERROR: this is not a scene");
-		return nullptr;
+		return;
 	}
 	cursor += size_of;
 
@@ -479,8 +479,6 @@ GameObject * ModuleScene::LoadSceneFromOwnFormat(const char * name)
 
 	delete[] data;
 	LOG("Loading scene %s", name);
-
-	return nullptr;
 }
 
 uint ModuleScene::LoadObjectFromOwnFormat(char*& cursor)

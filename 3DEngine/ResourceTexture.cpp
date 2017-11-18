@@ -17,8 +17,10 @@ ResourceTexture::~ResourceTexture()
 	glDeleteTextures(1, &texture_buffer_id);
 }
 
-void ResourceTexture::SetData(uint text_id, const char* t_name)
+void ResourceTexture::SetData(uint text_id, const char* t_name, int x, int y)
 {
 	texture_buffer_id = text_id;
 	texture_name = t_name;
+	width = x;
+	height = y;
 }

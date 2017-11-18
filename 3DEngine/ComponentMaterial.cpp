@@ -25,18 +25,20 @@ void ComponentMaterial::OnEditor()
 {
 	if (IsActive() == true)
 	{
-		if (GetTextureID() != 0)
-		{
-			ImVec2 size;
-			size.x = 200;
-			size.y = 200;
-
-			ImGui::Image((ImTextureID)GetTextureID(), ImVec2(200, 200));
-			ImGui::TextColored(ImVec4(0, 255, 0, 255), "%i x %i", (int)size.x, (int)size.y);	
-		}
-
 		if (texture)
 		{
+			if (GetTextureID() != 0)
+			{
+				ImVec2 size;
+				size.x = 200;
+				size.y = 200;
+				float2 texture_dimensions = texture->GetDimensions();
+
+				ImGui::Image((ImTextureID)GetTextureID(), ImVec2(200, 200));
+				ImGui::TextColored(ImVec4(0, 255, 0, 255), "%i x %i", (int)texture_dimensions.x, (int)texture_dimensions.y);
+			}
+
+	
 			want_to_change_texture = ImGui::Button(GetTextureName().c_str());
 			ImGui::TextWrapped("Instancies in scene: %i", texture->GetInstancies());
 		}

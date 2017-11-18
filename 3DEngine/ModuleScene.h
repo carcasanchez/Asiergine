@@ -43,7 +43,7 @@ public:
 
 	//Scene serialization
 	bool SaveSceneToOwnFormat(const char* name);
-	GameObject* LoadSceneFromOwnFormat(const char* path);
+	void LoadSceneFromOwnFormat(const char* path);
 	uint SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>>& buffer, GameObject* to_save);
 	uint LoadObjectFromOwnFormat(char*& cursor);
 

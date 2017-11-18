@@ -293,7 +293,9 @@ uint ModuleResourceManager::ManageTexture(const char * path, const char* image_e
 			//Construct path to library
 			std::string library_path = App->fs->GetLibraryDirectory();
 			library_path += "Textures/" + file_name + TEXTURE_EXTENSION;
-			new_texture->SetData(App->importer->LoadTexture(library_path.c_str()), (file_name + image_extension).c_str());
+			float2 texture_dimensions;
+			uint texture_id = App->importer->LoadTexture(library_path.c_str(), texture_dimensions);
+			new_texture->SetData(texture_id, (file_name + image_extension).c_str(), texture_dimensions.x, texture_dimensions.y);
 			new_texture->SetFile(path, library_path.c_str());
 		}
 
@@ -315,7 +317,8 @@ uint ModuleResourceManager::ImportTexture(const char * path, bool unload_after_i
 	std::string texture_extension = std::experimental::filesystem::path(path).extension().string().c_str();
 
 	//Import Texture and save it to library
-	uint texture_id = App->importer->LoadTexture(path, true);
+	float2 texture_dimensions;
+	uint texture_id = App->importer->LoadTexture(path, texture_dimensions, true);
 	if (texture_id != 0)
 	{
 		App->importer->SaveTextureToDDS(library_path.c_str());
@@ -327,7 +330,7 @@ uint ModuleResourceManager::ImportTexture(const char * path, bool unload_after_i
 	//Load again if you want
 	if (!unload_after_import)
 	{
-		new_texture->SetData(App->importer->LoadTexture(library_path.c_str()), (texture_name + texture_extension).c_str());
+		new_texture->SetData(App->importer->LoadTexture(library_path.c_str(), texture_dimensions), (texture_name + texture_extension).c_str(), texture_dimensions.x, texture_dimensions.y);
 		new_texture->SetFile(path, library_path.c_str());		
 	}
 	else

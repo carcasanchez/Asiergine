@@ -112,15 +112,11 @@ void CompTransform::OnEditor()
 		}
 		else App->editor->UnLockSelection();
 
-		if (game_object->IsStatic())
+		//GIZMOS
+		if (game_object->IsStatic() || App->editor->AreGizmosLocked())
 			ImGuizmo::Enable(false);
 		else ImGuizmo::Enable(true);
 
-		//GUIZMOS
-
-		if (App->editor->AreGizmosLocked())
-			ImGuizmo::Enable(false);
-		else ImGuizmo::Enable(true);
 
 		static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::ROTATE);
 		static ImGuizmo::MODE mCurrentGizmoMode(ImGuizmo::WORLD);
@@ -157,6 +153,7 @@ void CompTransform::OnEditor()
 		float4x4 trs_matrix = matrix;
 		ImGuizmo::Manipulate(view_matrix.ptr(), proj_matrix.ptr(), mCurrentGizmoOperation, mCurrentGizmoMode, trs_matrix.ptr());
 
+		//Using gizmos
 		if (ImGuizmo::IsUsing())
 		{					
 			trs_matrix.Transpose();
@@ -175,9 +172,7 @@ void CompTransform::OnEditor()
 			{
 				rot_in_euler = new_q.ToEulerXYZ()*RADTODEG;
 				SetRotation(new_q);
-			}
-
-				
+			}				
 		}
 		//--------------------------------------------------------------------
 

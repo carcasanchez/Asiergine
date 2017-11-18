@@ -26,7 +26,7 @@ public:
 	
 
 
-	uint LoadTexture(const char * path, bool flip = false) const;
+	uint LoadTexture(const char * path, float2 &size, bool flip = false) const;
 
 
 	bool ImportFBX(const char* path);

@@ -51,6 +51,7 @@ bool ModuleEditor::Start()
 	ImGui_ImplSdlGL3_NewFrame(App->window->window);
 
 	ImGuiStyle& style = ImGui::GetStyle();
+	style.WindowRounding = 0.0;
 	style.Colors[ImGuiCol_Text] = ImVec4(0.98f, 0.98f, 0.98f, 1.00f);
 	style.Colors[ImGuiCol_TextDisabled] = ImVec4(0.60f, 0.82f, 0.55f, 1.00f);
 	style.Colors[ImGuiCol_WindowBg] = ImVec4(0.08f, 0.10f, 0.43f, 0.70f);
@@ -563,6 +564,7 @@ void ModuleEditor::ManageSaveWindow()
 	}
 }
 
+//Asset window-------------------------------------------------------------------
 void ModuleEditor::ManageAssetWindow()
 {
 	if (asset_window_open)
@@ -590,6 +592,7 @@ void ModuleEditor::ManageAssetWindow()
 			{
 				std::string filename = std::experimental::filesystem::path(it.path().string().c_str()).stem().string().c_str();
 				std::string extension = std::experimental::filesystem::path(it.path().string().c_str()).extension().string().c_str();
+				std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
 
 				if (extension.compare(FORMAT_EXTENSION) != 0)
 					continue;
@@ -606,6 +609,7 @@ void ModuleEditor::ManageAssetWindow()
 			{
 				std::string filename = std::experimental::filesystem::path(it.path().string().c_str()).stem().string().c_str();
 				std::string extension = std::experimental::filesystem::path(it.path().string().c_str()).extension().string().c_str();
+				std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
 
 				if (extension.compare(".dds") != 0 && extension.compare(".png") != 0 && extension.compare(".jpg") != 0 && extension.compare(".tga") != 0 && extension.compare(".jpeg") != 0)
 					continue;
@@ -622,6 +626,7 @@ void ModuleEditor::ManageAssetWindow()
 			{
 				std::string filename = std::experimental::filesystem::path(it.path().string().c_str()).stem().string().c_str();
 				std::string extension = std::experimental::filesystem::path(it.path().string().c_str()).extension().string().c_str();
+				std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
 
 				if (extension.compare(FORMAT_EXTENSION) != 0)
 					continue;
@@ -638,6 +643,7 @@ void ModuleEditor::ManageAssetWindow()
 			{
 				std::string filename = std::experimental::filesystem::path(it.path().string().c_str()).stem().string().c_str();
 				std::string extension = std::experimental::filesystem::path(it.path().string().c_str()).extension().string().c_str();
+				std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
 
 				if (extension.compare(".fbx") != 0)
 					continue;
