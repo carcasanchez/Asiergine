@@ -26,6 +26,7 @@
     <ClCompile Include="3DEngine\imgui\imgui_demo.cpp" />
     <ClCompile Include="3DEngine\imgui\imgui_draw.cpp" />
     <ClCompile Include="3DEngine\imgui\imgui_impl_sdl_gl3.cpp" />
+    <ClCompile Include="3DEngine\include_wwise.cpp" />
     <ClCompile Include="3DEngine\Light.cpp" />
     <ClCompile Include="3DEngine\log.cpp" />
     <ClCompile Include="3DEngine\Main.cpp" />
@@ -109,6 +110,7 @@
     <ClInclude Include="3DEngine\imgui\stb_rect_pack.h" />
     <ClInclude Include="3DEngine\imgui\stb_textedit.h" />
     <ClInclude Include="3DEngine\imgui\stb_truetype.h" />
+    <ClInclude Include="3DEngine\include_wwise.h" />
     <ClInclude Include="3DEngine\Light.h" />
     <ClInclude Include="3DEngine\MathGeoLib\include\Algorithm\Random\LCG.h" />
     <ClInclude Include="3DEngine\MathGeoLib\include\Geometry\AABB.h" />
@@ -230,7 +232,9 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(WWISESDK)\include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>

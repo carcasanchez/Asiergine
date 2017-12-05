@@ -205,6 +205,9 @@
     <ClCompile Include="3DEngine\ComponentLight.cpp">
       <Filter>Source\Containers\Components</Filter>
     </ClCompile>
+    <ClCompile Include="3DEngine\include_wwise.cpp">
+      <Filter>Source\Tools\Wwished</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3DEngine\Application.h">
@@ -537,6 +540,9 @@
     <ClInclude Include="3DEngine\ComponentLight.h">
       <Filter>Source\Containers\Components</Filter>
     </ClInclude>
+    <ClInclude Include="3DEngine\include_wwise.h">
+      <Filter>Source\Tools\Wwished</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -589,6 +595,9 @@
     </Filter>
     <Filter Include="Source\Containers\Resources">
       <UniqueIdentifier>{d49042b6-a8e6-475d-acb4-c25dc83940a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Tools\Wwished">
+      <UniqueIdentifier>{4a7dbe66-584c-45fe-ba5f-d85d29236344}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
