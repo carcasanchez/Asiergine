@@ -208,6 +208,9 @@
     <ClCompile Include="3DEngine\include_wwise.cpp">
       <Filter>Source\Tools\Wwished</Filter>
     </ClCompile>
+    <ClCompile Include="3DEngine\wwished.cpp">
+      <Filter>Source\Tools\Wwished</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3DEngine\Application.h">
@@ -541,6 +544,9 @@
       <Filter>Source\Containers\Components</Filter>
     </ClInclude>
     <ClInclude Include="3DEngine\include_wwise.h">
+      <Filter>Source\Tools\Wwished</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\wwished.h">
       <Filter>Source\Tools\Wwished</Filter>
     </ClInclude>
   </ItemGroup>

@@ -983,12 +983,12 @@ void ModuleEditor::ConfigAudioMenu()
 	ImGui::SameLine();
 	ImGui::TextColored({ 255, 50, 100, 255 }, "%s", SDL_GetAudioDeviceName(App->audio->audio_device, 0));
 
-	//Change the volume
+	/*//Change the volume
 	int volume = App->audio->GetVolume();
 	if (ImGui::SliderInt("Volume", &volume, 0, 100))
 	{
 		App->audio->ChangeVolume(volume);
-	}
+	}*/
 }
 
 //Input submenu on Configuration window
