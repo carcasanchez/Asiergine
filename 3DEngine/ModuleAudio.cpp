@@ -18,17 +18,19 @@ ModuleAudio::~ModuleAudio()
 // Called before render is available
 bool ModuleAudio::Init(const JSON_Object* config_data)
 {
-	LOG("Loading Audio Mixer");
-	bool ret = true;
+	LOG("Loading Wwished library");
+	return Wwished::InitWwished();
+}
 
-	Wwished::InitWwished();
-
-	return true;
+update_status ModuleAudio::Update(float real_dt, float game_dt)
+{
+	Wwished::ProcessAudio();
+	return UPDATE_CONTINUE;
 }
 
 // Called before quitting
 bool ModuleAudio::CleanUp()
 {
-	
-	return true;
+	LOG("Unloading Wwished library");
+	return Wwished::CloseWwished();
 }

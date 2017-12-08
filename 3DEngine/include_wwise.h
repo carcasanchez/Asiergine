@@ -13,7 +13,6 @@
 
 
 
-
 // Input libraries
 #ifndef _DEBUG  // Profile build configuration must be loaded instead of Debug
 #define AK_OPTIMIZED
