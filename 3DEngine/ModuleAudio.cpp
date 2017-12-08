@@ -19,7 +19,7 @@ ModuleAudio::~ModuleAudio()
 bool ModuleAudio::Init(const JSON_Object* config_data)
 {
 	LOG("Loading Wwished library");
-	return Wwished::InitWwished();
+	return Wwished::InitWwished(".", "English(US)");
 }
 
 update_status ModuleAudio::Update(float real_dt, float game_dt)

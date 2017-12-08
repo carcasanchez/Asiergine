@@ -1,11 +1,13 @@
 #include "wwished.h"
-#include "include_wwise.h"
 #include <assert.h>
+
+#include "include_wwise.h"
 #include "AK/include/Win32/AkFilePackageLowLevelIOBlocking.h"
 
 CAkFilePackageLowLevelIOBlocking g_lowLevelIO;
 
-bool Wwished::InitWwished()
+//Initialize all Wwise modules. Receives the base path for soundbanks and the current language
+bool Wwished::InitWwished(const char* base_path, const char* language)
 {
 
 	//Init default Wwise memory manager
@@ -37,7 +39,6 @@ bool Wwished::InitWwished()
 	}
 
 
-
 	// Create the Sound Engine using default initialization parameters
 	AkInitSettings initSettings;
 	AkPlatformInitSettings platformInitSettings;
@@ -60,7 +61,6 @@ bool Wwished::InitWwished()
 	}
 
 
-
 #ifndef AK_OPTIMIZED
 	// Initialize communications for debug purposes
 	AkCommSettings commSettings;
@@ -71,6 +71,11 @@ bool Wwished::InitWwished()
 		return false;
 	}
 #endif 
+	
+	//Set base path for sound banks
+	g_lowLevelIO.SetBasePath((AkOSChar*)base_path);
+
+	Utility::SetLanguage(language);
 
 	return true;
 }
@@ -103,4 +108,13 @@ bool Wwished::CloseWwished()
 
 
 	return false;
+}
+
+void Wwished::Utility::SetLanguage(const char * language)
+{
+	AKRESULT res = AK::StreamMgr::SetCurrentLanguage((AkOSChar*)language);
+	if (res == AK_Fail)
+	{
+		assert(!"Invalid language!");
+	}
 }
