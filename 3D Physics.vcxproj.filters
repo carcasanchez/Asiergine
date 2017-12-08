@@ -211,12 +211,6 @@
     <ClCompile Include="3DEngine\wwished.cpp">
       <Filter>Source\Tools\Wwished</Filter>
     </ClCompile>
-    <ClCompile Include="3DEngine\AK\include\Win32\AkDefaultIOHookBlocking.cpp">
-      <Filter>Source\Tools\Wwished\wwise_libraries</Filter>
-    </ClCompile>
-    <ClCompile Include="3DEngine\AK\include\Win32\AkDefaultIOHookDeferred.cpp">
-      <Filter>Source\Tools\Wwished\wwise_libraries</Filter>
-    </ClCompile>
     <ClCompile Include="3DEngine\AK\include\Common\AkDefaultLowLevelIODispatcher.cpp">
       <Filter>Source\Tools\Wwished\wwise_libraries</Filter>
     </ClCompile>
@@ -227,6 +221,12 @@
       <Filter>Source\Tools\Wwished\wwise_libraries</Filter>
     </ClCompile>
     <ClCompile Include="3DEngine\AK\include\Common\AkFilePackageLUT.cpp">
+      <Filter>Source\Tools\Wwished\wwise_libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="3DEngine\AK\include\Win32\AkDefaultIOHookBlocking.cpp">
+      <Filter>Source\Tools\Wwished\wwise_libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="3DEngine\AK\include\Win32\AkDefaultIOHookDeferred.cpp">
       <Filter>Source\Tools\Wwished\wwise_libraries</Filter>
     </ClCompile>
     <ClCompile Include="3DEngine\AK\include\Win32\stdafx.cpp">
@@ -570,16 +570,7 @@
     <ClInclude Include="3DEngine\wwished.h">
       <Filter>Source\Tools\Wwished</Filter>
     </ClInclude>
-    <ClInclude Include="3DEngine\AK\include\Win32\AkDefaultIOHookBlocking.h">
-      <Filter>Source\Tools\Wwished\wwise_libraries</Filter>
-    </ClInclude>
-    <ClInclude Include="3DEngine\AK\include\Win32\AkDefaultIOHookDeferred.h">
-      <Filter>Source\Tools\Wwished\wwise_libraries</Filter>
-    </ClInclude>
     <ClInclude Include="3DEngine\AK\include\Common\AkDefaultLowLevelIODispatcher.h">
-      <Filter>Source\Tools\Wwished\wwise_libraries</Filter>
-    </ClInclude>
-    <ClInclude Include="3DEngine\AK\include\Win32\akfilehelpers.h">
       <Filter>Source\Tools\Wwished\wwise_libraries</Filter>
     </ClInclude>
     <ClInclude Include="3DEngine\AK\include\Common\AkFileLocationBase.h">
@@ -591,16 +582,25 @@
     <ClInclude Include="3DEngine\AK\include\Common\AkFilePackageLowLevelIO.h">
       <Filter>Source\Tools\Wwished\wwise_libraries</Filter>
     </ClInclude>
-    <ClInclude Include="3DEngine\AK\include\Win32\AkFilePackageLowLevelIOBlocking.h">
-      <Filter>Source\Tools\Wwished\wwise_libraries</Filter>
-    </ClInclude>
-    <ClInclude Include="3DEngine\AK\include\Win32\AkFilePackageLowLevelIODeferred.h">
-      <Filter>Source\Tools\Wwished\wwise_libraries</Filter>
-    </ClInclude>
     <ClInclude Include="3DEngine\AK\include\Common\AkFilePackageLUT.h">
       <Filter>Source\Tools\Wwished\wwise_libraries</Filter>
     </ClInclude>
     <ClInclude Include="3DEngine\AK\include\Common\AkMultipleFileLocation.h">
+      <Filter>Source\Tools\Wwished\wwise_libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\AK\include\Win32\AkDefaultIOHookBlocking.h">
+      <Filter>Source\Tools\Wwished\wwise_libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\AK\include\Win32\AkDefaultIOHookDeferred.h">
+      <Filter>Source\Tools\Wwished\wwise_libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\AK\include\Win32\AkFileHelpers.h">
+      <Filter>Source\Tools\Wwished\wwise_libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\AK\include\Win32\AkFilePackageLowLevelIOBlocking.h">
+      <Filter>Source\Tools\Wwished\wwise_libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\AK\include\Win32\AkFilePackageLowLevelIODeferred.h">
       <Filter>Source\Tools\Wwished\wwise_libraries</Filter>
     </ClInclude>
     <ClInclude Include="3DEngine\AK\include\Win32\stdafx.h">

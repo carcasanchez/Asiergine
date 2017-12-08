@@ -80,6 +80,7 @@ public:
 		flags.uCustomParamSize = 0;
 		flags.pCustomParam = NULL;
 		flags.bIsLanguageSpecific = !in_bReadFromSFXOnlyDir;
+		
 
 		AKRESULT eResult = AK::IAkStreamMgr::Get()->CreateStd(
             in_pszFilePackageName,

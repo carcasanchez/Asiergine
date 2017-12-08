@@ -6,7 +6,7 @@
 namespace Wwished
 {
 	//Life cycle functions
-	bool InitWwished(const char* base_path, const char* language);
+	bool InitWwished(const wchar_t* base_path, const char* language);
 	void ProcessAudio();
 	bool CloseWwished();
 
@@ -14,6 +14,7 @@ namespace Wwished
 	namespace Utility
 	{
 		void SetLanguage(const char* language);
+		unsigned long LoadBank(const char* path);
 	}
 }
 

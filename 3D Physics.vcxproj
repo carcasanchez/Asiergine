@@ -98,7 +98,7 @@
     <ClInclude Include="3DEngine\AK\include\Common\AkMultipleFileLocation.h" />
     <ClInclude Include="3DEngine\AK\include\Win32\AkDefaultIOHookBlocking.h" />
     <ClInclude Include="3DEngine\AK\include\Win32\AkDefaultIOHookDeferred.h" />
-    <ClInclude Include="3DEngine\AK\include\Win32\akfilehelpers.h" />
+    <ClInclude Include="3DEngine\AK\include\Win32\AkFileHelpers.h" />
     <ClInclude Include="3DEngine\AK\include\Win32\AkFilePackageLowLevelIOBlocking.h" />
     <ClInclude Include="3DEngine\AK\include\Win32\AkFilePackageLowLevelIODeferred.h" />
     <ClInclude Include="3DEngine\AK\include\Win32\stdafx.h" />

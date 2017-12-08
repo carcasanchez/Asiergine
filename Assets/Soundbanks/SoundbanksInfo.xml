@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SoundBanksInfo Platform="Windows" BasePlatform="Windows" SchemaVersion="11" SoundbankVersion="125">
+	<RootPaths>
+		<ProjectRoot>C:\Users\Kay\Documents\WwiseProjects\ProyectoPrueba\</ProjectRoot>
+		<SourceFilesRoot>C:\Users\Kay\Documents\WwiseProjects\ProyectoPrueba\.cache\Windows\</SourceFilesRoot>
+		<SoundBanksRoot>C:\Users\Kay\Documents\GitHub\Asiergine\Assets\Soundbanks\</SoundBanksRoot>
+		<ExternalSourcesInputFile></ExternalSourcesInputFile>
+		<ExternalSourcesOutputRoot>C:\Users\Kay\Documents\WwiseProjects\ProyectoPrueba\GeneratedSoundBanks\Windows\</ExternalSourcesOutputRoot>
+	</RootPaths>
+	<DialogueEvents/>
+	<StreamedFiles/>
+	<MediaFilesNotInAnyBank/>
+	<SoundBanks>
+		<SoundBank Id="1355168291" Language="SFX">
+			<ObjectPath>Init</ObjectPath>
+			<ShortName>Init</ShortName>
+			<Path>Init.bnk</Path>
+		</SoundBank>
+		<SoundBank Id="3161908922" Language="SFX">
+			<ObjectPath>\SoundBanks\Default Work Unit\Main</ObjectPath>
+			<ShortName>Main</ShortName>
+			<Path>Main.bnk</Path>
+			<IncludedEvents>
+				<Event Id="1367775454" Name="Fire_Shotgun_Player" ObjectPath="\Events\Default Work Unit\Fire_Shotgun_Player"/>
+			</IncludedEvents>
+			<IncludedMemoryFiles>
+				<File Id="584224464" Language="SFX">
+					<ShortName>Gunshot.wav</ShortName>
+					<Path>SFX\Gunshot_1C9C67B2.wem</Path>
+				</File>
+			</IncludedMemoryFiles>
+		</SoundBank>
+	</SoundBanks>
+</SoundBanksInfo>

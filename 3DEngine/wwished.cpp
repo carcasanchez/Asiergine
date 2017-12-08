@@ -7,7 +7,7 @@
 CAkFilePackageLowLevelIOBlocking g_lowLevelIO;
 
 //Initialize all Wwise modules. Receives the base path for soundbanks and the current language
-bool Wwished::InitWwished(const char* base_path, const char* language)
+bool Wwished::InitWwished(const wchar_t* base_path, const char* language)
 {
 
 	//Init default Wwise memory manager
@@ -73,9 +73,18 @@ bool Wwished::InitWwished(const char* base_path, const char* language)
 #endif 
 	
 	//Set base path for sound banks
-	g_lowLevelIO.SetBasePath((AkOSChar*)base_path);
+	AKRESULT base_path_res = g_lowLevelIO.SetBasePath(base_path);
+	if (base_path_res != AK_Success)
+	{
+		assert(!"Invalid base path!");
+		return false;
+	}
 
+	//Set language
 	Utility::SetLanguage(language);
+
+	//Loads the Init Sound Bank
+	Utility::LoadBank("Init.bnk");
 
 	return true;
 }
@@ -117,4 +126,19 @@ void Wwished::Utility::SetLanguage(const char * language)
 	{
 		assert(!"Invalid language!");
 	}
+}
+
+//Gets the bank path and returns it's ID. IMPORTANT: never call this before InitWwished()
+unsigned long Wwished::Utility::LoadBank(const char * path)
+{
+	unsigned long bank_id;
+	AKRESULT res = AK::SoundEngine::LoadBank(path, AK_DEFAULT_POOL_ID, bank_id);
+	
+	if (res != AK_Success)
+	{
+		//The .bnk file is missing
+		assert(!"Could not initialize soundbank!");
+	}
+
+	return bank_id;
 }

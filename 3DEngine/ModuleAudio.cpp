@@ -19,7 +19,16 @@ ModuleAudio::~ModuleAudio()
 bool ModuleAudio::Init(const JSON_Object* config_data)
 {
 	LOG("Loading Wwished library");
-	return Wwished::InitWwished(".", "English(US)");
+
+
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;	
+	std::wstring base_path = converter.from_bytes((App->fs->GetAssetDirectory() + "Soundbanks/").c_str());
+
+	bool ret = Wwished::InitWwished(base_path.c_str(), "English(US)");
+
+	unsigned long bank1_id = Wwished::Utility::LoadBank("Main.bnk");
+
+	return ret;
 }
 
 update_status ModuleAudio::Update(float real_dt, float game_dt)
