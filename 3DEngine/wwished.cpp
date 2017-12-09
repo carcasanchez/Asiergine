@@ -142,3 +142,96 @@ unsigned long Wwished::Utility::LoadBank(const char * path)
 
 	return bank_id;
 }
+
+Wwished::SoundEmitter * Wwished::Utility::CreateEmitter(unsigned long id, const char * name, float x, float y, float z)
+{
+	SoundEmitter* emitter = nullptr;
+
+	emitter = new SoundEmitter(id, name);
+	emitter->SetPosition(x, y, z);
+	emitter->SetOrientation(1, 0, 0, 0, 1, 0);
+
+	return emitter;
+}
+
+
+
+// SoundEmitter class methods -------------------------------------------------
+Wwished::SoundEmitter::SoundEmitter(unsigned long id, const char * n)
+{
+	EmitterID = id;
+	name = n;
+	AKRESULT res = AK::SoundEngine::RegisterGameObj((AkGameObjectID)EmitterID, name);
+	if (res != AK_Success)
+	{
+		assert(!"Could not register GameObj! See res variable to more info");
+	}
+}
+
+Wwished::SoundEmitter::~SoundEmitter()
+{
+	AKRESULT res = AK::SoundEngine::UnregisterGameObj((AkGameObjectID)EmitterID);
+	if (res != AK_Success)
+	{
+		assert(!"Could not unregister GameObj! See res variable to more info");
+	}
+}
+
+unsigned long Wwished::SoundEmitter::GetID()
+{
+	return EmitterID;
+}
+
+const char * Wwished::SoundEmitter::GetName()
+{
+	return name;
+}
+
+void Wwished::SoundEmitter::SetPosition(float x, float y, float z)
+{
+	position.X = x;
+	position.Y = y;
+	position.Z = z;
+	
+	AkSoundPosition sound_pos;
+	sound_pos.Set(position, orient_front, orient_top);
+	
+	AKRESULT res = AK::SoundEngine::SetPosition((AkGameObjectID)EmitterID, sound_pos);
+	if (res != AK_Success)
+		assert(!"Something went wrong. Check the res variable for more info");
+}
+
+
+//The two vectors must be normalized and orthogonal!
+void Wwished::SoundEmitter::SetOrientation(float x_front, float y_front, float z_front, float x_top, float y_top, float z_top)
+{
+	orient_front.X = x_front;
+	orient_front.Y = y_front;
+	orient_front.Z = z_front;
+	orient_top.X = x_top;
+	orient_top.Y = y_top;
+	orient_top.Z = z_top;
+
+	float length_front = sqrt(pow(orient_front.X, 2)+pow(orient_front.Y, 2) + pow(orient_front.Z, 2));
+	float length_top = sqrt(pow(orient_top.X, 2) + pow(orient_top.Y, 2) + pow(orient_top.Z, 2));
+
+	//Normalize vectors
+	orient_front.X = orient_front.X / length_front;
+	orient_front.Y = orient_front.Y / length_front;
+	orient_front.Z = orient_front.Z / length_front;
+	orient_top.X = orient_top.X / length_top;
+	orient_top.Y = orient_top.Y / length_top;
+	orient_top.Z = orient_top.Z / length_top;
+
+	//Check if the are orthogonals
+	float dot_prod = orient_top.X*orient_front.X + orient_top.Y*orient_front.Y + orient_top.Z*orient_front.Z;
+
+	if (dot_prod != 0)
+		assert(!"Vectors are not orthogonal!");
+
+	AkSoundPosition sound_pos;
+	sound_pos.Set(position, orient_front, orient_top);
+	AKRESULT res = AK::SoundEngine::SetPosition((AkGameObjectID)EmitterID, sound_pos);
+	if (res != AK_Success)
+		assert(!"Something went wrong. Check the res variable for more info");
+}

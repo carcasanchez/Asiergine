@@ -28,6 +28,9 @@ bool ModuleAudio::Init(const JSON_Object* config_data)
 
 	unsigned long bank1_id = Wwished::Utility::LoadBank("Main.bnk");
 
+
+	//Wwished::Utility::CreateEmitter(23, "emitter1", 0, 5, 0);
+
 	return ret;
 }
 
@@ -40,6 +43,7 @@ update_status ModuleAudio::Update(float real_dt, float game_dt)
 // Called before quitting
 bool ModuleAudio::CleanUp()
 {
+	
 	LOG("Unloading Wwished library");
 	return Wwished::CloseWwished();
 }

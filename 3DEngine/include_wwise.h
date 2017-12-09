@@ -8,7 +8,7 @@
 #include <AK/SoundEngine/Common/AkMemoryMgr.h>       
 #include <AK/SoundEngine/Common/AkModule.h>           
 #include <AK/SoundEngine/Common/AkStreamMgrModule.h>   
-#include <AK/SoundEngine/Common/AkTypes.h>
+
 #include <AK/Tools/Common/AkPlatformFuncs.h>           
 
 
