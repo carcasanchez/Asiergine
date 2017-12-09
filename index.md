@@ -16,7 +16,6 @@ The main core of our game engine is the integration of the Wwise audio engine wi
 
 **Engine video:**
 
-![Videos]
 
 <dl>
   <a href="https://github.com/carcasanchez/Asiergine/releases/download/Assignment2/Asiergine_v0.8.zip" class="btn">Download Latest Build</a>
