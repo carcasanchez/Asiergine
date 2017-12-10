@@ -1,6 +1,6 @@
 Event	ID	Name			Wwise Object Path	Notes
-	1367775454	Fire_Shotgun_Player			\Default Work Unit\Fire_Shotgun_Player	Primer evento creado 
+	1079886303	Zoo			\Default Work Unit\Zoo	Primer evento creado 
 
 In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
-	584224464	Shotgun_Blast	C:\Users\Kay\Documents\WwiseProjects\ProyectoPrueba\.cache\Windows\SFX\Gunshot_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Shotgun_Blast		3385408
+	554954147	Zoo	C:\Users\Kay\Documents\WwiseProjects\ProyectoPrueba\.cache\Windows\SFX\Intro_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Zoo		434240
 

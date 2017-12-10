@@ -22,7 +22,7 @@ ComponentAudio::~ComponentAudio()
 void ComponentAudio::OnEditor()
 {
 	if (ImGui::Button("Play!"))
-		emitter->PlayEvent("Fire_Shotgun_Player");
+		emitter->PlayEvent("Zoo");
 }
 
 void ComponentAudio::Update(float real_dt, float game_dt)

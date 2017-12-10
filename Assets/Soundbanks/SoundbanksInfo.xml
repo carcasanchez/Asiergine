@@ -21,12 +21,12 @@
 			<ShortName>Main</ShortName>
 			<Path>Main.bnk</Path>
 			<IncludedEvents>
-				<Event Id="1367775454" Name="Fire_Shotgun_Player" ObjectPath="\Events\Default Work Unit\Fire_Shotgun_Player"/>
+				<Event Id="1079886303" Name="Zoo" ObjectPath="\Events\Default Work Unit\Zoo"/>
 			</IncludedEvents>
 			<IncludedMemoryFiles>
-				<File Id="584224464" Language="SFX">
-					<ShortName>Gunshot.wav</ShortName>
-					<Path>SFX\Gunshot_1C9C67B2.wem</Path>
+				<File Id="554954147" Language="SFX">
+					<ShortName>Intro.wav</ShortName>
+					<Path>SFX\Intro_1C9C67B2.wem</Path>
 				</File>
 			</IncludedMemoryFiles>
 		</SoundBank>
