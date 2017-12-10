@@ -22,7 +22,7 @@ public:
 	int audio_device = 0;
 
 
-	Wwished::SoundEmitter* CreateSoundEmitter(unsigned long id, const char* name, float3 position);
+	Wwished::SoundEmitter* CreateSoundEmitter(const char* name, float3 position);
 	void DeleteSoundEmitter(Wwished::SoundEmitter*);
 
 
@@ -33,6 +33,7 @@ private:
 	std::list <Wwished::SoundEmitter*> sound_emitters;
 
 	unsigned long listener_id = 0;
+	unsigned long last_go_id = 1;
 
 };
 

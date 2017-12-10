@@ -7,10 +7,16 @@
 
 class ComponentAudio : public Component
 {
+public:
 	ComponentAudio(GameObject*);
 	~ComponentAudio();
 
+	void OnEditor();
 
+	void Update(float real_dt, float game_dt);
+
+private:
+	Wwished::SoundEmitter* emitter = nullptr;
 };
 
 

@@ -7,6 +7,7 @@
 #include "ComponentMaterial.h"
 #include "ComponentCamera.h"
 #include "ComponentLight.h"
+#include "ComponentAudio.h"
 #include "MathGeoLib\include\Algorithm\Random\LCG.h"
 
 GameObject::GameObject(const char* name): name(name)
@@ -245,6 +246,19 @@ ComponentLight * GameObject::CreateComponent_Light(uint UID)
 	
 	components.push_back(new_light);
 	return new_light;
+}
+
+ComponentAudio * GameObject::CreateComponent_Audio(uint UID)
+{
+	ComponentAudio* ret = nullptr;
+	ComponentAudio* new_audio = new ComponentAudio(this);
+
+	if (UID > 0)
+		new_audio->SetID(UID);
+
+	components.push_back(new_audio);
+
+	return ret;
 }
 
 
@@ -506,6 +520,11 @@ void GameObject::OnEditor()
 		{
 			CreateComponent_Light();
 		}
+		if (ImGui::MenuItem("Sound Emitter"))
+		{
+			CreateComponent_Audio();
+		}
+
 
 		ImGui::EndPopup();
 	}

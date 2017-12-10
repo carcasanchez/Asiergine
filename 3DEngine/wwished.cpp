@@ -232,7 +232,7 @@ void Wwished::SoundEmitter::SetPosition(float x, float y, float z, float x_front
 {
 	position.X = -x;
 	position.Y = y;
-	position.Z = z;
+	position.Z = -z;
 
 	orient_front.X = x_front;
 	orient_front.Y = y_front;
