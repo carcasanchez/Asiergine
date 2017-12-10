@@ -232,6 +232,9 @@
     <ClCompile Include="3DEngine\AK\DefaultIO\Win32\stdafx.cpp">
       <Filter>Source\Tools\Wwished\wwise_libraries</Filter>
     </ClCompile>
+    <ClCompile Include="3DEngine\ComponentAudio.cpp">
+      <Filter>Source\Containers\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3DEngine\Application.h">
@@ -605,6 +608,9 @@
     </ClInclude>
     <ClInclude Include="3DEngine\AK\DefaultIO\Win32\stdafx.h">
       <Filter>Source\Tools\Wwished\wwise_libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\ComponentAudio.h">
+      <Filter>Source\Containers\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

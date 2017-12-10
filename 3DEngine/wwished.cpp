@@ -230,7 +230,7 @@ const char * Wwished::SoundEmitter::GetName()
 //The two vectors must be normalized and orthogonal!
 void Wwished::SoundEmitter::SetPosition(float x, float y, float z, float x_front, float y_front, float z_front, float x_top, float y_top, float z_top)
 {
-	position.X = x;
+	position.X = -x;
 	position.Y = y;
 	position.Z = z;
 
@@ -255,7 +255,7 @@ void Wwished::SoundEmitter::SetPosition(float x, float y, float z, float x_front
 	//Check if the are orthogonals
 	float dot_prod = orient_top.X*orient_front.X + orient_top.Y*orient_front.Y + orient_top.Z*orient_front.Z;
 
-	if (dot_prod != 0)
+	if (dot_prod >= 0.0001)
 		assert(!"Vectors are not orthogonal!");
 
 	AkSoundPosition sound_pos;

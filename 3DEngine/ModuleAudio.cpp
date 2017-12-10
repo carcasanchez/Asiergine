@@ -2,6 +2,7 @@
 #include "Application.h"
 #include ".\mmgr\mmgr.h"
 #include "ModuleAudio.h"
+#include "ModuleCamera3D.h"
 
 
 
@@ -27,31 +28,35 @@ bool ModuleAudio::Init(const JSON_Object* config_data)
 
 	bool ret = Wwished::InitWwished(base_path.c_str(), "English(US)");
 
-	unsigned long bank1_id = Wwished::Utility::LoadBank("Main.bnk");
+	Wwished::Utility::LoadBank("Main.bnk");
+
 		
 	return ret;
 }
 
 bool ModuleAudio::Start()
 {
-	listener = Wwished::Utility::CreateEmitter(0, "listener", 0, 0, 0, true);
-	emitter1 = Wwished::Utility::CreateEmitter(1, "emitter1", 10, 0, 0);
+	//Create listener for the module camera
+	float3 cam_up = App->camera->frustum.up;
+	float3 cam_front = App->camera->frustum.front;
+	float3 cam_pos = App->camera->frustum.pos;
+
+	camera_listener = Wwished::Utility::CreateEmitter(0, "Camera_Listener", cam_pos.x, cam_pos.y, cam_pos.z, true);
+	camera_listener->SetPosition(cam_pos.x, cam_pos.y, cam_pos.z, cam_front.x, cam_front.y, cam_front.z, cam_up.x, cam_up.y, cam_up.z);
 
 	return true;
 }
 
-update_status ModuleAudio::Update(float real_dt, float game_dt)
-{	
-
-	if(App->input->GetKey(SDL_SCANCODE_P) == KEY_DOWN)
-		emitter1->PlayEvent("Fire_Shotgun_Player");
-
-	/*if (App->input->GetKey(SDL_SCANCODE_O) == KEY_DOWN)
-		Wwished::Utility::ChangeState("music1", "battle");*/
-		
+update_status ModuleAudio::PostUpdate(float real_dt, float game_dt)
+{
+	//Update camera listener
+	//Create listener for the module camera
+	float3 cam_up = App->camera->frustum.up;
+	float3 cam_front = App->camera->frustum.front;
+	float3 cam_pos = App->camera->frustum.pos;
+	camera_listener->SetPosition(cam_pos.x, cam_pos.y, cam_pos.z, cam_front.x, cam_front.y, cam_front.z, cam_up.x, cam_up.y, cam_up.z);
 
 	Wwished::ProcessAudio();
-
 	return UPDATE_CONTINUE;
 }
 
@@ -59,5 +64,28 @@ update_status ModuleAudio::Update(float real_dt, float game_dt)
 bool ModuleAudio::CleanUp()
 {
 	LOG("Unloading Wwished library");
+
+	for (std::list<Wwished::SoundEmitter*>::iterator it = sound_emitters.begin(); it != sound_emitters.end(); it++)
+	{
+		delete (*it);
+	}
+
+	sound_emitters.clear();
+
 	return Wwished::CloseWwished();
+}
+
+Wwished::SoundEmitter * ModuleAudio::CreateSoundEmitter(unsigned long id, const char * name, float3 position)
+{
+	Wwished::SoundEmitter* ret = Wwished::Utility::CreateEmitter(id, name, position.x, position.y, position.z);
+
+	sound_emitters.push_back(ret);
+
+	return ret;
+}
+
+void ModuleAudio::DeleteSoundEmitter(Wwished::SoundEmitter * emit)
+{
+	sound_emitters.remove(emit);
+	delete emit;
 }

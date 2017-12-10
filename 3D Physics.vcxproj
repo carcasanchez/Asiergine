@@ -21,6 +21,7 @@
     <ClCompile Include="3DEngine\Application.cpp" />
     <ClCompile Include="3DEngine\Color.cpp" />
     <ClCompile Include="3DEngine\Component.cpp" />
+    <ClCompile Include="3DEngine\ComponentAudio.cpp" />
     <ClCompile Include="3DEngine\ComponentCamera.cpp" />
     <ClCompile Include="3DEngine\ComponentLight.cpp" />
     <ClCompile Include="3DEngine\ComponentMaterial.cpp" />
@@ -106,6 +107,7 @@
     <ClInclude Include="3DEngine\Brofiler\Brofiler.h" />
     <ClInclude Include="3DEngine\Color.h" />
     <ClInclude Include="3DEngine\Component.h" />
+    <ClInclude Include="3DEngine\ComponentAudio.h" />
     <ClInclude Include="3DEngine\ComponentCamera.h" />
     <ClInclude Include="3DEngine\ComponentLight.h" />
     <ClInclude Include="3DEngine\ComponentMaterial.h" />
