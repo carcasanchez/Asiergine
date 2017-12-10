@@ -9,8 +9,8 @@ may use this file in accordance with the end user license agreement provided
 with the software or, alternatively, in accordance with the terms contained in a
 written agreement between you and Audiokinetic Inc.
 
-  Version: v2016.2.1  Build: 5995
-  Copyright (c) 2006-2016 Audiokinetic Inc.
+  Version: v2017.1.2  Build: 6361
+  Copyright (c) 2006-2017 Audiokinetic Inc.
 *******************************************************************************/
 //////////////////////////////////////////////////////////////////////
 //
@@ -158,7 +158,7 @@ AKRESULT CAkDefaultIOHookDeferred::Open(
 				out_fileDesc.hFile );
 			if ( eResult == AK_Success )
 			{
-#ifdef AK_USE_METRO_API
+#ifdef AK_USE_UWP_API
 				FILE_STANDARD_INFO info;
 				::GetFileInformationByHandleEx( out_fileDesc.hFile, FileStandardInfo, &info, sizeof(info) );
 				out_fileDesc.iFileSize = info.EndOfFile.QuadPart;
@@ -220,7 +220,7 @@ AKRESULT CAkDefaultIOHookDeferred::Open(
 				out_fileDesc.hFile );
 			if ( eResult == AK_Success )
 			{
-#ifdef AK_USE_METRO_API
+#ifdef AK_USE_UWP_API
 				FILE_STANDARD_INFO info;
 				::GetFileInformationByHandleEx( out_fileDesc.hFile, FileStandardInfo, &info, sizeof(info) );
 				out_fileDesc.iFileSize = info.EndOfFile.QuadPart;
@@ -367,8 +367,8 @@ void CAkDefaultIOHookDeferred::Cancel(
 	bool & io_bCancelAllTransfersForThisFile	// Flag indicating whether all transfers should be cancelled for this file (see notes in function description).
 	)
 {
-#ifdef AK_USE_METRO_API
-	// No cancel function seems to be defined on Metro applications. Do nothing.
+#ifdef AK_USE_UWP_API
+	// No cancel function seems to be defined on UWP applications. Do nothing.
 	return;
 #else
 	if ( io_bCancelAllTransfersForThisFile )

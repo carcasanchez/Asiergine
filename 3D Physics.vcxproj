@@ -11,13 +11,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="3DEngine\AK\include\Common\AkDefaultLowLevelIODispatcher.cpp" />
-    <ClCompile Include="3DEngine\AK\include\Common\AkFileLocationBase.cpp" />
-    <ClCompile Include="3DEngine\AK\include\Common\AkFilePackage.cpp" />
-    <ClCompile Include="3DEngine\AK\include\Common\AkFilePackageLUT.cpp" />
-    <ClCompile Include="3DEngine\AK\include\Win32\AkDefaultIOHookBlocking.cpp" />
-    <ClCompile Include="3DEngine\AK\include\Win32\AkDefaultIOHookDeferred.cpp" />
-    <ClCompile Include="3DEngine\AK\include\Win32\stdafx.cpp" />
+    <ClCompile Include="3DEngine\AK\DefaultIO\Common\AkDefaultLowLevelIODispatcher.cpp" />
+    <ClCompile Include="3DEngine\AK\DefaultIO\Common\AkFileLocationBase.cpp" />
+    <ClCompile Include="3DEngine\AK\DefaultIO\Common\AkFilePackage.cpp" />
+    <ClCompile Include="3DEngine\AK\DefaultIO\Common\AkFilePackageLUT.cpp" />
+    <ClCompile Include="3DEngine\AK\DefaultIO\Win32\AkDefaultIOHookBlocking.cpp" />
+    <ClCompile Include="3DEngine\AK\DefaultIO\Win32\AkDefaultIOHookDeferred.cpp" />
+    <ClCompile Include="3DEngine\AK\DefaultIO\Win32\stdafx.cpp" />
     <ClCompile Include="3DEngine\Application.cpp" />
     <ClCompile Include="3DEngine\Color.cpp" />
     <ClCompile Include="3DEngine\Component.cpp" />
@@ -90,18 +90,18 @@
     <ClCompile Include="3DEngine\wwished.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="3DEngine\AK\include\Common\AkDefaultLowLevelIODispatcher.h" />
-    <ClInclude Include="3DEngine\AK\include\Common\AkFileLocationBase.h" />
-    <ClInclude Include="3DEngine\AK\include\Common\AkFilePackage.h" />
-    <ClInclude Include="3DEngine\AK\include\Common\AkFilePackageLowLevelIO.h" />
-    <ClInclude Include="3DEngine\AK\include\Common\AkFilePackageLUT.h" />
-    <ClInclude Include="3DEngine\AK\include\Common\AkMultipleFileLocation.h" />
-    <ClInclude Include="3DEngine\AK\include\Win32\AkDefaultIOHookBlocking.h" />
-    <ClInclude Include="3DEngine\AK\include\Win32\AkDefaultIOHookDeferred.h" />
-    <ClInclude Include="3DEngine\AK\include\Win32\AkFileHelpers.h" />
-    <ClInclude Include="3DEngine\AK\include\Win32\AkFilePackageLowLevelIOBlocking.h" />
-    <ClInclude Include="3DEngine\AK\include\Win32\AkFilePackageLowLevelIODeferred.h" />
-    <ClInclude Include="3DEngine\AK\include\Win32\stdafx.h" />
+    <ClInclude Include="3DEngine\AK\DefaultIO\Common\AkDefaultLowLevelIODispatcher.h" />
+    <ClInclude Include="3DEngine\AK\DefaultIO\Common\AkFileLocationBase.h" />
+    <ClInclude Include="3DEngine\AK\DefaultIO\Common\AkFilePackage.h" />
+    <ClInclude Include="3DEngine\AK\DefaultIO\Common\AkFilePackageLowLevelIO.h" />
+    <ClInclude Include="3DEngine\AK\DefaultIO\Common\AkFilePackageLUT.h" />
+    <ClInclude Include="3DEngine\AK\DefaultIO\Common\AkMultipleFileLocation.h" />
+    <ClInclude Include="3DEngine\AK\DefaultIO\Win32\AkDefaultIOHookBlocking.h" />
+    <ClInclude Include="3DEngine\AK\DefaultIO\Win32\AkDefaultIOHookDeferred.h" />
+    <ClInclude Include="3DEngine\AK\DefaultIO\Win32\AkFileHelpers.h" />
+    <ClInclude Include="3DEngine\AK\DefaultIO\Win32\AkFilePackageLowLevelIOBlocking.h" />
+    <ClInclude Include="3DEngine\AK\DefaultIO\Win32\AkFilePackageLowLevelIODeferred.h" />
+    <ClInclude Include="3DEngine\AK\DefaultIO\Win32\stdafx.h" />
     <ClInclude Include="3DEngine\Application.h" />
     <ClInclude Include="3DEngine\Brofiler\Brofiler.h" />
     <ClInclude Include="3DEngine\Color.h" />
@@ -216,8 +216,8 @@
     <ClInclude Include="3DEngine\wwished.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="3DEngine\AK\include\Common\AkFilePackageLowLevelIO.inl" />
-    <None Include="3DEngine\AK\include\Common\AkMultipleFileLocation.inl" />
+    <None Include="3DEngine\AK\DefaultIO\Common\AkFilePackageLowLevelIO.inl" />
+    <None Include="3DEngine\AK\DefaultIO\Common\AkMultipleFileLocation.inl" />
     <None Include="3DEngine\MathGeoLib\include\Geometry\KDTree.inl" />
     <None Include="3DEngine\MathGeoLib\include\Geometry\QuadTree.inl" />
     <None Include="3DEngine\MathGeoLib\include\Geometry\TriangleMesh_IntersectRay_AVX.inl" />
@@ -256,7 +256,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(WWISESDK)\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Program Files %28x86%29\Audiokinetic\Wwise 2017.1.2.6361\SDK\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

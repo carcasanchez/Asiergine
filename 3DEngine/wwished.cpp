@@ -2,7 +2,7 @@
 #include <assert.h>
 
 #include "include_wwise.h"
-#include "AK/include/Win32/AkFilePackageLowLevelIOBlocking.h"
+#include "AK/DefaultIO/Win32/AkFilePackageLowLevelIOBlocking.h"
 
 CAkFilePackageLowLevelIOBlocking g_lowLevelIO;
 
@@ -86,6 +86,27 @@ bool Wwished::InitWwished(const wchar_t* base_path, const char* language)
 	//Loads the Init Sound Bank
 	Utility::LoadBank("Init.bnk");
 
+
+	//TO DELETE ------------------------------------
+	
+	/*Utility::LoadBank("Main.bnk");
+
+	AkGameObjectID MY_DEFAULT_LISTENER = 0;
+
+	// Register the main listener.
+	AK::SoundEngine::RegisterGameObj(MY_DEFAULT_LISTENER, "My Default Listener");
+
+	// Set one listener as the default.	
+	AK::SoundEngine::SetDefaultListeners(&MY_DEFAULT_LISTENER, 1);
+
+	// Register a game object for playing sounds
+	AkGameObjectID MY_EMITTER = 1;
+	AK::SoundEngine::RegisterGameObj(MY_EMITTER, "My Emitter");
+	// At this point "My Emitter" has 1 listener, "My Default Listener", because we designated it as the default listener.
+	
+	AK::SoundEngine::PostEvent("Fire_Shotgun_Player", MY_EMITTER);*/
+
+
 	return true;
 }
 
@@ -149,20 +170,26 @@ unsigned long Wwished::Utility::LoadBank(const char * path)
 	return bank_id;
 }
 
-Wwished::SoundEmitter * Wwished::Utility::CreateEmitter(unsigned long id, const char * name, float x, float y, float z, unsigned long* listener_id)
+Wwished::SoundEmitter * Wwished::Utility::CreateEmitter(unsigned long id, const char * name, float x, float y, float z, bool is_default_listener)
 {
 	SoundEmitter* emitter = nullptr;
 
 	emitter = new SoundEmitter(id, name);
+
+	if (is_default_listener)
+	{
+		AkGameObjectID listener_id = emitter->GetID();
+		AK::SoundEngine::SetDefaultListeners(&listener_id, 1);
+	}
 	
-//	if( listener_id != nullptr )
-//		AK::SoundEngine::SetListeners(emitter->GetID(), (AkGameObjectID*)listener_id, 1);
-
-
-	emitter->SetPosition();
-
+	emitter->SetPosition(x, y, z);
 
 	return emitter;
+}
+
+void Wwished::Utility::ChangeState(const char* group, const char* new_state)
+{
+	AK::SoundEngine::SetState(group, new_state);
 }
 
 
@@ -252,4 +279,15 @@ void Wwished::SoundEmitter::PlayEvent(unsigned long id)
 void Wwished::SoundEmitter::PlayEvent(const char* name)
 {
 	AK::SoundEngine::PostEvent(name, EmitterID);
+}
+
+void Wwished::SoundEmitter::PlayMusic(unsigned long music_id)
+{
+	AK::SoundEngine::PostEvent(music_id, EmitterID, AK_EnableGetMusicPlayPosition);
+}
+
+void Wwished::SoundEmitter::PlayMusic(const char * music_name)
+{
+	AK::SoundEngine::PostEvent(music_name, EmitterID, AK_EnableGetMusicPlayPosition);
+
 }

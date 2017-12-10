@@ -9,46 +9,33 @@ may use this file in accordance with the end user license agreement provided
 with the software or, alternatively, in accordance with the terms contained in a
 written agreement between you and Audiokinetic Inc.
 
-  Version: v2016.2.1  Build: 5995
-  Copyright (c) 2006-2016 Audiokinetic Inc.
+  Version: v2017.1.2  Build: 6361
+  Copyright (c) 2006-2017 Audiokinetic Inc.
 *******************************************************************************/
 //////////////////////////////////////////////////////////////////////
 //
-// AkMultipleFileLocation.h
+// AkFileLocationBase.h
 //
-// File location resolving: Supports multiple base paths for file access, searched in reverse order.
+// Basic file location resolving: Uses simple path concatenation logic.
+// Exposes basic path functions for convenience.
 // For more details on resolving file location, refer to section "File Location" inside
 // "Going Further > Overriding Managers > Streaming / Stream Manager > Low-Level I/O"
 // of the SDK documentation. 
 //
 //////////////////////////////////////////////////////////////////////
 
-#ifndef _AK_MULTI_FILE_LOCATION_H_
-#define _AK_MULTI_FILE_LOCATION_H_
+#ifndef _AK_FILE_LOCATION_BASE_H_
+#define _AK_FILE_LOCATION_BASE_H_
 
 struct AkFileSystemFlags;
 
 #include <AK/SoundEngine/Common/IAkStreamMgr.h>
-#include <AK/SoundEngine/Common/AkStreamMgrModule.h>
-#include <AK/Tools/Common/AkListBareLight.h>
 
-
-// This file location class supports multiple base paths for Wwise file access.
-// Each path will be searched the reverse order of the addition order until the file is found.
-template<class OPEN_POLICY>
-class CAkMultipleFileLocation
+class CAkFileLocationBase
 {
-protected:
-
-	// Internal user paths.
-	struct FilePath
-	{
-		FilePath *pNextLightItem;
-		AkOSChar szPath[1];	//Variable length
-	};
 public:
-	CAkMultipleFileLocation();
-	void Term();
+	CAkFileLocationBase();
+	virtual ~CAkFileLocationBase();
 
 	//
 	// Global path functions.
@@ -58,30 +45,17 @@ public:
 	// Audio source path is appended to base path whenever uCompanyID is AK and uCodecID specifies an audio source.
 	// Bank path is appended to base path whenever uCompanyID is AK and uCodecID specifies a sound bank.
 	// Language specific dir name is appended to path whenever "bIsLanguageSpecific" is true.
-	AKRESULT SetBasePath(const AkOSChar*   in_pszBasePath)
-	{
-		return AddBasePath(in_pszBasePath);
-	}
-
-	AKRESULT AddBasePath(const AkOSChar*   in_pszBasePath);
-
-	AKRESULT Open( 
-		const AkOSChar* in_pszFileName,     // File name.
-		AkOpenMode      in_eOpenMode,       // Open mode.
-		AkFileSystemFlags * in_pFlags,      // Special flags. Can pass NULL.
-		bool			in_bOverlapped,		// Overlapped IO open
-		AkFileDesc &    out_fileDesc        // Returned file descriptor.
+	AKRESULT SetBasePath(
+		const AkOSChar*   in_pszBasePath
 		);
-
-	
-	AKRESULT Open( 
-		AkFileID        in_fileID,          // File ID.
-		AkOpenMode      in_eOpenMode,       // Open mode.
-		AkFileSystemFlags * in_pFlags,      // Special flags. Can pass NULL.
-		bool			in_bOverlapped,		// Overlapped IO open
-		AkFileDesc &    out_fileDesc        // Returned file descriptor.
+	AKRESULT SetBankPath(
+		const AkOSChar*   in_pszBankPath
 		);
-	
+	AKRESULT SetAudioSrcPath(
+		const AkOSChar*   in_pszAudioSrcPath
+		);
+	// Note: SetLangSpecificDirName() does not exist anymore. See release note WG-19397 (Wwise 2011.2).
+
 	//
 	// Path resolving services.
 	// ------------------------------------------------------
@@ -93,15 +67,31 @@ public:
 		const AkOSChar *	in_pszFileName,		// File name.
 		AkFileSystemFlags * in_pFlags,			// Special flags. Can be NULL.
 		AkOpenMode			in_eOpenMode,		// File open mode (read, write, ...).
-		AkOSChar *			out_pszFullFilePath, // Full file path.
-		FilePath*			in_pBasePath = NULL	// Base path to use.  If null, the first suitable location will be given.		
+		AkOSChar *			out_pszFullFilePath // Full file path.
 		);  
+
+	// ID overload. 
+	// The name of the file will be formatted as ID.ext. This is meant to be used with options
+	// "Use SoundBank Names" unchecked, and/or "Copy Streamed Files" in the SoundBank Settings.
+	// For more details, refer to the SoundBank Settings in Wwise Help, and to section "Identifying Banks" inside
+	// "Sound Engine Integration Walkthrough > Integrate Wwise Elements into Your Game > Integrating Banks > 
+	// Integration Details - Banks > General Information" of the SDK documentation.
+	// Returns AK_Success if input flags are supported and the resulting path is not too long.
+	// Returns AK_Fail otherwise.
+	AKRESULT GetFullFilePath(
+		AkFileID			in_fileID,			// File ID.
+		AkFileSystemFlags *	in_pFlags,			// Special flags. 
+		AkOpenMode			in_eOpenMode,		// File open mode (read, write, ...).
+		AkOSChar *			out_pszFullFilePath	// Full file path.
+		);
 
 protected:
 
-	AkListBareLight<FilePath> m_Locations;
+	// Internal user paths.
+	AkOSChar			m_szBasePath[AK_MAX_PATH];
+	AkOSChar			m_szBankPath[AK_MAX_PATH];
+	AkOSChar			m_szAudioSrcPath[AK_MAX_PATH];
+
 };
 
-#include "AkMultipleFileLocation.inl"
-
-#endif //_AK_MULTI_FILE_LOCATION_H_
+#endif //_AK_FILE_LOCATION_BASE_H_

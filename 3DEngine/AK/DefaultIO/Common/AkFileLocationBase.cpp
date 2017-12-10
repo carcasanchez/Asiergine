@@ -9,8 +9,8 @@ may use this file in accordance with the end user license agreement provided
 with the software or, alternatively, in accordance with the terms contained in a
 written agreement between you and Audiokinetic Inc.
 
-  Version: v2016.2.1  Build: 5995
-  Copyright (c) 2006-2016 Audiokinetic Inc.
+  Version: v2017.1.2  Build: 6361
+  Copyright (c) 2006-2017 Audiokinetic Inc.
 *******************************************************************************/
 //////////////////////////////////////////////////////////////////////
 //
@@ -24,7 +24,7 @@ written agreement between you and Audiokinetic Inc.
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "../Win32/stdafx.h"
 #include "AkFileLocationBase.h"
 
 #include <AK/SoundEngine/Common/AkStreamMgrModule.h>
@@ -35,7 +35,7 @@ written agreement between you and Audiokinetic Inc.
 #include <stdio.h>
 #include <AK/Tools/Common/AkAssert.h>
 
-#include "AkFileHelpers.h"
+#include "../Win32/AkFileHelpers.h"
 
 
 #define MAX_NUMBER_STRING_SIZE      (10)    // 4G
@@ -118,26 +118,26 @@ AKRESULT CAkFileLocationBase::GetFullFilePath(
 		{
 			
 		}*/
-		
-		// Add language directory name if needed.
-		if ( in_pFlags->bIsLanguageSpecific )
+	}
+
+	// Add language directory name if needed.
+	if (in_pFlags && in_pFlags->bIsLanguageSpecific)
+	{
+		size_t uLanguageStrLen = AKPLATFORM::OsStrLen(AK::StreamMgr::GetCurrentLanguage());
+		if (uLanguageStrLen > 0)
 		{
-			size_t uLanguageStrLen = AKPLATFORM::OsStrLen( AK::StreamMgr::GetCurrentLanguage() );
-			if ( uLanguageStrLen > 0 )
+			uiPathSize += (uLanguageStrLen + 1);
+			if (uiPathSize >= AK_MAX_PATH)
 			{
-				uiPathSize += ( uLanguageStrLen + 1 );
-				if ( uiPathSize >= AK_MAX_PATH )
-				{
-					AKASSERT( !"Path is too large" );
-					return AK_Fail;
-				}
-				AKPLATFORM::SafeStrCat( out_pszFullFilePath, AK::StreamMgr::GetCurrentLanguage(), AK_MAX_PATH );
-				AKPLATFORM::SafeStrCat( out_pszFullFilePath, AK_PATH_SEPARATOR, AK_MAX_PATH );
+				AKASSERT(!"Path is too large");
+				return AK_Fail;
 			}
+			AKPLATFORM::SafeStrCat(out_pszFullFilePath, AK::StreamMgr::GetCurrentLanguage(), AK_MAX_PATH);
+			AKPLATFORM::SafeStrCat(out_pszFullFilePath, AK_PATH_SEPARATOR, AK_MAX_PATH);
 		}
 	}
-        
-    // Append file title.
+
+	// Append file title.
 	uiPathSize += AKPLATFORM::OsStrLen( out_pszFullFilePath );
 	if ( uiPathSize >= AK_MAX_PATH )
 	{

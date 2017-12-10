@@ -29,6 +29,9 @@ namespace Wwished
 		void PlayEvent(unsigned long id);
 		void PlayEvent(const char* name);
 
+		void PlayMusic(unsigned long music_id);
+		void PlayMusic(const char* music_name);
+
 	private:
 		unsigned long EmitterID = 0;
 		const char* name = nullptr;
@@ -42,7 +45,9 @@ namespace Wwished
 	{
 		void SetLanguage(const char* language);
 		unsigned long LoadBank(const char* path);
-		SoundEmitter* CreateEmitter(unsigned long id, const char* name,  float x, float y, float z, unsigned long* listener_id = nullptr);
+		SoundEmitter* CreateEmitter(unsigned long id, const char* name,  float x, float y, float z, bool is_default_listener = false);
+		void ChangeState(const char* group, const char* new_state);
+	
 	}
 
 }

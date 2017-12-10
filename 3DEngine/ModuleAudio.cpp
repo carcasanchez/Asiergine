@@ -34,25 +34,21 @@ bool ModuleAudio::Init(const JSON_Object* config_data)
 
 bool ModuleAudio::Start()
 {
-	listener = Wwished::Utility::CreateEmitter(0, "listener", 0, 0, 0);
-	listener_id = listener->GetID();
-	Wwished::SetDefaultListeners(&listener_id);
-	listener->SetPosition(0, 0, 30);
-
-	emitter1 = Wwished::Utility::CreateEmitter(2, "emitter1", 5, 0, 0, &listener_id);
-	//emitter1->SetListener(&listener_id);
+	listener = Wwished::Utility::CreateEmitter(0, "listener", 0, 0, 0, true);
+	emitter1 = Wwished::Utility::CreateEmitter(1, "emitter1", 10, 0, 0);
 
 	return true;
 }
 
 update_status ModuleAudio::Update(float real_dt, float game_dt)
-{
-	
+{	
 
 	if(App->input->GetKey(SDL_SCANCODE_P) == KEY_DOWN)
 		emitter1->PlayEvent("Fire_Shotgun_Player");
 
-	
+	/*if (App->input->GetKey(SDL_SCANCODE_O) == KEY_DOWN)
+		Wwished::Utility::ChangeState("music1", "battle");*/
+		
 
 	Wwished::ProcessAudio();
 
@@ -62,7 +58,6 @@ update_status ModuleAudio::Update(float real_dt, float game_dt)
 // Called before quitting
 bool ModuleAudio::CleanUp()
 {
-	
 	LOG("Unloading Wwished library");
 	return Wwished::CloseWwished();
 }

@@ -9,17 +9,16 @@ may use this file in accordance with the end user license agreement provided
 with the software or, alternatively, in accordance with the terms contained in a
 written agreement between you and Audiokinetic Inc.
 
-  Version: v2016.2.1  Build: 5995
-  Copyright (c) 2006-2016 Audiokinetic Inc.
+  Version: v2017.1.2  Build: 6361
+  Copyright (c) 2006-2017 Audiokinetic Inc.
 *******************************************************************************/
 //////////////////////////////////////////////////////////////////////
 //
-// AkDefaultIOHookBlocking.h
+// AkDefaultIOHookDeferred.h
 //
-// Default blocking low level IO hook (AK::StreamMgr::IAkIOHookBlocking) 
+// Default deferred low level IO hook (AK::StreamMgr::IAkIOHookDeferred) 
 // and file system (AK::StreamMgr::IAkFileLocationResolver) implementation 
-// on Windows. It can be used as a standalone implementation of the 
-// Low-Level I/O system.
+// on Windows.
 // 
 // AK::StreamMgr::IAkFileLocationResolver: 
 // Resolves file location using simple path concatenation logic 
@@ -29,14 +28,16 @@ written agreement between you and Audiokinetic Inc.
 // AK::StreamMgr::IAkFileLocationResolver elsewhere (you may take a look 
 // at class CAkDefaultLowLevelIODispatcher).
 //
-// AK::StreamMgr::IAkIOHookBlocking: 
+// AK::StreamMgr::IAkIOHookDeferred: 
 // Uses platform API for I/O. Calls to ::ReadFile() and ::WriteFile() 
-// block because files are opened without the FILE_FLAG_OVERLAPPED flag. 
-// The AK::StreamMgr::IAkIOHookBlocking interface is meant to be used with
-// AK_SCHEDULER_BLOCKING streaming devices. 
+// do not block because files are opened with the FILE_FLAG_OVERLAPPED flag. 
+// Transfer completion is handled by internal FileIOCompletionRoutine function,
+// which then calls the AkAIOCallback.
+// The AK::StreamMgr::IAkIOHookDeferred interface is meant to be used with
+// AK_SCHEDULER_DEFERRED_LINED_UP streaming devices. 
 //
 // Init() creates a streaming device (by calling AK::StreamMgr::CreateDevice()).
-// AkDeviceSettings::uSchedulerTypeFlags is set inside to AK_SCHEDULER_BLOCKING.
+// AkDeviceSettings::uSchedulerTypeFlags is set inside to AK_SCHEDULER_DEFERRED_LINED_UP.
 // If there was no AK::StreamMgr::IAkFileLocationResolver previously registered 
 // to the Stream Manager, this object registers itself as the File Location Resolver.
 //
@@ -50,12 +51,12 @@ written agreement between you and Audiokinetic Inc.
 	AK:IAkStreamMgr * pStreamMgr = AK::StreamMgr::Create( stmSettings );
 	AKASSERT( pStreamMgr );
 
-	// Create blocking device.
+	// Create deferred device.
 	AkDeviceSettings deviceSettings;
 	AK::StreamMgr::GetDefaultDeviceSettings( deviceSettings );
-	CAkDefaultIOHookBlocking hookIOBlocking;
-	AKRESULT eResult = hookIOBlocking.Init( deviceSettings );
-	AKASSERT( AK_Success == eResult );
+	CAkDefaultIOHookDeferred hookIODeferred;
+	AKRESULT eResult = hookIODeferred.Init( deviceSettings );
+	AKASSERT( AK_SUCCESS == eResult );
 */
 //
 // As part of a system with multiple devices (the File Location Resolver is 
@@ -71,46 +72,46 @@ written agreement between you and Audiokinetic Inc.
 	CAkDefaultLowLevelIODispatcher lowLevelIODispatcher;
 	AK::StreamMgr::SetFileLocationResolver( &lowLevelIODispatcher );
 
-	// Create blocking device.
+	// Create deferred device.
 	AkDeviceSettings deviceSettings;
 	AK::StreamMgr::GetDefaultDeviceSettings( deviceSettings );
-	CAkDefaultIOHookBlocking hookIOBlocking;
-	AKRESULT eResult = hookIOBlocking.Init( deviceSettings );
-	AKASSERT( AK_Success == eResult );
+	CAkDefaultIOHookDeferred hookIODeferred;
+	AKRESULT eResult = hookIODeferred.Init( deviceSettings );
+	AKASSERT( AK_SUCCESS == eResult );
 
 	// Add it to the global File Location Resolver.
-	lowLevelIODispatcher.AddDevice( hookIOBlocking );
+	lowLevelIODispatcher.AddDevice( hookIODeferred );
 
 	// Create more devices.
 	// ...
 */
-
-#ifndef _AK_DEFAULT_IO_HOOK_BLOCKING_H_
-#define _AK_DEFAULT_IO_HOOK_BLOCKING_H_
+#ifndef _AK_DEFAULT_IO_HOOK_DEFERRED_H_
+#define _AK_DEFAULT_IO_HOOK_DEFERRED_H_
 
 #include <AK/SoundEngine/Common/AkStreamMgrModule.h>
 #include "../Common/AkFileLocationBase.h"
+#include <AK/Tools/Common/AkAssert.h>
 
 //-----------------------------------------------------------------------------
-// Name: class CAkDefaultIOHookBlocking.
-// Desc: Implements IAkIOHookBlocking low-level I/O hook, and 
+// Name: class CAkDefaultIOHookDeferred.
+// Desc: Implements IAkIOHookDeferred low-level I/O hook, and 
 //		 IAkFileLocationResolver. Can be used as a standalone Low-Level I/O
 //		 system, or as part of a system with multiple devices.
 //		 File location is resolved using simple path concatenation logic
 //		 (implemented in CAkFileLocationBase).
 //-----------------------------------------------------------------------------
-class CAkDefaultIOHookBlocking : public AK::StreamMgr::IAkFileLocationResolver
-								,public AK::StreamMgr::IAkIOHookBlocking
+class CAkDefaultIOHookDeferred : public AK::StreamMgr::IAkFileLocationResolver
+								,public AK::StreamMgr::IAkIOHookDeferred
 								,public CAkFileLocationBase
 {
 public:
 
-	CAkDefaultIOHookBlocking();
-	virtual ~CAkDefaultIOHookBlocking();
+	CAkDefaultIOHookDeferred();
+	virtual ~CAkDefaultIOHookDeferred();
 
 	// Initialization/termination. Init() registers this object as the one and 
 	// only File Location Resolver if none were registered before. Then 
-	// it creates a streaming device with scheduler type AK_SCHEDULER_BLOCKING.
+	// it creates a streaming device with scheduler type AK_SCHEDULER_DEFERRED_LINED_UP.
 	AKRESULT Init(
 		const AkDeviceSettings &	in_deviceSettings,	// Device settings.
 		bool						in_bAsyncOpen=AK_ASYNC_OPEN_DEFAULT	// If true, files are opened asynchronously when possible.
@@ -122,7 +123,7 @@ public:
 	// IAkFileLocationAware interface.
 	//-----------------------------------------------------------------------------
 
-	// Returns a file descriptor for a given file name (string).
+    // Returns a file descriptor for a given file name (string).
     virtual AKRESULT Open( 
         const AkOSChar*			in_pszFileName,		// File name.
 		AkOpenMode				in_eOpenMode,		// Open mode.
@@ -142,27 +143,32 @@ public:
 
 
 	//
-	// IAkIOHookBlocking interface.
+	// IAkIOHookDeferred interface.
 	//-----------------------------------------------------------------------------
 
-	// Reads data from a file (synchronous). 
-	virtual AKRESULT Read(
-        AkFileDesc &			in_fileDesc,        // File descriptor.
-		const AkIoHeuristics &	in_heuristics,		// Heuristics for this data transfer.
-        void *					out_pBuffer,        // Buffer to be filled with data.
-        AkIOTransferInfo &		io_transferInfo		// Synchronous data transfer info. 
-        );
-
-    // Writes data to a file (synchronous). 
-	virtual AKRESULT Write(
+    /// Reads data from a file (asynchronous).
+    virtual AKRESULT Read(
 		AkFileDesc &			in_fileDesc,        // File descriptor.
 		const AkIoHeuristics &	in_heuristics,		// Heuristics for this data transfer.
-        void *					in_pData,           // Data to be written.
-        AkIOTransferInfo &		io_transferInfo		// Synchronous data transfer info. 
-        );
+		AkAsyncIOTransferInfo & io_transferInfo		// Asynchronous data transfer info.
+		);
+
+    // Writes data to a file (asynchronous).
+    virtual AKRESULT Write(
+		AkFileDesc &			in_fileDesc,        // File descriptor.
+		const AkIoHeuristics &	in_heuristics,		// Heuristics for this data transfer.
+		AkAsyncIOTransferInfo & io_transferInfo		// Platform-specific asynchronous IO operation info.
+		);
+
+    // Notifies that a transfer request is cancelled. It will be flushed by the streaming device when completed.
+    virtual void Cancel(
+		AkFileDesc &			in_fileDesc,		// File descriptor.
+		AkAsyncIOTransferInfo & io_transferInfo,	// Transfer info to cancel.
+		bool & io_bCancelAllTransfersForThisFile	// Flag indicating whether all transfers should be cancelled for this file (see notes in function description).
+		);
 
 	// Cleans up a file.
-    virtual AKRESULT Close(
+	virtual AKRESULT Close(
         AkFileDesc &			in_fileDesc			// File descriptor.
         );
 
@@ -173,15 +179,52 @@ public:
 
 	// Returns a description for the streaming device above this low-level hook.
     virtual void GetDeviceDesc(
-        AkDeviceDesc &  		out_deviceDesc      // Device description.
+        AkDeviceDesc &  		out_deviceDesc      // Description of associated low-level I/O device.
         );
 
 	// Returns custom profiling data: 1 if file opens are asynchronous, 0 otherwise.
 	virtual AkUInt32 GetDeviceData();
 
 protected:
-	AkDeviceID	m_deviceID;
-	bool		m_bAsyncOpen;	// If true, opens files asynchronously when it can.
+	
+	// Local callback for overlapped I/O.
+	static VOID CALLBACK FileIOCompletionRoutine(
+		DWORD dwErrorCode,
+		DWORD dwNumberOfBytesTransfered,
+		LPOVERLAPPED lpOverlapped
+		);
+
+protected:
+
+	AkDeviceID			m_deviceID;
+	bool				m_bAsyncOpen;	// If true, opens files asynchronously when it can.
+
+	// Structures for concurrent asynchronous transfers bookkeeping.
+	static AkMemPoolId	m_poolID;			// Memory pool for overlapped objects.
+	// Note 1: The pool is a fixed block size pool. It returns OVERLAPPED objects. Allocation is guaranteed
+	// because the pool size is MaxConcurrentIO * sizeof(OVERLAPPED).
+	// Note 2: accesses to memory pool are not locked, because we only use the platform SDK here,
+	// which is executed by the I/O thread when it is in an alertable state.
+	// If you release overlapped objects from your own thread, a lock is mandatory.
+	// Note 3: we use the hEvent field to store a pointer to the AkAsyncIOTransferInfo structure.
+	
+	// Get a free slot for an OVERLAPPED I/O transfer.
+	OVERLAPPED * GetFreeOverlapped(
+		AkAsyncIOTransferInfo * in_pTransfer	// Transfer that will use this OVERLAPPED. Its address is stored in OVERLAPPED::hEvent.
+		)
+	{
+		OVERLAPPED * pOverlapped = (OVERLAPPED*)AK::MemoryMgr::GetBlock( m_poolID );
+		AKASSERT( pOverlapped || !"Too many concurrent transfers in the Low-Level IO" );
+		pOverlapped->hEvent = in_pTransfer;
+		return pOverlapped;
+	}
+	// Release a slot after an OVERLAPPED I/O transfer.
+	static inline void ReleaseOverlapped(
+		OVERLAPPED * in_pOverlapped				// OVERLAPPED structure to release. 
+		)
+	{
+		AK::MemoryMgr::ReleaseBlock( m_poolID, in_pOverlapped );
+	}
 };
 
-#endif //_AK_DEFAULT_IO_HOOK_BLOCKING_H_
+#endif //_AK_DEFAULT_IO_HOOK_DEFERRED_H_
