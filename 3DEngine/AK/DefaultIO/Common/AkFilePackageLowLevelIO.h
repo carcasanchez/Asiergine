@@ -9,8 +9,8 @@ may use this file in accordance with the end user license agreement provided
 with the software or, alternatively, in accordance with the terms contained in a
 written agreement between you and Audiokinetic Inc.
 
-  Version: v2016.2.1  Build: 5995
-  Copyright (c) 2006-2016 Audiokinetic Inc.
+  Version: v2017.1.2  Build: 6361
+  Copyright (c) 2006-2017 Audiokinetic Inc.
 *******************************************************************************/
 //////////////////////////////////////////////////////////////////////
 //
@@ -80,7 +80,6 @@ public:
 		flags.uCustomParamSize = 0;
 		flags.pCustomParam = NULL;
 		flags.bIsLanguageSpecific = !in_bReadFromSFXOnlyDir;
-		
 
 		AKRESULT eResult = AK::IAkStreamMgr::Get()->CreateStd(
             in_pszFilePackageName,

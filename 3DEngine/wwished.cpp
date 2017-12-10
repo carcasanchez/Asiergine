@@ -2,7 +2,7 @@
 #include <assert.h>
 
 #include "include_wwise.h"
-#include "AK/include/Win32/AkFilePackageLowLevelIOBlocking.h"
+#include "AK/DefaultIO/Win32/AkFilePackageLowLevelIOBlocking.h"
 
 CAkFilePackageLowLevelIOBlocking g_lowLevelIO;
 
@@ -86,6 +86,27 @@ bool Wwished::InitWwished(const wchar_t* base_path, const char* language)
 	//Loads the Init Sound Bank
 	Utility::LoadBank("Init.bnk");
 
+
+	//TO DELETE ------------------------------------
+	
+	/*Utility::LoadBank("Main.bnk");
+
+	AkGameObjectID MY_DEFAULT_LISTENER = 0;
+
+	// Register the main listener.
+	AK::SoundEngine::RegisterGameObj(MY_DEFAULT_LISTENER, "My Default Listener");
+
+	// Set one listener as the default.	
+	AK::SoundEngine::SetDefaultListeners(&MY_DEFAULT_LISTENER, 1);
+
+	// Register a game object for playing sounds
+	AkGameObjectID MY_EMITTER = 1;
+	AK::SoundEngine::RegisterGameObj(MY_EMITTER, "My Emitter");
+	// At this point "My Emitter" has 1 listener, "My Default Listener", because we designated it as the default listener.
+	
+	AK::SoundEngine::PostEvent("Fire_Shotgun_Player", MY_EMITTER);*/
+
+
 	return true;
 }
 
@@ -119,6 +140,12 @@ bool Wwished::CloseWwished()
 	return false;
 }
 
+void Wwished::SetDefaultListeners(unsigned long* id)
+{
+	AK::SoundEngine::SetDefaultListeners((AkGameObjectID*)id, 0);
+
+}
+
 void Wwished::Utility::SetLanguage(const char * language)
 {
 	AKRESULT res = AK::StreamMgr::SetCurrentLanguage((AkOSChar*)language);
@@ -143,15 +170,26 @@ unsigned long Wwished::Utility::LoadBank(const char * path)
 	return bank_id;
 }
 
-Wwished::SoundEmitter * Wwished::Utility::CreateEmitter(unsigned long id, const char * name, float x, float y, float z)
+Wwished::SoundEmitter * Wwished::Utility::CreateEmitter(unsigned long id, const char * name, float x, float y, float z, bool is_default_listener)
 {
 	SoundEmitter* emitter = nullptr;
 
 	emitter = new SoundEmitter(id, name);
+
+	if (is_default_listener)
+	{
+		AkGameObjectID listener_id = emitter->GetID();
+		AK::SoundEngine::SetDefaultListeners(&listener_id, 1);
+	}
+	
 	emitter->SetPosition(x, y, z);
-	emitter->SetOrientation(1, 0, 0, 0, 1, 0);
 
 	return emitter;
+}
+
+void Wwished::Utility::ChangeState(const char* group, const char* new_state)
+{
+	AK::SoundEngine::SetState(group, new_state);
 }
 
 
@@ -187,24 +225,15 @@ const char * Wwished::SoundEmitter::GetName()
 	return name;
 }
 
-void Wwished::SoundEmitter::SetPosition(float x, float y, float z)
+
+
+//The two vectors must be normalized and orthogonal!
+void Wwished::SoundEmitter::SetPosition(float x, float y, float z, float x_front, float y_front, float z_front, float x_top, float y_top, float z_top)
 {
 	position.X = x;
 	position.Y = y;
 	position.Z = z;
-	
-	AkSoundPosition sound_pos;
-	sound_pos.Set(position, orient_front, orient_top);
-	
-	AKRESULT res = AK::SoundEngine::SetPosition((AkGameObjectID)EmitterID, sound_pos);
-	if (res != AK_Success)
-		assert(!"Something went wrong. Check the res variable for more info");
-}
 
-
-//The two vectors must be normalized and orthogonal!
-void Wwished::SoundEmitter::SetOrientation(float x_front, float y_front, float z_front, float x_top, float y_top, float z_top)
-{
 	orient_front.X = x_front;
 	orient_front.Y = y_front;
 	orient_front.Z = z_front;
@@ -234,4 +263,31 @@ void Wwished::SoundEmitter::SetOrientation(float x_front, float y_front, float z
 	AKRESULT res = AK::SoundEngine::SetPosition((AkGameObjectID)EmitterID, sound_pos);
 	if (res != AK_Success)
 		assert(!"Something went wrong. Check the res variable for more info");
+}
+
+void Wwished::SoundEmitter::SetListener(unsigned long * id)
+{
+	AKRESULT res = AK::SoundEngine::SetListeners(EmitterID, (AkGameObjectID*)id, 1);
+}
+
+
+void Wwished::SoundEmitter::PlayEvent(unsigned long id)
+{
+	AK::SoundEngine::PostEvent(id, EmitterID);
+}
+
+void Wwished::SoundEmitter::PlayEvent(const char* name)
+{
+	AK::SoundEngine::PostEvent(name, EmitterID);
+}
+
+void Wwished::SoundEmitter::PlayMusic(unsigned long music_id)
+{
+	AK::SoundEngine::PostEvent(music_id, EmitterID, AK_EnableGetMusicPlayPosition);
+}
+
+void Wwished::SoundEmitter::PlayMusic(const char * music_name)
+{
+	AK::SoundEngine::PostEvent(music_name, EmitterID, AK_EnableGetMusicPlayPosition);
+
 }
