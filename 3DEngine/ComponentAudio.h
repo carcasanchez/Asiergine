@@ -14,9 +14,11 @@ public:
 	void OnEditor();
 
 	void Update(float real_dt, float game_dt);
+	AABB GetBox() { return box; }
 
 private:
 	Wwished::SoundEmitter* emitter = nullptr;
+	AABB box = AABB::AABB(float3(-1.0f, -1.0f, -1.0f), float3(1.0f, 1.0f, 1.0f));
 };
 
 

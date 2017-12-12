@@ -7,10 +7,11 @@
 
 ComponentAudio::ComponentAudio(GameObject* g):Component(g)
 {
+	type = COMPONENT_AUDIO;
 	CompTransform* transf = (CompTransform*)g->GetComponentByType(COMPONENT_TRANSFORM);
 	if (transf)
 	{
-		emitter = App->audio->CreateSoundEmitter("Shotgun", transf->GetTranslation());
+		emitter = App->audio->CreateSoundEmitter(g->GetName(), transf->GetTranslation());
 	}
 }
 
@@ -43,5 +44,13 @@ void ComponentAudio::Update(float real_dt, float game_dt)
 	{
 		float3 pos = transf->GetTranslation();
 		emitter->SetPosition(pos.x, pos.y, pos.z);
+
+		box.minPoint = transf->GetTranslation() - float3(1, 1, 1);
+		box.maxPoint = transf->GetTranslation() + float3(1, 1, 1);
+	}
+
+	if (App->scene->debug_boxes)
+	{
+		App->renderer3D->SetBoxToDraw(box);
 	}
 }

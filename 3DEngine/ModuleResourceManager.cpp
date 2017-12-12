@@ -27,7 +27,7 @@ bool ModuleResourceManager::Init(const JSON_Object* config_data)
 
 bool ModuleResourceManager::Start()
 {
-	ReimportAllAssets();
+	//ReimportAllAssets();
 	return true;
 }
 

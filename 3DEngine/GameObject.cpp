@@ -340,6 +340,7 @@ AABB GameObject::GetBoundingBox()
 {
 	std::vector<Component*> meshes = GetAllComponentOfType(COMPONENT_MESH);
 	ComponentCamera* cam = (ComponentCamera*)GetComponentByType(COMPONENT_CAMERA);
+	ComponentAudio* audio = (ComponentAudio*)GetComponentByType(COMPONENT_AUDIO);
 	math::AABB total_aabb;
 	total_aabb.SetNegativeInfinity();
 
@@ -350,6 +351,10 @@ AABB GameObject::GetBoundingBox()
 	if (cam)
 	{
 		total_aabb.Enclose(*cam->GetBox());
+	}
+	if (audio)
+	{
+		total_aabb.Enclose(audio->GetBox());
 	}
 
 	return total_aabb;
@@ -402,6 +407,22 @@ void GameObject::CheckTriangleCollision(math::LineSegment &line, float& distance
 		for (int i = 0; i < 6; i++)
 		{
 			if (line.Intersects(*cam->GetBox(), tmp_distance, out))
+				if (tmp_distance < distance)
+				{
+					distance = tmp_distance;
+					best_candidate = this;
+					break;
+				}
+		}
+	}
+
+	ComponentAudio* audio = (ComponentAudio*)GetComponentByType(COMPONENT_AUDIO);
+	if (audio)
+	{
+		float tmp_distance, out;
+		for (int i = 0; i < 6; i++)
+		{
+			if (line.Intersects(audio->GetBox(), tmp_distance, out))
 				if (tmp_distance < distance)
 				{
 					distance = tmp_distance;
