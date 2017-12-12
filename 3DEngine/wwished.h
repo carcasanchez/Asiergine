@@ -33,7 +33,7 @@ namespace Wwished
 		void PlayMusic(const char* music_name);
 
 	private:
-		unsigned long EmitterID = 0;
+		AkGameObjectID EmitterID;
 		const char* name = nullptr;
 		AkVector position;
 		AkVector orient_top;

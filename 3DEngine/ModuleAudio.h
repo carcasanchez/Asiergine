@@ -32,8 +32,8 @@ private:
 	
 	std::list <Wwished::SoundEmitter*> sound_emitters;
 
-	unsigned long listener_id = 0;
-	unsigned long last_go_id = 1;
+	unsigned long listener_id = 1;
+	unsigned long last_go_id = 2;
 
 };
 

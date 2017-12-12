@@ -17,16 +17,19 @@ ComponentAudio::ComponentAudio(GameObject* g):Component(g)
 
 ComponentAudio::~ComponentAudio()
 {
+	App->audio->DeleteSoundEmitter(emitter);
 }
 
 void ComponentAudio::OnEditor()
 {
 	if (ImGui::Button("Play Effect"))
 		emitter->PlayEvent("Zoo");
-	if (ImGui::Button("Play Overworld Music"))
-		emitter->PlayEvent("Play_Overworld_Music");
-	if (ImGui::Button("Play Battle Music"))
-		emitter->PlayEvent("Play_Battle_Music");
+	if (ImGui::Button("Play Music"))
+		emitter->PlayEvent("Play_Music");
+	if (ImGui::Button("Change to Battle Music"))
+		emitter->PlayEvent("Transition_To_Battle");
+	if (ImGui::Button("Change to Overworld Music"))
+		emitter->PlayEvent("Transition_To_Overworld");
 	if (ImGui::Button("Stop Music"))
 		emitter->PlayEvent("Stop_Music");
 }

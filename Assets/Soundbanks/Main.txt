@@ -1,9 +1,10 @@
 Event	ID	Name			Wwise Object Path	Notes
-	542889596	Play_Overworld_Music			\Default Work Unit\Play_Overworld_Music	
+	586745641	Transition_To_Battle			\Default Work Unit\Transition_To_Battle	
 	621108255	Step			\Default Work Unit\Step	
 	1079886303	Zoo			\Default Work Unit\Zoo	Primer evento creado 
+	1991317035	Transition_To_Overworld			\Default Work Unit\Transition_To_Overworld	
 	2837384057	Stop_Music			\Default Work Unit\Stop_Music	
-	2862166672	Play_Battle_Music			\Default Work Unit\Play_Battle_Music	
+	2932040671	Play_Music			\Default Work Unit\Play_Music	
 
 In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
 	8751515	Polvos_mañaneros	C:\Users\Kay\Documents\WwiseProjects\ProyectoPrueba\.cache\Windows\SFX\Polvos_mañaneros_F17FB28C.wem		\Interactive Music Hierarchy\Default Work Unit\music1\music1_battle\battle_base\Polvos_mañaneros		39347776

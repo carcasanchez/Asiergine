@@ -21,10 +21,11 @@
 			<ShortName>Main</ShortName>
 			<Path>Main.bnk</Path>
 			<IncludedEvents>
-				<Event Id="2862166672" Name="Play_Battle_Music" ObjectPath="\Events\Default Work Unit\Play_Battle_Music"/>
-				<Event Id="542889596" Name="Play_Overworld_Music" ObjectPath="\Events\Default Work Unit\Play_Overworld_Music"/>
+				<Event Id="2932040671" Name="Play_Music" ObjectPath="\Events\Default Work Unit\Play_Music"/>
 				<Event Id="621108255" Name="Step" ObjectPath="\Events\Default Work Unit\Step"/>
 				<Event Id="2837384057" Name="Stop_Music" ObjectPath="\Events\Default Work Unit\Stop_Music"/>
+				<Event Id="586745641" Name="Transition_To_Battle" ObjectPath="\Events\Default Work Unit\Transition_To_Battle"/>
+				<Event Id="1991317035" Name="Transition_To_Overworld" ObjectPath="\Events\Default Work Unit\Transition_To_Overworld"/>
 				<Event Id="1079886303" Name="Zoo" ObjectPath="\Events\Default Work Unit\Zoo"/>
 			</IncludedEvents>
 			<IncludedMemoryFiles>

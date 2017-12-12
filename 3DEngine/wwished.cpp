@@ -117,7 +117,7 @@ bool Wwished::CloseWwished()
 	AK::MemoryMgr::Term();
 
 
-	return false;
+	return true;
 }
 
 void Wwished::SetDefaultListeners(unsigned long* id)
@@ -188,7 +188,8 @@ Wwished::SoundEmitter::SoundEmitter(unsigned long id, const char * n)
 
 Wwished::SoundEmitter::~SoundEmitter()
 {
-	AKRESULT res = AK::SoundEngine::UnregisterGameObj((AkGameObjectID)EmitterID);
+	
+	AKRESULT res = AK::SoundEngine::UnregisterGameObj(EmitterID);
 	if (res != AK_Success)
 	{
 		assert(!"Could not unregister GameObj! See res variable to more info");
