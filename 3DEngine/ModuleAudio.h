@@ -25,6 +25,8 @@ public:
 	Wwished::SoundEmitter* CreateSoundEmitter(const char* name, float3 position);
 	void DeleteSoundEmitter(Wwished::SoundEmitter*);
 
+	void ChangeState(const char* group, const char* new_state);
+
 
 private:
 

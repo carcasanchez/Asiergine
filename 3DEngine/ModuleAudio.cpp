@@ -77,3 +77,8 @@ void ModuleAudio::DeleteSoundEmitter(Wwished::SoundEmitter * emit)
 	sound_emitters.remove(emit);
 	delete emit;
 }
+
+void ModuleAudio::ChangeState(const char * group, const char * new_state)
+{
+	Wwished::Utility::ChangeState(group, new_state);
+}

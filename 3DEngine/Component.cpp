@@ -46,6 +46,9 @@ const char* Component::GetComponentNameByType()
 	case COMPONENT_LIGHT:
 		return "Component Light";
 
+	case COMPONENT_AUDIO:
+		return "Component Audios";
+
 	default:
 		break;
 	}

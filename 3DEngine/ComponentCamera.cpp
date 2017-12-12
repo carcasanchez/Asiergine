@@ -66,6 +66,8 @@ void ComponentCamera::Update(float real_dt, float game_dt)
 
 void ComponentCamera::OnEditor()
 {
+
+
 	if (IsActive() == true)
 	{
 		ImGui::TextWrapped("Aspect ratio:");
