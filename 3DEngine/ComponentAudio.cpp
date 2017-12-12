@@ -22,8 +22,10 @@ ComponentAudio::~ComponentAudio()
 
 void ComponentAudio::OnEditor()
 {
-	if (ImGui::Button("Play Effect"))
-		emitter->PlayEvent("Zoo");
+	if (ImGui::Button("Play Shot"))
+		emitter->PlayEvent("Shot");
+	if (ImGui::Button("Play Train"))
+		emitter->PlayEvent("Train");
 	if (ImGui::Button("Play Music"))
 		emitter->PlayEvent("Play_Music");
 	if (ImGui::Button("Change to Battle Music"))

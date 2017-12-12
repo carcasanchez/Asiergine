@@ -187,8 +187,7 @@ Wwished::SoundEmitter::SoundEmitter(unsigned long id, const char * n)
 }
 
 Wwished::SoundEmitter::~SoundEmitter()
-{
-	
+{	
 	AKRESULT res = AK::SoundEngine::UnregisterGameObj(EmitterID);
 	if (res != AK_Success)
 	{
