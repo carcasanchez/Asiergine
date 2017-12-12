@@ -21,9 +21,25 @@
 			<ShortName>Main</ShortName>
 			<Path>Main.bnk</Path>
 			<IncludedEvents>
+				<Event Id="2862166672" Name="Play_Battle_Music" ObjectPath="\Events\Default Work Unit\Play_Battle_Music"/>
+				<Event Id="542889596" Name="Play_Overworld_Music" ObjectPath="\Events\Default Work Unit\Play_Overworld_Music"/>
+				<Event Id="621108255" Name="Step" ObjectPath="\Events\Default Work Unit\Step"/>
+				<Event Id="2837384057" Name="Stop_Music" ObjectPath="\Events\Default Work Unit\Stop_Music"/>
 				<Event Id="1079886303" Name="Zoo" ObjectPath="\Events\Default Work Unit\Zoo"/>
 			</IncludedEvents>
 			<IncludedMemoryFiles>
+				<File Id="8751515" Language="SFX">
+					<ShortName>Polvos_mañaneros.wav</ShortName>
+					<Path>SFX\Polvos_mañaneros_F17FB28C.wem</Path>
+				</File>
+				<File Id="200967748" Language="SFX">
+					<ShortName>No_todo_es_seda.wav</ShortName>
+					<Path>SFX\No_todo_es_seda_F17FB28C.wem</Path>
+				</File>
+				<File Id="320230409" Language="SFX">
+					<ShortName>Footsteps_on_Cement-Tim_Fryer-870410055.wav</ShortName>
+					<Path>SFX\Footsteps_on_Cement-Tim_Fryer-870410055_1C9C67B2.wem</Path>
+				</File>
 				<File Id="554954147" Language="SFX">
 					<ShortName>Intro.wav</ShortName>
 					<Path>SFX\Intro_1C9C67B2.wem</Path>

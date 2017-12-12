@@ -21,8 +21,14 @@ ComponentAudio::~ComponentAudio()
 
 void ComponentAudio::OnEditor()
 {
-	if (ImGui::Button("Play!"))
+	if (ImGui::Button("Play Effect"))
 		emitter->PlayEvent("Zoo");
+	if (ImGui::Button("Play Overworld Music"))
+		emitter->PlayEvent("Play_Overworld_Music");
+	if (ImGui::Button("Play Battle Music"))
+		emitter->PlayEvent("Play_Battle_Music");
+	if (ImGui::Button("Stop Music"))
+		emitter->PlayEvent("Stop_Music");
 }
 
 void ComponentAudio::Update(float real_dt, float game_dt)

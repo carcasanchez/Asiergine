@@ -1,6 +1,13 @@
 Event	ID	Name			Wwise Object Path	Notes
+	542889596	Play_Overworld_Music			\Default Work Unit\Play_Overworld_Music	
+	621108255	Step			\Default Work Unit\Step	
 	1079886303	Zoo			\Default Work Unit\Zoo	Primer evento creado 
+	2837384057	Stop_Music			\Default Work Unit\Stop_Music	
+	2862166672	Play_Battle_Music			\Default Work Unit\Play_Battle_Music	
 
 In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
+	8751515	Polvos_mañaneros	C:\Users\Kay\Documents\WwiseProjects\ProyectoPrueba\.cache\Windows\SFX\Polvos_mañaneros_F17FB28C.wem		\Interactive Music Hierarchy\Default Work Unit\music1\music1_battle\battle_base\Polvos_mañaneros		39347776
+	200967748	No_todo_es_seda	C:\Users\Kay\Documents\WwiseProjects\ProyectoPrueba\.cache\Windows\SFX\No_todo_es_seda_F17FB28C.wem		\Interactive Music Hierarchy\Default Work Unit\music1\music1_overworld\overworld_base\No_todo_es_seda		56144124
+	320230409	Footstep	C:\Users\Kay\Documents\WwiseProjects\ProyectoPrueba\.cache\Windows\SFX\Footsteps_on_Cement-Tim_Fryer-870410055_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Footstep		4822276
 	554954147	Zoo	C:\Users\Kay\Documents\WwiseProjects\ProyectoPrueba\.cache\Windows\SFX\Intro_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Zoo		434240
 

@@ -87,26 +87,6 @@ bool Wwished::InitWwished(const wchar_t* base_path, const char* language)
 	Utility::LoadBank("Init.bnk");
 
 
-	//TO DELETE ------------------------------------
-	
-	/*Utility::LoadBank("Main.bnk");
-
-	AkGameObjectID MY_DEFAULT_LISTENER = 0;
-
-	// Register the main listener.
-	AK::SoundEngine::RegisterGameObj(MY_DEFAULT_LISTENER, "My Default Listener");
-
-	// Set one listener as the default.	
-	AK::SoundEngine::SetDefaultListeners(&MY_DEFAULT_LISTENER, 1);
-
-	// Register a game object for playing sounds
-	AkGameObjectID MY_EMITTER = 1;
-	AK::SoundEngine::RegisterGameObj(MY_EMITTER, "My Emitter");
-	// At this point "My Emitter" has 1 listener, "My Default Listener", because we designated it as the default listener.
-	
-	AK::SoundEngine::PostEvent("Fire_Shotgun_Player", MY_EMITTER);*/
-
-
 	return true;
 }
 
