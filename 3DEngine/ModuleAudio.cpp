@@ -53,7 +53,7 @@ bool ModuleAudio::CleanUp()
 
 Wwished::SoundEmitter * ModuleAudio::CreateSoundEmitter(const char * name, float3 position)
 {
-	Wwished::SoundEmitter* ret = Wwished::Utility::CreateEmitter(last_go_id++, name, position.x, position.y, position.z);
+	Wwished::SoundEmitter* ret = Wwished::Utility::CreateEmitter(last_go_id++, name, position.z, position.y, position.x);
 	sound_emitters.push_back(ret);
 	return ret;
 }
@@ -76,11 +76,9 @@ bool ModuleAudio::SetListener(ComponentAudio* c)
 	{
 		current_listener->ResetComponent();
 	}
+
 	current_listener = c;
-	unsigned long listener_id = current_listener->GetEmitterID();
-	
-	if(listener_id > 0)
-		Wwished::SetDefaultListener(&listener_id);
+	Wwished::SetDefaultListener(current_listener->GetEmitterID());
 
 	return ret;
 }

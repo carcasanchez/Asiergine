@@ -40,6 +40,10 @@ void ComponentAudio::OnEditor()
 			audio_type = MUSIC;
 	}
 
+	if (audio_type == FX && ImGui::Button("Play!"))
+	{
+		emitter->PlayEvent("Shot");
+	}
 
 	/*ImGui::InputText("Event Name", (char*)event_name.c_str(), 40);
 
@@ -84,7 +88,7 @@ void ComponentAudio::Update(float real_dt, float game_dt)
 	if (transf)
 	{
 		float3 pos = transf->GetTranslation();
-		emitter->SetPosition(pos.x, pos.y, pos.z);
+		emitter->SetPosition(pos.z, pos.y, pos.x);
 
 		box.minPoint = transf->GetTranslation() - float3(1, 1, 1);
 		box.maxPoint = transf->GetTranslation() + float3(1, 1, 1);
@@ -94,6 +98,7 @@ void ComponentAudio::Update(float real_dt, float game_dt)
 	{
 		App->renderer3D->SetBoxToDraw(box);
 	}
+
 }
 
 void ComponentAudio::ResetComponent()

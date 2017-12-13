@@ -120,9 +120,10 @@ bool Wwished::CloseWwished()
 	return true;
 }
 
-void Wwished::SetDefaultListener(unsigned long* id)
+void Wwished::SetDefaultListener(unsigned long id)
 {
-	AK::SoundEngine::SetDefaultListeners((AkGameObjectID*)id, 0);
+	AkGameObjectID listener_id = id;
+	AKRESULT res = AK::SoundEngine::SetDefaultListeners(&listener_id, 1);
 }
 
 void Wwished::Utility::SetLanguage(const char * language)
@@ -209,9 +210,9 @@ const char * Wwished::SoundEmitter::GetName()
 //The two vectors must be normalized and orthogonal!
 void Wwished::SoundEmitter::SetPosition(float x, float y, float z, float x_front, float y_front, float z_front, float x_top, float y_top, float z_top)
 {
-	position.X = -x;
+	position.X = x;
 	position.Y = y;
-	position.Z = -z;
+	position.Z = z;
 
 	orient_front.X = x_front;
 	orient_front.Y = y_front;

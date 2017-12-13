@@ -12,7 +12,7 @@ namespace Wwished
 	void ProcessAudio();
 	bool CloseWwished();
 
-	void SetDefaultListener(unsigned long* id);
+	void SetDefaultListener(unsigned long id);
 		
 	class SoundEmitter
 	{
