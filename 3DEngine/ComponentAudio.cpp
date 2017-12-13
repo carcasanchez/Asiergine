@@ -8,9 +8,7 @@
 ComponentAudio::ComponentAudio(GameObject* g):Component(g)
 {
 	type = COMPONENT_AUDIO;
-	event_name.reserve(41);
-	state1_name.reserve(41);
-	state2_name.reserve(41);
+	
 
 	CompTransform* transf = (CompTransform*)g->GetComponentByType(COMPONENT_TRANSFORM);
 	if (transf)
@@ -22,21 +20,28 @@ ComponentAudio::ComponentAudio(GameObject* g):Component(g)
 
 ComponentAudio::~ComponentAudio()
 {
+	App->audio->CheckIfListenerIsDeleted(this);
 	App->audio->DeleteSoundEmitter(emitter);
 }
 
 void ComponentAudio::OnEditor()
 {
-	static int selected_option = 0;
-	if (ImGui::Combo("Audio type", &selected_option, "FX\0Music", 2))
+	
+	if (ImGui::Combo("Audio type", &selected_option, "FX\0Music\0Listener", 3))
 	{
-		if (selected_option == 0)
+		if (selected_option == 2)
+		{
+			audio_type = LISTENER;
+			App->audio->SetListener(this);
+		}
+		else if (selected_option == 0)
 			audio_type = FX;
 		else if (selected_option == 1)
 			audio_type = MUSIC;
 	}
 
-	ImGui::InputText("Event Name", (char*)event_name.c_str(), 40);
+
+	/*ImGui::InputText("Event Name", (char*)event_name.c_str(), 40);
 
 	if (ImGui::Button("Play!"))
 	{
@@ -47,28 +52,33 @@ void ComponentAudio::OnEditor()
 
 	if (audio_type == MUSIC)
 	{
+		if (ImGui::Button("Stop Music"))
+		{
+			emitter->PlayEvent("Stop_Music");
+		}
+
 		ImGui::InputText("Music State 1", (char*)state1_name.c_str(), 40);
 		ImGui::InputText("Music State 2", (char*)state2_name.c_str(), 40);
 		ImGui::InputFloat("Change Time", &music_change_time, 0.1, 1.0, 1);
 	}
 
-
+	*/
 	
 }
 
 void ComponentAudio::Update(float real_dt, float game_dt)
 {
-
-	if (current_music_state && music_timer.ReadMS()/1000 > music_change_time)
-	{
-		music_timer.Start();
-		if (current_music_state == &state1_name)
-			current_music_state = &state2_name;
-		else if (current_music_state == &state2_name)
-			current_music_state = &state1_name;
-		App->audio->ChangeState("music1", current_music_state->c_str());
-	}
-
+	/*if(audio_type == MUSIC)
+		if (current_music_state && music_timer.ReadMS()/1000 > music_change_time)
+		{
+			music_timer.Start();
+			if (current_music_state == &state1_name)
+				current_music_state = &state2_name;
+			else if (current_music_state == &state2_name)
+				current_music_state = &state1_name;
+			App->audio->ChangeState("music1", current_music_state->c_str());
+		}
+*/
 
 	CompTransform* transf = (CompTransform*)game_object->GetComponentByType(COMPONENT_TRANSFORM);
 	if (transf)
@@ -84,4 +94,10 @@ void ComponentAudio::Update(float real_dt, float game_dt)
 	{
 		App->renderer3D->SetBoxToDraw(box);
 	}
+}
+
+void ComponentAudio::ResetComponent()
+{
+	audio_type = FX;
+	selected_option = 0;
 }

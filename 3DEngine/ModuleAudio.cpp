@@ -2,7 +2,7 @@
 #include "Application.h"
 #include ".\mmgr\mmgr.h"
 #include "ModuleAudio.h"
-#include "ModuleCamera3D.h"
+#include "ComponentAudio.h"
 
 
 
@@ -32,26 +32,13 @@ bool ModuleAudio::Init(const JSON_Object* config_data)
 
 bool ModuleAudio::Start()
 {
-	//Create listener for the module camera
-	float3 cam_up = App->camera->frustum.up;
-	float3 cam_front = App->camera->frustum.front;
-	float3 cam_pos = App->camera->frustum.pos;
-
-	camera_listener = Wwished::Utility::CreateEmitter(0, "Camera_Listener", cam_pos.x, cam_pos.y, cam_pos.z, true);
-	camera_listener->SetPosition(cam_pos.x, cam_pos.y, cam_pos.z, cam_front.x, cam_front.y, cam_front.z, cam_up.x, cam_up.y, cam_up.z);
-
+	
 	return true;
 }
 
 update_status ModuleAudio::PostUpdate(float real_dt, float game_dt)
 {
-	//Update camera listener
-	//Create listener for the module camera
-	float3 cam_up = App->camera->frustum.up;
-	float3 cam_front = App->camera->frustum.front;
-	float3 cam_pos = App->camera->frustum.pos;
-	camera_listener->SetPosition(cam_pos.x, cam_pos.y, cam_pos.z, cam_front.x, cam_front.y, cam_front.z, cam_up.x, cam_up.y, cam_up.z);
-
+	
 	Wwished::ProcessAudio();
 
 	return UPDATE_CONTINUE;
@@ -61,7 +48,6 @@ update_status ModuleAudio::PostUpdate(float real_dt, float game_dt)
 bool ModuleAudio::CleanUp()
 {
 	LOG("Unloading Wwished library");
-	delete camera_listener;
 	return Wwished::CloseWwished();
 }
 
@@ -82,3 +68,28 @@ void ModuleAudio::ChangeState(const char * group, const char * new_state)
 {
 	Wwished::Utility::ChangeState(group, new_state);
 }
+
+bool ModuleAudio::SetListener(ComponentAudio* c)
+{
+	bool ret = true;
+	if (current_listener != nullptr)
+	{
+		current_listener->ResetComponent();
+	}
+	current_listener = c;
+	unsigned long listener_id = current_listener->GetEmitterID();
+	
+	if(listener_id > 0)
+		Wwished::SetDefaultListener(&listener_id);
+
+	return ret;
+}
+
+void ModuleAudio::CheckIfListenerIsDeleted(ComponentAudio * c)
+{
+	if (current_listener == c)
+	{
+		current_listener = nullptr;
+	}
+}
+

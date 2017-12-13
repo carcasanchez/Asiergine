@@ -120,10 +120,9 @@ bool Wwished::CloseWwished()
 	return true;
 }
 
-void Wwished::SetDefaultListeners(unsigned long* id)
+void Wwished::SetDefaultListener(unsigned long* id)
 {
 	AK::SoundEngine::SetDefaultListeners((AkGameObjectID*)id, 0);
-
 }
 
 void Wwished::Utility::SetLanguage(const char * language)
@@ -259,15 +258,4 @@ void Wwished::SoundEmitter::PlayEvent(unsigned long id)
 void Wwished::SoundEmitter::PlayEvent(const char* name)
 {
 	AK::SoundEngine::PostEvent(name, EmitterID);
-}
-
-void Wwished::SoundEmitter::PlayMusic(unsigned long music_id)
-{
-	AK::SoundEngine::PostEvent(music_id, EmitterID, AK_EnableGetMusicPlayPosition);
-}
-
-void Wwished::SoundEmitter::PlayMusic(const char * music_name)
-{
-	AK::SoundEngine::PostEvent(music_name, EmitterID, AK_EnableGetMusicPlayPosition);
-
 }

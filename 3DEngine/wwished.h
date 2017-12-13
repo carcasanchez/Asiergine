@@ -12,7 +12,7 @@ namespace Wwished
 	void ProcessAudio();
 	bool CloseWwished();
 
-	void SetDefaultListeners(unsigned long* id);
+	void SetDefaultListener(unsigned long* id);
 		
 	class SoundEmitter
 	{
@@ -29,8 +29,6 @@ namespace Wwished
 		void PlayEvent(unsigned long id);
 		void PlayEvent(const char* name);
 
-		void PlayMusic(unsigned long music_id);
-		void PlayMusic(const char* music_name);
 
 	private:
 		AkGameObjectID EmitterID;

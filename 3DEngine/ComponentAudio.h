@@ -8,6 +8,7 @@
 
 enum AUDIO_TYPE
 {
+	LISTENER,
 	FX,
 	MUSIC
 };
@@ -22,20 +23,24 @@ public:
 
 	void Update(float real_dt, float game_dt);
 	AABB GetBox() { return box; }
+	unsigned long GetEmitterID()
+	{
+		return emitter ?  emitter->GetID() :  0;
+	}
+
+	void ResetComponent();
 
 private:
+	AUDIO_TYPE  audio_type = FX;
 	Wwished::SoundEmitter* emitter = nullptr;
 	AABB box = AABB::AABB(float3(-1.0f, -1.0f, -1.0f), float3(1.0f, 1.0f, 1.0f));
-	AUDIO_TYPE  audio_type = FX;
 
-	std::string event_name;
-	std::string state1_name;
-	std::string state2_name;
-	std::string* current_music_state = nullptr;
 
 	float music_change_time = 0.0f;
 
 	Timer music_timer;
+
+	int selected_option = 0;
 
 };
 

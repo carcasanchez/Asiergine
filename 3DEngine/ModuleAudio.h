@@ -4,6 +4,7 @@
 #include "Module.h"
 #include "wwished.h"
 
+class ComponentAudio;
 
 class ModuleAudio : public Module
 {
@@ -24,18 +25,18 @@ public:
 
 	Wwished::SoundEmitter* CreateSoundEmitter(const char* name, float3 position);
 	void DeleteSoundEmitter(Wwished::SoundEmitter*);
-
 	void ChangeState(const char* group, const char* new_state);
+
+	bool SetListener(ComponentAudio* c);
+	void CheckIfListenerIsDeleted(ComponentAudio* c);
 
 
 private:
 
-	Wwished::SoundEmitter* camera_listener = nullptr;
-	
+	ComponentAudio* current_listener = nullptr;
+		
 	std::list <Wwished::SoundEmitter*> sound_emitters;
-
-	unsigned long listener_id = 1;
-	unsigned long last_go_id = 2;
+	unsigned long last_go_id = 1;
 
 };
 
