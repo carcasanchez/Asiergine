@@ -1146,19 +1146,19 @@ void ModuleEditor::SelectObject(GameObject * g)
 void ModuleEditor::Resize()
 {
 	//Configuration
-	config_size.x = 280;
-	config_size.y = App->window->window_height/2;
+	config_size.x = (23 * App->window->window_width) / 100;
+	config_size.y = (50 * App->window->window_height) / 100;
 	config_pos.x = App->window->window_width - config_size.x;
 	config_pos.y = App->window->window_height - config_size.y;
 
 	//hierarchy
-	hierarchy_size.x = 220;
+	hierarchy_size.x = (16 * App->window->window_width) / 100;
 	hierarchy_size.y = App->window->window_height - asset_size.y - 18;
 	hierarchy_pos.x = 0;
 	hierarchy_pos.y = 18;
 
 	//Inspector
-	inspector_size.x = 280;
+	inspector_size.x = (23 * App->window->window_width) / 100;
 	inspector_size.y = App->window->window_height - config_size.y - 18;
 	inspector_pos.x = App->window->window_width - inspector_size.x;
 	inspector_pos.y = 18;
@@ -1171,7 +1171,7 @@ void ModuleEditor::Resize()
 
 	//Asset
 	asset_size.x = App->window->window_width - config_size.x;
-	asset_size.y = 180;
+	asset_size.y = (32 * App->window->window_height) / 100;
 	asset_pos.x = 0;
 	asset_pos.y = App->window->window_height - asset_size.y;
 }
