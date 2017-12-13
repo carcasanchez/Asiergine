@@ -88,7 +88,15 @@ void ComponentAudio::Update(float real_dt, float game_dt)
 	if (transf)
 	{
 		float3 pos = transf->GetTranslation();
-		emitter->SetPosition(pos.z, pos.y, pos.x);
+		Quat rot = transf->GetRotation();
+
+		float3 up = rot.Transform(float3(0, 1, 0));
+		float3 front = rot.Transform(float3(0, 0, 1));
+
+		up.Normalize();
+		front.Normalize();
+
+		emitter->SetPosition(-pos.x, pos.y, pos.z, -front.x, front.y, front.z, -up.x, up.y, up.z);
 
 		box.minPoint = transf->GetTranslation() - float3(1, 1, 1);
 		box.maxPoint = transf->GetTranslation() + float3(1, 1, 1);

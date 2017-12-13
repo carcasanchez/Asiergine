@@ -53,7 +53,7 @@ bool ModuleAudio::CleanUp()
 
 Wwished::SoundEmitter * ModuleAudio::CreateSoundEmitter(const char * name, float3 position)
 {
-	Wwished::SoundEmitter* ret = Wwished::Utility::CreateEmitter(last_go_id++, name, position.z, position.y, position.x);
+	Wwished::SoundEmitter* ret = Wwished::Utility::CreateEmitter(last_go_id++, name, -position.x, position.y, position.z);
 	sound_emitters.push_back(ret);
 	return ret;
 }
