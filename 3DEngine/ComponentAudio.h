@@ -8,9 +8,9 @@
 
 enum AUDIO_TYPE
 {
-	LISTENER,
 	FX,
-	MUSIC
+	MUSIC,
+	LISTENER
 };
 
 class ComponentAudio : public Component
@@ -30,6 +30,12 @@ public:
 
 	void ResetComponent();
 
+	void SetAudioType(AUDIO_TYPE);
+
+	//Scene serialization------------------------
+	uint PrepareToSave() const;
+	void Save(char* &cursor) const;
+
 private:
 	AUDIO_TYPE  audio_type = FX;
 	Wwished::SoundEmitter* emitter = nullptr;
@@ -39,10 +45,6 @@ private:
 	float music_change_time = 0.0f;
 
 	Timer music_timer;
-
-	int selected_option = 0;
-
-
 };
 
 

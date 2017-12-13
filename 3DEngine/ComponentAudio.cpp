@@ -26,17 +26,17 @@ ComponentAudio::~ComponentAudio()
 
 void ComponentAudio::OnEditor()
 {
-	
-	if (ImGui::Combo("Audio type", &selected_option, "FX\0Music\0Listener", 3))
+	int selected_opt = audio_type;
+	if (ImGui::Combo("Audio type", &selected_opt, "FX\0Music\0Listener", 3))
 	{
-		if (selected_option == 2)
+		if (selected_opt == 2)
 		{
 			audio_type = LISTENER;
 			App->audio->SetListener(this);
 		}
-		else if (selected_option == 0)
+		else if (selected_opt == 0)
 			audio_type = FX;
-		else if (selected_option == 1)
+		else if (selected_opt == 1)
 			audio_type = MUSIC;
 	}
 
@@ -112,5 +112,31 @@ void ComponentAudio::Update(float real_dt, float game_dt)
 void ComponentAudio::ResetComponent()
 {
 	audio_type = FX;
-	selected_option = 0;
+}
+
+void ComponentAudio::SetAudioType(AUDIO_TYPE t)
+{
+	audio_type = t;
+
+	if(audio_type==LISTENER)
+	{
+		App->audio->SetListener(this);
+	}
+}
+
+uint ComponentAudio::PrepareToSave() const
+{
+	uint size = 0;
+	size += sizeof(uint); //Type of audio
+	return size;
+}
+
+void ComponentAudio::Save(char *& cursor) const
+{
+	uint audio_t = audio_type;
+
+	//copy type of audio
+	uint size_of = sizeof(uint);
+	memcpy(cursor, &audio_t, size_of);
+	cursor += size_of;
 }

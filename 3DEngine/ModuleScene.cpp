@@ -11,6 +11,7 @@
 #include "ComponentCamera.h"
 #include "ComponentMesh.h"
 #include "ComponentLight.h"
+#include "ComponentAudio.h"
 
 ModuleScene::ModuleScene(bool start_enabled) : Module(start_enabled)
 {
@@ -232,6 +233,7 @@ uint ModuleScene::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>> &b
 	//  UID of material - size of texture name - texture name
 	//UID of camera - near dist - far dist - active
 	//UID of light
+	//UID of audio - type of audio
 
 	//STORE SIZE-------------------------------------------------------------------
 	uint size = 1;
@@ -282,6 +284,15 @@ uint ModuleScene::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>> &b
 
 	//Light
 	size += sizeof(uint);
+
+
+	//Audio
+	size += sizeof(uint);
+	ComponentAudio* audio = (ComponentAudio*)to_save->GetComponentByType(COMPONENT_AUDIO);
+	if (audio != nullptr)
+	{
+		size += audio->PrepareToSave();
+	}
 
 	//COPY DATA------------------------------------------------------
 	char* data = new char[size];
@@ -385,6 +396,20 @@ uint ModuleScene::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>> &b
 	size_of = sizeof(uint);
 	memcpy(cursor, &lightID, size_of);
 	cursor += size_of;
+
+	//Copy audio
+	uint audioID = 0;
+	if (audio != nullptr)
+		audioID = audio->GetID();
+
+	size_of = sizeof(uint);
+	memcpy(cursor, &audioID, size_of);
+	cursor += size_of;
+
+	if (audio != nullptr)
+	{
+		audio->Save(cursor);
+	}
 
 	data[size - 1] = '\0';
 	std::pair<char*, uint> pair_of_data;
@@ -649,6 +674,22 @@ uint ModuleScene::LoadObjectFromOwnFormat(char*& cursor)
 	if (light_id != 0)
 	{
 		new_obj->CreateComponent_Light(light_id);
+	}
+
+	//Audio
+	uint audio_id = 0;
+	size_of = sizeof(uint);
+	memcpy(&audio_id, cursor, size_of);
+	cursor += size_of;
+	
+	if (audio_id != 0)
+	{
+
+		uint audio_type = 0;
+		memcpy(&audio_type, cursor, size_of);
+		cursor += size_of;
+
+		new_obj->CreateComponent_Audio(audio_id, (AUDIO_TYPE)audio_type);
 	}
 
 	cursor++;
