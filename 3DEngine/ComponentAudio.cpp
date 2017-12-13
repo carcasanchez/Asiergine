@@ -26,17 +26,17 @@ ComponentAudio::~ComponentAudio()
 
 void ComponentAudio::OnEditor()
 {
-	
-	if (ImGui::Combo("Audio type", &selected_option, "FX\0Music\0Listener", 3))
+	int selected_opt = audio_type;
+	if (ImGui::Combo("Audio type", &selected_opt, "FX\0Music\0Listener", 3))
 	{
-		if (selected_option == 2)
+		if (selected_opt == 2)
 		{
 			audio_type = LISTENER;
 			App->audio->SetListener(this);
 		}
-		else if (selected_option == 0)
+		else if (selected_opt == 0)
 			audio_type = FX;
-		else if (selected_option == 1)
+		else if (selected_opt == 1)
 			audio_type = MUSIC;
 	}
 
@@ -88,7 +88,15 @@ void ComponentAudio::Update(float real_dt, float game_dt)
 	if (transf)
 	{
 		float3 pos = transf->GetTranslation();
-		emitter->SetPosition(pos.z, pos.y, pos.x);
+		Quat rot = transf->GetRotation();
+
+		float3 up = rot.Transform(float3(0, 1, 0));
+		float3 front = rot.Transform(float3(0, 0, 1));
+
+		up.Normalize();
+		front.Normalize();
+
+		emitter->SetPosition(-pos.x, pos.y, pos.z, -front.x, front.y, front.z, -up.x, up.y, up.z);
 
 		box.minPoint = transf->GetTranslation() - float3(1, 1, 1);
 		box.maxPoint = transf->GetTranslation() + float3(1, 1, 1);
@@ -104,5 +112,31 @@ void ComponentAudio::Update(float real_dt, float game_dt)
 void ComponentAudio::ResetComponent()
 {
 	audio_type = FX;
-	selected_option = 0;
+}
+
+void ComponentAudio::SetAudioType(AUDIO_TYPE t)
+{
+	audio_type = t;
+
+	if(audio_type==LISTENER)
+	{
+		App->audio->SetListener(this);
+	}
+}
+
+uint ComponentAudio::PrepareToSave() const
+{
+	uint size = 0;
+	size += sizeof(uint); //Type of audio
+	return size;
+}
+
+void ComponentAudio::Save(char *& cursor) const
+{
+	uint audio_t = audio_type;
+
+	//copy type of audio
+	uint size_of = sizeof(uint);
+	memcpy(cursor, &audio_t, size_of);
+	cursor += size_of;
 }

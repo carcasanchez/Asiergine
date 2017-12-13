@@ -1,6 +1,7 @@
 #pragma once
 #include "Globals.h"
 #include "QuadTree.h"
+#include "ComponentAudio.h"
 
 class Component;
 class CompTransform;
@@ -8,14 +9,12 @@ class ComponentMesh;
 class ComponentMaterial;
 class ComponentCamera;
 class ComponentLight;
-class ComponentAudio;
 class ComponentMovement;
 
 class ResourceMesh;
 class ResourceTexture;
 
 enum ComponentType;
-
 
 
 class GameObject
@@ -46,7 +45,7 @@ public:
 	ComponentMaterial* CreateComponent_Material(ResourceTexture* t = nullptr, uint UID = 0);
 	ComponentCamera* CreateComponent_Camera(float near_dist, float far_dist, bool active = false, uint UID = 0);
 	ComponentLight* CreateComponent_Light(uint UID = 0);
-	ComponentAudio* CreateComponent_Audio(uint UID = 0);
+	ComponentAudio* CreateComponent_Audio(uint UID = 0, AUDIO_TYPE t = AUDIO_TYPE::FX);
 	ComponentMovement* CreateComponent_Movement(uint UID = 0);
 
 

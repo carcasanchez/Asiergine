@@ -7,7 +7,7 @@
 #include "ComponentMaterial.h"
 #include "ComponentCamera.h"
 #include "ComponentLight.h"
-#include "ComponentAudio.h"
+
 #include "ComponentMovement.h"
 #include "MathGeoLib\include\Algorithm\Random\LCG.h"
 
@@ -249,13 +249,22 @@ ComponentLight * GameObject::CreateComponent_Light(uint UID)
 	return new_light;
 }
 
-ComponentAudio * GameObject::CreateComponent_Audio(uint UID)
+ComponentAudio * GameObject::CreateComponent_Audio(uint UID, AUDIO_TYPE t)
 {
+
+	if (GetComponentByType(COMPONENT_AUDIO) != nullptr)
+	{
+		LOG("ERROR: GameObject %s already has an audio component!", name.c_str());
+		return nullptr;
+	}
+
 	ComponentAudio* ret = nullptr;
 	ComponentAudio* new_audio = new ComponentAudio(this);
 
 	if (UID > 0)
 		new_audio->SetID(UID);
+
+	new_audio->SetAudioType(t);
 
 	components.push_back(new_audio);
 
