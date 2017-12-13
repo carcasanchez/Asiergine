@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _COMPONENT_TRANSFORM_H_
+#define _COMPONENT_TRANSFORM_H_
+
 #include "Component.h"
 #include "Globals.h"
 
@@ -63,3 +65,5 @@ private:
 
 
 };
+
+#endif

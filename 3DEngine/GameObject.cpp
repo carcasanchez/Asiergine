@@ -8,6 +8,7 @@
 #include "ComponentCamera.h"
 #include "ComponentLight.h"
 #include "ComponentAudio.h"
+#include "ComponentMovement.h"
 #include "MathGeoLib\include\Algorithm\Random\LCG.h"
 
 GameObject::GameObject(const char* name): name(name)
@@ -261,6 +262,23 @@ ComponentAudio * GameObject::CreateComponent_Audio(uint UID)
 	return ret;
 }
 
+ComponentMovement * GameObject::CreateComponent_Movement(uint UID)
+{
+	if (GetComponentByType(COMPONENT_MOVEMENT) != nullptr)
+	{
+		LOG("ERROR: GameObject %s already has a movement component!", name.c_str());
+		return nullptr;
+	}
+
+	ComponentMovement* new_mov = new ComponentMovement(this);
+
+	if (UID > 0)
+		new_mov->SetID(UID);
+
+	components.push_back(new_mov);
+
+	return new_mov;
+}
 
 //Recursive methods-------------------------------------------------------------------
 bool GameObject::PutInQuadTree(QuadTreeNodeObj* node)
@@ -544,6 +562,10 @@ void GameObject::OnEditor()
 		if (ImGui::MenuItem("Sound Emitter"))
 		{
 			CreateComponent_Audio();
+		}
+		if (ImGui::MenuItem("Movement"))
+		{
+			CreateComponent_Movement();
 		}
 
 

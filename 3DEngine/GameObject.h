@@ -9,6 +9,7 @@ class ComponentMaterial;
 class ComponentCamera;
 class ComponentLight;
 class ComponentAudio;
+class ComponentMovement;
 
 class ResourceMesh;
 class ResourceTexture;
@@ -46,6 +47,7 @@ public:
 	ComponentCamera* CreateComponent_Camera(float near_dist, float far_dist, bool active = false, uint UID = 0);
 	ComponentLight* CreateComponent_Light(uint UID = 0);
 	ComponentAudio* CreateComponent_Audio(uint UID = 0);
+	ComponentMovement* CreateComponent_Movement(uint UID = 0);
 
 
 	void OnEditor();
