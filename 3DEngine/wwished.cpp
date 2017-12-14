@@ -270,3 +270,8 @@ void Wwished::SoundEmitter::PlayEvent(const char* name)
 {
 	AK::SoundEngine::PostEvent(name, EmitterID);
 }
+
+void Wwished::SoundEmitter::StopEvent(const char * name)
+{
+	AK::SoundEngine::ExecuteActionOnEvent(name, AK::SoundEngine::AkActionOnEventType_Stop);
+}
