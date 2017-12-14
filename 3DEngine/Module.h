@@ -63,6 +63,9 @@ public:
 	virtual void OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 	{}
 
+	virtual void OnPlay() {};
+	virtual void OnPause() {};
+	virtual void OnStop() {};
 
 
 	std::string GetModuleName() 

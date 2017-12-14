@@ -79,16 +79,8 @@ public:
 		return paused;
 	}
 
-	bool PlayApp()
-	{
-		running = true;
-		scene->wants_to_save = true;
-		game_time_modifier = last_game_time_modifier;
-		game_seconds = 0.0;
-		game_frames = 0;
-		app_timer.Start();
-		return true;
-	}
+	bool PlayApp();
+	
 
 	bool StopApp()
 	{

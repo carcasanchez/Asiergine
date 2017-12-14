@@ -55,17 +55,11 @@ void ComponentAudio::OnEditor()
 
 void ComponentAudio::Update(float real_dt, float game_dt)
 {
-	/*if(audio_type == MUSIC)
-		if (current_music_state && music_timer.ReadMS()/1000 > music_change_time)
-		{
-			music_timer.Start();
-			if (current_music_state == &state1_name)
-				current_music_state = &state2_name;
-			else if (current_music_state == &state2_name)
-				current_music_state = &state1_name;
-			App->audio->ChangeState("music1", current_music_state->c_str());
-		}
-*/
+	if (App->IsAppRunning())
+	{
+		if (audio_type == FX)
+			ManageEvents();
+	}
 
 	CompTransform* transf = (CompTransform*)game_object->GetComponentByType(COMPONENT_TRANSFORM);
 	if (transf)
@@ -138,7 +132,7 @@ void ComponentAudio::Save(char *& cursor) const
 	for (int i = 0; i < num_of_events; i++)
 	{
 		uint name_size = events[i]->name.size();
-		size_of = events[i]->name.size();
+		size_of = sizeof(uint);
 		memcpy(cursor, &name_size, size_of); // copy size of name of the event
 		cursor += size_of;
 
@@ -146,8 +140,9 @@ void ComponentAudio::Save(char *& cursor) const
 		memcpy(cursor, events[i]->name.data(), size_of); // copy name of the event
 		cursor += size_of;
 
+		uint play_param = events[i]->play_parameter;
 		size_of = sizeof(uint); //copy type of play parameter
-		memcpy(cursor, &events[i]->play_parameter, size_of);
+		memcpy(cursor, &play_param, size_of);
 		cursor += size_of;
 	}
 
@@ -173,6 +168,17 @@ void ComponentAudio::DeleteAudioEvent(uint index)
 
 void ComponentAudio::ManageEvents()
 {
+	for (int i = 0; i < events.size(); i++)
+	{
+		if (events[i]->play_parameter == WHEN_PRESS_E && App->input->GetKey(SDL_SCANCODE_E) == KEY_DOWN)
+			emitter->PlayEvent(events[i]->name.c_str());
+		else if (events[i]->play_parameter == ON_AWAKE && events[i]->is_playing == false)
+		{
+			events[i]->is_playing = true;
+			emitter->PlayEvent(events[i]->name.c_str());
+		}
+	}
+
 }
 
 void ComponentAudio::ManageMusic()
