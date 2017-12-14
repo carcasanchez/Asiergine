@@ -25,7 +25,6 @@ bool ModuleAudio::Init(const JSON_Object* config_data)
 
 	bool ret = Wwished::InitWwished(base_path.c_str(), "English(US)");
 
-	Wwished::Utility::LoadBank("Main.bnk");
 		
 	return ret;
 }
@@ -88,6 +87,33 @@ void ModuleAudio::CheckIfListenerIsDeleted(ComponentAudio * c)
 	if (current_listener == c)
 	{
 		current_listener = nullptr;
+	}
+}
+
+void ModuleAudio::LoadBank(const char * bank_name)
+{
+	//Avoid double bank loading
+	if (std::find(loaded_banks.begin(), loaded_banks.end(), bank_name) == loaded_banks.end())
+	{
+		if(Wwished::Utility::LoadBank(bank_name))
+		{ 
+			loaded_banks.push_back(bank_name);
+			LOG("Loaded %s Wwise audio bank", bank_name)
+		}
+		else LOG("ERROR: Invalid bank name: %s", bank_name);
+	}
+	else LOG("Bank %s already loaded", bank_name);
+}
+
+void ModuleAudio::UnLoadBank(uint bank_index)
+{
+	if (!Wwished::Utility::UnLoadBank(loaded_banks[bank_index].c_str()))
+	{
+		LOG("Bank %s is not loaded in memory", name);
+	}
+	else
+	{
+		loaded_banks.erase(loaded_banks.begin() + bank_index);
 	}
 }
 

@@ -37,14 +37,19 @@ public:
 	void Save(char* &cursor) const;
 
 private:
+
+
+	void ManageEvents();
+	void ManageMusic();
+
+
 	AUDIO_TYPE  audio_type = FX;
+	std::string bank_name;
 	Wwished::SoundEmitter* emitter = nullptr;
+
+	std::list<std::string> events;
+
 	AABB box = AABB::AABB(float3(-1.0f, -1.0f, -1.0f), float3(1.0f, 1.0f, 1.0f));
-
-
-	float music_change_time = 0.0f;
-
-	Timer music_timer;
 };
 
 

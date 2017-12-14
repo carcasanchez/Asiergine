@@ -9,6 +9,7 @@ ComponentAudio::ComponentAudio(GameObject* g):Component(g)
 {
 	type = COMPONENT_AUDIO;
 	
+	bank_name.reserve(51);
 
 	CompTransform* transf = (CompTransform*)g->GetComponentByType(COMPONENT_TRANSFORM);
 	if (transf)
@@ -26,6 +27,7 @@ ComponentAudio::~ComponentAudio()
 
 void ComponentAudio::OnEditor()
 {
+
 	int selected_opt = audio_type;
 	if (ImGui::Combo("Audio type", &selected_opt, "FX\0Music\0Listener", 3))
 	{
@@ -44,6 +46,7 @@ void ComponentAudio::OnEditor()
 	{
 		emitter->PlayEvent("Shot");
 	}
+
 
 	/*ImGui::InputText("Event Name", (char*)event_name.c_str(), 40);
 
@@ -139,4 +142,12 @@ void ComponentAudio::Save(char *& cursor) const
 	uint size_of = sizeof(uint);
 	memcpy(cursor, &audio_t, size_of);
 	cursor += size_of;
+}
+
+void ComponentAudio::ManageEvents()
+{
+}
+
+void ComponentAudio::ManageMusic()
+{
 }

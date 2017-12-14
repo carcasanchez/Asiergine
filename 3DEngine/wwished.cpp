@@ -135,19 +135,29 @@ void Wwished::Utility::SetLanguage(const char * language)
 	}
 }
 
-//Gets the bank path and returns it's ID. IMPORTANT: never call this before InitWwished()
-unsigned long Wwished::Utility::LoadBank(const char * path)
+//Gets the bank path and returns true if exists. IMPORTANT: never call this before InitWwished()
+bool Wwished::Utility::LoadBank(const char * path)
 {
+	bool ret = true;
 	unsigned long bank_id;
 	AKRESULT res = AK::SoundEngine::LoadBank(path, AK_DEFAULT_POOL_ID, bank_id);
 	
 	if (res != AK_Success)
 	{
-		//The .bnk file is missing
-		assert(!"Could not initialize soundbank!");
+		ret = false;
 	}
 
-	return bank_id;
+	return ret;
+}
+
+bool Wwished::Utility::UnLoadBank(const char * path)
+{
+	bool ret = true;
+	AKRESULT res = AK::SoundEngine::UnloadBank(path, NULL);
+	if (res != AK_Success)
+		ret = false;
+
+	return ret;
 }
 
 Wwished::SoundEmitter * Wwished::Utility::CreateEmitter(unsigned long id, const char * name, float x, float y, float z, bool is_default_listener)

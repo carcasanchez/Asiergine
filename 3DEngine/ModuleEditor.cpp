@@ -983,6 +983,32 @@ void ModuleEditor::ConfigAudioMenu()
 	ImGui::SameLine();
 	ImGui::TextColored({ 255, 50, 100, 255 }, "%s", SDL_GetAudioDeviceName(App->audio->audio_device, 0));
 
+
+	//Loaded banks
+	ImGui::Separator();
+	ImGui::Text("Loaded Wwise sound banks");
+	
+	for (int i = 0; i < App->audio->loaded_banks.size();)
+	{
+		ImGui::Text("%s", App->audio->loaded_banks[i].c_str());
+		ImGui::SameLine();
+
+		if (ImGui::Button("Unload bank"))
+		{
+			App->audio->UnLoadBank(i);
+		}
+		else i++;
+	}
+
+	ImGui::Separator();
+	static char new_bank_name[51];
+	ImGui::InputText("", new_bank_name, 50);
+	ImGui::SameLine();
+	if (ImGui::Button("Load new bank"))
+	{
+		App->audio->LoadBank(new_bank_name);
+	}
+
 	/*//Change the volume
 	int volume = App->audio->GetVolume();
 	if (ImGui::SliderInt("Volume", &volume, 0, 100))

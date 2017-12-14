@@ -30,6 +30,10 @@ public:
 	bool SetListener(ComponentAudio* c);
 	void CheckIfListenerIsDeleted(ComponentAudio* c);
 
+	void LoadBank(const char* name);
+	void UnLoadBank(uint bank_index);
+	
+	std::vector <std::string> loaded_banks;
 
 private:
 

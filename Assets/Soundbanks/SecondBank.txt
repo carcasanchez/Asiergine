@@ -1,0 +1,6 @@
+Event	ID	Name			Wwise Object Path	Notes
+	3412057565	Train			\Default Work Unit\Train	
+
+In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
+	601521417	Train	C:\Users\Kay\Documents\WwiseProjects\ProyectoPrueba\.cache\Windows\SFX\Train_fx_F17FB28C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Train		3233344
+
