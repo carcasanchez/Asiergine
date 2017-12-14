@@ -25,6 +25,9 @@ public:
 	void OnEditor();
 	bool IsActive() { return active; }
 
+	uint PrepareToSave() const;
+	void Save(char *& cursor) const;
+
 private:
 	CompTransform* transform;
 

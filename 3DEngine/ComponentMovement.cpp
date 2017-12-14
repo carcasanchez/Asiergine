@@ -108,3 +108,44 @@ void ComponentMovement::OnEditor()
 		}
 	}
 }
+
+
+//-------------------------------------------------------------
+uint ComponentMovement::PrepareToSave() const
+{
+	uint size = 0;
+
+	//Point1
+	size += sizeof(float) * 3;
+	//Point2
+	size += sizeof(float) * 3;
+	//Speed
+	size += sizeof(float);
+
+	return size;
+}
+
+void ComponentMovement::Save(char *& cursor) const
+{
+	uint size_of = sizeof(float);
+
+	//Copy point1
+	memcpy(cursor, &point1.x, size_of);
+	cursor += size_of;
+	memcpy(cursor, &point1.y, size_of);
+	cursor += size_of;
+	memcpy(cursor, &point1.z, size_of);
+	cursor += size_of;
+
+	//Copy point2
+	memcpy(cursor, &point2.x, size_of);
+	cursor += size_of;
+	memcpy(cursor, &point2.y, size_of);
+	cursor += size_of;
+	memcpy(cursor, &point2.z, size_of);
+	cursor += size_of;
+
+	//Copy speed
+	memcpy(cursor, &speed, size_of);
+	cursor += size_of;
+}
