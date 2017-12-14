@@ -46,7 +46,7 @@ public:
 	ComponentCamera* CreateComponent_Camera(float near_dist, float far_dist, bool active = false, uint UID = 0);
 	ComponentLight* CreateComponent_Light(uint UID = 0);
 	ComponentAudio* CreateComponent_Audio(uint UID = 0, AUDIO_TYPE t = AUDIO_TYPE::FX);
-	ComponentMovement* CreateComponent_Movement(uint UID = 0);
+	ComponentMovement* CreateComponent_Movement(float3 point1 = float3(0, 0, 0), float3 point2 = float3(0, 0, 0), float speed = 0.001, uint UID = 0);
 
 
 	void OnEditor();

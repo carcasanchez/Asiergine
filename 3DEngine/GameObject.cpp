@@ -271,7 +271,7 @@ ComponentAudio * GameObject::CreateComponent_Audio(uint UID, AUDIO_TYPE t)
 	return new_audio;
 }
 
-ComponentMovement * GameObject::CreateComponent_Movement(uint UID)
+ComponentMovement * GameObject::CreateComponent_Movement(float3 point1, float3 point2, float speed, uint UID)
 {
 	if (GetComponentByType(COMPONENT_MOVEMENT) != nullptr)
 	{
@@ -280,6 +280,9 @@ ComponentMovement * GameObject::CreateComponent_Movement(uint UID)
 	}
 
 	ComponentMovement* new_mov = new ComponentMovement(this);
+	new_mov->SetFirstPoint(point1.x, point1.y, point1.z);
+	new_mov->SetSecondPoint(point2.x, point2.y, point2.z);
+	new_mov->SetSpeed(speed);
 
 	if (UID > 0)
 		new_mov->SetID(UID);

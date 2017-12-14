@@ -12,6 +12,7 @@
 #include "ComponentMesh.h"
 #include "ComponentLight.h"
 #include "ComponentAudio.h"
+#include "ComponentMovement.h"
 
 ModuleScene::ModuleScene(bool start_enabled) : Module(start_enabled)
 {
@@ -264,6 +265,7 @@ uint ModuleScene::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>> &b
 	//UID of camera - near dist - far dist - active
 	//UID of light
 	//UID of audio - type of audio - num of events - [event name size - event name - play parameter]
+	//UID of movement - point1 - point2 - speed
 
 	//STORE SIZE-------------------------------------------------------------------
 	uint size = 1;
@@ -322,6 +324,14 @@ uint ModuleScene::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>> &b
 	if (audio != nullptr)
 	{
 		size += audio->PrepareToSave();
+	}
+
+	//Movement
+	ComponentMovement* move = ((ComponentMovement*)to_save->GetComponentByType(COMPONENT_MOVEMENT));
+	size += sizeof(uint);
+	if (move != nullptr)
+	{
+		size += move->PrepareToSave();
 	}
 
 	//COPY DATA------------------------------------------------------
@@ -439,6 +449,19 @@ uint ModuleScene::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>> &b
 	if (audio != nullptr)
 	{
 		audio->Save(cursor);
+	}
+
+	//Copy movement
+	uint movementID = 0;
+	if (move != nullptr)
+		movementID = move->GetID();
+	size_of = sizeof(uint);
+	memcpy(cursor, &movementID, size_of);
+	cursor += size_of;
+
+	if (move != nullptr)
+	{
+		move->Save(cursor);
 	}
 
 	data[size - 1] = '\0';
@@ -570,6 +593,7 @@ uint ModuleScene::LoadObjectFromOwnFormat(char*& cursor)
 	// UID of camera - near distance - far distance
 	//UID of light
 	//UID of audio - type of audio - num of events - [event name size - event name - play parameter]
+	//UID of movement - point1 - point2 - speed
 	uint object_id = 0;
 
 	uint size_of = sizeof(uint);
@@ -774,6 +798,32 @@ uint ModuleScene::LoadObjectFromOwnFormat(char*& cursor)
 			delete[] event_name;
 		}
 
+	}
+
+	uint movement_id = 0;
+	size_of = sizeof(uint);
+	memcpy(&movement_id, cursor, size_of);
+	cursor += size_of;
+
+
+	if (movement_id != 0)
+	{
+		float point1[] = { 0, 0, 0 };
+		size_of = sizeof(float) * 3;
+		memcpy(point1, cursor, size_of);
+		cursor += size_of;
+
+		float point2[] = { 0, 0, 0 };
+		size_of = sizeof(float) * 3;
+		memcpy(point2, cursor, size_of);
+		cursor += size_of;
+
+		float speed = 0;
+		size_of = sizeof(float);
+		memcpy(&speed, cursor, size_of);
+		cursor += size_of;
+
+		new_obj->CreateComponent_Movement(float3(point1[0], point1[1], point1[2]), float3(point2[0], point2[1], point2[2]), speed, movement_id);
 	}
 
 	cursor++;
