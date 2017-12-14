@@ -23,6 +23,7 @@ enum PLAY_PARAMETER
 
 struct AudioEvent
 {
+	bool is_playing = false;
 	std::string name;
 	PLAY_PARAMETER play_parameter;
 };

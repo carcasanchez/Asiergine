@@ -34,7 +34,8 @@ public:
 	void LoadBank(const char* name);
 	void UnLoadBank(uint bank_index);
 	void UnloadAllBanks();
-	
+
+		
 	std::vector <std::string> loaded_banks;
 
 private:

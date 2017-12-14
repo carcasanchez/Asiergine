@@ -164,15 +164,15 @@ void Application::FinishUpdate()
 		frame_count = 0;
 		App->editor->calculate_fps_graph = true;
 	}
-	
-	last_frame_miliseconds = (float)ms_timer.ReadMS();
 
-	if (fps_cap > 0 && last_frame_miliseconds < ms_cap)
-	{
-		SDL_Delay(ms_cap - last_frame_miliseconds);
-	}
+last_frame_miliseconds = (float)ms_timer.ReadMS();
 
-	last_frame_miliseconds = (float)ms_timer.ReadMS();
+if (fps_cap > 0 && last_frame_miliseconds < ms_cap)
+{
+	SDL_Delay(ms_cap - last_frame_miliseconds);
+}
+
+last_frame_miliseconds = (float)ms_timer.ReadMS();
 
 
 }
@@ -183,10 +183,10 @@ update_status Application::Update()
 	update_status ret = UPDATE_CONTINUE;
 	PrepareUpdate();
 
-	
+
 	std::list<Module*>::iterator item = list_modules.begin();
-	
-	while(item != list_modules.end() && ret == UPDATE_CONTINUE)
+
+	while (item != list_modules.end() && ret == UPDATE_CONTINUE)
 	{
 		ret = (*item)->PreUpdate(real_dt, game_dt);
 		item++;
@@ -194,7 +194,7 @@ update_status Application::Update()
 
 	item = list_modules.begin();
 
-	while(item != list_modules.end() && ret == UPDATE_CONTINUE)
+	while (item != list_modules.end() && ret == UPDATE_CONTINUE)
 	{
 		ret = (*item)->Update(real_dt, game_dt);
 		item++;
@@ -202,7 +202,7 @@ update_status Application::Update()
 
 	item = list_modules.begin();
 
-	while(item != list_modules.end() && ret == UPDATE_CONTINUE)
+	while (item != list_modules.end() && ret == UPDATE_CONTINUE)
 	{
 		ret = (*item)->PostUpdate(real_dt, game_dt);
 		item++;
@@ -224,7 +224,7 @@ bool Application::CleanUp()
 	LOG("Closing Console");
 	console_on = false;
 
-	while(item != list_modules.rend() && ret == true)
+	while (item != list_modules.rend() && ret == true)
 	{
 		ret = (*item)->CleanUp();
 		item++;
@@ -247,10 +247,30 @@ void Application::SetGameSpeed(float game_speed)
 {
 	if (game_speed < 0)
 		game_speed = 0;
-	else if(game_speed >1)
+	else if (game_speed > 1)
 		game_speed = 1;
 
 	game_time_modifier = game_speed;
+}
+
+bool Application::PlayApp()
+{
+
+	running = true;
+	scene->wants_to_save = true;
+	game_time_modifier = last_game_time_modifier;
+	game_seconds = 0.0;
+	game_frames = 0;
+
+
+	for (std::list<Module*>::iterator it = list_modules.begin(); it != list_modules.end(); it++)
+	{
+		(*it)->OnPlay();
+	}
+
+	app_timer.Start();
+	return true;
+
 }
 
 //---------------------------------------------
