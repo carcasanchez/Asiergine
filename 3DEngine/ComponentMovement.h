@@ -20,6 +20,7 @@ public:
 
 	void MoveFromPointToPoint(float game_dt);
 	math::float3 GetClosestPoint();
+	void SetSpeed(float speed);
 
 	void OnEditor();
 	bool IsActive() { return active; }
@@ -29,6 +30,7 @@ private:
 
 	math::float3 point1 = math::float3(0, 0, 0);
 	math::float3 point2 = math::float3(0, 0, 0);
+	float speed = 0.0003f;
 
 	float3 closest_point = math::float3(0, 0, 0);
 
