@@ -8,8 +8,7 @@
 ComponentAudio::ComponentAudio(GameObject* g):Component(g)
 {
 	type = COMPONENT_AUDIO;
-	
-	bank_name.reserve(51);
+
 
 	CompTransform* transf = (CompTransform*)g->GetComponentByType(COMPONENT_TRANSFORM);
 	if (transf)
@@ -111,7 +110,15 @@ void ComponentAudio::SetAudioType(AUDIO_TYPE t)
 uint ComponentAudio::PrepareToSave() const
 {
 	uint size = 0;
-	size += sizeof(uint); //Type of audio
+	size += sizeof(uint) *2 ; //Type of audio & num of events
+	
+	for (int i = 0; i < events.size(); i++)
+	{
+		size += sizeof(uint); //size of the name of the event
+		size += events[i]->name.size(); //name of the event
+		size += sizeof(uint); //type of play parameter
+	}
+
 	return size;
 }
 
@@ -123,6 +130,27 @@ void ComponentAudio::Save(char *& cursor) const
 	uint size_of = sizeof(uint);
 	memcpy(cursor, &audio_t, size_of);
 	cursor += size_of;
+
+	//copy num of events
+	uint num_of_events = events.size();
+	memcpy(cursor, &num_of_events, size_of);
+	cursor += size_of;
+	for (int i = 0; i < num_of_events; i++)
+	{
+		uint name_size = events[i]->name.size();
+		size_of = events[i]->name.size();
+		memcpy(cursor, &name_size, size_of); // copy size of name of the event
+		cursor += size_of;
+
+		size_of = events[i]->name.size();
+		memcpy(cursor, events[i]->name.data(), size_of); // copy name of the event
+		cursor += size_of;
+
+		size_of = sizeof(uint); //copy type of play parameter
+		memcpy(cursor, &events[i]->play_parameter, size_of);
+		cursor += size_of;
+	}
+
 }
 
 void ComponentAudio::CreateAudioEvent(const char * name, PLAY_PARAMETER p)
@@ -186,7 +214,6 @@ void ComponentAudio::ManageEventsEditor()
 		}
 		else  i++;
 		ImGui::PopID();
-
 	}
 
 	ImGui::Separator();

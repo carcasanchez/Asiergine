@@ -263,7 +263,7 @@ uint ModuleScene::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>> &b
 	//  UID of material - size of texture name - texture name
 	//UID of camera - near dist - far dist - active
 	//UID of light
-	//UID of audio - type of audio
+	//UID of audio - type of audio - num of events - [event name size - event name - play parameter]
 
 	//STORE SIZE-------------------------------------------------------------------
 	uint size = 1;
@@ -569,6 +569,7 @@ uint ModuleScene::LoadObjectFromOwnFormat(char*& cursor)
 	//  UID of material - size of texture name - texture name
 	// UID of camera - near distance - far distance
 	//UID of light
+	//UID of audio - type of audio - num of events - [event name size - event name - play parameter]
 	uint object_id = 0;
 
 	uint size_of = sizeof(uint);
@@ -743,7 +744,36 @@ uint ModuleScene::LoadObjectFromOwnFormat(char*& cursor)
 		memcpy(&audio_type, cursor, size_of);
 		cursor += size_of;
 
-		new_obj->CreateComponent_Audio(audio_id, (AUDIO_TYPE)audio_type);
+		ComponentAudio* new_comp_audio = new_obj->CreateComponent_Audio(audio_id, (AUDIO_TYPE)audio_type);
+
+		uint num_of_events = 0;
+		size_of = sizeof(uint);
+		memcpy(&num_of_events, cursor, size_of);
+		cursor += size_of;
+
+		for (int i = 0; i < num_of_events; i++)
+		{
+			uint event_name_size = 0;
+			size_of = sizeof(uint);
+			memcpy(&event_name_size, cursor, size_of);
+			cursor += size_of;
+
+			char* event_name = new char[event_name_size + 1];
+			size_of = event_name_size;
+			memcpy(event_name, cursor, size_of);
+			cursor += size_of;
+			event_name[event_name_size] = '\0';
+
+			uint event_play_parameter = 0;
+			size_of = sizeof(uint);
+			memcpy(&event_play_parameter, cursor, size_of);
+			cursor += size_of;
+
+			new_comp_audio->CreateAudioEvent(event_name, (PLAY_PARAMETER)event_play_parameter);
+
+			delete[] event_name;
+		}
+
 	}
 
 	cursor++;

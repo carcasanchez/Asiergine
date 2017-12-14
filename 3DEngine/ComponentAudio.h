@@ -43,28 +43,24 @@ public:
 	}
 
 	void ResetComponent();
-
 	void SetAudioType(AUDIO_TYPE);
+
+	void CreateAudioEvent(const char* name, PLAY_PARAMETER);
+	void DeleteAudioEvent(uint index);
+
 
 	//Scene serialization------------------------
 	uint PrepareToSave() const;
 	void Save(char* &cursor) const;
 
 private:
-
-
-	void CreateAudioEvent(const char* name, PLAY_PARAMETER);
-	void DeleteAudioEvent(uint index);
-
 	void ManageEvents();
 	void ManageMusic();
 	void ManageEventsEditor();
 	void ManageMusicEditor();
 
 	AUDIO_TYPE  audio_type = FX;
-	std::string bank_name;
 	Wwished::SoundEmitter* emitter = nullptr;
-
 	std::vector<AudioEvent*> events;
 
 	AABB box = AABB::AABB(float3(-1.0f, -1.0f, -1.0f), float3(1.0f, 1.0f, 1.0f));

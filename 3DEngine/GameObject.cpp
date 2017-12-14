@@ -258,7 +258,7 @@ ComponentAudio * GameObject::CreateComponent_Audio(uint UID, AUDIO_TYPE t)
 		return nullptr;
 	}
 
-	ComponentAudio* ret = nullptr;
+
 	ComponentAudio* new_audio = new ComponentAudio(this);
 
 	if (UID > 0)
@@ -268,7 +268,7 @@ ComponentAudio * GameObject::CreateComponent_Audio(uint UID, AUDIO_TYPE t)
 
 	components.push_back(new_audio);
 
-	return ret;
+	return new_audio;
 }
 
 ComponentMovement * GameObject::CreateComponent_Movement(uint UID)
