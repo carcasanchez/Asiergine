@@ -117,3 +117,14 @@ void ModuleAudio::UnLoadBank(uint bank_index)
 	}
 }
 
+void ModuleAudio::UnloadAllBanks()
+{
+	for (int i = 0; i < loaded_banks.size(); i++)
+	{
+		Wwished::Utility::UnLoadBank(loaded_banks[i].c_str());
+	}
+
+	loaded_banks.clear();
+}
+
+

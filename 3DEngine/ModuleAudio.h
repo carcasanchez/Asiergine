@@ -17,6 +17,7 @@ public:
 	bool Start();
 	update_status PostUpdate(float real_dt, float game_dt);
 	bool CleanUp();
+
 		
 	
 	int audio_driver = 0;
@@ -32,6 +33,7 @@ public:
 
 	void LoadBank(const char* name);
 	void UnLoadBank(uint bank_index);
+	void UnloadAllBanks();
 	
 	std::vector <std::string> loaded_banks;
 

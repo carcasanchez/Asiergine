@@ -153,8 +153,10 @@ void ModuleScene::CleanScene()
 	root = CreateGameObject("Root");	
 	root->SetID(0);
 	App->editor->UnselectAll();
+	App->audio->UnloadAllBanks();
 }
 
+//Set the scene to its original state
 void ModuleScene::ResetScene()
 {
 		CleanScene();
@@ -162,6 +164,7 @@ void ModuleScene::ResetScene()
 		camera->CreateComponent_Camera(0.5, 5, true);
 		camera->CreateComponent_Transform();
 		App->camera->ResetCamera();
+		
 }
 
 
@@ -169,7 +172,7 @@ void ModuleScene::ResetScene()
 
 bool ModuleScene::SaveSceneToOwnFormat(const char* name)
 {
-	//DATA ORDER: tag - num objects - [object]
+	//DATA ORDER: tag - num objects - [object] - num of audio banks - [name size - bank name]
 
 	bool ret = true;
 
@@ -185,6 +188,13 @@ bool ModuleScene::SaveSceneToOwnFormat(const char* name)
 		size += SaveGameObjectToOwnFormat(object_buffers, objects_to_save[i]);
 	}
 
+	//Store size for all audio banks
+	size += sizeof(uint);
+	for (int i = 0; i < App->audio->loaded_banks.size(); i++) 
+	{
+		size += sizeof(uint);
+		size += App->audio->loaded_banks[i].size();
+	};
 
 	//Save tag
 	char* data = new char[size];
@@ -210,6 +220,26 @@ bool ModuleScene::SaveSceneToOwnFormat(const char* name)
 
 		delete[](*it).first;
 	}
+	
+
+	//Save num banks
+	uint num_banks = App->audio->loaded_banks.size();
+	size_of = sizeof(uint);
+	memcpy(cursor, &num_banks, size_of);
+	cursor += size_of;
+
+	//Save loaded audio banks
+	for (int i = 0; i < num_banks; i++)
+	{
+		size_of = sizeof(uint);
+		uint size_of_bank_name = App->audio->loaded_banks[i].size();
+		memcpy(cursor, &size_of_bank_name, size_of);
+		cursor += size_of;
+		
+		size_of = App->audio->loaded_banks[i].size();
+		memcpy(cursor, App->audio->loaded_banks[i].data(), size_of);
+		cursor += size_of;
+	};
 
 
 	std::string scenes_dir = App->fs->CreateDirectoryInAssets("Scenes");
@@ -451,7 +481,7 @@ void ModuleScene::LoadSceneFromOwnFormat(const char * name)
 	App->scene->CleanScene();
 
 	//Get data from buffer---------------
-	//DATA ORDER: tag - num objects - [object]
+	//DATA ORDER: tag - num objects - [object] - num of audio banks - [name size - bank name]
 
 	//Get tag and check that its a scene
 	char* cursor = data;
@@ -476,6 +506,33 @@ void ModuleScene::LoadSceneFromOwnFormat(const char * name)
 	for (int i = 0; i < num_objects[0]; i++)
 	{
 		LoadObjectFromOwnFormat(cursor);
+	}
+
+
+	//Load num of banks
+	uint bank_num = 0;
+	size_of = sizeof(uint);
+	memcpy(&bank_num, cursor, size_of);
+	cursor += size_of;
+
+	//Load all audio banks
+	for (int i = 0; i < bank_num; i++)
+	{
+		uint size_of_bank_name = 0;
+		size_of = sizeof(uint);
+		memcpy(&size_of_bank_name, cursor, size_of);
+		cursor += size_of;
+
+		char* bank_name = new char[size_of_bank_name+1];
+		size_of = size_of_bank_name;
+		memcpy(bank_name, cursor, size_of);
+		bank_name[size_of_bank_name] = '\0';
+		cursor += size_of;
+
+		App->audio->LoadBank(bank_name);
+		delete[] bank_name;		
+
+
 	}
 
 	//Set all parents properly
