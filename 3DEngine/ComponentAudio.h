@@ -13,6 +13,20 @@ enum AUDIO_TYPE
 	LISTENER
 };
 
+//Hardcode for demonstration purposes
+enum PLAY_PARAMETER
+{
+	WHEN_PRESS_E,
+	ON_AWAKE
+};
+
+
+struct AudioEvent
+{
+	std::string name;
+	PLAY_PARAMETER play_parameter;
+};
+
 class ComponentAudio : public Component
 {
 public:
@@ -39,15 +53,19 @@ public:
 private:
 
 
+	void CreateAudioEvent(const char* name, PLAY_PARAMETER);
+	void DeleteAudioEvent(uint index);
+
 	void ManageEvents();
 	void ManageMusic();
-
+	void ManageEventsEditor();
+	void ManageMusicEditor();
 
 	AUDIO_TYPE  audio_type = FX;
 	std::string bank_name;
 	Wwished::SoundEmitter* emitter = nullptr;
 
-	std::list<std::string> events;
+	std::vector<AudioEvent*> events;
 
 	AABB box = AABB::AABB(float3(-1.0f, -1.0f, -1.0f), float3(1.0f, 1.0f, 1.0f));
 };

@@ -21,6 +21,12 @@ ComponentAudio::ComponentAudio(GameObject* g):Component(g)
 
 ComponentAudio::~ComponentAudio()
 {
+	for (int i = 0; i < events.size(); i++)
+	{
+		delete events[i];
+	}
+
+	events.clear();
 	App->audio->CheckIfListenerIsDeleted(this);
 	App->audio->DeleteSoundEmitter(emitter);
 }
@@ -42,35 +48,10 @@ void ComponentAudio::OnEditor()
 			audio_type = MUSIC;
 	}
 
-	if (audio_type == FX && ImGui::Button("Play!"))
-	{
-		emitter->PlayEvent("Shot");
-	}
-
-
-	/*ImGui::InputText("Event Name", (char*)event_name.c_str(), 40);
-
-	if (ImGui::Button("Play!"))
-	{
-		emitter->PlayEvent(event_name.c_str());
-		music_timer.Start();
-		current_music_state = &state1_name;
-	}
-
-	if (audio_type == MUSIC)
-	{
-		if (ImGui::Button("Stop Music"))
-		{
-			emitter->PlayEvent("Stop_Music");
-		}
-
-		ImGui::InputText("Music State 1", (char*)state1_name.c_str(), 40);
-		ImGui::InputText("Music State 2", (char*)state2_name.c_str(), 40);
-		ImGui::InputFloat("Change Time", &music_change_time, 0.1, 1.0, 1);
-	}
-
-	*/
-	
+	if (audio_type == FX)
+		ManageEventsEditor();
+	else if (audio_type == MUSIC)
+		ManageMusicEditor();
 }
 
 void ComponentAudio::Update(float real_dt, float game_dt)
@@ -144,10 +125,80 @@ void ComponentAudio::Save(char *& cursor) const
 	cursor += size_of;
 }
 
+void ComponentAudio::CreateAudioEvent(const char * name, PLAY_PARAMETER p)
+{
+	AudioEvent* new_event = new AudioEvent();
+	new_event->name = name;
+	new_event->play_parameter = p;
+
+	events.push_back(new_event);
+}
+
+void ComponentAudio::DeleteAudioEvent(uint index)
+{
+
+	emitter->StopEvent(events[index]->name.c_str());
+
+	delete events[index];
+	events.erase((events.begin() + index));
+}
+
 void ComponentAudio::ManageEvents()
 {
 }
 
 void ComponentAudio::ManageMusic()
+{
+}
+
+void ComponentAudio::ManageEventsEditor()
+{
+	ImGui::Text("AudioEvents:");
+	for (int i = 0; i < events.size();)
+	{
+		ImGui::Separator();
+
+		ImGui::Text("%s", events[i]->name.c_str());
+	
+		ImGui::PushID(i);
+		if (ImGui::Button("Play"))
+		{
+			emitter->PlayEvent(events[i]->name.c_str());
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Stop"))
+		{
+			emitter->StopEvent(events[i]->name.c_str());
+		}
+		ImGui::SameLine();
+		int selected_opt = (int)events[i]->play_parameter;
+		if (ImGui::Combo("", &selected_opt, "When pressing E\0On Awake", 2))
+		{
+			if (selected_opt == 0)
+				events[i]->play_parameter = WHEN_PRESS_E;
+			else if (selected_opt == 1)
+				events[i]->play_parameter = ON_AWAKE;
+		}
+
+		if (ImGui::Button("Delete Event"))
+		{
+			DeleteAudioEvent(i);
+		}
+		else  i++;
+		ImGui::PopID();
+
+	}
+
+	ImGui::Separator();
+	static char new_event_name[51];
+	ImGui::InputText("", new_event_name, 50);
+	ImGui::SameLine();
+	if (ImGui::Button("New Event"))
+	{
+		CreateAudioEvent(new_event_name, WHEN_PRESS_E);
+	}
+}
+
+void ComponentAudio::ManageMusicEditor()
 {
 }

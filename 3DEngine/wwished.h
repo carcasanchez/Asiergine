@@ -29,6 +29,8 @@ namespace Wwished
 		void PlayEvent(unsigned long id);
 		void PlayEvent(const char* name);
 
+		void StopEvent(const char* name);
+
 
 	private:
 		AkGameObjectID EmitterID;
