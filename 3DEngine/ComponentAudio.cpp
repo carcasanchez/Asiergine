@@ -20,12 +20,7 @@ ComponentAudio::ComponentAudio(GameObject* g):Component(g)
 
 ComponentAudio::~ComponentAudio()
 {
-	for (int i = 0; i < events.size(); i++)
-	{
-		delete events[i];
-	}
-
-	events.clear();
+	DeleteAllEvents();
 	App->audio->CheckIfListenerIsDeleted(this);
 	App->audio->DeleteSoundEmitter(emitter);
 }
@@ -59,6 +54,8 @@ void ComponentAudio::Update(float real_dt, float game_dt)
 	{
 		if (audio_type == FX)
 			ManageEvents();
+		if (audio_type == MUSIC)
+			ManageMusic();
 	}
 
 	CompTransform* transf = (CompTransform*)game_object->GetComponentByType(COMPONENT_TRANSFORM);
@@ -99,6 +96,7 @@ void ComponentAudio::SetAudioType(AUDIO_TYPE t)
 	{
 		App->audio->SetListener(this);
 	}
+
 }
 
 uint ComponentAudio::PrepareToSave() const
@@ -166,6 +164,15 @@ void ComponentAudio::DeleteAudioEvent(uint index)
 	events.erase((events.begin() + index));
 }
 
+void ComponentAudio::DeleteAllEvents()
+{
+	for (int i = 0; i < events.size(); i++)
+	{
+		delete events[i];
+	}
+	events.clear();
+}
+
 void ComponentAudio::ManageEvents()
 {
 	for (int i = 0; i < events.size(); i++)
@@ -183,15 +190,40 @@ void ComponentAudio::ManageEvents()
 
 void ComponentAudio::ManageMusic()
 {
+	for (int i = 0; i < events.size(); i++)
+	{
+		if (events[i]->is_playing == false)
+		{
+			events[i]->is_playing = true;
+			events[i]->timer.Start();
+			events[i]->current_state = &events[i]->state1;
+			emitter->PlayEvent(events[i]->name.c_str());
+			App->audio->ChangeState(events[i]->state_group.c_str(), events[i]->current_state->c_str());
+		}
+		else
+		{
+			if (events[i]->timer.ReadMS()/1000 > events[i]->change_time)
+			{
+				
+				if (events[i]->current_state == &events[i]->state1)
+					events[i]->current_state = &events[i]->state2;
+				else if (events[i]->current_state == &events[i]->state2)
+					events[i]->current_state = &events[i]->state1;
+					
+				App->audio->ChangeState(events[i]->state_group.c_str(), events[i]->current_state->c_str());
+				events[i]->timer.Start();
+
+			}
+		}
+	}
 }
 
 void ComponentAudio::ManageEventsEditor()
 {
-	ImGui::Text("AudioEvents:");
+	ImGui::Text("Audio Events:");
 	for (int i = 0; i < events.size();)
 	{
 		ImGui::Separator();
-
 		ImGui::Text("%s", events[i]->name.c_str());
 	
 		ImGui::PushID(i);
@@ -204,15 +236,7 @@ void ComponentAudio::ManageEventsEditor()
 		{
 			emitter->StopEvent(events[i]->name.c_str());
 		}
-		ImGui::SameLine();
-		int selected_opt = (int)events[i]->play_parameter;
-		if (ImGui::Combo("", &selected_opt, "When pressing E\0On Awake", 2))
-		{
-			if (selected_opt == 0)
-				events[i]->play_parameter = WHEN_PRESS_E;
-			else if (selected_opt == 1)
-				events[i]->play_parameter = ON_AWAKE;
-		}
+		
 
 		if (ImGui::Button("Delete Event"))
 		{
@@ -234,4 +258,44 @@ void ComponentAudio::ManageEventsEditor()
 
 void ComponentAudio::ManageMusicEditor()
 {
+	ImGui::Text("Music Events:");
+	for (int i = 0; i < events.size();)
+	{
+		ImGui::Separator();
+		ImGui::Text("%s", events[i]->name.c_str());
+		ImGui::PushID(i);
+		if (ImGui::Button("Play"))
+		{
+			emitter->PlayEvent(events[i]->name.c_str());
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Stop"))
+		{
+			emitter->StopEvent(events[i]->name.c_str());
+		}
+		
+		//Event states
+		ImGui::InputText("State group", (char*)events[i]->state_group.c_str(), 40);
+		ImGui::InputText("State 1", (char*)events[i]->state1.c_str(), 40);
+		ImGui::InputText("State 2", (char*)events[i]->state2.c_str(), 40);
+		ImGui::InputFloat("Change time", &events[i]->change_time, 0.1, 1.0, 1);
+
+
+		if (ImGui::Button("Delete Event"))
+		{
+			DeleteAudioEvent(i);
+		}
+		else  i++;
+		ImGui::PopID();
+	}
+
+	ImGui::Separator();
+	static char new_event_name[51];
+	ImGui::InputText("", new_event_name, 50);
+	ImGui::SameLine();
+	if (ImGui::Button("New Event"))
+	{
+		CreateAudioEvent(new_event_name, WHEN_PRESS_E);
+	}
+
 }
