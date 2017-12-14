@@ -507,8 +507,7 @@ void ModuleScene::LoadSceneFromOwnFormat(const char * name)
 	{
 		LoadObjectFromOwnFormat(cursor);
 	}
-
-
+	
 	//Load num of banks
 	uint bank_num = 0;
 	size_of = sizeof(uint);
@@ -531,8 +530,6 @@ void ModuleScene::LoadSceneFromOwnFormat(const char * name)
 
 		App->audio->LoadBank(bank_name);
 		delete[] bank_name;		
-
-
 	}
 
 	//Set all parents properly

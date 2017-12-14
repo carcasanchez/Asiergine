@@ -992,12 +992,13 @@ void ModuleEditor::ConfigAudioMenu()
 	{
 		ImGui::Text("%s", App->audio->loaded_banks[i].c_str());
 		ImGui::SameLine();
-
+		ImGui::PushID(i);
 		if (ImGui::Button("Unload bank"))
 		{
 			App->audio->UnLoadBank(i);
 		}
 		else i++;
+		ImGui::PopID();
 	}
 
 	ImGui::Separator();

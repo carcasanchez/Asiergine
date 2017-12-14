@@ -113,7 +113,7 @@ void ModuleAudio::UnLoadBank(uint bank_index)
 	}
 	else
 	{
-		loaded_banks.erase(loaded_banks.begin() + bank_index);
+		loaded_banks.erase((loaded_banks.begin() + bank_index));
 	}
 }
 
