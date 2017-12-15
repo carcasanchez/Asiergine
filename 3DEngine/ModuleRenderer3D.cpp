@@ -178,6 +178,9 @@ update_status ModuleRenderer3D::PostUpdate(float real_dt, float game_dt)
 	//Draw Geometries
 	DrawGeometry();
 
+	//Draw gizmo spheres
+	DrawSpheres();
+
 
 	//Draw Debug Axis
 	glLineWidth(3.f);
@@ -267,6 +270,11 @@ bool ModuleRenderer3D::SaveConfig(JSON_Object* config_data)
 void ModuleRenderer3D::SetMeshToDraw(ComponentMesh * m)
 {
 	meshes_to_draw.push(m);
+}
+
+void ModuleRenderer3D::SetSphereToDraw(math::Sphere s)
+{
+	spheres_to_draw.push(s);
 }
 
 void ModuleRenderer3D::DrawGeometry()
@@ -401,6 +409,35 @@ void ModuleRenderer3D::DrawCameraFrustums()
 
 		frustums_to_draw.pop();
 	}
+}
+
+void ModuleRenderer3D::DrawSpheres()
+{
+	glColor3f(2.0f, 2.0f, 2.0f);
+	glLineWidth(3.0f);
+
+	while (spheres_to_draw.empty() == false)
+	{		
+		float radius = spheres_to_draw.front().r;
+		float3 pos = spheres_to_draw.front().pos;
+		float degInRad = 360.0f / 12;
+		degInRad *= DEGTORAD;
+		glBegin(GL_LINE_LOOP);
+		for (unsigned int i = 0; i < 12; i++)
+			glVertex3f(cos(degInRad * i) * radius + pos.x, pos.y, sin(degInRad * i) * radius + pos.z);
+		glEnd();
+		glBegin(GL_LINE_LOOP);
+		for (unsigned int i = 0; i < 12; i++)
+			glVertex3f(cos(degInRad * i) * radius + pos.x, sin(degInRad * i) * radius +pos.y, pos.z);
+		glEnd();
+		glBegin(GL_LINE_LOOP);
+		for (unsigned int i = 0; i < 12; i++)
+			glVertex3f(pos.x, sin(degInRad * i) * radius + pos.y, cos(degInRad * i) * radius + pos.z);
+		glEnd();
+
+		spheres_to_draw.pop();
+	}
+	glLineWidth(1.0f);
 }
 
 void ModuleRenderer3D::RenderLights()

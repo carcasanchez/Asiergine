@@ -27,7 +27,7 @@ bool ModuleResourceManager::Init(const JSON_Object* config_data)
 
 bool ModuleResourceManager::Start()
 {
-	//ReimportAllAssets();
+	ReimportAllAssets();
 	return true;
 }
 
@@ -486,6 +486,19 @@ void ModuleResourceManager::ReimportAllAssets()
 			continue;
 
 		ImportTexture(it.path().string().c_str(), true);
+	}
+
+
+	//Reimport soundbanks
+	std::string audio_asset_directory = App->fs->GetAssetDirectory();
+	std::string audio_library = App->fs->CreateDirectoryInLibrary("Soundbanks");
+	audio_asset_directory += "Soundbanks/";
+	for (std::experimental::filesystem::recursive_directory_iterator::value_type it : std::experimental::filesystem::recursive_directory_iterator(audio_asset_directory.c_str()))
+	{
+		std::string filename = std::experimental::filesystem::path(it.path().string().c_str()).filename().string().c_str();
+
+		App->fs->CloneFile(it.path().string().c_str(), (audio_library + filename).c_str());
+		
 	}
 }
 

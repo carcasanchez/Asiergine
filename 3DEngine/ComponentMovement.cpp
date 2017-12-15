@@ -95,7 +95,7 @@ void ComponentMovement::OnEditor()
 
 		ImGui::TextWrapped("Speed:");
 		ImGui::SameLine();
-		if (ImGui::DragFloat("  ", &speed_force, speed_drag_speed, 0.0f,1.0f,"%.3f",100.f) && GetGameObject()->IsStatic() == false)
+		if (ImGui::DragFloat("  ", &speed_force, speed_drag_speed, 0.0f,1.0f,"%.5f",100.f) && GetGameObject()->IsStatic() == false)
 		{
 			SetSpeed(speed_force);
 		}

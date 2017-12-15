@@ -27,6 +27,7 @@ ComponentAudio::~ComponentAudio()
 
 void ComponentAudio::OnEditor()
 {
+	
 
 	int selected_opt = audio_type;
 	if (ImGui::Combo("Audio type", &selected_opt, "FX\0Music\0Listener", 3))
@@ -68,12 +69,12 @@ void ComponentAudio::Update(float real_dt, float game_dt)
 		float3 front = rot.Transform(float3(0, 0, 1));
 
 		up.Normalize();
-		front.Normalize();
-
 		emitter->SetPosition(-pos.x, pos.y, pos.z, -front.x, front.y, front.z, -up.x, up.y, up.z);
 
 		box.minPoint = transf->GetTranslation() - float3(1, 1, 1);
 		box.maxPoint = transf->GetTranslation() + float3(1, 1, 1);
+
+		App->renderer3D->SetSphereToDraw(math::Sphere(pos, 1.5));
 	}
 
 	if (App->scene->debug_boxes)
@@ -276,6 +277,16 @@ void ComponentAudio::ManageEventsEditor()
 		if (ImGui::Button("Stop"))
 		{
 			emitter->StopEvent(events[i]->name.c_str());
+		}
+
+		ImGui::SameLine();
+		int selected_opt = (int)events[i]->play_parameter;
+		if (ImGui::Combo("", &selected_opt, "When pressing E\0On Awake", 2))
+		{
+			if (selected_opt == 0)
+				events[i]->play_parameter = WHEN_PRESS_E;
+			else if (selected_opt == 1)
+				events[i]->play_parameter = ON_AWAKE;
 		}
 		
 
