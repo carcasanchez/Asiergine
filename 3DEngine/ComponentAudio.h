@@ -85,6 +85,7 @@ private:
 	Wwished::SoundEmitter* emitter = nullptr;
 	std::vector<AudioEvent*> events;
 	float volume = 50.0f;
+	float pitch = 0.0f;
 
 	AABB box = AABB::AABB(float3(-2.0f, -2.0f, -2.0f), float3(2.0f, 2.0f, 2.0f));
 };

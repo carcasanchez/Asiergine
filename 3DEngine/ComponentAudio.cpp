@@ -262,6 +262,24 @@ void ComponentAudio::ManageMusic()
 
 void ComponentAudio::ManageEventsEditor()
 {
+
+	if (ImGui::SliderFloat("Volume", &volume, 0.0f, 100.0f, "%.1f"))
+	{
+		App->audio->ChangeObjVolume(volume, emitter->GetID());
+	}
+
+	if (ImGui::SliderFloat("Pitch", &pitch, -10.0f, 10.0f, "%.1f"))
+	{
+		App->audio->ChangeObjPitch(pitch, emitter->GetID());
+	}
+	
+	ImGui::SameLine();
+	if (ImGui::Button("Reset"))
+	{
+		pitch = 0.0;
+		App->audio->ChangeObjPitch(pitch, emitter->GetID());
+	}
+
 	ImGui::Text("Audio Events:");
 	for (int i = 0; i < events.size();)
 	{
@@ -288,11 +306,7 @@ void ComponentAudio::ManageEventsEditor()
 			else if (selected_opt == 1)
 				events[i]->play_parameter = ON_AWAKE;
 		}
-
-		if (ImGui::SliderFloat("Volume", &volume, 0.0f, 100.0f, "%.1f"))
-		{
-			App->audio->ChangeObjVolume(volume, emitter->GetID());
-		}		
+	
 
 		if (ImGui::Button("Delete Event"))
 		{

@@ -143,4 +143,12 @@ void ModuleAudio::ChangeObjVolume(float volume, unsigned long obj_id)
 
 }
 
+void ModuleAudio::ChangeObjPitch(float pitch, unsigned long obj_id)
+{
+	Wwished::Utility::SetRTPCValue("Pitch", pitch, obj_id);
+
+}
+
+
+
 

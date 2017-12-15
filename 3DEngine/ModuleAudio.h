@@ -38,6 +38,7 @@ public:
 	void StopSounds();
 	void ChangeVolume(float volume);
 	void ChangeObjVolume(float volume, unsigned long obj_id);
+	void ChangeObjPitch(float pitch, unsigned long obj_id);
 		
 	std::vector <std::string> loaded_banks;
 

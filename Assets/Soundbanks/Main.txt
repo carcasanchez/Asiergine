@@ -5,7 +5,9 @@ Event	ID	Name			Wwise Object Path	Notes
 	3412057565	Train			\Default Work Unit\Train	
 
 Game Parameter	ID	Name			Wwise Object Path	Notes
+	191401384	MaxDistanceAttenuation			\Default Work Unit\MaxDistanceAttenuation	
 	421429125	GeneralVolume			\Default Work Unit\GeneralVolume	
+	1908158473	Pitch			\Default Work Unit\Pitch	
 
 In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
 	8751515	Polvos_mañaneros	C:\Users\Kay\Documents\WwiseProjects\ProyectoPrueba\.cache\Windows\SFX\Polvos_mañaneros_F17FB28C.wem		\Interactive Music Hierarchy\Default Work Unit\music1\music1_battle\battle_base\Polvos_mañaneros		39347776
