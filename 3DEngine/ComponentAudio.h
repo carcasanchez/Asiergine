@@ -29,15 +29,18 @@ public:
 		state_group.reserve(41);
 		state1.reserve(41);
 		state2.reserve(41);
+		state_group = "";
+		state1 = "";
+		state2 = "";
 	};
 
 	bool is_playing = false;
 	std::string name;
 	PLAY_PARAMETER play_parameter;
 
-	std::string state_group = "none";
-	std::string state1 = "none";
-	std::string state2 = "none";
+	std::string state_group;
+	std::string state1;
+	std::string state2;
 	float change_time = 0.0;
 
 	std::string* current_state = nullptr;
@@ -63,7 +66,7 @@ public:
 	void ResetComponent();
 	void SetAudioType(AUDIO_TYPE);
 
-	void CreateAudioEvent(const char* name, PLAY_PARAMETER);
+	AudioEvent* CreateAudioEvent(const char* name, PLAY_PARAMETER);
 	void DeleteAudioEvent(uint index);
 	void DeleteAllEvents();
 
@@ -80,10 +83,6 @@ private:
 	AUDIO_TYPE  audio_type = FX;
 	Wwished::SoundEmitter* emitter = nullptr;
 	std::vector<AudioEvent*> events;
-
-	std::string state1;
-	std::string state2;
-
 
 	AABB box = AABB::AABB(float3(-1.0f, -1.0f, -1.0f), float3(1.0f, 1.0f, 1.0f));
 };

@@ -109,6 +109,14 @@ uint ComponentAudio::PrepareToSave() const
 		size += sizeof(uint); //size of the name of the event
 		size += events[i]->name.size(); //name of the event
 		size += sizeof(uint); //type of play parameter
+
+		size += sizeof(uint); //size of state_group name
+		size += events[i]->state_group.size(); //state group
+		size += sizeof(uint); //size of state_1 name
+		size += events[i]->state1.size(); //state 1
+		size += sizeof(uint); //size of state_2 name
+		size += events[i]->state2.size(); //state 2
+		size += sizeof(float); //change time
 	}
 
 	return size;
@@ -142,17 +150,50 @@ void ComponentAudio::Save(char *& cursor) const
 		size_of = sizeof(uint); //copy type of play parameter
 		memcpy(cursor, &play_param, size_of);
 		cursor += size_of;
+
+		//state group
+		uint state_group_size = events[i]->state_group.length();
+		size_of = sizeof(uint); 
+		memcpy(cursor, &state_group_size, size_of);
+		cursor += size_of;
+		size_of = state_group_size;
+		memcpy(cursor, events[i]->state_group.c_str(), size_of);
+		cursor += size_of;
+
+		//state1
+		uint state_1_size = events[i]->state1.length();
+		size_of = sizeof(uint);
+		memcpy(cursor, &state_1_size, size_of);
+		cursor += size_of;
+		size_of = state_1_size;
+		memcpy(cursor, events[i]->state1.c_str(), size_of);
+		cursor += size_of;
+
+		//state2
+		uint state_2_size = events[i]->state2.length();
+		size_of = sizeof(uint);
+		memcpy(cursor, &state_2_size, size_of);
+		cursor += size_of;
+		size_of = state_2_size;
+		memcpy(cursor, events[i]->state2.c_str(), size_of);
+		cursor += size_of;
+
+		//change time
+		size_of = sizeof(float);
+		memcpy(cursor, &events[i]->change_time, size_of);
+		cursor += size_of;
 	}
 
 }
 
-void ComponentAudio::CreateAudioEvent(const char * name, PLAY_PARAMETER p)
+AudioEvent* ComponentAudio::CreateAudioEvent(const char * name, PLAY_PARAMETER p)
 {
 	AudioEvent* new_event = new AudioEvent();
 	new_event->name = name;
 	new_event->play_parameter = p;
 
 	events.push_back(new_event);
+	return new_event;
 }
 
 void ComponentAudio::DeleteAudioEvent(uint index)
@@ -273,12 +314,31 @@ void ComponentAudio::ManageMusicEditor()
 		{
 			emitter->StopEvent(events[i]->name.c_str());
 		}
-		
+
+
+		char* state_group = new char[41];
+		char* state_1 = new char[41];
+		char* state_2= new char[41];
+
+		std::copy(events[i]->state_group.begin(), events[i]->state_group.end(), state_group);
+		state_group[events[i]->state_group.length()] = '\0';
+		std::copy(events[i]->state1.begin(), events[i]->state1.end(), state_1);
+		state_1[events[i]->state1.length()] = '\0';
+		std::copy(events[i]->state2.begin(), events[i]->state2.end(), state_2);
+		state_2[events[i]->state2.length()] = '\0';
+
 		//Event states
-		ImGui::InputText("State group", (char*)events[i]->state_group.c_str(), 40);
-		ImGui::InputText("State 1", (char*)events[i]->state1.c_str(), 40);
-		ImGui::InputText("State 2", (char*)events[i]->state2.c_str(), 40);
+		ImGui::InputText("State group", state_group, 40);
+		ImGui::InputText("State 1", state_1, 40);
+		ImGui::InputText("State 2", state_2, 40);
 		ImGui::InputFloat("Change time", &events[i]->change_time, 0.1, 1.0, 1);
+		events[i]->state_group = state_group;
+		events[i]->state1 = state_1;
+		events[i]->state2 = state_2;
+
+		delete[] state_group;
+		delete[] state_1;
+		delete[] state_2;
 
 
 		if (ImGui::Button("Delete Event"))

@@ -793,9 +793,54 @@ uint ModuleScene::LoadObjectFromOwnFormat(char*& cursor)
 			memcpy(&event_play_parameter, cursor, size_of);
 			cursor += size_of;
 
-			new_comp_audio->CreateAudioEvent(event_name, (PLAY_PARAMETER)event_play_parameter);
+			AudioEvent* new_ev = new_comp_audio->CreateAudioEvent(event_name, (PLAY_PARAMETER)event_play_parameter);
+
+			//state group
+			uint stat_name_size = 0;
+			size_of = sizeof(uint);
+			memcpy(&stat_name_size, cursor, size_of);
+			cursor += size_of;
+			char* stat_group_name = new char[stat_name_size + 1];
+			size_of = stat_name_size;
+			memcpy(stat_group_name, cursor, size_of);
+			cursor += size_of;
+			stat_group_name[stat_name_size] = '\0';
+
+			//state1
+			size_of = sizeof(uint);
+			memcpy(&stat_name_size, cursor, size_of);
+			cursor += size_of;
+			char* state_1 = new char[stat_name_size + 1];
+			size_of = stat_name_size;
+			memcpy(state_1, cursor, size_of);
+			cursor += size_of;
+			state_1[stat_name_size] = '\0';
+
+			//state2
+			size_of = sizeof(uint);
+			memcpy(&stat_name_size, cursor, size_of);
+			cursor += size_of;
+			char* state_2 = new char[stat_name_size + 1];
+			size_of = stat_name_size;
+			memcpy(state_2, cursor, size_of);
+			cursor += size_of;
+			state_2[stat_name_size] = '\0';
+
+			//change time
+			float change_time = 0.0;
+			size_of = sizeof(float);
+			memcpy(&change_time, cursor, size_of);
+			cursor += size_of;
+			
+			new_ev->state_group = stat_group_name;
+			new_ev->state1 = state_1;
+			new_ev->state2 = state_2;
+			new_ev->change_time = change_time;
 
 			delete[] event_name;
+			delete[] stat_group_name;
+			delete[] state_1;
+			delete[] state_2;
 		}
 
 	}
