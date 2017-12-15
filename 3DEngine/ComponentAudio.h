@@ -41,7 +41,8 @@ public:
 	std::string state_group;
 	std::string state1;
 	std::string state2;
-	float change_time = 0.0;
+	float change_time = 0.0f;
+
 
 	std::string* current_state = nullptr;
 	Timer timer;
@@ -83,6 +84,7 @@ private:
 	AUDIO_TYPE  audio_type = FX;
 	Wwished::SoundEmitter* emitter = nullptr;
 	std::vector<AudioEvent*> events;
+	float volume = 50.0f;
 
 	AABB box = AABB::AABB(float3(-2.0f, -2.0f, -2.0f), float3(2.0f, 2.0f, 2.0f));
 };

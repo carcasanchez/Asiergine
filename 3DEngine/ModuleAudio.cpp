@@ -132,4 +132,15 @@ void ModuleAudio::StopSounds()
 	Wwished::Utility::StopAllSounds();
 }
 
+void ModuleAudio::ChangeVolume(float volume)
+{
+	Wwished::Utility::SetRTPCValue("GeneralVolume", volume);
+}
+
+void ModuleAudio::ChangeObjVolume(float volume, unsigned long obj_id)
+{
+	Wwished::Utility::SetRTPCValue("GeneralVolume", volume, obj_id);
+
+}
+
 

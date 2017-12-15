@@ -45,19 +45,5 @@
 				</File>
 			</IncludedMemoryFiles>
 		</SoundBank>
-		<SoundBank Id="3649342871" Language="SFX">
-			<ObjectPath>\SoundBanks\Default Work Unit\SecondBank</ObjectPath>
-			<ShortName>SecondBank</ShortName>
-			<Path>SecondBank.bnk</Path>
-			<IncludedEvents>
-				<Event Id="3412057565" Name="Train" ObjectPath="\Events\Default Work Unit\Train"/>
-			</IncludedEvents>
-			<IncludedMemoryFiles>
-				<File Id="601521417" Language="SFX">
-					<ShortName>Train_fx.wav</ShortName>
-					<Path>SFX\Train_fx_F17FB28C.wem</Path>
-				</File>
-			</IncludedMemoryFiles>
-		</SoundBank>
 	</SoundBanks>
 </SoundBanksInfo>

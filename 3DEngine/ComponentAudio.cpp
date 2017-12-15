@@ -288,7 +288,11 @@ void ComponentAudio::ManageEventsEditor()
 			else if (selected_opt == 1)
 				events[i]->play_parameter = ON_AWAKE;
 		}
-		
+
+		if (ImGui::SliderFloat("Volume", &volume, 0.0f, 100.0f, "%.1f"))
+		{
+			App->audio->ChangeObjVolume(volume, emitter->GetID());
+		}		
 
 		if (ImGui::Button("Delete Event"))
 		{
@@ -310,6 +314,11 @@ void ComponentAudio::ManageEventsEditor()
 
 void ComponentAudio::ManageMusicEditor()
 {
+	if (ImGui::SliderFloat("Volume", &volume, 0.0f, 100.0f, "%.1f"))
+	{
+		App->audio->ChangeObjVolume(volume, emitter->GetID());
+	}
+
 	ImGui::Text("Music Events:");
 	for (int i = 0; i < events.size();)
 	{

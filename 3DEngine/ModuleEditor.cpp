@@ -983,6 +983,11 @@ void ModuleEditor::ConfigAudioMenu()
 	ImGui::SameLine();
 	ImGui::TextColored({ 255, 50, 100, 255 }, "%s", SDL_GetAudioDeviceName(App->audio->audio_device, 0));
 
+	//Loaded banks
+	ImGui::Separator();
+	static float volume = 50.0;
+	if (ImGui::SliderFloat("Volume", &volume, 0.0f, 100.0f, "%.1f"))
+		App->audio->ChangeVolume(volume);
 
 	//Loaded banks
 	ImGui::Separator();

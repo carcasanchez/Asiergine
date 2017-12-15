@@ -187,6 +187,11 @@ void Wwished::Utility::StopAllSounds()
 	AK::SoundEngine::StopAll();
 }
 
+void Wwished::Utility::SetRTPCValue(const char * name, float value, AkGameObjectID id)
+{
+	AK::SoundEngine::SetRTPCValue(name, (AkRtpcValue)value, id);
+}
+
 
 
 // SoundEmitter class methods -------------------------------------------------
