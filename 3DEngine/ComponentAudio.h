@@ -58,8 +58,8 @@ public:
 	void OnEditor();
 
 	void Update(float real_dt, float game_dt);
-	AABB GetBox() { return box; }
-	unsigned long GetEmitterID()
+	AABB GetBox() { return box; } const
+	unsigned long GetEmitterID() const
 	{
 		return emitter ?  emitter->GetID() :  0;
 	}
@@ -74,6 +74,9 @@ public:
 	//Scene serialization------------------------
 	uint PrepareToSave() const;
 	void Save(char* &cursor) const;
+
+	void ChangeVolume(float volume);
+	void ChangePitch(float pitch);
 
 private:
 	void ManageEvents();

@@ -985,7 +985,7 @@ void ModuleEditor::ConfigAudioMenu()
 
 	//Loaded banks
 	ImGui::Separator();
-	static float volume = 50.0;
+	float volume = App->audio->GetVolume();
 	if (ImGui::SliderFloat("Volume", &volume, 0.0f, 100.0f, "%.1f"))
 		App->audio->ChangeVolume(volume);
 

@@ -173,7 +173,7 @@ void ModuleScene::ResetScene()
 
 bool ModuleScene::SaveSceneToOwnFormat(const char* name)
 {
-	//DATA ORDER: tag - num objects - [object] - num of audio banks - [name size - bank name]
+	//DATA ORDER: tag - num objects - [object] - num of audio banks - [name size - bank name] - scene volume
 
 	bool ret = true;
 
@@ -196,6 +196,8 @@ bool ModuleScene::SaveSceneToOwnFormat(const char* name)
 		size += sizeof(uint);
 		size += App->audio->loaded_banks[i].size();
 	};
+
+	size += sizeof(float);
 
 	//Save tag
 	char* data = new char[size];
@@ -242,6 +244,12 @@ bool ModuleScene::SaveSceneToOwnFormat(const char* name)
 		cursor += size_of;
 	};
 
+	//Save volume
+	float volume = App->audio->GetVolume();
+	size_of = sizeof(float);
+	memcpy(cursor, &volume, size_of);
+	cursor += size_of;
+
 
 	std::string scenes_dir = App->fs->CreateDirectoryInAssets("Scenes");
 	scenes_dir += name;
@@ -264,7 +272,7 @@ uint ModuleScene::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>> &b
 	//  UID of material - size of texture name - texture name
 	//UID of camera - near dist - far dist - active
 	//UID of light
-	//UID of audio - type of audio - num of events - [event name size - event name - play parameter]
+	//UID of audio - type of audio - volume - pitch - num of events - [event name size - event name - play parameter]
 	//UID of movement - point1 - point2 - speed
 
 	//STORE SIZE-------------------------------------------------------------------
@@ -504,7 +512,7 @@ void ModuleScene::LoadSceneFromOwnFormat(const char * name)
 	App->scene->CleanScene();
 
 	//Get data from buffer---------------
-	//DATA ORDER: tag - num objects - [object] - num of audio banks - [name size - bank name]
+	//DATA ORDER: tag - num objects - [object] - num of audio banks - [name size - bank name] - scene volume
 
 	//Get tag and check that its a scene
 	char* cursor = data;
@@ -555,6 +563,13 @@ void ModuleScene::LoadSceneFromOwnFormat(const char * name)
 		delete[] bank_name;		
 	}
 
+	//Load scene volume
+	float volume = 0;
+	size_of = sizeof(float);
+	memcpy(&volume, cursor, size_of);
+	cursor += size_of;
+	App->audio->ChangeVolume(volume);
+
 	//Set all parents properly
 	std::vector<GameObject*> objects_in_scene = App->scene->root->GetChildrens();
 	for (int i = 0; i < objects_in_scene.size(); i++)
@@ -592,7 +607,7 @@ uint ModuleScene::LoadObjectFromOwnFormat(char*& cursor)
 	//  UID of material - size of texture name - texture name
 	// UID of camera - near distance - far distance
 	//UID of light
-	//UID of audio - type of audio - num of events - [event name size - event name - play parameter]
+	//UID of audio - type of audio - volume - pitch - num of events - [event name size - event name - play parameter]
 	//UID of movement - point1 - point2 - speed
 	uint object_id = 0;
 
@@ -769,6 +784,18 @@ uint ModuleScene::LoadObjectFromOwnFormat(char*& cursor)
 		cursor += size_of;
 
 		ComponentAudio* new_comp_audio = new_obj->CreateComponent_Audio(audio_id, (AUDIO_TYPE)audio_type);
+
+		float volume = 0;
+		size_of = sizeof(float);
+		memcpy(&volume, cursor, size_of);
+		cursor += size_of;
+		new_comp_audio->ChangeVolume(volume);
+		
+		float pitch = 0;
+		size_of = sizeof(float);
+		memcpy(&pitch, cursor, size_of);
+		cursor += size_of;
+		new_comp_audio->ChangePitch(pitch);
 
 		uint num_of_events = 0;
 		size_of = sizeof(uint);

@@ -18,20 +18,17 @@ ModuleAudio::~ModuleAudio()
 // Called before render is available
 bool ModuleAudio::Init(const JSON_Object* config_data)
 {
-	LOG("Loading Wwished library");
-
-	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;	
-	std::wstring base_path = converter.from_bytes((App->fs->GetAssetDirectory() + "Soundbanks/").c_str());
-
-	bool ret = Wwished::InitWwished(base_path.c_str(), "English(US)");
-
-		
-	return ret;
+	
+	return true;
 }
 
 bool ModuleAudio::Start()
 {
+	LOG("Loading Wwished library");
 	
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+	std::wstring base_path = converter.from_bytes((App->fs->GetLibraryDirectory() + "Soundbanks/").c_str());
+	Wwished::InitWwished(base_path.c_str(), "English(US)");
 	return true;
 }
 
@@ -132,8 +129,9 @@ void ModuleAudio::StopSounds()
 	Wwished::Utility::StopAllSounds();
 }
 
-void ModuleAudio::ChangeVolume(float volume)
+void ModuleAudio::ChangeVolume(float vol)
 {
+	volume = vol;
 	Wwished::Utility::SetRTPCValue("GeneralVolume", volume);
 }
 
@@ -146,7 +144,6 @@ void ModuleAudio::ChangeObjVolume(float volume, unsigned long obj_id)
 void ModuleAudio::ChangeObjPitch(float pitch, unsigned long obj_id)
 {
 	Wwished::Utility::SetRTPCValue("Pitch", pitch, obj_id);
-
 }
 
 

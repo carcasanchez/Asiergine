@@ -27,8 +27,6 @@ ComponentAudio::~ComponentAudio()
 
 void ComponentAudio::OnEditor()
 {
-	
-
 	int selected_opt = audio_type;
 	if (ImGui::Combo("Audio type", &selected_opt, "FX\0Music\0Listener", 3))
 	{
@@ -104,6 +102,8 @@ uint ComponentAudio::PrepareToSave() const
 {
 	uint size = 0;
 	size += sizeof(uint) *2 ; //Type of audio & num of events
+
+	size += sizeof(float) *2; //Volume and pitch
 	
 	for (int i = 0; i < events.size(); i++)
 	{
@@ -130,6 +130,16 @@ void ComponentAudio::Save(char *& cursor) const
 	//copy type of audio
 	uint size_of = sizeof(uint);
 	memcpy(cursor, &audio_t, size_of);
+	cursor += size_of;
+
+	//copy volume
+	size_of = sizeof(float);
+	memcpy(cursor, &volume, size_of);
+	cursor += size_of;
+
+	//copy pitch
+	size_of = sizeof(float);
+	memcpy(cursor, &pitch, size_of);
 	cursor += size_of;
 
 	//copy num of events
@@ -185,6 +195,18 @@ void ComponentAudio::Save(char *& cursor) const
 		cursor += size_of;
 	}
 
+}
+
+void ComponentAudio::ChangeVolume(float volume)
+{
+	this->volume = volume;
+	App->audio->ChangeObjVolume(volume, emitter->GetID());
+}
+
+void ComponentAudio::ChangePitch(float pitch)
+{
+	this->pitch = pitch;
+	App->audio->ChangeObjPitch(pitch, emitter->GetID());
 }
 
 AudioEvent* ComponentAudio::CreateAudioEvent(const char * name, PLAY_PARAMETER p)
@@ -265,12 +287,12 @@ void ComponentAudio::ManageEventsEditor()
 
 	if (ImGui::SliderFloat("Volume", &volume, 0.0f, 100.0f, "%.1f"))
 	{
-		App->audio->ChangeObjVolume(volume, emitter->GetID());
+		ChangeVolume(volume);
 	}
 
 	if (ImGui::SliderFloat("Pitch", &pitch, -10.0f, 10.0f, "%.1f"))
 	{
-		App->audio->ChangeObjPitch(pitch, emitter->GetID());
+		ChangePitch(pitch);
 	}
 	
 	ImGui::SameLine();
@@ -330,7 +352,7 @@ void ComponentAudio::ManageMusicEditor()
 {
 	if (ImGui::SliderFloat("Volume", &volume, 0.0f, 100.0f, "%.1f"))
 	{
-		App->audio->ChangeObjVolume(volume, emitter->GetID());
+		ChangeVolume(volume);
 	}
 
 	ImGui::Text("Music Events:");

@@ -36,6 +36,7 @@ public:
 	void UnloadAllBanks();
 
 	void StopSounds();
+	float GetVolume() const { return volume; }
 	void ChangeVolume(float volume);
 	void ChangeObjVolume(float volume, unsigned long obj_id);
 	void ChangeObjPitch(float pitch, unsigned long obj_id);
@@ -48,6 +49,8 @@ private:
 		
 	std::list <Wwished::SoundEmitter*> sound_emitters;
 	unsigned long last_go_id = 1;
+
+	float volume = 50.0;
 
 };
 
