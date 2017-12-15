@@ -127,4 +127,9 @@ void ModuleAudio::UnloadAllBanks()
 	loaded_banks.clear();
 }
 
+void ModuleAudio::StopSounds()
+{
+	Wwished::Utility::StopAllSounds();
+}
+
 

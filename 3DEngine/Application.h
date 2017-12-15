@@ -82,15 +82,8 @@ public:
 	bool PlayApp();
 	
 
-	bool StopApp()
-	{
-		running = false;
-		paused = false;
-		last_game_time_modifier = 1;
-		game_time_modifier = 0;
-		scene->wants_to_load = true;
-		return true;
-	}
+	bool StopApp();
+
 
 	void PauseApp()
 	{

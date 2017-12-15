@@ -273,6 +273,17 @@ bool Application::PlayApp()
 
 }
 
+bool Application::StopApp()
+{
+	running = false;
+	paused = false;
+	last_game_time_modifier = 1;
+	game_time_modifier = 0;
+	scene->wants_to_load = true;
+	App->audio->StopSounds();
+	return true;
+}
+
 //---------------------------------------------
 
 bool Application::SaveConfig()

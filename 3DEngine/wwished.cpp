@@ -182,6 +182,11 @@ void Wwished::Utility::ChangeState(const char* group, const char* new_state)
 	AK::SoundEngine::SetState(group, new_state);
 }
 
+void Wwished::Utility::StopAllSounds()
+{
+	AK::SoundEngine::StopAll();
+}
+
 
 
 // SoundEmitter class methods -------------------------------------------------

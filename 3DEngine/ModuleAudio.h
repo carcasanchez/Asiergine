@@ -35,6 +35,8 @@ public:
 	void UnLoadBank(uint bank_index);
 	void UnloadAllBanks();
 
+	void StopSounds();
+
 		
 	std::vector <std::string> loaded_banks;
 
