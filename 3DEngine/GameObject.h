@@ -10,6 +10,7 @@ class ComponentMaterial;
 class ComponentCamera;
 class ComponentLight;
 class ComponentMovement;
+class ComponentReverb;
 
 class ResourceMesh;
 class ResourceTexture;
@@ -47,6 +48,7 @@ public:
 	ComponentLight* CreateComponent_Light(uint UID = 0);
 	ComponentAudio* CreateComponent_Audio(uint UID = 0, AUDIO_TYPE t = AUDIO_TYPE::FX);
 	ComponentMovement* CreateComponent_Movement(float3 point1 = float3(0, 0, 0), float3 point2 = float3(0, 0, 0), float speed = 0.001, uint UID = 0);
+	ComponentReverb* CreateComponent_Reverb(uint UID = 0);
 
 
 	void OnEditor();

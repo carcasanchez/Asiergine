@@ -30,6 +30,7 @@ public:
 	void SetSphereToDraw(math::Sphere);
 	void SetBoxToDraw(math::AABB);
 	void SetBoxToDraw(math::Frustum*);
+	void SetBoxToDraw(math::OBB);
 	void SendQuadTreeGameObjectsToPaint(QuadTreeNodeObj* node);
 	void SetLightToRender(Light* l);
 
@@ -62,10 +63,12 @@ private:
 	std::queue<math::AABB> boxes_to_draw;
 	std::queue<math::Frustum*> frustums_to_draw;
 	std::queue<math::Sphere> spheres_to_draw;
+	std::queue<math::OBB> obbs_to_draw;
 
 	std::queue<Light*> lights_to_render;
 
 	void DrawGeometry();
+	void DrawOBBS();
 	void DrawDebugBoxes();
 	void DrawCameraFrustums();
 	void DrawSpheres();

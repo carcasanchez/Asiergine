@@ -68,6 +68,7 @@ void ComponentAudio::Update(float real_dt, float game_dt)
 		float3 front = rot.Transform(float3(0, 0, 1));
 
 		up.Normalize();
+		front.Normalize();
 		emitter->SetPosition(-pos.x, pos.y, pos.z, -front.x, front.y, front.z, -up.x, up.y, up.z);
 
 		box.minPoint = transf->GetTranslation() - float3(1, 1, 1);
@@ -240,12 +241,7 @@ void ComponentAudio::DeleteAllEvents()
 
 void ComponentAudio::ManageEvents()
 {
-
-	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
-	{
-		emitter->SetAuxiliarySends(1, "Corridor", App->audio->GetListenerID());
-	}
-
+	
 	for (int i = 0; i < events.size(); i++)
 	{
 		if (events[i]->play_parameter == WHEN_PRESS_E && App->input->GetKey(SDL_SCANCODE_E) == KEY_DOWN)

@@ -26,6 +26,7 @@
     <ClCompile Include="3DEngine\ComponentLight.cpp" />
     <ClCompile Include="3DEngine\ComponentMaterial.cpp" />
     <ClCompile Include="3DEngine\ComponentMovement.cpp" />
+    <ClCompile Include="3DEngine\ComponentReverb.cpp" />
     <ClCompile Include="3DEngine\CompTransform.cpp" />
     <ClCompile Include="3DEngine\Console.cpp" />
     <ClCompile Include="3DEngine\GameObject.cpp" />
@@ -113,6 +114,7 @@
     <ClInclude Include="3DEngine\ComponentLight.h" />
     <ClInclude Include="3DEngine\ComponentMaterial.h" />
     <ClInclude Include="3DEngine\ComponentMovement.h" />
+    <ClInclude Include="3DEngine\ComponentReverb.h" />
     <ClInclude Include="3DEngine\CompTransform.h" />
     <ClInclude Include="3DEngine\Console.h" />
     <ClInclude Include="3DEngine\Devil\include\config.h" />

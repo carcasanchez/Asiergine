@@ -178,6 +178,9 @@ update_status ModuleRenderer3D::PostUpdate(float real_dt, float game_dt)
 	//Draw Geometries
 	DrawGeometry();
 
+	//Draw gizmo OBBS
+	DrawOBBS();
+
 	//Draw gizmo spheres
 	DrawSpheres();
 
@@ -298,6 +301,8 @@ void ModuleRenderer3D::DrawGeometry()
 
 }
 
+
+
 void ModuleRenderer3D::SendQuadTreeGameObjectsToPaint(QuadTreeNodeObj* node)
 {
 	if (active_camera->frustum.Contains(node->box))
@@ -327,7 +332,7 @@ void ModuleRenderer3D::SetLightToRender(Light* l)
 	lights_to_render.push(l);
 }
 
-// Draw debug AABB's-----------------------------------------------------------
+// Draw primitives -----------------------------------------------------------
 void ModuleRenderer3D::SetBoxToDraw(math::AABB b) 
 {
 	boxes_to_draw.push(b);
@@ -336,6 +341,11 @@ void ModuleRenderer3D::SetBoxToDraw(math::AABB b)
 void ModuleRenderer3D::SetBoxToDraw(math::Frustum * b)
 {
 	frustums_to_draw.push(b);
+}
+
+void ModuleRenderer3D::SetBoxToDraw(math::OBB b)
+{
+	obbs_to_draw.push(b);
 }
 
 void ModuleRenderer3D::DrawDebugBoxes()
@@ -413,8 +423,8 @@ void ModuleRenderer3D::DrawCameraFrustums()
 
 void ModuleRenderer3D::DrawSpheres()
 {
-	glColor3f(2.0f, 2.0f, 2.0f);
 	glLineWidth(3.0f);
+	glColor3f(2.0f, 2.0f, 2.0f);
 
 	while (spheres_to_draw.empty() == false)
 	{		
@@ -438,6 +448,26 @@ void ModuleRenderer3D::DrawSpheres()
 		spheres_to_draw.pop();
 	}
 	glLineWidth(1.0f);
+}
+
+void ModuleRenderer3D::DrawOBBS()
+{
+	glLineWidth(3.0f);
+	glBegin(GL_LINES);
+	glColor3f(1.0f, 0.0f, 1.0f);
+
+	while (obbs_to_draw.empty() == false)
+	{
+
+		for (uint i = 0; i < 12; i++) 
+		{ 
+			glVertex3f(obbs_to_draw.front().Edge(i).a.x, obbs_to_draw.front().Edge(i).a.y, obbs_to_draw.front().Edge(i).a.z);
+			glVertex3f(obbs_to_draw.front().Edge(i).b.x, obbs_to_draw.front().Edge(i).b.y, obbs_to_draw.front().Edge(i).b.z); 
+		}
+
+		obbs_to_draw.pop();
+	}
+	glEnd();
 }
 
 void ModuleRenderer3D::RenderLights()

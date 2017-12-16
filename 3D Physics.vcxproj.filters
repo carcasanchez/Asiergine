@@ -238,6 +238,9 @@
     <ClCompile Include="3DEngine\ComponentMovement.cpp">
       <Filter>Source\Containers\Components</Filter>
     </ClCompile>
+    <ClCompile Include="3DEngine\ComponentReverb.cpp">
+      <Filter>Source\Containers\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3DEngine\Application.h">
@@ -616,6 +619,9 @@
       <Filter>Source\Containers\Components</Filter>
     </ClInclude>
     <ClInclude Include="3DEngine\ComponentMovement.h">
+      <Filter>Source\Containers\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="3DEngine\ComponentReverb.h">
       <Filter>Source\Containers\Components</Filter>
     </ClInclude>
   </ItemGroup>

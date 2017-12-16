@@ -7,6 +7,7 @@
 #include "ComponentMaterial.h"
 #include "ComponentCamera.h"
 #include "ComponentLight.h"
+#include "ComponentReverb.h"
 
 #include "ComponentMovement.h"
 #include "MathGeoLib\include\Algorithm\Random\LCG.h"
@@ -290,6 +291,15 @@ ComponentMovement * GameObject::CreateComponent_Movement(float3 point1, float3 p
 	components.push_back(new_mov);
 
 	return new_mov;
+}
+
+ComponentReverb * GameObject::CreateComponent_Reverb(uint UID)
+{
+	ComponentReverb* new_rev = new ComponentReverb(this);
+	if (UID > 0)
+		new_rev->SetID(UID);
+	components.push_back(new_rev);
+	return new_rev;
 }
 
 //Recursive methods-------------------------------------------------------------------
@@ -578,6 +588,10 @@ void GameObject::OnEditor()
 		if (ImGui::MenuItem("Movement"))
 		{
 			CreateComponent_Movement();
+		}
+		if (ImGui::MenuItem("Reverb"))
+		{
+			CreateComponent_Reverb();
 		}
 
 
