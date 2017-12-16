@@ -1,11 +1,11 @@
-# Asiergine
+# Asiergine  
 
-This is a 3D Game Engine created by Carlos Cabreira and Asier Iglesias in OpenGL and C++ with educational purposes for the Videogame Engines subject of 2017-2018.
+This is a 3D Game Engine created by Carlos Cabreira and Asier Iglesias in OpenGL and C++ with educational purposes for the Videogame Engines subject of 2017-2018.  
 
-![Teamphoto](https://i.imgur.com/kmJaLbM.jpg)
+![Teamphoto](https://i.imgur.com/kmJaLbM.jpg)  
 
-### What have we done   
-**Carlos:**
+### What have we done     
+**Carlos:**   
  - Functionality for the engine UI
  - Json Config integration at all modules
  - Integrate Profiler
@@ -21,7 +21,7 @@ This is a 3D Game Engine created by Carlos Cabreira and Asier Iglesias in OpenGL
  - Integrate Wwise
  - Implement audio sub-system 
 
-**Asier:**
+**Asier:**   
  - Functionality for the engine UI
  - Save required info of modules at Json config
  - Beautify the engine
@@ -41,11 +41,13 @@ The main core of our game engine is the integration of the Wwise audio engine wi
 - Static and moving gameobjects with spatial audio source.
 - Tunnel effect in an area of the level that distorts the audio.
 
-**Engine video:**
+**Engine video:**   
 
+
+![Code repository](https://github.com/carcasanchez/Asiergine/tree/master)   
 
 <dl>
   <a href="https://github.com/carcasanchez/Asiergine/releases/download/Assignment2%E2%80%8B/Asiergine_v0.8.zip" class="btn">Download Latest Build</a>
 </dl>
-
-![License](https://github.com/carcasanchez/Asiergine/blob/Assignment2%E2%80%8B/LICENSE)
+   
+![License](https://github.com/carcasanchez/Asiergine/blob/Assignment2%E2%80%8B/LICENSE)   
