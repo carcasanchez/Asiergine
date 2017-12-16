@@ -2,7 +2,7 @@
 
 This is a 3D Game Engine created by Carlos Cabreira and Asier Iglesias in OpenGL and C++ with educational purposes for the Videogame Engines subject of 2017-2018.  
 
-![Teamphoto](https://i.imgur.com/lIPaYFf.jpg)  
+![Teamphoto](https://i.imgur.com/k9t5vBT.jpg)  
 
 ### What have we done     
 **Carlos:**   
