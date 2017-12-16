@@ -166,6 +166,7 @@ private:
 	bool textures_selected = false;
 	bool scenes_selected = false;
 	bool fbx_selected = false;
+	bool soundbanks_selected = false;
 	std::vector<std::string> objects_to_show;
 
 	//Main menu bar options

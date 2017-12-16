@@ -579,6 +579,7 @@ void ModuleEditor::ManageAssetWindow()
 		textures_selected = ImGui::Selectable("Textures");
 		scenes_selected = ImGui::Selectable("Scenes");
 		fbx_selected = ImGui::Selectable("Fbx");
+		soundbanks_selected = ImGui::Selectable("Soundbanks");
 
 		ImGui::EndChildFrame();
 		ImGui::SameLine();
@@ -646,6 +647,23 @@ void ModuleEditor::ManageAssetWindow()
 				std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
 
 				if (extension.compare(".fbx") != 0)
+					continue;
+
+				objects_to_show.push_back(filename);
+			}
+		}
+		if (soundbanks_selected)
+		{
+			objects_to_show.clear();
+			std::string library_meshes_path = App->fs->GetAssetDirectory();
+			library_meshes_path += "Soundbanks/";
+			for (std::experimental::filesystem::recursive_directory_iterator::value_type it : std::experimental::filesystem::recursive_directory_iterator(library_meshes_path.c_str()))
+			{
+				std::string filename = std::experimental::filesystem::path(it.path().string().c_str()).stem().string().c_str();
+				std::string extension = std::experimental::filesystem::path(it.path().string().c_str()).extension().string().c_str();
+				std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
+
+				if (extension.compare(".bnk") != 0)
 					continue;
 
 				objects_to_show.push_back(filename);
