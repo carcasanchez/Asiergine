@@ -996,11 +996,11 @@ void ModuleEditor::ConfigAudioMenu()
 	ImGui::SameLine();
 	ImGui::TextColored({ 255, 50, 100, 255 }, "%s", SDL_GetAudioDriver(App->audio->audio_driver));
 
-	//The audio device you are using
+/*	//The audio device you are using
 	ImGui::TextWrapped("Audio Device:");
 	ImGui::SameLine();
 	ImGui::TextColored({ 255, 50, 100, 255 }, "%s", SDL_GetAudioDeviceName(App->audio->audio_device, 0));
-
+	*/
 	//Loaded banks
 	ImGui::Separator();
 	float volume = App->audio->GetVolume();

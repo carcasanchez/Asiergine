@@ -53,7 +53,7 @@ const char* Component::GetComponentNameByType()
 		return "Component Movement";
 
 	case COMPONENT_REVERB:
-		return "Component REVERB";
+		return "Component Reverb";
 
 	default:
 		break;
