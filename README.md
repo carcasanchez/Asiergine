@@ -1,4 +1,4 @@
-# Asiergine v0.8
+# Asiergine v1.0
 
 3D Engine created by Carlos Cabreira and Asier Iglesias in OpenGL and C++ with educational purposes.
 
@@ -24,36 +24,30 @@ https://github.com/carcasanchez/Asiergine
 -F1 to show vertex normals
 -F2 to show bounding boxes
 
-## About Quadtree
+
  
- The Quadtree only will generate if you have any static object in scene. If you make static an object (and viceversa), all its children
-will become static.
- To see the Quadtree drawn in scene, the menu Bake Quadtree (in the Configuration Window) must be opened.
- In this menu, you can change the size of the quadtree and the maximum number of objects each node will admit before division.
- If you want to active frustum culling, go to Configuration Window -> Rendering -> Frustum Culling.
- 
-## About Assets and Library
+## About Wwished library
 
- Asiergine works with four main assets folders: fbx, textures, meshes and scenes
- Also, meshes and textures will be imported to the Library to improve performance.
- We recomend you not to delete any of these folders. 
+- Add audio banks in Configuration->Audio (in this case, Main)
+- Create a Component Audio in camera and set to Listener type
+- Create a Component Audio in any obj and set it to the desired type:
 
- Drag and drop any FBX file from anywhere in the computer to add their hierarchy, meshes and textures to the scene.
- If you drop a image file, the engine will import it.
- Any of these files will be cloned in its respective Assets folder. 
+Valid FX name events are Train and Shot
+  
+Music: set event name to Play_Music
+	set Group to music1
+	set states to Overworld and Battle
+	Set time to whatever
+music will play when app starts running
 
- The engine always reimports all meshes and textures in start, but if
- you delete something from Assets or Library in execution, try to drop the file again in the editor to reimport it.
- 
- Also, don't change .meta.json files if you want the engine to work properly!
-
-## Extra features (for innovation grade)
--Trasformation gizmos
--Scene serialized to own binary format (.carca)
--Textures and meshes can be changed in their respective component windows
--Light is now a component that can be added and deleted
+-To add a reverb area, create a Reverb Area with name Corridor and any value. Scale it with Gizmos
 
 # Changelog
+
+### v1.0
+-Wwise is integrated in engine via own Wwished library. 
+-Added various musics and FX
+-Added Reverb areas
 
 ### v0.8
 -Implemented resource manager: meshes and textures will only load once
