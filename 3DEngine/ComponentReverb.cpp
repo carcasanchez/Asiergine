@@ -49,7 +49,41 @@ void ComponentReverb::OnEditor()
 
 }
 
-bool ComponentReverb::CheckCollision(float3 p)
+bool ComponentReverb::CheckCollision(float3 p) const
 {
 	return box.Contains(p);
+}
+
+uint ComponentReverb::PrepareToSave() const
+{
+	uint size = 0;
+
+	//size of name
+	size += sizeof(uint);
+	//name
+	size += target_bus.size();
+	//value
+	size += sizeof(float);
+
+	return size;
+}
+
+void ComponentReverb::Save(char *& cursor) const
+{
+	uint size_of_name = target_bus.size();
+	
+	//copy size of name
+	uint size_of = sizeof(uint);
+	memcpy(cursor, &size_of_name, size_of);
+	cursor += size_of;
+
+	//copy name
+	size_of = size_of_name;
+	memcpy(cursor, target_bus.c_str(), size_of);
+	cursor += size_of;
+
+	//copy value
+	size_of = sizeof(float);
+	memcpy(cursor, &value, size_of);
+	cursor += size_of;
 }

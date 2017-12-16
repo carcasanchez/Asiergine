@@ -92,6 +92,7 @@ void ModuleAudio::CheckIfListenerIsDeleted(ComponentAudio * c)
 	}
 }
 
+
 void ModuleAudio::LoadBank(const char * bank_name)
 {
 	//Avoid double bank loading
@@ -146,7 +147,7 @@ void ModuleAudio::SubstracReverbArea(ComponentReverb * area)
 	}
 }
 
-void ModuleAudio::StopSounds()
+void ModuleAudio::StopSounds() const
 {
 	Wwished::Utility::StopAllSounds();
 }

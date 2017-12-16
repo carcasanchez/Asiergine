@@ -13,6 +13,7 @@
 #include "ComponentLight.h"
 #include "ComponentAudio.h"
 #include "ComponentMovement.h"
+#include "ComponentReverb.h"
 
 ModuleScene::ModuleScene(bool start_enabled) : Module(start_enabled)
 {
@@ -274,11 +275,13 @@ uint ModuleScene::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>> &b
 	//UID of light
 	//UID of audio - type of audio - volume - pitch - num of events - [event name size - event name - play parameter]
 	//UID of movement - point1 - point2 - speed
+	//num of reverbs - [UID of reverb - size of name - name - value]
 
 	//STORE SIZE-------------------------------------------------------------------
 	uint size = 1;
 
 	std::vector<Component*> meshes = to_save->GetAllComponentOfType(COMPONENT_MESH);
+	std::vector<Component*> reverbs = to_save->GetAllComponentOfType(COMPONENT_REVERB);
 
 	size += sizeof(uint);
 	std::string name = to_save->GetName();
@@ -340,6 +343,14 @@ uint ModuleScene::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>> &b
 	if (move != nullptr)
 	{
 		size += move->PrepareToSave();
+	}
+
+	//Reverb
+	size += sizeof(uint); //num of reverbs
+	for (int i = 0; i < reverbs.size(); i++)
+	{
+		size += sizeof(uint); //UID of component
+		size += reverbs[i]->PrepareToSave();
 	}
 
 	//COPY DATA------------------------------------------------------
@@ -472,11 +483,43 @@ uint ModuleScene::SaveGameObjectToOwnFormat(std::list<std::pair<char*, uint>> &b
 		move->Save(cursor);
 	}
 
+
+	//Copy reverbs
+	uint num_of_reverbs = reverbs.size();
+	size_of = sizeof(uint);
+	memcpy(cursor, &num_of_reverbs, size_of);
+	cursor += size_of;
+	for (int i = 0; i<num_of_reverbs;i++)
+	{
+		// UID
+		uint reverbID = reverbs[i]->GetID();
+		size_of = sizeof(uint);
+		memcpy(cursor, &reverbID, size_of);
+		cursor += size_of;
+
+		//size of name
+		uint size_of_name = ((ComponentReverb*)reverbs[i])->target_bus.size();
+		size_of = sizeof(uint);
+		memcpy(cursor, &size_of_name, size_of);
+		cursor += size_of;
+
+		//name
+		size_of = size_of_name;
+		memcpy(cursor, ((ComponentReverb*)reverbs[i])->target_bus.c_str(), size_of);
+		cursor += size_of;
+
+		//value
+		size_of = sizeof(float);
+		memcpy(cursor, &((ComponentReverb*)reverbs[i])->value, size_of);
+		cursor += size_of;
+	}
+
 	data[size - 1] = '\0';
 	std::pair<char*, uint> pair_of_data;
 	buffer.push_back(pair_of_data);
 	buffer.back().first = data;
 	buffer.back().second = size;
+
 
 	//Load children 
 	std::vector<GameObject*> children = to_save->GetChildrens();
@@ -609,6 +652,8 @@ uint ModuleScene::LoadObjectFromOwnFormat(char*& cursor)
 	//UID of light
 	//UID of audio - type of audio - volume - pitch - num of events - [event name size - event name - play parameter]
 	//UID of movement - point1 - point2 - speed
+	//num of reverbs - [UID of reverb - size of name - name - value]
+
 	uint object_id = 0;
 
 	uint size_of = sizeof(uint);
@@ -877,7 +922,6 @@ uint ModuleScene::LoadObjectFromOwnFormat(char*& cursor)
 	memcpy(&movement_id, cursor, size_of);
 	cursor += size_of;
 
-
 	if (movement_id != 0)
 	{
 		float point1[] = { 0, 0, 0 };
@@ -896,6 +940,44 @@ uint ModuleScene::LoadObjectFromOwnFormat(char*& cursor)
 		cursor += size_of;
 
 		new_obj->CreateComponent_Movement(float3(point1[0], point1[1], point1[2]), float3(point2[0], point2[1], point2[2]), speed, movement_id);
+	}
+
+	//Reverb
+	uint num_of_reverbs = 0;
+	size_of = sizeof(uint);
+	memcpy(&num_of_reverbs, cursor, size_of);
+	cursor += size_of;
+	for (int i = 0; i < num_of_reverbs; i++)
+	{
+		//Component UID
+		uint reverb_UID = 0;
+		size_of = sizeof(uint);
+		memcpy(&reverb_UID, cursor, size_of);
+		cursor += size_of;
+
+		//Size of name
+		uint name_size = 0;
+		memcpy(&name_size, cursor, size_of);
+		cursor += size_of;
+
+		//Name 
+		char* target_bus_name = new char[name_size+1];
+		size_of = name_size;
+		memcpy(target_bus_name, cursor, size_of);
+		target_bus_name[name_size]='\0';
+		cursor += size_of;
+
+		//value
+		float value = 0.0;
+		size_of = sizeof(float);
+		memcpy(&value, cursor, size_of);
+		cursor += size_of;
+
+		ComponentReverb* comp_reverb = new_obj->CreateComponent_Reverb(reverb_UID);
+		comp_reverb->target_bus = target_bus_name;
+		comp_reverb->value = value;
+
+		delete[] target_bus_name;
 	}
 
 	cursor++;

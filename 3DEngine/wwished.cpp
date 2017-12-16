@@ -219,12 +219,12 @@ Wwished::SoundEmitter::~SoundEmitter()
 	}
 }
 
-unsigned long Wwished::SoundEmitter::GetID()
+unsigned long Wwished::SoundEmitter::GetID()const
 {
 	return EmitterID;
 }
 
-const char * Wwished::SoundEmitter::GetName()
+const char * Wwished::SoundEmitter::GetName()const
 {
 	return name;
 }
@@ -269,28 +269,28 @@ void Wwished::SoundEmitter::SetPosition(float x, float y, float z, float x_front
 		assert(!"Something went wrong. Check the res variable for more info");
 }
 
-void Wwished::SoundEmitter::SetListener(unsigned long * id)
+void Wwished::SoundEmitter::SetListener(unsigned long * id)const
 {
 	AKRESULT res = AK::SoundEngine::SetListeners(EmitterID, (AkGameObjectID*)id, 1);
 }
 
 
-void Wwished::SoundEmitter::PlayEvent(unsigned long id)
+void Wwished::SoundEmitter::PlayEvent(unsigned long id)const
 {
 	AK::SoundEngine::PostEvent(id, EmitterID);
 }
 
-void Wwished::SoundEmitter::PlayEvent(const char* name)
+void Wwished::SoundEmitter::PlayEvent(const char* name)const
 {
 	AK::SoundEngine::PostEvent(name, EmitterID);
 }
 
-void Wwished::SoundEmitter::StopEvent(const char * name)
+void Wwished::SoundEmitter::StopEvent(const char * name)const
 {
 	AK::SoundEngine::ExecuteActionOnEvent(name, AK::SoundEngine::AkActionOnEventType_Stop);
 }
 
-void Wwished::SoundEmitter::SetAuxiliarySends(AkReal32 value, const char * target_bus, AkGameObjectID listener_id)
+void Wwished::SoundEmitter::SetAuxiliarySends(AkReal32 value, const char * target_bus, AkGameObjectID listener_id)const
 {
 	AkAuxSendValue environment;
 	environment.listenerID = listener_id;

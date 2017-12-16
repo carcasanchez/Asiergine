@@ -21,17 +21,17 @@ namespace Wwished
 		SoundEmitter(unsigned long id, const char* n);
 		~SoundEmitter();
 
-		unsigned long GetID();
-		const char* GetName();
+		unsigned long GetID() const;
+		const char* GetName()const;
 		void SetPosition(float x=0, float y = 0, float z = 0, float x_front = 1, float y_front=0, float z_front=0, float x_top=0, float y_top=1, float z_top=0);
-		void SetListener(unsigned long* id);
+		void SetListener(unsigned long* id)const;
 
-		void PlayEvent(unsigned long id);
-		void PlayEvent(const char* name);
+		void PlayEvent(unsigned long id)const;
+		void PlayEvent(const char* name)const;
 
-		void StopEvent(const char* name);
+		void StopEvent(const char* name)const;
 
-		void SetAuxiliarySends(AkReal32 value, const char* target_bus, AkGameObjectID listener_id);
+		void SetAuxiliarySends(AkReal32 value, const char* target_bus, AkGameObjectID listener_id)const;
 
 	private:
 		AkGameObjectID EmitterID;

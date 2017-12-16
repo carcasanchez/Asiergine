@@ -30,15 +30,21 @@ void ComponentAudio::OnEditor()
 	int selected_opt = audio_type;
 	if (ImGui::Combo("Audio type", &selected_opt, "FX\0Music\0Listener", 3))
 	{
-		if (selected_opt == 2)
+		if (selected_opt == 2 && audio_type != LISTENER)
 		{
 			audio_type = LISTENER;
 			App->audio->SetListener(this);
 		}
 		else if (selected_opt == 0)
+		{
+			App->audio->CheckIfListenerIsDeleted(this);
 			audio_type = FX;
+		}
 		else if (selected_opt == 1)
+		{
+			App->audio->CheckIfListenerIsDeleted(this);
 			audio_type = MUSIC;
+		}
 	}
 
 	if (audio_type == FX)

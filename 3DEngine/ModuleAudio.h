@@ -33,6 +33,7 @@ public:
 	bool SetListener(ComponentAudio* c);
 	void CheckIfListenerIsDeleted(ComponentAudio* c);
 
+
 	void LoadBank(const char* name);
 	void UnLoadBank(uint bank_index);
 	void UnloadAllBanks();
@@ -40,7 +41,7 @@ public:
 	void AddReverbArea(ComponentReverb*);
 	void SubstracReverbArea(ComponentReverb*);
 
-	void StopSounds();
+	void StopSounds() const;
 	float GetVolume() const { return volume; }
 	void ChangeVolume(float volume);
 	void ChangeObjVolume(float volume, unsigned long obj_id);
