@@ -141,7 +141,9 @@ uint ComponentMesh::PrepareToSave()const
 
 void ComponentMesh::Save(char *& cursor) const
 {
-	uint mesh_id = mesh->GetID();
+	uint mesh_id = 0;
+	if(mesh)
+		mesh_id = mesh->GetID();
 	//copy mesh UID
 	uint size_of = sizeof(uint);
 	memcpy(cursor, &mesh_id, size_of);
