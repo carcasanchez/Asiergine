@@ -31,7 +31,7 @@ void GameObject::Update(float real_dt, float game_dt)
 	{
 		if ((*del_comp)->deleted)
 		{
-			(*del_comp)->deleted == false;
+			delete (*del_comp);
 			components.erase(del_comp);
 			break;
 		}
@@ -299,6 +299,7 @@ ComponentReverb * GameObject::CreateComponent_Reverb(uint UID)
 	if (UID > 0)
 		new_rev->SetID(UID);
 	components.push_back(new_rev);
+	App->audio->AddReverbArea(new_rev);
 	return new_rev;
 }
 

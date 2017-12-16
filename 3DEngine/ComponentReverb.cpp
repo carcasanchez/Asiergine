@@ -12,7 +12,7 @@ ComponentReverb::ComponentReverb(GameObject* g) :Component(g)
 
 ComponentReverb::~ComponentReverb()
 {
-
+	App->audio->SubstracReverbArea(this);
 }
 
 void ComponentReverb::Update(float real_dt, float game_dt)
@@ -47,4 +47,9 @@ void ComponentReverb::OnEditor()
 
 	delete[] bus_name;
 
+}
+
+bool ComponentReverb::CheckCollision(float3 p)
+{
+	return box.Contains(p);
 }

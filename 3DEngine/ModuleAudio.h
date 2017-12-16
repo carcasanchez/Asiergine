@@ -5,6 +5,8 @@
 #include "wwished.h"
 
 class ComponentAudio;
+class ComponentReverb;
+class GameObject;
 
 class ModuleAudio : public Module
 {
@@ -35,17 +37,24 @@ public:
 	void UnLoadBank(uint bank_index);
 	void UnloadAllBanks();
 
+	void AddReverbArea(ComponentReverb*);
+	void SubstracReverbArea(ComponentReverb*);
+
 	void StopSounds();
 	float GetVolume() const { return volume; }
 	void ChangeVolume(float volume);
 	void ChangeObjVolume(float volume, unsigned long obj_id);
 	void ChangeObjPitch(float pitch, unsigned long obj_id);
 
+	bool CheckReverb(GameObject*);
+
 	long GetListenerID() const;
 
 	std::vector <std::string> loaded_banks;
 
 private:
+
+	std::vector <ComponentReverb*> reverb_areas;
 
 	ComponentAudio* current_listener = nullptr;
 		

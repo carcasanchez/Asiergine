@@ -8,7 +8,7 @@ public:
 
 	void Update(float real_dt, float game_dt);
 	void OnEditor();
-
+	bool CheckCollision(float3 p);
 
 	std::string target_bus = "";
 	float value = 0.0;

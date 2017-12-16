@@ -78,6 +78,8 @@ public:
 	void ChangeVolume(float volume);
 	void ChangePitch(float pitch);
 
+	void ApplyReverb(float value, const char* target_bus);
+
 private:
 	void ManageEvents();
 	void ManageMusic();

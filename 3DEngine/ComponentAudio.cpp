@@ -50,6 +50,8 @@ void ComponentAudio::OnEditor()
 void ComponentAudio::Update(float real_dt, float game_dt)
 {
 
+	App->audio->CheckReverb(game_object);
+
 	if (App->IsAppRunning())
 	{
 		if (audio_type == FX)
@@ -209,6 +211,11 @@ void ComponentAudio::ChangePitch(float pitch)
 {
 	this->pitch = pitch;
 	App->audio->ChangeObjPitch(pitch, emitter->GetID());
+}
+
+void ComponentAudio::ApplyReverb(float value, const char* target_bus)
+{
+	emitter->SetAuxiliarySends(value,target_bus, emitter->GetID());
 }
 
 AudioEvent* ComponentAudio::CreateAudioEvent(const char * name, PLAY_PARAMETER p)
