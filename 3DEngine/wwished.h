@@ -31,6 +31,7 @@ namespace Wwished
 
 		void StopEvent(const char* name);
 
+		void SetAuxiliarySends(AkReal32 value, const char* target_bus, AkGameObjectID listener_id);
 
 	private:
 		AkGameObjectID EmitterID;

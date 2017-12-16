@@ -4,6 +4,9 @@
 #include "include_wwise.h"
 #include "AK/DefaultIO/Win32/AkFilePackageLowLevelIOBlocking.h"
 
+//Plug-ins
+#include <AK/Plugin/AkRoomVerbFXFactory.h>
+
 CAkFilePackageLowLevelIOBlocking g_lowLevelIO;
 
 //Initialize all Wwise modules. Receives the base path for soundbanks and the current language
@@ -61,6 +64,7 @@ bool Wwished::InitWwished(const wchar_t* base_path, const char* language)
 	}
 
 
+	
 #ifndef AK_OPTIMIZED
 	// Initialize communications for debug purposes
 	AkCommSettings commSettings;
@@ -284,4 +288,14 @@ void Wwished::SoundEmitter::PlayEvent(const char* name)
 void Wwished::SoundEmitter::StopEvent(const char * name)
 {
 	AK::SoundEngine::ExecuteActionOnEvent(name, AK::SoundEngine::AkActionOnEventType_Stop);
+}
+
+void Wwished::SoundEmitter::SetAuxiliarySends(AkReal32 value, const char * target_bus, AkGameObjectID listener_id)
+{
+	AkAuxSendValue environment;
+	environment.listenerID = listener_id;
+	environment.auxBusID = AK::SoundEngine::GetIDFromString(target_bus);
+	environment.fControlValue = value;
+
+	AKRESULT res = AK::SoundEngine::SetGameObjectAuxSendValues(EmitterID, &environment, 1);
 }

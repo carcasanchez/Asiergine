@@ -49,6 +49,7 @@ void ComponentAudio::OnEditor()
 
 void ComponentAudio::Update(float real_dt, float game_dt)
 {
+
 	if (App->IsAppRunning())
 	{
 		if (audio_type == FX)
@@ -239,6 +240,12 @@ void ComponentAudio::DeleteAllEvents()
 
 void ComponentAudio::ManageEvents()
 {
+
+	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
+	{
+		emitter->SetAuxiliarySends(1, "Corridor", App->audio->GetListenerID());
+	}
+
 	for (int i = 0; i < events.size(); i++)
 	{
 		if (events[i]->play_parameter == WHEN_PRESS_E && App->input->GetKey(SDL_SCANCODE_E) == KEY_DOWN)

@@ -20,6 +20,7 @@
 #pragma comment( lib, "3DEngine/AK/Release(StaticCRT)/lib/AkMusicEngine.lib")
 #pragma comment( lib, "3DEngine/AK/Release(StaticCRT)/lib/AkMemoryMgr.lib")
 #pragma comment( lib, "3DEngine/AK/Release(StaticCRT)/lib/AkStreamMgr.lib")
+#pragma comment( lib, "3DEngine/AK/Release(StaticCRT)/lib/AkRoomVerbFX.lib")
 #else
 #include <AK/Comm/AkCommunication.h>
 #pragma comment( lib, "3DEngine/AK/Debug(StaticCRT)/lib/CommunicationCentral.lib")
@@ -28,6 +29,8 @@
 #pragma comment( lib, "3DEngine/AK/Debug(StaticCRT)/lib/AkMusicEngine.lib")
 #pragma comment( lib, "3DEngine/AK/Debug(StaticCRT)/lib/AkMemoryMgr.lib")
 #pragma comment( lib, "3DEngine/AK/Debug(StaticCRT)/lib/AkStreamMgr.lib")
+#pragma comment( lib, "3DEngine/AK/Debug(StaticCRT)/lib/AkRoomVerbFX.lib")
+
 #endif
 
 // Microsoft DirectX external libs

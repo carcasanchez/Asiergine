@@ -146,6 +146,11 @@ void ModuleAudio::ChangeObjPitch(float pitch, unsigned long obj_id)
 	Wwished::Utility::SetRTPCValue("Pitch", pitch, obj_id);
 }
 
+long ModuleAudio::GetListenerID() const
+{
+		return current_listener ? current_listener->GetEmitterID() : -1;
+}
+
 
 
 

@@ -40,7 +40,9 @@ public:
 	void ChangeVolume(float volume);
 	void ChangeObjVolume(float volume, unsigned long obj_id);
 	void ChangeObjPitch(float pitch, unsigned long obj_id);
-		
+
+	long GetListenerID() const;
+
 	std::vector <std::string> loaded_banks;
 
 private:
