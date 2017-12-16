@@ -32,3 +32,19 @@ void ComponentReverb::Update(float real_dt, float game_dt)
 		App->renderer3D->SetBoxToDraw(box);
 	}
 }
+
+void ComponentReverb::OnEditor()
+{
+	char* bus_name = new char[41];
+
+	std::copy(target_bus.begin(), target_bus.end(), bus_name);
+	bus_name[target_bus.length()] = '\0';
+
+	ImGui::InputText("Target bus", bus_name, 40);
+	target_bus = bus_name;
+
+	ImGui::DragFloat("Value", &value, 0.1, 0.0, 12.0, "%.1f");
+
+	delete[] bus_name;
+
+}
