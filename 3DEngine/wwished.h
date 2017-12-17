@@ -50,6 +50,8 @@ namespace Wwished
 		SoundEmitter* CreateEmitter(unsigned long id, const char* name,  float x, float y, float z, bool is_default_listener = false);
 		void ChangeState(const char* group, const char* new_state);	
 		void StopAllSounds();
+		void PauseAllSounds();
+		void RestartAllSounds();
 		void SetRTPCValue(const char* name, float value, AkGameObjectID game_obj_id = AK_INVALID_GAME_OBJECT);
 	}
 

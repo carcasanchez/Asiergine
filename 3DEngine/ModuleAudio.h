@@ -42,6 +42,9 @@ public:
 	void SubstracReverbArea(ComponentReverb*);
 
 	void StopSounds() const;
+	void PauseSounds() const;
+	void ResumeSounds() const;
+
 	float GetVolume() const { return volume; }
 	void ChangeVolume(float volume);
 	void ChangeObjVolume(float volume, unsigned long obj_id);

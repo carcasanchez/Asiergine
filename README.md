@@ -24,7 +24,7 @@ https://github.com/carcasanchez/Asiergine
 -F1 to show vertex normals
 -F2 to show bounding boxes
 
-The release comes with a scene that you can load from File>LoadScene. This scene features a demos of different aspects of our audio system.
+The release comes with a scene that you can load from File>LoadScene. This scene features a demo of different aspects of our audio system.
 Press play to run it, and press E to trigger a Shot sound.
  
 ## About Wwished library

@@ -3,6 +3,8 @@ Event	ID	Name			Wwise Object Path	Notes
 	2837384057	Stop_Music			\Default Work Unit\Stop_Music	
 	2932040671	Play_Music			\Default Work Unit\Play_Music	
 	3412057565	Train			\Default Work Unit\Train	
+	3679762312	Resume_All			\Default Work Unit\Resume_All	
+	3864097025	Pause_All			\Default Work Unit\Pause_All	
 
 Game Parameter	ID	Name			Wwise Object Path	Notes
 	191401384	MaxDistanceAttenuation			\Default Work Unit\MaxDistanceAttenuation	

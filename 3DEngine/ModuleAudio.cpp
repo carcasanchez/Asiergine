@@ -152,6 +152,16 @@ void ModuleAudio::StopSounds() const
 	Wwished::Utility::StopAllSounds();
 }
 
+void ModuleAudio::PauseSounds() const
+{
+	Wwished::Utility::PauseAllSounds();
+}
+
+void ModuleAudio::ResumeSounds() const
+{
+	Wwished::Utility::RestartAllSounds();
+}
+
 void ModuleAudio::ChangeVolume(float vol)
 {
 	volume = vol;

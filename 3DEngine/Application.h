@@ -90,12 +90,14 @@ public:
 		paused = true;
 		last_game_time_modifier = game_time_modifier;
 		game_time_modifier = 0;
+		audio->PauseSounds();
 	}
 	
 	void UnPauseApp()
 	{
 		paused = false;
 		game_time_modifier = last_game_time_modifier;
+		audio->ResumeSounds();
 	}
 
 	//Updates the game once and stops again

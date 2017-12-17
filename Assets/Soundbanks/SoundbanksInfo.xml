@@ -21,7 +21,9 @@
 			<ShortName>Main</ShortName>
 			<Path>Main.bnk</Path>
 			<IncludedEvents>
+				<Event Id="3864097025" Name="Pause_All" ObjectPath="\Events\Default Work Unit\Pause_All"/>
 				<Event Id="2932040671" Name="Play_Music" ObjectPath="\Events\Default Work Unit\Play_Music"/>
+				<Event Id="3679762312" Name="Resume_All" ObjectPath="\Events\Default Work Unit\Resume_All"/>
 				<Event Id="251412229" Name="Shot" ObjectPath="\Events\Default Work Unit\Shot"/>
 				<Event Id="2837384057" Name="Stop_Music" ObjectPath="\Events\Default Work Unit\Stop_Music"/>
 				<Event Id="3412057565" Name="Train" ObjectPath="\Events\Default Work Unit\Train"/>
