@@ -5,7 +5,12 @@ educational work for the Game Engines subject on the Politecnical University of 
 ![Teamphoto](https://i.imgur.com/k9t5vBT.jpg)  
 
 Our goal was to achieve a working 3D space with support of the basic elements of a game engine: game object hierarchy, components, rendering modes, time management and more.
-We also created Wwished, a library that integrates the Wwise audio engine ina simple, quick manner.
+We also created Wwished, a library that integrates the Wwise audio engine in a simple, quick manner.
+
+
+<dl>
+  <a href="https://github.com/carcasanchez/Asiergine/blob/Assignment2%E2%80%8B/LICENSE" class="btn">Asiergine is under the Mit license. Click here if you want more information.</a>
+</dl>
 
 ### Work log    
 **Carlos Cabreira**   
@@ -74,11 +79,14 @@ All music starts on play.
 
 **Engine video:**   
 
-
-![Code repository](https://github.com/carcasanchez/Asiergine/tree/master)   
+<dl>
+  <a href="(https://github.com/carcasanchez/Asiergine/tree/master" class="btn">Check the Engine code here!Build</a>
+</dl>
 
 <dl>
   <a href="https://github.com/carcasanchez/Asiergine/releases/download/Assignment3/Asiergine_v1.0.zip" class="btn">Download Latest Build</a>
 </dl>
+
+
    
-![License](https://github.com/carcasanchez/Asiergine/blob/Assignment2%E2%80%8B/LICENSE)   
+
