@@ -99,7 +99,7 @@ All music starts on play.
 Timelapse: Setting up the audio   
 <iframe 
    width="560" 
-   height="315" 
+   height="314" 
    src="https://www.youtube.com/embed/6UPPgBBpLww" 
    frameborder="0" 
    allowfullscreen>
