@@ -1,38 +1,30 @@
 # Asiergine  
 
-This is a 3D Game Engine created by Carlos Cabreira and Asier Iglesias in OpenGL and C++ with educational purposes for the Videogame Engines subject of 2017-2018.  
-
+Asiergine is a 3D Game Engine created by Carlos Cabreira and Asier Iglesias, in OpenGL and C++. The project starts as a 
+educational work for the Game Engines subject on the Politecnical University of Catalunya, Spain.
 ![Teamphoto](https://i.imgur.com/k9t5vBT.jpg)  
 
-### What have we done     
-**Carlos:**   
- - Functionality for the engine UI
- - Json Config integration at all modules
- - Integrate Profiler
- - Camera controls
- - Geometry and textures import and save to own format
- - Load geometry and textures from own format to the engine
- - Save and load scenes to and from own format
- - Components utility: camera, light, mesh, material and audio
- - Time managment added
- - Mouse picking
- - Guizmos
- - Resource management
- - Integrate Wwise
- - Implement audio sub-system 
+Our goal was to achieve a working 3D space with support of the basic elements of a game engine: game object hierarchy, components, rendering modes, time management and more.
+We also created Wwished, a library that integrates the Wwise audio engine ina simple, quick manner.
+
+### Work log    
+**Carlos Cabreira**   
+ - Camera rendering: OpenGl 3D space drawing of texturized geometry
+ - Import capabilities: Asiergine can import geometry and textures from FBX files
+ - Scene serialization: Asiergine saves data to own binary format, .carca
+ - Component utility: different components can be added to game objects to define their behaviour in the game
+ - Time managment: the game speed can be controlled in real time. Also, the user can pause the game in middle of execution.
+ - Game Object hierarchy: all game objects follow a hierarchy that inherits transformations from parents to childs. Game objects can be 
+   transformed using visual gizmos
+ - Resource management: meshes, scenes and textures are structured in a Library system that avoids double loading and improves      performance
+ - Wwise Audio Engine integration: via own Wwished library, Asiergine can take advantage of the powerful audio engine to implement music and FX in games.
 
 **Asier:**   
- - Functionality for the engine UI
- - Save required info of modules at Json config
- - Beautify the engine
- - Components transform and movement created
- - Show all components at inspector window
- - Scene quadtree 
- - Camera culling with quadtree
- - Empty game object option
- - Change mesh and material from components
- - Delete game objects
- - Assets window to show all assets aviable at the engine
+ - Engine UI: organization and coding of all visual elements and options in the editor window
+ - Component and object edition: creation, deletion and modification of the different elements of the engine
+ - Scene quadtree: static objects are included in a 3D Quadtree that accelerates processing.
+ - Camera culling system: optimization to avoid drawing 3D objects that are not in camera. Accelerated via Quadtree.
+ - Asset explorer: see all resources available, from meshes to soundbanks.
  
 
 ### Sub-system   
