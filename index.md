@@ -94,10 +94,8 @@ All music starts on play.
 
 
 
-Timelapse: Setting the audio in Asiergine
-<iframe width="560" height="315" src="https://www.youtube.com/embed/https://youtu.be/6UPPgBBpLww" frameborder="0" allowfullscreen></iframe>
-
-
+Timelapse: Setting the audio in Asiergine    
+{% include youtubePlayer.html id=https://youtu.be/gcuZhsAth6M %}
 
 
 <dl>
