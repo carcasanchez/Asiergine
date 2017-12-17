@@ -24,7 +24,7 @@ Timelapse: Creating a scene in Asiergine
 ### Work log    
 **Carlos Cabreira**   
  - Camera rendering: OpenGl 3D space drawing of texturized geometry   
-   ![Gif](https://i.gyazo.com/333d625f836b61bd5ce3ffe4a6ee2d77.gif)
+   ![scene](https://i.gyazo.com/333d625f836b61bd5ce3ffe4a6ee2d77.gif)
  - Import capabilities: Asiergine can import geometry and textures from FBX files
  - Scene serialization: Asiergine saves data to own binary format, .carca
  - Component utility: different components can be added to game objects to define their behaviour in the game
