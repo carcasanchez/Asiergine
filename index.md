@@ -18,8 +18,8 @@ We also created Wwished, a library that integrates the Wwise audio engine in a s
   <a href="https://github.com/carcasanchez/Asiergine/blob/Assignment2%E2%80%8B/LICENSE" class="btn">Asiergine is under the Mit license. Click here if you want more information.</a>
 </dl>
 
-Timelapse: Creating a scene in Asiergine
-<iframe width="560" height="315" src="https://www.youtube.com/embed/gcuZhsAth6M?ecver=1" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
+Timelapse: Creating a scene in Asiergine   
+{% include youtubePlayer.html id=https://youtu.be/gcuZhsAth6M %}
 
 ### Work log    
 **Carlos Cabreira**   
