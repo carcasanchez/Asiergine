@@ -1,14 +1,14 @@
 # Asiergine  
 
  
-
+ <a href="https://gyazo.com/415d9b12faa2e0a3c8f1f321805f3c14"><img src="https://i.gyazo.com/415d9b12faa2e0a3c8f1f321805f3c14.png" alt="https://gyazo.com/415d9b12faa2e0a3c8f1f321805f3c14" width="1272.6666666666667"/></a>
    
 
    
 Asiergine is a 3D Game Engine created by Carlos Cabreira and Asier Iglesias, in OpenGL and C++. The project starts as a 
 educational work for the Game Engines subject on the Politecnical University of Catalunya, Spain.   
    
-![Teamphoto](https://fotos.subefotos.com/6b4f779ac922cbc05ae5dbc6f18cfe52o.jpg)  
+
 
 Our goal was to achieve a working 3D space with support of the basic elements of a game engine: game object hierarchy, components, rendering modes, time management and more.
 We also created Wwished, a library that integrates the Wwise audio engine in a simple, quick manner.
