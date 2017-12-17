@@ -19,7 +19,8 @@ We also created Wwished, a library that integrates the Wwise audio engine in a s
 
 ### Work log    
 **Carlos Cabreira**   
- - Camera rendering: OpenGl 3D space drawing of texturized geometry
+ - Camera rendering: OpenGl 3D space drawing of texturized geometry   
+ <a href="https://gyazo.com/333d625f836b61bd5ce3ffe4a6ee2d77"><img src="https://i.gyazo.com/333d625f836b61bd5ce3ffe4a6ee2d77.gif" alt="https://gyazo.com/333d625f836b61bd5ce3ffe4a6ee2d77" width="1199.9999999999995"/></a>   
  - Import capabilities: Asiergine can import geometry and textures from FBX files
  - Scene serialization: Asiergine saves data to own binary format, .carca
  - Component utility: different components can be added to game objects to define their behaviour in the game
