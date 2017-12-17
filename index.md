@@ -60,16 +60,16 @@ You can only have one listener in scene.
  Now, the only thing you need to do is populate the scene with sound.
 You have various options: 
 
--FX: just set the Audio Type in Component Audio to FX. You must now add Events to this component. 
+- FX: just set the Audio Type in Component Audio to FX. You must now add Events to this component. 
 Events must be defined in Wwise first. In the Component Editor, you can add or delete events, and specify when this events will trigger.
 By default, only two possibilities are included (when pressing the E key, or when the game starts running).
 
--Music: just set the Audio Type in Component Audio to Music. As with FX, you must specify the Event that will trigger the music. Also, you 
+- Music: just set the Audio Type in Component Audio to Music. As with FX, you must specify the Event that will trigger the music. Also, you 
 have the possibility of add a State group to make transitions between two states. Just create the group and states in Wwise, and specify in the 
 Component the name of the Group, the two states and the time between changes.
 All music starts on play.
 
--Reverb areas: add a Reverb Component to any object, and transform the box to fit the desired size. In the Component editor, add the name 
+- Reverb areas: add a Reverb Component to any object, and transform the box to fit the desired size. In the Component editor, add the name 
 of the effect you want (previously defined on Wwise), and its value. Any object that is inside the box will note the marked effect.
 
 
