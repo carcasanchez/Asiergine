@@ -93,7 +93,11 @@ All music starts on play.
 ![reverb](https://i.gyazo.com/9227baeea8f899e0cf366693cfc33692.gif)
 
 
-**Engine video:**   
+
+Timelapse: Setting the audio in Asiergine  
+{% include youtubePlayer.html id=https://youtu.be/6UPPgBBpLww %}
+
+
 
 <dl>
   <a href="https://github.com/carcasanchez/Asiergine/tree/master" class="btn">Check the Engine code
