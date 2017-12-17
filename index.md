@@ -88,7 +88,8 @@ All music starts on play.
 
 ![reverb](https://i.gyazo.com/9227baeea8f899e0cf366693cfc33692.gif)
 
-
+Timelapse: Setting up the audio
+<iframe width="560" height="315" src="https://www.youtube.com/embed/6UPPgBBpLww?ecver=1" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
 
 <dl>
   <a href="https://github.com/carcasanchez/Asiergine/tree/master" class="btn">Check the Engine code
