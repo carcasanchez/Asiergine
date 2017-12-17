@@ -1,6 +1,7 @@
 # Asiergine  
 
-<a href="https://gyazo.com/ce418e0c532e7d8e8f63342ebfa2c47a"><img src="https://i.gyazo.com/ce418e0c532e7d8e8f63342ebfa2c47a.png" alt="https://gyazo.com/ce418e0c532e7d8e8f63342ebfa2c47a" width="1278.6666666666667"/></a>   
+ 
+ <a href="https://gyazo.com/415d9b12faa2e0a3c8f1f321805f3c14"><img src="https://i.gyazo.com/415d9b12faa2e0a3c8f1f321805f3c14.png" alt="https://gyazo.com/415d9b12faa2e0a3c8f1f321805f3c14" width="1272.6666666666667"/></a>
    
 
    
@@ -37,8 +38,7 @@ We also created Wwished, a library that integrates the Wwise audio engine in a s
  - Camera culling system: optimization to avoid drawing 3D objects that are not in camera. Accelerated via Quadtree.
  - Asset explorer: see all resources available, from meshes to soundbanks.
  ![assets](https://i.gyazo.com/bc0eaf62e08f177ab7bdf26e57b6fec8.gif)
- 
- <a href="https://gyazo.com/415d9b12faa2e0a3c8f1f321805f3c14"><img src="https://i.gyazo.com/415d9b12faa2e0a3c8f1f321805f3c14.png" alt="https://gyazo.com/415d9b12faa2e0a3c8f1f321805f3c14" width="1272.6666666666667"/></a>
+
  
 
 ## About Wwished library
