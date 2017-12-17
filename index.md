@@ -94,10 +94,6 @@ All music starts on play.
 
 
 
-Timelapse: Setting the audio in Asiergine    
-{% include youtubePlayer.html id=https://youtu.be/gcuZhsAth6M %}
-
-
 <dl>
   <a href="https://github.com/carcasanchez/Asiergine/tree/master" class="btn">Check the Engine code
     here</a>
