@@ -36,6 +36,7 @@ We also created Wwished, a library that integrates the Wwise audio engine in a s
  - Scene quadtree: static objects are included in a 3D Quadtree that accelerates processing.
  - Camera culling system: optimization to avoid drawing 3D objects that are not in camera. Accelerated via Quadtree.
  - Asset explorer: see all resources available, from meshes to soundbanks.
+ ![](https://gyazo.com/79d7c588fb47e93f8d33b83da2251649)
  
  <a href="https://gyazo.com/415d9b12faa2e0a3c8f1f321805f3c14"><img src="https://i.gyazo.com/415d9b12faa2e0a3c8f1f321805f3c14.png" alt="https://gyazo.com/415d9b12faa2e0a3c8f1f321805f3c14" width="1272.6666666666667"/></a>
  
