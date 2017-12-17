@@ -35,6 +35,7 @@ We also created Wwished, a library that integrates the Wwise audio engine in a s
  - Engine UI: organization and coding of all visual elements and options in the editor window
  - Component and object edition: creation, deletion and modification of the different elements of the engine
  - Scene quadtree: static objects are included in a 3D Quadtree that accelerates processing.
+ <a href="https://gyazo.com/bf1805fc276b0556ebbaff85b9ce819c"><img src="https://i.gyazo.com/bf1805fc276b0556ebbaff85b9ce819c.png" alt="https://gyazo.com/bf1805fc276b0556ebbaff85b9ce819c" width="774.6666666666666"/></a>
  - Camera culling system: optimization to avoid drawing 3D objects that are not in camera. Accelerated via Quadtree.
  - Asset explorer: see all resources available, from meshes to soundbanks.
  ![assets](https://i.gyazo.com/bc0eaf62e08f177ab7bdf26e57b6fec8.gif)
