@@ -80,7 +80,7 @@ All music starts on play.
 **Engine video:**   
 
 <dl>
-  <a href="(https://github.com/carcasanchez/Asiergine/tree/master" class="btn">Check the Engine code here!Build</a>
+  <a href="(https://github.com/carcasanchez/Asiergine/tree/master" class="btn">Check the Engine code here</a>
 </dl>
 
 <dl>
