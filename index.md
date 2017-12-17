@@ -1,7 +1,7 @@
 # Asiergine  
 
  
- <a href="https://gyazo.com/415d9b12faa2e0a3c8f1f321805f3c14"><img src="https://i.gyazo.com/415d9b12faa2e0a3c8f1f321805f3c14.png" alt="https://gyazo.com/415d9b12faa2e0a3c8f1f321805f3c14" width="1272.6666666666667"/></a>
+
    
 
    
