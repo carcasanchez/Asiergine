@@ -29,25 +29,24 @@ We also created Wwished, a library that integrates the Wwise audio engine ina si
 
 ## About Wwished library
 
- Wwished is a own library, created to integrate the Wwise audio engine in a quick, easy fashion. 
-Wwished sacrifices depth and complexity in order to offer a simpler approach.
-The only thing you need to do, in order to use it, is download the Wwise SDK, add "$(WWISESDK)\include" to your additional include directories,
+ Wwished is a own library, created to integrate the Wwise audio engine in a quick, easy fashion.    
+Wwished sacrifices depth and complexity in order to offer a simpler approach.   
+The only thing you need to do, in order to use it, is download the Wwise SDK, add "$(WWISESDK)\include" to your additional include directories,   
 and add "Wwished.h" to your project. 
 
-Warning: by default, "Wwished.h" uses a bunch of libraries that are placed in the "3DEngine/AK/" route. Be sure that this libraries are placed properly 
-in your project, or rename the routes in "Wwished.h".
-
-In the Audio module, Wwished is mainly called three times:
+Warning: by default, "Wwished.h" uses a bunch of libraries that are placed in the "3DEngine/AK/" route. Be sure that this libraries are placed properly in your project, or rename the routes in "Wwished.h".   
+   
+In the Audio module, Wwished is mainly called three times:   
 
 - Wwished::InitWwished(): receives the language and the Sounbanl directory. Is called on start, and it takes care of load the Init soundbank and all Wwise initial proccess;
 - Wwished::ProccessAudio(): called each post-update, this function renders all the audio and reproduces sound.
 - Wwished::CloseWwished(): called on exit, takes care of shut down Wwise functionallity in a safe way.
 
-Wwished holds three main aspects: Emitters, Events and Utility. 
-Emitters are the synonymous of Wwise GameObjects. They marks the spatial position of a sound or a listener.
-Events are triggers that Wwise receives and plays in the way you configure. Wwished only stores the name and the Emitter of the Event:
-the rest of the work must be done on Wwise.
-Last, Wwished utility includes things like StopAllSounds, LoadAudioBank, Pause/Restart sounds, state changes and more.
+Wwished holds three main aspects: Emitters, Events and Utility.    
+Emitters are the synonymous of Wwise GameObjects. They marks the spatial position of a sound or a listener.   
+Events are triggers that Wwise receives and plays in the way you configure. Wwished only stores the name and the Emitter of the Event:   
+the rest of the work must be done on Wwise.   
+Last, Wwished utility includes things like StopAllSounds, LoadAudioBank, Pause/Restart sounds, state changes and more.   
 
 ## About audio in Asiergine
 
@@ -69,8 +68,7 @@ have the possibility of add a State group to make transitions between two states
 Component the name of the Group, the two states and the time between changes.
 All music starts on play.
 
-- Reverb areas: add a Reverb Component to any object, and transform the box to fit the desired size. In the Component editor, add the name 
-of the effect you want (previously defined on Wwise), and its value. Any object that is inside the box will note the marked effect.
+- Reverb areas: add a Reverb Component to any object, and transform the box to fit the desired size. In the Component editor, add the name of the effect you want (previously defined on Wwise), and its value. Any object that is inside the box will note the marked effect.
 
 
 
