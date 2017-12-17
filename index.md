@@ -24,7 +24,7 @@ We also created Wwished, a library that integrates the Wwise audio engine in a s
  - Resource management: meshes, scenes and textures are structured in a Library system that avoids double loading and improves      performance
  - Wwise Audio Engine integration: via own Wwished library, Asiergine can take advantage of the powerful audio engine to implement music and FX in games.
 
-**Asier:**   
+**Asier Iglesias:**   
  - Engine UI: organization and coding of all visual elements and options in the editor window
  - Component and object edition: creation, deletion and modification of the different elements of the engine
  - Scene quadtree: static objects are included in a 3D Quadtree that accelerates processing.
@@ -80,8 +80,10 @@ All music starts on play.
 **Engine video:**   
 
 <dl>
-  <a href="(https://github.com/carcasanchez/Asiergine/tree/master" class="btn">Check the Engine code here</a>
+  <a href="https://github.com/carcasanchez/Asiergine/tree/master" class="btn">Check the Engine code
+    here</a>
 </dl>
+
 
 <dl>
   <a href="https://github.com/carcasanchez/Asiergine/releases/download/Assignment3/Asiergine_v1.0.zip" class="btn">Download Latest Build</a>
