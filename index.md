@@ -47,7 +47,7 @@ The main core of our game engine is the integration of the Wwise audio engine wi
 ![Code repository](https://github.com/carcasanchez/Asiergine/tree/master)   
 
 <dl>
-  <a href="https://github.com/carcasanchez/Asiergine/releases/download/v0.9/Asiergine_v1.0.zip" class="btn">Download Latest Build</a>
+  <a href="https://github.com/carcasanchez/Asiergine/releases/download/Assignment3/Asiergine_v1.0.zip" class="btn">Download Latest Build</a>
 </dl>
    
 ![License](https://github.com/carcasanchez/Asiergine/blob/Assignment2%E2%80%8B/LICENSE)   
