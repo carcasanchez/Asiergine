@@ -17,7 +17,13 @@ We also created Wwished, a library that integrates the Wwise audio engine in a s
 </dl>
 
 Timelaspse: Create a Scene
-{% include youtubePlayer.html id=gcuZhsAth6M %}
+<iframe 
+   width="560" 
+   height="315" 
+   src="https://www.youtube.com/embed/gcuZhsAth6M" 
+   frameborder="0" 
+   allowfullscreen>
+</iframe>
 
 ### Work log    
 **Carlos Cabreira**   
@@ -91,7 +97,7 @@ All music starts on play.
 ![reverb](https://i.gyazo.com/9227baeea8f899e0cf366693cfc33692.gif)
 
 Timelapse: Setting up the audio   
-{% include youtubePlayer.html id=6UPPgBBpLww %}
+
 
 
 <dl>
