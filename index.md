@@ -36,7 +36,7 @@ We also created Wwished, a library that integrates the Wwise audio engine in a s
  - Scene quadtree: static objects are included in a 3D Quadtree that accelerates processing.
  - Camera culling system: optimization to avoid drawing 3D objects that are not in camera. Accelerated via Quadtree.
  - Asset explorer: see all resources available, from meshes to soundbanks.
- ![](https://gyazo.com/79d7c588fb47e93f8d33b83da2251649)
+ ![assets](https://gyazo.com/79d7c588fb47e93f8d33b83da2251649)
  
  <a href="https://gyazo.com/415d9b12faa2e0a3c8f1f321805f3c14"><img src="https://i.gyazo.com/415d9b12faa2e0a3c8f1f321805f3c14.png" alt="https://gyazo.com/415d9b12faa2e0a3c8f1f321805f3c14" width="1272.6666666666667"/></a>
  
@@ -82,8 +82,11 @@ have the possibility of add a State group to make transitions between two states
 Component the name of the Group, the two states and the time between changes.
 All music starts on play.
 
+![music](https://i.gyazo.com/02da2c48a3fa3d02dbbe245e3eb958d3.gif)
+
 - Reverb areas: add a Reverb Component to any object, and transform the box to fit the desired size. In the Component editor, add the name of the effect you want (previously defined on Wwise), and its value. Any object that is inside the box will note the marked effect.
 
+![reverb](https://i.gyazo.com/9227baeea8f899e0cf366693cfc33692.gif)
 
 
 **Engine video:**   
