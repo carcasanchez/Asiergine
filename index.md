@@ -95,7 +95,7 @@ All music starts on play.
 
 
 Timelapse: Setting the audio in Asiergine    
-{% include youtubePlayer.html id=https://www.youtube.com/watch?v=6UPPgBBpLww&feature=youtu.be %}
+{% include youtubePlayer.html id=https://youtu.be/6UPPgBBpLww %}
 
 
 
