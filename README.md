@@ -24,23 +24,56 @@ https://github.com/carcasanchez/Asiergine
 -F1 to show vertex normals
 -F2 to show bounding boxes
 
-
+The release comes with a scene that you can load from File>LoadScene. This scene features a demos of different aspects of our audio system.
+Press play to run it, and press E to trigger a Shot sound.
  
 ## About Wwished library
 
-- Add audio banks in Configuration->Audio (in this case, Main)
-- Create a Component Audio in camera and set to Listener type
-- Create a Component Audio in any obj and set it to the desired type:
+ Wwished is a own library, created to integrate the Wwise audio engine in a quick, easy fashion. 
+Wwished sacrifices depth and complexity in order to offer a simpler approach.
+The only thing you need to do, in order to use it, is download the Wwise SDK, add "$(WWISESDK)\include" to your additional include directories,
+and add "Wwished.h" to your project. 
 
-Valid FX name events are Train and Shot
-  
-Music: set event name to Play_Music
-	set Group to music1
-	set states to Overworld and Battle
-	Set time to whatever
-music will play when app starts running
+Warning: by default, "Wwished.h" uses a bunch of libraries that are placed in the "3DEngine/AK/" route. Be sure that this libraries are placed properly 
+in your project, or rename the routes in "Wwished.h".
 
--To add a reverb area, create a Reverb Area with name Corridor and any value. Scale it with Gizmos
+## About audio in Asiergine
+
+ In order to create audio in a Asiergine scene, you must first load a Wwise soundbank. The soundbank must be placed in the Assets/Sounbanks folder.
+To load a Sounbank, go to Configuration->Audio, and type the name of the bank you want to load. In the case of this release, only the Main bank is available.
+
+After loading a bank, you must add a Listener, usually in the Camera object. Select the camera, add an Audio Component to it, and select the type Listener.
+You can only have one listener in scene.
+
+ Now, the only thing you need to do is populate the scene with sound.
+You have various options: 
+
+-FX: just set the Audio Type in Component Audio to FX. You must now add Events to this component. 
+Events must be defined in Wwise first. In the Component Editor, you can add or delete events, and specify when this events will trigger.
+By default, only two possibilities are included (when pressing the E key, or when the game starts running).
+
+-Music: just set the Audio Type in Component Audio to Music. As with FX, you must specify the Event that will trigger the music. Also, you 
+have the possibility of add a State group to make transitions between two states. Just create the group and states in Wwise, and specify in the 
+Component the name of the Group, the two states and the time between changes.
+All music starts on play.
+
+-Reverb areas: add a Reverb Component to any object, and transform the box to fit the desired size. In the Component editor, add the name 
+of the effect you want (previously defined on Wwise), and its value. Any object that is inside the box will note the marked effect.
+
+
+## Demo scene
+
+ This release comes with a audio demo scene. The elements in this scene are:
+- A Main audio bank loaded
+- A Listener added to the camera object
+- A music obj with transitions between two musics every 30 secs
+- A Shot obj that triggers the Shot event when E is pressed (only when game is running)
+- A Train that moves from left to right and plays when the game starts
+- A Tunnel area where a special reverb effect is applied to the Train and the Shot
+
+ Please, note that the point of reference for 3D audio is the camera object, which owns the listener. If you want to test spatial audio, 
+move the audio objects around the camera frustum.
+
 
 # Changelog
 
